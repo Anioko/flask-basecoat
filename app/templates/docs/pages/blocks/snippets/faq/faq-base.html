@@ -1,0 +1,44 @@
+{% from 'docs/macros/faq_blocks.html' import faq_articles, faq_accordion, faq_support_panel, faq_sidebar %}
+{% set data = variant.data or {} %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--faq" data-preview data-faq-layout="{{ data.get('layout', 'cards') }}">
+    <header class="faq-block__header">
+      {% if data.get('eyebrow') %}<span class="faq-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
+      <h2 class="faq-block__headline">{{ data.get('headline', 'Frequently asked questions') }}</h2>
+      {% if data.get('description') %}<p class="faq-block__description">{{ data['description'] }}</p>{% endif %}
+    </header>
+
+    {% if data.get('layout') == 'accordion' %}
+      {{ faq_accordion(data.get('accordion', [])) }}
+      {% if data.get('support') %}
+      {{ faq_support_panel(data['support']) }}
+      {% endif %}
+    {% elif data.get('layout') == 'split' %}
+      <div class="faq-block__split">
+        {{ faq_articles(data.get('list', []), data.get('layout')) }}
+        {% if data.get('sidebar') %}
+        {{ faq_sidebar(data['sidebar']) }}
+        {% endif %}
+      </div>
+    {% else %}
+      {{ faq_articles(data.get('list', []), data.get('layout')) }}
+      {% if data.get('highlight') %}
+      <aside class="faq-block__highlight">
+        {% if data['highlight'].get('label') %}<span class="faq-block__highlight-label">{{ data['highlight']['label'] }}</span>{% endif %}
+        <h3>{{ data['highlight'].get('title') }}</h3>
+        <p>{{ data['highlight'].get('copy') }}</p>
+      </aside>
+      {% endif %}
+    {% endif %}
+
+    {% if data.get('cta') %}
+    <div class="faq-block__cta">
+      <button class="btn btn-{{ data['cta'].get('style', 'primary') }}" type="button">{{ data['cta'].get('label', 'Get help') }}</button>
+    </div>
+    {% endif %}
+
+    {% if data.get('meta') %}
+    <p class="faq-block__meta">{{ data['meta'] }}</p>
+    {% endif %}
+  </div>
+</section>

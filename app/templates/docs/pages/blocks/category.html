@@ -1,0 +1,25 @@
+{% extends 'docs/layout.html' %}
+{% block content %}
+<section class="docs-section">
+  <div class="docs-callout docs-callout--info">
+    <h2>{{ category.title }} blocks</h2>
+    <p>Showing {{ blocks|length }} block{{ blocks|length != 1 and 's' or '' }} sourced from the shadcn/ui registry.</p>
+    <p><a class="docs-link" href="{{ url_for('docs.page', slug='blocks') }}">Back to blocks overview</a></p>
+  </div>
+</section>
+<section class="docs-section">
+  {% if blocks %}
+  <div class="docs-grid">
+    {% for block in blocks %}
+    <article class="docs-card">
+      <h3><a class="docs-link" href="{{ block.url }}">{{ block.title }}</a></h3>
+      <p>{{ block.description or 'No description provided.' }}</p>
+      <p><a class="docs-link" href="{{ block.url }}">View block details &rarr;</a></p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="docs-empty">No blocks are currently tagged for this category.</p>
+  {% endif %}
+</section>
+{% endblock %}

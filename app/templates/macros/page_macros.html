@@ -1,0 +1,65 @@
+{% macro render_inline_editor(editable_html_obj, current_user) %}
+    <div id="editor-{{ editable_html_obj.editor_name }}" contenteditable="false">
+        {{ editable_html_obj.value|safe }}
+    </div>
+
+    {% if current_user.is_admin() %}
+    <button class="btn btn--sm start-edit">
+        Edit
+       </button>
+    <button class="btn btn--primary end-edit">
+        Save
+       </button>
+    {% endif %}
+
+    <script>
+    (function(){
+        var editorIDName = "editor-{{ editable_html_obj.editor_name }}";
+        document.addEventListener('DOMContentLoaded', function(){
+            {% if current_user.is_admin() %}
+                document.querySelectorAll('.end-edit').forEach(function(el){ el.style.display = 'none'; });
+            {% endif %}
+
+            document.querySelectorAll('.start-edit').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    CKEDITOR.disableAutoInline = true;
+                    var editor = CKEDITOR.inline(editorIDName, {
+                        startupFocus: true,
+                        autoGrow_onStartup: true
+                    });
+                    document.querySelectorAll('.start-edit').forEach(function(s){ s.style.display = 'none'; });
+                    document.querySelectorAll('.end-edit').forEach(function(e){ e.style.display = ''; });
+                    var el = document.getElementById(editorIDName);
+                    if(el) el.setAttribute('contenteditable','true');
+                });
+            });
+
+            document.querySelectorAll('.end-edit').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    if ( CKEDITOR.instances[editorIDName] ) {
+                        var formData = new URLSearchParams();
+                        formData.append('csrf_token', '{{ csrf_token() }}');
+                        formData.append('editor_name', '{{ editable_html_obj.editor_name }}');
+                        formData.append('edit_data', CKEDITOR.instances[editorIDName].getData());
+
+                        fetch("{{ url_for('admin.update_editor_contents') }}", {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: formData.toString()
+                        }).then(function(){
+                            // ignore response for now
+                        }).catch(function(err){ console.error('editor save failed', err); });
+
+                        CKEDITOR.instances[editorIDName].destroy();
+                    }
+                    document.querySelectorAll('.end-edit').forEach(function(e){ e.style.display = 'none'; });
+                    document.querySelectorAll('.start-edit').forEach(function(s){ s.style.display = ''; });
+                    var el = document.getElementById(editorIDName);
+                    if(el) el.setAttribute('contenteditable','false');
+                });
+            });
+        });
+    })();
+    </script>
+
+{% endmacro %}

@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% block content %}
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto w-full">
+            <h2 class="text-2xl font-semibold mb-4">Create your password</h2>
+            {{ f.render_form(form) }}
+        </div>
+    </div>
+    {{ check.password_check('password', 0) }}
+{% endblock %}

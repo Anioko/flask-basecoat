@@ -1,0 +1,51 @@
+<section class="docs-section">
+  <h2>Basecoat preview</h2>
+  <div class="docs-preview" data-preview>
+    <aside class="preview-sidebar">
+      <div class="preview-sidebar__header">
+        <span class="preview-logo">🚀</span>
+        <span class="preview-title">LaunchCtrl</span>
+      </div>
+      <nav class="preview-nav">
+        <a class="preview-nav__item is-active" href="#">
+          <span class="preview-nav__icon">🏠</span>
+          Overview
+        </a>
+        <a class="preview-nav__item" href="#">
+          <span class="preview-nav__icon">📊</span>
+          Analytics
+        </a>
+        <a class="preview-nav__item" href="#">
+          <span class="preview-nav__icon">👥</span>
+          Team
+        </a>
+        <a class="preview-nav__item" href="#">
+          <span class="preview-nav__icon">⚙️</span>
+          Settings
+        </a>
+      </nav>
+      <div class="preview-sidebar__footer">
+        <button class="btn btn-secondary w-full" type="button">New project</button>
+      </div>
+    </aside>
+    <section class="preview-main">
+      <header class="preview-main__header">
+        <div>
+          <h3 class="preview-main__title">Analytics overview</h3>
+          <p class="preview-main__subtitle">Detailed breakdown of active launches this quarter.</p>
+        </div>
+        <div class="preview-actions">
+          <button class="btn btn-ghost">Download</button>
+          <button class="btn btn-primary">Share dashboard</button>
+        </div>
+      </header>
+      <div class="preview-grid">
+        <div class="preview-card">
+          <p class="preview-card__label">Active campaigns</p>
+          <p class="preview-card__value">12</p>
+          <p class="preview-card__delta">+18% vs last month</p>
+        </div>
+        <div class="preview-card">
+          {% from 'docs/macros/block_snippets.html' import sidebar_preview %}
+          {{ sidebar_preview(block, {'variant': 'basic', 'features': ['Sectioned navigation', 'Primary CTA'], 'badge': 'Default'}) }}
+          <p class="preview-card__delta is-positive">+0.6% vs goal</p>

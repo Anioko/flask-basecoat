@@ -1,0 +1,74 @@
+{% extends 'docs/layout.html' %}
+{% block content %}
+<section class="docs-hero">
+  <div class="docs-hero__content">
+    <p class="docs-hero__eyebrow">Overview</p>
+    <h2 class="docs-hero__title">Design parity with shadcn/ui — without leaving Flask</h2>
+    <p class="docs-hero__lead">Basecoat Docs recreate the shadcn/ui documentation experience in a Python-friendly stack. Ship onboarding-ready docs, live previews, and copyable markup alongside your Flask app.</p>
+    <div class="docs-hero__actions">
+      <a class="docs-hero__button" href="{{ url_for('docs.page', slug='installation') }}">Start installing</a>
+      <a class="docs-hero__link" href="https://ui.shadcn.com" target="_blank" rel="noreferrer">Compare with shadcn/ui →</a>
+    </div>
+  </div>
+  <dl class="docs-hero__meta">
+    <div class="docs-hero__stat">
+      <dt>Blueprint pages</dt>
+      <dd>14 core guides</dd>
+    </div>
+    <div class="docs-hero__stat">
+      <dt>Block families</dt>
+      <dd>Expanding to full registry</dd>
+    </div>
+    <div class="docs-hero__stat">
+      <dt>Framework lock-in</dt>
+      <dd>None — Flask + Jinja</dd>
+    </div>
+  </dl>
+</section>
+<section class="docs-section">
+  <h2>Why Basecoat docs exist</h2>
+  <p>Teams love the polish of shadcn/ui, but its starter defaults assume a Next.js workspace. Basecoat Docs bring the same navigation, layout, and interaction patterns to Flask so product squads can document UI decisions where the backend already lives.</p>
+  <div class="docs-grid docs-grid--two">
+    <div class="docs-card">
+      <h3>Aligned with Basecoat UI</h3>
+      <p>Components ship with Basecoat class names, giving you light/dark theming, spacing tokens, and state styles out of the box.</p>
+    </div>
+    <div class="docs-card">
+      <h3>Optimized for cross-functional teams</h3>
+      <p>Writers, designers, and engineers collaborate in the same repo: editorial updates happen in Jinja, while previews stay wired to live Tailwind utilities.</p>
+    </div>
+  </div>
+</section>
+<section class="docs-section">
+  <h2>What you get today</h2>
+  <ul class="docs-list">
+    <li><strong>Interactive shell</strong> mirroring <code>ui.shadcn.com</code>, including responsive sidebar, theme toggle, and contextual pagination.</li>
+    <li><strong>Foundational guides</strong> covering installation, configuration, theming, and project conventions tailored for Flask deployments.</li>
+    <li><strong>Block previews</strong> rewritten with Basecoat primitives and wired for copy-to-clipboard and forthcoming code tabs.</li>
+    <li><strong>Registry scaffolding</strong> ready to import the entire shadcn/ui block catalogue as we expand coverage beyond the initial set.</li>
+  </ul>
+</section>
+<section class="docs-section">
+  <h2>How the documentation is structured</h2>
+  <p>The <code>docs</code> blueprint keeps content declarative: each page is registered in <code>app/docs/navigation.py</code> with its slug, description, and template. Rendered pages combine prose, macros, and live previews so your team can ship design decisions and implementation details together.</p>
+  <div class="docs-grid">
+    <div class="docs-card">
+      <h3>Getting Started</h3>
+      <p>Install dependencies, wire Tailwind assets, and align Basecoat tokens with your Flask environment.</p>
+    </div>
+    <div class="docs-card">
+      <h3>Foundations</h3>
+      <p>Document typography, colors, spacing, and accessibility expectations derived from Basecoat defaults.</p>
+    </div>
+    <div class="docs-card">
+      <h3>Blocks</h3>
+      <p>Browse production-ready patterns and drop them directly into your product with copyable markup.</p>
+    </div>
+  </div>
+</section>
+<section class="docs-section">
+  <h2>When to use this blueprint</h2>
+  <p>Reach for Basecoat Docs when you want shadcn/ui ergonomics without adopting a new frontend stack. Because everything renders server-side, you can document API contracts, business rules, and UI decisions right next to the routes that need them.</p>
+  <p>As the registry grows, your docs serve as the canonical reference: the same markup powers live previews, component snippets, and the UI your customers see.</p>
+</section>
+{% endblock %}

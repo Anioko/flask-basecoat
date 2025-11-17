@@ -1,0 +1,120 @@
+{
+  "statuses": [
+    {
+      "id": "planned",
+      "name": "Planned",
+      "color": "slate"
+    },
+    {
+      "id": "in-progress",
+      "name": "In Progress",
+      "color": "blue"
+    },
+    {
+      "id": "completed",
+      "name": "Completed",
+      "color": "green"
+    }
+  ],
+  "features": [
+    {
+      "id": "feature-1",
+      "status": "planned",
+      "title": "Advanced Search Filters",
+      "description": "Allow users to filter results by multiple criteria",
+      "owner": {
+        "name": "Alex Rivera",
+        "avatar": "AR"
+      },
+      "priority": "high"
+    },
+    {
+      "id": "feature-2",
+      "status": "planned",
+      "title": "Export to PDF",
+      "description": "Generate PDF reports from dashboard data",
+      "owner": {
+        "name": "Jordan Lee",
+        "avatar": "JL"
+      },
+      "priority": "medium"
+    },
+    {
+      "id": "feature-3",
+      "status": "planned",
+      "title": "Bulk Operations",
+      "description": "Enable batch editing and deletion",
+      "owner": {
+        "name": "Taylor Swift",
+        "avatar": "TS"
+      },
+      "priority": "high"
+    },
+    {
+      "id": "feature-4",
+      "status": "in-progress",
+      "title": "Email Notifications",
+      "description": "Send automated email alerts for important events",
+      "owner": {
+        "name": "Morgan Blake",
+        "avatar": "MB"
+      },
+      "priority": "high"
+    },
+    {
+      "id": "feature-5",
+      "status": "in-progress",
+      "title": "Real-time Collaboration",
+      "description": "Enable multiple users to edit simultaneously",
+      "owner": {
+        "name": "Casey Jordan",
+        "avatar": "CJ"
+      },
+      "priority": "medium"
+    },
+    {
+      "id": "feature-6",
+      "status": "in-progress",
+      "title": "Mobile App",
+      "description": "Build native iOS and Android applications",
+      "owner": {
+        "name": "Riley Parker",
+        "avatar": "RP"
+      },
+      "priority": "high"
+    },
+    {
+      "id": "feature-7",
+      "status": "completed",
+      "title": "Two-Factor Authentication",
+      "description": "Add 2FA for enhanced security",
+      "owner": {
+        "name": "Jamie Chen",
+        "avatar": "JC"
+      },
+      "priority": "high"
+    },
+    {
+      "id": "feature-8",
+      "status": "completed",
+      "title": "Dark Mode Support",
+      "description": "Implement system-wide dark theme",
+      "owner": {
+        "name": "Quinn Martinez",
+        "avatar": "QM"
+      },
+      "priority": "medium"
+    },
+    {
+      "id": "feature-9",
+      "status": "completed",
+      "title": "API Documentation",
+      "description": "Create comprehensive API docs with examples",
+      "owner": {
+        "name": "Avery Thompson",
+        "avatar": "AT"
+      },
+      "priority": "high"
+    }
+  ]
+}

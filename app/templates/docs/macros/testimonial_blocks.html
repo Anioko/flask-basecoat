@@ -1,0 +1,62 @@
+{% macro testimonial_quote_collection(quotes, layout='grid') -%}
+<section class="testimonial-grid" data-layout="{{ layout }}">
+  {% for quote in quotes %}
+  <article class="testimonial-card" data-variant="{{ layout }}">
+    <p class="testimonial-card__quote">&ldquo;{{ quote.get('quote') }}&rdquo;</p>
+    <footer class="testimonial-card__meta">
+      <div class="testimonial-card__avatar" aria-hidden="true">{{ quote.get('initials', quote.get('author', '')[:1]) }}</div>
+      <div>
+        <p class="testimonial-card__author">{{ quote.get('author') }}</p>
+        {% if quote.get('role') or quote.get('company') %}
+        <p class="testimonial-card__role">
+          {{ quote.get('role', '') }}{% if quote.get('role') and quote.get('company') %} &middot; {% endif %}{{ quote.get('company', '') }}
+        </p>
+        {% endif %}
+      </div>
+    </footer>
+  </article>
+  {% endfor %}
+</section>
+{%- endmacro %}
+
+{% macro testimonial_featured(featured, layout='highlight') -%}
+<article class="testimonial-featured" data-layout="{{ layout }}">
+  {% if featured.get('badge') %}<span class="testimonial-featured__badge">{{ featured['badge'] }}</span>{% endif %}
+  <p class="testimonial-featured__quote">&ldquo;{{ featured.get('quote') }}&rdquo;</p>
+  <div class="testimonial-featured__meta">
+    <div class="testimonial-card__avatar" aria-hidden="true">{{ featured.get('initials', featured.get('author', '')[:1]) }}</div>
+    <div>
+      <p class="testimonial-featured__author">{{ featured.get('author') }}</p>
+      {% if featured.get('role') or featured.get('company') %}
+      <p class="testimonial-featured__role">{{ featured.get('role', '') }}{% if featured.get('role') and featured.get('company') %} &middot; {% endif %}{{ featured.get('company', '') }}</p>
+      {% endif %}
+    </div>
+  </div>
+  {% if featured.get('rating') or featured.get('metric') %}
+  <p class="testimonial-featured__signal">
+    {% if featured.get('rating') %}Rated {{ featured['rating'] }}/5{% endif %}
+    {% if featured.get('rating') and featured.get('metric') %}<span class="testimonial-featured__divider">&middot;</span>{% endif %}
+    {% if featured.get('metric') %}{{ featured['metric'] }}{% endif %}
+  </p>
+  {% endif %}
+</article>
+{%- endmacro %}
+
+{% macro testimonial_logo_wall(logos) -%}
+<ul class="testimonial-logo-wall">
+  {% for logo in logos %}
+  <li>{{ logo.get('name') }}</li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro testimonial_stats(stats) -%}
+<ul class="testimonial-stats">
+  {% for stat in stats %}
+  <li>
+    <p class="testimonial-stats__value">{{ stat.get('value') }}</p>
+    <p class="testimonial-stats__label">{{ stat.get('label') }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{%- endmacro %}

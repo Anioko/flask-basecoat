@@ -1,0 +1,53 @@
+{% extends 'docs/layout.html' %}
+{% block content %}
+<section class="docs-section">
+  <h2>Design tokens</h2>
+  <p>The docs shell exposes CSS variables so you can retheme the experience without touching the markup. Values live under the <code>:root</code> selector and automatically switch when the dark theme is active.</p>
+  <div class="docs-code" data-code>
+    <button type="button" class="docs-copy" data-copy>Copy</button>
+<pre><code class="language-css">:root {
+  --docs-bg: #fafafa;
+  --docs-border: rgba(15, 23, 42, 0.08);
+  --docs-text: #0f172a;
+  --docs-muted: #475569;
+  --docs-card: #ffffff;
+  --docs-code-bg: #0f172a;
+}
+
+[data-color-theme="dark"] {
+  --docs-bg: #0f172a;
+  --docs-border: rgba(148, 163, 184, 0.16);
+  --docs-text: #e2e8f0;
+  --docs-muted: #94a3b8;
+  --docs-card: rgba(15, 23, 42, 0.75);
+  --docs-code-bg: #020617;
+}</code></pre>
+  </div>
+</section>
+<section class="docs-section">
+  <h2>Typography</h2>
+  <p>Shadcn defaults to the <em>Inter</em> family. Basecoat already includes a neutral sans-serif stack, so we simply declare it on the docs shell:</p>
+  <div class="docs-code" data-code>
+    <button type="button" class="docs-copy" data-copy>Copy</button>
+<pre><code class="language-css">body.docs-shell {
+  font-family: "Inter", "SF Pro Text", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0.01em;
+}</code></pre>
+  </div>
+  <p>Headers use tightened leading plus subtle tracking to match shadcn&rsquo;s editorial rhythm.</p>
+</section>
+<section class="docs-section">
+  <h2>Component tokens</h2>
+  <p>These utilities provide a consistent feel across cards, callouts, and pagination links:</p>
+  <ul class="docs-list">
+    <li><strong>Radius:</strong> 0.75rem corners for page chrome, 0.5rem for callouts.</li>
+    <li><strong>Shadows:</strong> <code>0 10px 40px rgba(15, 23, 42, 0.08)</code> for cards in light mode, softened in dark mode.</li>
+    <li><strong>Spacing:</strong> 1.25rem base padding, with vertical rhythm controlled by CSS clamp utilities.</li>
+  </ul>
+</section>
+<section class="docs-section">
+  <h2>Dark mode strategy</h2>
+  <p>The theme toggle flips a <code>data-color-theme</code> attribute on the <code>&lt;html&gt;</code> element. All color tokens derive from that attribute, so you can adjust hues in one place without refactoring markup.</p>
+</section>
+{% endblock %}

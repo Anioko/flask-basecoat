@@ -1,0 +1,77 @@
+{% macro hero_actions(actions) -%}
+<div class="hero-actions">
+  {% for action in actions %}
+  <button class="btn btn-{{ action.get('style', 'primary') }}" type="button">{{ action.get('label') }}</button>
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro hero_highlights(highlights) -%}
+<ul class="hero-highlights">
+  {% for highlight in highlights %}
+  <li>{{ highlight }}</li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro hero_social_proof(social_proof) -%}
+<aside class="hero-social">
+  <p class="hero-social__label">{{ social_proof.get('label') }}</p>
+  <div class="hero-social__avatars">
+    {% for avatar in social_proof.get('avatars', []) %}
+    <span class="hero-avatar">{{ avatar }}</span>
+    {% endfor %}
+  </div>
+  <p class="hero-social__count">{{ social_proof.get('count') }}</p>
+</aside>
+{%- endmacro %}
+
+{% macro hero_stats(stats) -%}
+<ul class="hero-stats">
+  {% for stat in stats %}
+  <li>
+    <p class="hero-stats__value">{{ stat.get('value') }}</p>
+    <p class="hero-stats__label">{{ stat.get('label') }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro hero_announcement(announcement) -%}
+<a class="hero-announcement" href="{{ announcement.get('url', '#') }}">
+  <span class="hero-announcement__label">{{ announcement.get('label') }}</span>
+  <span class="hero-announcement__text">{{ announcement.get('text') }}</span>
+  <span class="hero-announcement__arrow" aria-hidden="true">→</span>
+</a>
+{%- endmacro %}
+
+{% macro hero_badges(badges) -%}
+<ul class="hero-badges">
+  {% for badge in badges %}
+  <li>{{ badge }}</li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro hero_enterprise(enterprise) -%}
+<aside class="hero-enterprise">
+  <h3>{{ enterprise.get('title') }}</h3>
+  <ul>
+    {% for item in enterprise.get('items', []) %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+</aside>
+{%- endmacro %}
+
+{% macro hero_media(media) -%}
+<div class="hero-media">
+  <div class="hero-media__surface">
+    <p class="hero-media__title">{{ media.get('title') }}</p>
+    <p class="hero-media__demo">{{ media.get('demo_text') }}</p>
+  </div>
+  {% if media.get('caption') %}
+  <p class="hero-media__caption">{{ media['caption'] }}</p>
+  {% endif %}
+</div>
+{%- endmacro %}

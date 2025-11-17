@@ -1,0 +1,54 @@
+{% macro faq_articles(entries, layout='cards') -%}
+<section class="faq-block__answers" data-layout="{{ layout }}">
+  {% for item in entries %}
+  <article class="faq-block__item">
+    <h3 class="faq-block__question">{{ item['question'] }}</h3>
+    <p class="faq-block__answer">{{ item['answer'] }}</p>
+  </article>
+  {% endfor %}
+</section>
+{%- endmacro %}
+
+{% macro faq_accordion(entries) -%}
+<section class="faq-block__accordion" data-accordion>
+  {% for item in entries %}
+  <details class="faq-accordion__item"{% if loop.first %} open{% endif %}>
+    <summary class="faq-accordion__summary">
+      <span>{{ item['question'] }}</span>
+      <span class="faq-accordion__icon" aria-hidden="true">▸</span>
+    </summary>
+    <div class="faq-accordion__content">
+      <p>{{ item['answer'] }}</p>
+    </div>
+  </details>
+  {% endfor %}
+</section>
+{%- endmacro %}
+
+{% macro faq_support_panel(support) -%}
+<aside class="faq-block__support">
+  <div class="faq-block__support-header">
+    <h3>{{ support['title'] }}</h3>
+    <p>{{ support['description'] }}</p>
+  </div>
+  <div class="faq-block__support-actions">
+    {% for action in support.get('actions', []) %}
+    <button class="btn btn-{{ action.get('style', 'primary') }}" type="button">{{ action.get('label') }}</button>
+    {% endfor %}
+  </div>
+</aside>
+{%- endmacro %}
+
+{% macro faq_sidebar(sidebar) -%}
+<aside class="faq-block__sidebar">
+  <h3>{{ sidebar['title'] }}</h3>
+  <ul>
+    {% for item in sidebar.get('items', []) %}
+    <li>
+      <p class="faq-block__sidebar-label">{{ item['label'] }}</p>
+      <p class="faq-block__sidebar-description">{{ item['description'] }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>
+{%- endmacro %}

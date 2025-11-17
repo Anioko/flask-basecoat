@@ -1,0 +1,34 @@
+{% from 'docs/macros/feature_blocks.html' import feature_icon_grid, feature_split, feature_metrics, feature_timeline %}
+{% set data = variant.data or {} %}
+{% set layout = data.get('layout', 'grid') %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--feature" data-preview data-feature-layout="{{ layout }}">
+    <header class="feature-block__header">
+      {% if data.get('eyebrow') %}<span class="feature-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
+      <h2 class="feature-block__headline">{{ data.get('headline', 'Product features that scale') }}</h2>
+      {% if data.get('description') %}<p class="feature-block__description">{{ data['description'] }}</p>{% endif %}
+    </header>
+
+    {% if layout == 'grid' %}
+      {{ feature_icon_grid(data.get('features', [])) }}
+    {% elif layout == 'split' %}
+      {{ feature_split(data.get('features', []), data.get('media', {})) }}
+    {% elif layout == 'metrics' %}
+      {{ feature_metrics(data.get('metrics', []), data.get('features', [])) }}
+    {% elif layout == 'timeline' %}
+      {{ feature_timeline(data.get('timeline', [])) }}
+    {% else %}
+      {{ feature_icon_grid(data.get('features', [])) }}
+    {% endif %}
+
+    {% if data.get('cta') %}
+    <div class="feature-block__cta">
+      <button class="btn btn-{{ data['cta'].get('style', 'primary') }}" type="button">{{ data['cta'].get('label', 'Explore features') }}</button>
+    </div>
+    {% endif %}
+
+    {% if data.get('meta') %}
+    <p class="feature-block__meta">{{ data['meta'] }}</p>
+    {% endif %}
+  </div>
+</section>

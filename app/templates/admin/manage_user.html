@@ -1,0 +1,99 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% set deletion_endpoint = 'admin.delete_user_request' %}
+
+{% set endpoints = [
+    ('admin.user_info', 'User information'),
+    ('admin.change_user_email', 'Change email address'),
+    ('admin.change_account_type', 'Change account type'),
+    (deletion_endpoint, 'Delete user')
+] %}
+
+{% macro navigation(items) %}
+    <nav class="flex flex-col gap-1 bg-slate-50 p-2 rounded-lg border border-slate-200 dark:bg-slate-950 dark:border-slate-800">
+        {% for route, name in items %}
+            {% set href = url_for(route, user_id=user.id) %}
+            <a class="block py-2 px-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors {% if request.endpoint == route %}font-semibold bg-white dark:bg-slate-900 shadow-sm{% endif %}" href="{{ href }}">
+                {{ name }}
+            </a>
+        {% endfor %}
+    </nav>
+{% endmacro %}
+
+{% macro user_info(user) %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>Full name</td>
+                <td>{{ '%s %s' % (user.first_name, user.last_name) }}</td>
+            </tr>
+            <tr>
+                <td>Email address</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>Account type</td>
+                <td>{{ user.role.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-6">
+        <div class="mb-4">
+            <a class="btn btn--ghost inline-flex items-center" href="{{ url_for('admin.registered_users') }}">
+                ← Back to all users
+            </a>
+            <h2 class="text-2xl font-semibold mt-4">
+                {{ user.full_name() }}
+                <div class="text-sm text-slate-600 dark:text-slate-400">View and manage {{ user.first_name }}'s account.</div>
+            </h2>
+        </div>
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-3">
+                {{ navigation(endpoints) }}
+            </div>
+            <div class="col-span-6">
+                {% if request.endpoint == deletion_endpoint %}
+                    <div class="alert-destructive">
+                        <h2>This action is permanent</h2>
+                        <section>
+                            <p>Deleting a user account is not a reversible change. Any information associated with this account will be removed, and cannot be recovered.</p>
+                        </section>
+                    </div>
+
+                    <div role="group" class="mb-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="confirm-delete" class="rounded border-slate-300 dark:border-slate-700">
+                            <span>I understand that this action cannot be undone.</span>
+                        </label>
+                    </div>
+                    <a id="delete-user-btn" class="btn-destructive opacity-50 pointer-events-none">Delete this user</a>
+                    </div>
+                    </div>
+                {% elif form %}
+                    {{ f.render_form(form) }}
+                {% else %}
+                    {{ user_info(user) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function(){
+            var cb = document.getElementById('confirm-delete');
+            var btn = document.getElementById('delete-user-btn');
+            cb && cb.addEventListener('change', function(){
+                if(cb.checked){
+                    btn.classList.remove('opacity-50','pointer-events-none');
+                    btn.setAttribute("href","{{ url_for('admin.delete_user', user_id=user.id) }}");
+                } else {
+                    btn.classList.add('opacity-50','pointer-events-none');
+                    btn.removeAttribute("href");
+                }
+            });
+        });
+    </script>
+{% endblock %}

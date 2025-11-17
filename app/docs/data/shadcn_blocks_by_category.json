@@ -1,0 +1,780 @@
+{
+  "authentication": [
+    {
+      "description": "A simple login form.",
+      "name": "login-01"
+    },
+    {
+      "description": "A two column login page with a cover image.",
+      "name": "login-02"
+    },
+    {
+      "description": "A login page with a muted background color.",
+      "name": "login-03"
+    },
+    {
+      "description": "A login page with form and image.",
+      "name": "login-04"
+    },
+    {
+      "description": "A simple email-only login page.",
+      "name": "login-05"
+    },
+    {
+      "description": "A simple signup form.",
+      "name": "signup-01"
+    },
+    {
+      "description": "A two column signup page with a cover image.",
+      "name": "signup-02"
+    },
+    {
+      "description": "A signup page with a muted background color.",
+      "name": "signup-03"
+    },
+    {
+      "description": "A signup page with form and image.",
+      "name": "signup-04"
+    },
+    {
+      "description": "A simple signup form with social providers.",
+      "name": "signup-05"
+    },
+    {
+      "description": "A simple OTP verification form.",
+      "name": "otp-01"
+    },
+    {
+      "description": "A two column OTP page with a cover image.",
+      "name": "otp-02"
+    },
+    {
+      "description": "An OTP page with a muted background color.",
+      "name": "otp-03"
+    },
+    {
+      "description": "An OTP page with form and image.",
+      "name": "otp-04"
+    },
+    {
+      "description": "A simple OTP form with social providers.",
+      "name": "otp-05"
+    }
+  ],
+  "calendar": [
+    {
+      "description": "A simple calendar.",
+      "name": "calendar-01"
+    },
+    {
+      "description": "Multiple months with single selection.",
+      "name": "calendar-02"
+    },
+    {
+      "description": "Multiple months with multiple selection.",
+      "name": "calendar-03"
+    },
+    {
+      "description": "Single month with range selection",
+      "name": "calendar-04"
+    },
+    {
+  "cta": [
+    {
+      "description": "Centered CTA with supporting logo strip and dual actions.",
+      "name": "cta-01"
+    },
+    {
+      "description": "Split CTA highlighting benefits with supporting media panel.",
+      "name": "cta-02"
+    },
+    {
+      "description": "Banner CTA combining impact metrics with primary action.",
+      "name": "cta-03"
+    },
+    {
+      "description": "Inline CTA with email capture and reassurance copy.",
+      "name": "cta-04"
+    }
+  ],
+      "description": "Multiple months with range selection",
+      "name": "calendar-05"
+    },
+    {
+      "description": "Range selection with minimum days",
+      "name": "calendar-06"
+    },
+    {
+      "description": "Range selection with minimum and maximum days",
+      "name": "calendar-07"
+    },
+    {
+      "description": "Calendar with disabled days",
+      "name": "calendar-08"
+    },
+    {
+      "description": "Calendar with disabled weekends",
+      "name": "calendar-09"
+    },
+    {
+      "description": "Today button",
+      "name": "calendar-10"
+    },
+    {
+      "description": "Start and end of month",
+      "name": "calendar-11"
+    },
+    {
+      "description": "Localized calendar",
+      "name": "calendar-12"
+    },
+    {
+      "description": "With Month and Year Dropdown",
+      "name": "calendar-13"
+    },
+    {
+      "description": "With Booked/Unavailable Days",
+      "name": "calendar-14"
+    },
+    {
+      "description": "With Week Numbers",
+      "name": "calendar-15"
+    },
+    {
+      "description": "With time picker",
+      "name": "calendar-16"
+    },
+    {
+      "description": "With time picker inline",
+      "name": "calendar-17"
+    },
+    {
+      "description": "Variable size",
+      "name": "calendar-18"
+    },
+    {
+      "description": "With presets",
+      "name": "calendar-19"
+    },
+    {
+      "description": "With time presets",
+      "name": "calendar-20"
+    },
+    {
+      "description": "Custom days and formatters",
+      "name": "calendar-21"
+    },
+    {
+      "description": "Date picker",
+      "name": "calendar-22"
+    },
+    {
+      "description": "Date range picker",
+      "name": "calendar-23"
+    },
+    {
+      "description": "Date and Time picker",
+      "name": "calendar-24"
+    },
+    {
+      "description": "Date and Time range picker",
+      "name": "calendar-25"
+    },
+    {
+      "description": "Date range picker with time",
+      "name": "calendar-26"
+    },
+    {
+      "description": "Chart filter",
+      "name": "calendar-27"
+    },
+    {
+      "description": "Input with date picker",
+      "name": "calendar-28"
+    },
+    {
+      "description": "Natural language date picker",
+      "name": "calendar-29"
+    },
+    {
+      "description": "With little-date",
+      "name": "calendar-30"
+    },
+    {
+      "description": "With event slots",
+      "name": "calendar-31"
+    },
+    {
+      "description": "Date picker in a drawer",
+      "name": "calendar-32"
+    }
+  ],
+  "dashboard": [
+    {
+      "description": "A dashboard with sidebar, charts and data table.",
+      "name": "dashboard-01"
+    },
+    {
+      "description": "A simple sidebar with navigation grouped by section.",
+      "name": "sidebar-01"
+    },
+    {
+      "description": "A sidebar with collapsible sections.",
+      "name": "sidebar-02"
+    },
+    {
+      "description": "A sidebar with submenus.",
+      "name": "sidebar-03"
+    },
+    {
+      "description": "A floating sidebar with submenus.",
+      "name": "sidebar-04"
+    },
+    {
+      "description": "A sidebar with collapsible submenus.",
+      "name": "sidebar-05"
+    },
+    {
+      "description": "A sidebar with submenus as dropdowns.",
+      "name": "sidebar-06"
+    },
+    {
+      "description": "A sidebar that collapses to icons.",
+      "name": "sidebar-07"
+    },
+    {
+      "description": "An inset sidebar with secondary navigation.",
+      "name": "sidebar-08"
+    },
+    {
+      "description": "Collapsible nested sidebars.",
+      "name": "sidebar-09"
+    },
+    {
+      "description": "A sidebar in a popover.",
+      "name": "sidebar-10"
+    },
+    {
+      "description": "A sidebar with a collapsible file tree.",
+      "name": "sidebar-11"
+    },
+    {
+      "description": "A sidebar with a calendar.",
+      "name": "sidebar-12"
+    },
+    {
+      "description": "A sidebar in a dialog.",
+      "name": "sidebar-13"
+    },
+    {
+      "description": "A sidebar on the right.",
+      "name": "sidebar-14"
+    },
+    {
+      "description": "A left and right sidebar.",
+      "name": "sidebar-15"
+    },
+    {
+      "description": "A sidebar with a sticky site header.",
+      "name": "sidebar-16"
+    }
+  ],
+  "date": [
+    {
+      "description": "A simple calendar.",
+      "name": "calendar-01"
+    },
+    {
+      "description": "Multiple months with single selection.",
+      "name": "calendar-02"
+    },
+    {
+      "description": "Multiple months with multiple selection.",
+      "name": "calendar-03"
+    },
+    {
+      "description": "Single month with range selection",
+      "name": "calendar-04"
+    },
+    {
+      "description": "Multiple months with range selection",
+      "name": "calendar-05"
+    },
+    {
+      "description": "Range selection with minimum days",
+      "name": "calendar-06"
+    },
+    {
+      "description": "Range selection with minimum and maximum days",
+      "name": "calendar-07"
+    },
+    {
+      "description": "Calendar with disabled days",
+      "name": "calendar-08"
+    },
+    {
+      "description": "Calendar with disabled weekends",
+      "name": "calendar-09"
+    },
+    {
+      "description": "Today button",
+      "name": "calendar-10"
+    },
+    {
+      "description": "Start and end of month",
+      "name": "calendar-11"
+    },
+    {
+      "description": "Localized calendar",
+      "name": "calendar-12"
+    },
+    {
+      "description": "With Month and Year Dropdown",
+      "name": "calendar-13"
+    },
+    {
+      "description": "With Booked/Unavailable Days",
+      "name": "calendar-14"
+    },
+    {
+      "description": "With Week Numbers",
+      "name": "calendar-15"
+    },
+    {
+      "description": "With time picker",
+      "name": "calendar-16"
+    },
+    {
+      "description": "With time picker inline",
+      "name": "calendar-17"
+    },
+    {
+      "description": "Variable size",
+      "name": "calendar-18"
+    },
+    {
+      "description": "With presets",
+      "name": "calendar-19"
+    },
+    {
+      "description": "With time presets",
+      "name": "calendar-20"
+    },
+    {
+      "description": "Custom days and formatters",
+      "name": "calendar-21"
+    },
+    {
+      "description": "Date picker",
+      "name": "calendar-22"
+    },
+    {
+      "description": "Date range picker",
+      "name": "calendar-23"
+    },
+    {
+      "description": "Date and Time picker",
+      "name": "calendar-24"
+    },
+    {
+      "description": "Date and Time range picker",
+      "name": "calendar-25"
+    },
+    {
+      "description": "Date range picker with time",
+      "name": "calendar-26"
+    },
+    {
+      "description": "Chart filter",
+      "name": "calendar-27"
+    },
+    {
+      "description": "Input with date picker",
+      "name": "calendar-28"
+    },
+    {
+      "description": "Natural language date picker",
+      "name": "calendar-29"
+    },
+    {
+      "description": "With little-date",
+      "name": "calendar-30"
+    },
+    {
+      "description": "With event slots",
+      "name": "calendar-31"
+    },
+    {
+      "description": "Date picker in a drawer",
+      "name": "calendar-32"
+    }
+  ],
+  "drawer": [
+    {
+      "description": "Project settings drawer with details and notification toggles.",
+      "name": "drawer-01"
+    },
+    {
+      "description": "Workflow builder drawer that assembles automation triggers and tasks.",
+      "name": "drawer-02"
+    },
+    {
+      "description": "Team profile drawer with contact summary and recent activity timeline.",
+      "name": "drawer-03"
+    },
+    {
+      "description": "Analytics filter drawer with selectable segments and time ranges.",
+      "name": "drawer-04"
+    },
+    {
+      "description": "Bottom anchored release review drawer summarizing launch readiness.",
+      "name": "drawer-05"
+    }
+  ],
+  "overlay": [
+    {
+      "description": "Project settings drawer with details and notification toggles.",
+      "name": "drawer-01"
+    },
+    {
+      "description": "Workflow builder drawer that assembles automation triggers and tasks.",
+      "name": "drawer-02"
+    },
+    {
+      "description": "Team profile drawer with contact summary and recent activity timeline.",
+      "name": "drawer-03"
+    },
+    {
+      "description": "Analytics filter drawer with selectable segments and time ranges.",
+      "name": "drawer-04"
+    },
+    {
+      "description": "Bottom anchored release review drawer summarizing launch readiness.",
+      "name": "drawer-05"
+    }
+  ],
+  "pricing": [
+    {
+      "description": "Three tier pricing layout with add-on callouts and Basecoat styling.",
+      "name": "pricing-01"
+    },
+    {
+      "description": "Billing toggle and highlighted upgrade tier for growing teams.",
+      "name": "pricing-02"
+    },
+    {
+      "description": "Feature comparison table to evaluate plan differences.",
+      "name": "pricing-03"
+    },
+    {
+      "description": "Split layout with enterprise summary sidebar and FAQs.",
+      "name": "pricing-04"
+    }
+  ],
+  "commerce": [
+    {
+      "description": "Three tier pricing layout with add-on callouts and Basecoat styling.",
+      "name": "pricing-01"
+    },
+    {
+      "description": "Billing toggle and highlighted upgrade tier for growing teams.",
+      "name": "pricing-02"
+    },
+    {
+      "description": "Feature comparison table to evaluate plan differences.",
+      "name": "pricing-03"
+    },
+    {
+      "description": "Split layout with enterprise summary sidebar and FAQs.",
+      "name": "pricing-04"
+    }
+  ],
+  "faq": [
+    {
+      "description": "Two column FAQ layout with Basecoat migration guidance.",
+      "name": "faq-01"
+    },
+    {
+      "description": "Accordion FAQ with support call-to-action panel.",
+      "name": "faq-02"
+    },
+    {
+      "description": "FAQ cards paired with highlight tip messaging.",
+      "name": "faq-03"
+    },
+    {
+      "description": "Split FAQ layout with support sidebar and follow-up CTA.",
+      "name": "faq-04"
+    }
+  ],
+  "support": [
+    {
+      "description": "Two column FAQ layout with Basecoat migration guidance.",
+      "name": "faq-01"
+    },
+    {
+      "description": "Accordion FAQ with support call-to-action panel.",
+      "name": "faq-02"
+    },
+    {
+      "description": "FAQ cards paired with highlight tip messaging.",
+      "name": "faq-03"
+    },
+    {
+      "description": "Split FAQ layout with support sidebar and follow-up CTA.",
+      "name": "faq-04"
+    }
+  ],
+  "feature": [
+    {
+      "description": "Feature grid highlighting Basecoat capabilities with token badges.",
+      "name": "feature-01"
+    },
+    {
+      "description": "Split feature layout pairing product highlights with performance stats.",
+      "name": "feature-02"
+    },
+    {
+      "description": "Metrics-focused feature section showcasing operational improvements.",
+      "name": "feature-03"
+    },
+    {
+      "description": "Timeline of feature rollout steps with supporting guidance.",
+      "name": "feature-04"
+    }
+  ],
+  "hero": [
+    {
+      "description": "Centered hero with compelling headline and social proof indicators.",
+      "name": "hero-01"
+    },
+    {
+      "description": "Split hero layout balancing impact content with visual demonstration.",
+      "name": "hero-02"
+    },
+    {
+      "description": "Minimal hero design with focused messaging and essential actions.",
+      "name": "hero-03"
+    },
+    {
+      "description": "Gradient hero featuring enterprise elements and conversion badges.",
+      "name": "hero-04"
+    }
+  ],
+  "testimonial": [
+    {
+      "description": "Testimonial grid highlighting product teams with avatars.",
+      "name": "testimonial-01"
+    },
+    {
+      "description": "Featured testimonial spotlight with supporting quotes and metrics.",
+      "name": "testimonial-02"
+    },
+    {
+      "description": "Logo wall with customer quotes for social proof.",
+      "name": "testimonial-03"
+    },
+    {
+      "description": "Split testimonial layout pairing stats with customer quotes.",
+      "name": "testimonial-04"
+    }
+  ],
+  "marketing": [
+    {
+      "description": "Centered hero with compelling headline and social proof indicators.",
+      "name": "hero-01"
+    },
+    {
+      "description": "Split hero layout balancing impact content with visual demonstration.",
+      "name": "hero-02"
+    },
+    {
+      "description": "Minimal hero design with focused messaging and essential actions.",
+      "name": "hero-03"
+    },
+    {
+      "description": "Gradient hero featuring enterprise elements and conversion badges.",
+      "name": "hero-04"
+    },
+    {
+      "description": "Testimonial grid highlighting product teams with avatars.",
+      "name": "testimonial-01"
+    },
+    {
+      "description": "Featured testimonial spotlight with supporting quotes and metrics.",
+      "name": "testimonial-02"
+    },
+    {
+      "description": "Logo wall with customer quotes for social proof.",
+      "name": "testimonial-03"
+    },
+    {
+      "description": "Split testimonial layout pairing stats with customer quotes.",
+      "name": "testimonial-04"
+    },
+    {
+      "description": "Centered CTA with supporting logo strip and dual actions.",
+      "name": "cta-01"
+    },
+    {
+      "description": "Split CTA highlighting benefits with supporting media panel.",
+      "name": "cta-02"
+    },
+    {
+      "description": "Banner CTA combining impact metrics with primary action.",
+      "name": "cta-03"
+    },
+    {
+      "description": "Inline CTA with email capture and reassurance copy.",
+      "name": "cta-04"
+    },
+    {
+      "description": "Feature grid highlighting Basecoat capabilities with token badges.",
+      "name": "feature-01"
+    },
+    {
+      "description": "Split feature layout pairing product highlights with performance stats.",
+      "name": "feature-02"
+    },
+    {
+      "description": "Metrics-focused feature section showcasing operational improvements.",
+      "name": "feature-03"
+    },
+    {
+      "description": "Timeline of feature rollout steps with supporting guidance.",
+      "name": "feature-04"
+    }
+  ],
+  "login": [
+    {
+      "description": "A simple login form.",
+      "name": "login-01"
+    },
+    {
+      "description": "A two column login page with a cover image.",
+      "name": "login-02"
+    },
+    {
+      "description": "A login page with a muted background color.",
+      "name": "login-03"
+    },
+    {
+      "description": "A login page with form and image.",
+      "name": "login-04"
+    },
+    {
+      "description": "A simple email-only login page.",
+      "name": "login-05"
+    }
+  ],
+  "otp": [
+    {
+      "description": "A simple OTP verification form.",
+      "name": "otp-01"
+    },
+    {
+      "description": "A two column OTP page with a cover image.",
+      "name": "otp-02"
+    },
+    {
+      "description": "An OTP page with a muted background color.",
+      "name": "otp-03"
+    },
+    {
+      "description": "An OTP page with form and image.",
+      "name": "otp-04"
+    },
+    {
+      "description": "A simple OTP form with social providers.",
+      "name": "otp-05"
+    }
+  ],
+  "sidebar": [
+    {
+      "description": "A simple sidebar with navigation grouped by section.",
+      "name": "sidebar-01"
+    },
+    {
+      "description": "A sidebar with collapsible sections.",
+      "name": "sidebar-02"
+    },
+    {
+      "description": "A sidebar with submenus.",
+      "name": "sidebar-03"
+    },
+    {
+      "description": "A floating sidebar with submenus.",
+      "name": "sidebar-04"
+    },
+    {
+      "description": "A sidebar with collapsible submenus.",
+      "name": "sidebar-05"
+    },
+    {
+      "description": "A sidebar with submenus as dropdowns.",
+      "name": "sidebar-06"
+    },
+    {
+      "description": "A sidebar that collapses to icons.",
+      "name": "sidebar-07"
+    },
+    {
+      "description": "An inset sidebar with secondary navigation.",
+      "name": "sidebar-08"
+    },
+    {
+      "description": "Collapsible nested sidebars.",
+      "name": "sidebar-09"
+    },
+    {
+      "description": "A sidebar in a popover.",
+      "name": "sidebar-10"
+    },
+    {
+      "description": "A sidebar with a collapsible file tree.",
+      "name": "sidebar-11"
+    },
+    {
+      "description": "A sidebar with a calendar.",
+      "name": "sidebar-12"
+    },
+    {
+      "description": "A sidebar in a dialog.",
+      "name": "sidebar-13"
+    },
+    {
+      "description": "A sidebar on the right.",
+      "name": "sidebar-14"
+    },
+    {
+      "description": "A left and right sidebar.",
+      "name": "sidebar-15"
+    },
+    {
+      "description": "A sidebar with a sticky site header.",
+      "name": "sidebar-16"
+    }
+  ],
+  "signup": [
+    {
+      "description": "A simple signup form.",
+      "name": "signup-01"
+    },
+    {
+      "description": "A two column signup page with a cover image.",
+      "name": "signup-02"
+    },
+    {
+      "description": "A signup page with a muted background color.",
+      "name": "signup-03"
+    },
+    {
+      "description": "A signup page with form and image.",
+      "name": "signup-04"
+    },
+    {
+      "description": "A simple signup form with social providers.",
+      "name": "signup-05"
+    }
+  ]
+}

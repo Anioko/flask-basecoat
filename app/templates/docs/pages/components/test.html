@@ -1,0 +1,28 @@
+{% extends 'docs/layout.html' %}
+
+{% block content %}
+<h2>Test Page</h2>
+<p>If you can see this, the routing and templates are working.</p>
+
+<div id="test-output"></div>
+
+<script>
+(function() {
+  const output = document.getElementById('test-output');
+  output.innerHTML = '<p>JavaScript is working!</p>';
+
+  // Test JSON loading
+  fetch('/static/data/kanban_data.json')
+    .then(response => {
+      output.innerHTML += `<p>Fetch status: ${response.status}</p>`;
+      return response.json();
+    })
+    .then(data => {
+      output.innerHTML += `<p>JSON loaded successfully! Found ${data.cards.length} cards</p>`;
+    })
+    .catch(error => {
+      output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+    });
+})();
+</script>
+{% endblock %}

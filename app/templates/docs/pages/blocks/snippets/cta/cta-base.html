@@ -1,0 +1,29 @@
+{% from 'docs/macros/cta_blocks.html' import cta_actions, cta_supporting, cta_split, cta_metrics, cta_inline_form %}
+{% set data = variant.data or {} %}
+{% set layout = data.get('layout', 'centered') %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--cta" data-preview data-cta-layout="{{ layout }}">
+    <header class="cta-block__header">
+      {% if data.get('eyebrow') %}<span class="cta-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
+      <h2 class="cta-block__headline">{{ data.get('headline', 'Ready to get started?') }}</h2>
+      {% if data.get('description') %}<p class="cta-block__description">{{ data['description'] }}</p>{% endif %}
+    </header>
+
+    {% if layout == 'split' %}
+      {{ cta_split(data.get('bullets', []), data.get('media', {})) }}
+      {{ cta_actions(data.get('actions', [])) }}
+    {% elif layout == 'banner' %}
+      <div class="cta-banner">
+        {{ cta_metrics(data.get('metrics', [])) }}
+        {{ cta_actions(data.get('actions', [])) }}
+      </div>
+    {% elif layout == 'inline' %}
+      {{ cta_inline_form(data.get('form', {}), data.get('actions', [])) }}
+    {% else %}
+      {{ cta_actions(data.get('actions', [])) }}
+      {% if data.get('supporting') %}
+      {{ cta_supporting(data['supporting']) }}
+      {% endif %}
+    {% endif %}
+  </div>
+</section>

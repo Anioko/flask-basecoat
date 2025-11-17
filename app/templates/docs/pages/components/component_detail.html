@@ -1,0 +1,140 @@
+{% extends 'docs/layout.html' %}
+{% from 'docs/macros/components.html' import component_showcase, render_button, render_badge, render_card, render_alert, render_avatar, render_input %}
+
+{% block content %}
+<section class="docs-section">
+  <div class="docs-callout docs-callout--info">
+    <h2>{{ component.title }}</h2>
+    <p>{{ component.description }}</p>
+    <p>
+      Shadcn reference:
+      <a class="docs-link" href="{{ component.docs_url }}" target="_blank" rel="noreferrer">{{ component.docs_url }}</a>
+    </p>
+    <p><a class="docs-link" href="{{ url_for('docs.page', slug='components') }}">Back to components overview</a></p>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2>Variants</h2>
+  <p>Different styles and states for the {{ component.title.lower() }} component.</p>
+  
+  <div class="docs-preview docs-preview--components" data-preview>
+    {{ component_showcase(component.name, component.variants) }}
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2>Usage Examples</h2>
+  <p>Here are some practical examples of using the {{ component.title.lower() }} component:</p>
+  
+  {% if component.name == 'button' %}
+  <div class="docs-preview" data-preview>
+    <div class="component-usage">
+      <h4>Form Actions</h4>
+      <div class="component-example">
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+        <button class="btn btn-secondary" type="button">Cancel</button>
+      </div>
+      
+      <h4>Navigation</h4>
+      <div class="component-example">
+        <button class="btn btn-outline" type="button">← Previous</button>
+        <button class="btn btn-primary" type="button">Next →</button>
+      </div>
+      
+      <h4>Destructive Actions</h4>
+      <div class="component-example">
+        <button class="btn btn-destructive" type="button">Delete Item</button>
+        <button class="btn btn-ghost" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  {% elif component.name == 'card' %}
+  <div class="docs-preview" data-preview>
+    <div class="component-usage">
+      <h4>Product Card</h4>
+      <div class="component-example">
+        <div class="card card-interactive">
+          <div class="card-header">
+            <h3 class="card-title">Premium Plan</h3>
+            <p class="card-description">Perfect for growing teams</p>
+          </div>
+          <div class="card-content">
+            <p class="card-price">$29<span>/month</span></p>
+            <ul class="card-features">
+              <li>Unlimited projects</li>
+              <li>Advanced analytics</li>
+              <li>Priority support</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">Get Started</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% elif component.name == 'alert' %}
+  <div class="docs-preview" data-preview>
+    <div class="component-usage">
+      <h4>Form Validation</h4>
+      <div class="component-example">
+        <div class="alert alert-destructive" role="alert">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-content">
+            <h4 class="alert-title">Validation Error</h4>
+            <p class="alert-description">Please check the required fields and try again.</p>
+          </div>
+        </div>
+      </div>
+      
+      <h4>Success Message</h4>
+      <div class="component-example">
+        <div class="alert alert-success" role="alert">
+          <div class="alert-icon">✅</div>
+          <div class="alert-content">
+            <h4 class="alert-title">Success!</h4>
+            <p class="alert-description">Your changes have been saved successfully.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<section class="docs-section">
+  <h2>Implementation Notes</h2>
+  <ul class="docs-list">
+    <li>Components use Basecoat CSS classes for consistent styling</li>
+    <li>All variants support dark mode through CSS custom properties</li>
+    <li>Accessibility attributes are included where appropriate</li>
+    <li>Components are designed to be composable and customizable</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2>Related Components</h2>
+  <p>Other components that work well with {{ component.title.lower() }}:</p>
+  
+  <div class="docs-grid">
+    {% set related_components = {
+      'button': ['badge', 'card', 'alert'],
+      'badge': ['button', 'card', 'avatar'],
+      'card': ['button', 'badge', 'avatar'],
+      'alert': ['button', 'badge'],
+      'avatar': ['badge', 'card'],
+      'input': ['button', 'alert', 'card']
+    } %}
+    
+    {% for related_name in related_components.get(component.name, []) %}
+    <article class="docs-card">
+      <h3><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">{{ related_name|title }}</a></h3>
+      <p><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">View component &rarr;</a></p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { margin: 20px; font-family: system-ui; }
+    #kanban-board {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+      overflow-x: auto;
+      border: 3px solid red; /* Debug border */
+    }
+    .kanban-column {
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      min-height: 300px;
+      width: 350px;
+      min-width: 350px;
+      max-width: 350px;
+      flex-shrink: 0;
+      flex-grow: 0;
+      border: 2px solid blue; /* Debug border */
+    }
+  </style>
+</head>
+<body>
+  <h1>Test Kanban - Columns Should Be HORIZONTAL</h1>
+  <div id="kanban-board">
+    <div class="kanban-column">
+      <h3>Column 1</h3>
+      <p>Card 1</p>
+      <p>Card 2</p>
+    </div>
+    <div class="kanban-column">
+      <h3>Column 2</h3>
+      <p>Card 3</p>
+      <p>Card 4</p>
+    </div>
+    <div class="kanban-column">
+      <h3>Column 3</h3>
+      <p>Card 5</p>
+      <p>Card 6</p>
+    </div>
+    <div class="kanban-column">
+      <h3>Column 4</h3>
+      <p>Card 7</p>
+      <p>Card 8</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2757 @@
+{# Shadcn/ui Component macros for docs previews #}
+
+{%- macro render_button(variant) -%}
+<button class="{{ variant.class }}" type="button">
+  {{ variant.label }}
+</button>
+{%- endmacro -%}
+
+{%- macro render_badge(variant, text="Badge") -%}
+<span class="{{ variant.class }}">{{ text }}</span>
+{%- endmacro -%}
+
+{%- macro render_card(variant) -%}
+<div class="{{ variant.class }}">
+  {%- if variant.get('image') %}
+  <div class="card-image">
+    <img src="{{ variant.image }}" alt="Card image" />
+  </div>
+  {%- endif %}
+  <div class="card-header">
+    <h3 class="card-title">{{ variant.title }}</h3>
+    <p class="card-description">{{ variant.description }}</p>
+  </div>
+  <div class="card-content">
+    <p>{{ variant.content }}</p>
+  </div>
+  <div class="card-footer">
+    <p>{{ variant.footer }}</p>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_alert(variant) -%}
+<div class="{{ variant.class }}" role="alert">
+  <div class="alert-icon">{{ variant.icon }}</div>
+  <div class="alert-content">
+    <h4 class="alert-title">{{ variant.title }}</h4>
+    <p class="alert-description">{{ variant.description }}</p>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_avatar(variant) -%}
+<div class="{{ variant.class }}">
+  {%- if variant.src %}
+  <img src="{{ variant.src }}" alt="{{ variant.alt }}" class="avatar-image" />
+  {%- else %}
+  <span class="avatar-fallback">{{ variant.fallback }}</span>
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_input(variant) -%}
+<div class="input-group">
+  <label class="input-label" for="input-{{ variant.label|lower|replace(' ', '-') }}">{{ variant.label }}</label>
+  <input 
+    id="input-{{ variant.label|lower|replace(' ', '-') }}"
+    class="{{ variant.class }}" 
+    type="{{ variant.type }}" 
+    placeholder="{{ variant.placeholder }}"
+    {% if variant.get('disabled') %}disabled{% endif %}
+  />
+  {%- if variant.get('error') %}
+  <p class="input-error">{{ variant.error }}</p>
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_checkbox(variant) -%}
+<div class="checkbox-group">
+  <label class="checkbox-label">
+    <input 
+      type="checkbox" 
+      class="{{ variant.class }}" 
+      {% if variant.get('checked') %}checked{% endif %}
+      {% if variant.get('disabled') %}disabled{% endif %}
+    />
+    <span class="checkbox-text">{{ variant.label }}</span>
+  </label>
+  {%- if variant.get('help_text') %}
+  <p class="checkbox-help">{{ variant.help_text }}</p>
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_select(variant) -%}
+<div class="select-group">
+  <label class="select-label" for="select-{{ variant.label|lower|replace(' ', '-') }}">{{ variant.label }}</label>
+  <select 
+    id="select-{{ variant.label|lower|replace(' ', '-') }}"
+    class="{{ variant.class }}"
+    {% if variant.get('disabled') %}disabled{% endif %}
+  >
+    {%- if variant.get('placeholder') %}
+    <option value="" disabled {% if not variant.get('selected') %}selected{% endif %}>{{ variant.placeholder }}</option>
+    {%- endif %}
+    {%- for option in variant.get('options', []) %}
+    <option value="{{ option.value }}" {% if variant.get('selected') == option.value %}selected{% endif %}>
+      {{ option.text }}
+    </option>
+    {%- endfor %}
+  </select>
+</div>
+{%- endmacro -%}
+
+{%- macro render_textarea(variant) -%}
+<div class="textarea-group">
+  <label class="textarea-label" for="textarea-{{ variant.label|lower|replace(' ', '-') }}">{{ variant.label }}</label>
+  <textarea
+    id="textarea-{{ variant.label|lower|replace(' ', '-') }}"
+    class="{{ variant.class }}"
+    rows="{{ variant.get('rows', 4) }}"
+    placeholder="{{ variant.get('placeholder', '') }}"
+    {% if variant.get('disabled') %}disabled{% endif %}
+  >{{ variant.get('value', '') }}</textarea>
+</div>
+{%- endmacro -%}
+
+{%- macro render_toggle(variant) -%}
+<div class="toggle-group">
+  <label class="toggle-label">
+    <input 
+      type="checkbox" 
+      class="{{ variant.class }}" 
+      {% if variant.get('checked') %}checked{% endif %}
+      {% if variant.get('disabled') %}disabled{% endif %}
+    />
+    <span class="toggle-slider">
+      {%- if variant.get('off_icon') %}
+      <span class="toggle-icon toggle-off">{{ variant.off_icon }}</span>
+      {%- endif %}
+      {%- if variant.get('on_icon') %}
+      <span class="toggle-icon toggle-on">{{ variant.on_icon }}</span>
+      {%- endif %}
+    </span>
+    <span class="toggle-text">{{ variant.label }}</span>
+  </label>
+</div>
+{%- endmacro -%}
+
+{%- macro render_progress(variant) -%}
+<div class="progress-group">
+  <div class="progress-header">
+    <label class="progress-label">{{ variant.label }}</label>
+    {%- if variant.get('show_label') %}
+    <span class="progress-value">{{ variant.value }}%</span>
+    {%- endif %}
+  </div>
+  <div class="progress-container">
+    {% set percentage = variant.value / variant.max * 100 %}
+    <div class="{{ variant.class }}" role="progressbar" aria-valuenow="{{ variant.value }}" aria-valuemin="0" aria-valuemax="{{ variant.max }}">
+      <div class="progress-bar" style="width: {{ percentage }}%"></div>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro component_showcase(component_name, variants) -%}
+<div class="component-showcase">
+  <h3>{{ component_name|title }} Variants</h3>
+  <div class="component-grid">
+    {%- for variant_name, variant in variants.items() %}
+    <div class="component-example">
+      <h4>{{ variant_name|title }} {{ component_name|title }}</h4>
+      {%- if component_name == 'button' %}
+      {{ render_button(variant) }}
+      {%- elif component_name == 'badge' %}
+      {{ render_badge(variant) }}
+      {%- elif component_name == 'card' %}
+      {{ render_card(variant) }}
+      {%- elif component_name == 'alert' %}
+      {{ render_alert(variant) }}
+      {%- elif component_name == 'avatar' %}
+      {{ render_avatar(variant) }}
+      {%- elif component_name == 'input' %}
+      {{ render_input(variant) }}
+      {%- elif component_name == 'checkbox' %}
+      {{ render_checkbox(variant) }}
+      {%- elif component_name == 'select' %}
+      {{ render_select(variant) }}
+      {%- elif component_name == 'textarea' %}
+      {{ render_textarea(variant) }}
+      {%- elif component_name == 'toggle' %}
+      {{ render_toggle(variant) }}
+      {%- elif component_name == 'progress' %}
+      {{ render_progress(variant) }}
+      {%- elif component_name == 'tooltip' %}
+      {{ render_tooltip(variant) }}
+      {%- elif component_name == 'tabs' %}
+      {{ render_tabs(variant) }}
+      {%- elif component_name == 'dialog' %}
+      {{ render_dialog(variant) }}
+      {%- elif component_name == 'popover' %}
+      {{ render_popover(variant) }}
+      {%- elif component_name == 'breadcrumb' %}
+      {{ render_breadcrumb(variant) }}
+      {%- elif component_name == 'separator' %}
+      {{ render_separator(variant) }}
+      {%- elif component_name == 'command' %}
+      {{ render_command(variant) }}
+      {%- elif component_name == 'dropdown' %}
+      {{ render_dropdown(variant) }}
+      {%- elif component_name == 'menubar' %}
+      {{ render_menubar(variant) }}
+      {%- elif component_name == 'navigation' %}
+      {{ render_navigation(variant) }}
+      {%- elif component_name == 'sheet' %}
+      {{ render_sheet(variant) }}
+      {%- elif component_name == 'skeleton' %}
+      {{ render_skeleton(variant) }}
+      {%- elif component_name == 'slider' %}
+      {{ render_slider(variant) }}
+      {%- elif component_name == 'switch' %}
+      {{ render_switch(variant) }}
+      {%- elif component_name == 'table' %}
+      {{ render_table(variant) }}
+      {%- elif component_name == 'chart' %}
+      {{ render_chart(variant) }}
+      {%- elif component_name == 'datatable' %}
+      {{ render_datatable(variant) }}
+      {%- elif component_name == 'calendar' %}
+      {{ render_calendar(variant) }}
+      {%- elif component_name == 'accordion' %}
+      {{ render_accordion(variant) }}
+      {%- elif component_name == 'carousel' %}
+      {{ render_carousel(variant) }}
+      {%- elif component_name == 'grid' %}
+      {{ render_grid(variant) }}
+      {%- elif component_name == 'wizard' %}
+      {{ render_wizard(variant) }}
+      {%- elif component_name == 'editor' %}
+      {{ render_editor(variant) }}
+      {%- elif component_name == 'fileupload' %}
+      {{ render_fileupload(variant) }}
+      {%- elif component_name == 'autocomplete' %}
+      {{ render_autocomplete(variant) }}
+      {%- elif component_name == 'formvalidation' %}
+      {{ render_formvalidation(variant) }}
+      
+      {%- elif component_name == 'themetoggle' %}
+      {{ render_themetoggle(variant) }}
+      {%- elif component_name == 'colorgenerator' %}
+      {{ render_colorgenerator(variant) }}
+      {%- elif component_name == 'typographyeditor' %}
+      {{ render_typographyeditor(variant) }}
+      {%- elif component_name == 'variantbuilder' %}
+      {{ render_variantbuilder(variant) }}
+      
+      {%- elif component_name == 'animationkit' %}
+      {{ render_animationkit(variant) }}
+      {%- elif component_name == 'loadingstates' %}
+      {{ render_loadingstates(variant) }}
+      {%- elif component_name == 'transitions' %}
+      {{ render_transitions(variant) }}
+      {%- elif component_name == 'scrollanimations' %}
+      {{ render_scrollanimations(variant) }}
+      
+      {%- elif component_name == 'codeexamples' %}
+      {{ render_codeexamples(variant) }}
+      {%- elif component_name == 'apidocs' %}
+      {{ render_apidocs(variant) }}
+      {%- elif component_name == 'searchfilter' %}
+      {{ render_searchfilter(variant) }}
+      {%- elif component_name == 'versionhistory' %}
+      {{ render_versionhistory(variant) }}
+      {%- endif %}
+      {%- if variant.get('description') %}
+      <p class="component-description">{{ variant.description }}</p>
+      {%- endif %}
+    </div>
+    {%- endfor %}
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_tooltip(variant) -%}
+<div class="tooltip-container">
+  <button class="btn btn-outline tooltip-trigger" data-tooltip="{{ variant.text }}" data-placement="{{ variant.placement }}">
+    {{ variant.label }}
+  </button>
+  <div class="tooltip tooltip-{{ variant.placement }} tooltip-{{ variant.get('theme', 'default') }}" role="tooltip">
+    {{ variant.text }}
+    <div class="tooltip-arrow"></div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_tabs(variant) -%}
+<div class="tabs tabs-{{ variant.style }}">
+  <div class="tabs-list" role="tablist">
+    <button class="tabs-trigger tabs-active" role="tab" data-tab="tab1" id="tab-1">
+      Account
+    </button>
+    <button class="tabs-trigger" role="tab" data-tab="tab2" id="tab-2">
+      Password
+    </button>
+    <button class="tabs-trigger" role="tab" data-tab="tab3" id="tab-3">
+      Settings
+    </button>
+  </div>
+  <div class="tabs-content tabs-content-active" role="tabpanel" data-tab="tab1">
+    <div class="space-y-2">
+      <p>Make changes to your account here. Click save when you're done.</p>
+    </div>
+  </div>
+  <div class="tabs-content" role="tabpanel" data-tab="tab2">
+    <div class="space-y-2">
+      <p>Change your password here. After saving, you'll be logged out.</p>
+    </div>
+  </div>
+  <div class="tabs-content" role="tabpanel" data-tab="tab3">
+    <div class="space-y-2">
+      <p>Update your preferences and settings here.</p>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_dialog(variant) -%}
+<div class="dialog-container">
+  <button class="btn btn-default dialog-trigger" data-dialog="dialog-{{ variant.size }}">
+    Open {{ variant.label }} Dialog
+  </button>
+  <div class="dialog dialog-{{ variant.size }}" id="dialog-{{ variant.size }}" role="dialog" aria-hidden="true">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h2 class="dialog-title">Are you absolutely sure?</h2>
+        <button class="dialog-close" aria-label="Close">×</button>
+      </div>
+      <div class="dialog-description">
+        This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+      </div>
+      <div class="dialog-footer">
+        <button class="btn btn-outline">Cancel</button>
+        <button class="btn btn-destructive">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_popover(variant) -%}
+<div class="popover-container">
+  <button class="btn btn-outline popover-trigger" data-popover="popover-{{ variant.placement }}">
+    Open {{ variant.label }} Popover
+  </button>
+  <div class="popover popover-{{ variant.placement }}" id="popover-{{ variant.placement }}" role="dialog">
+    <div class="popover-content">
+      <div class="popover-header">
+        <h3 class="popover-title">Dimensions</h3>
+      </div>
+      <div class="popover-body">Set the dimensions for the layer.</div>
+      <div class="popover-arrow"></div>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_breadcrumb(variant) -%}
+<nav class="breadcrumb breadcrumb-{{ variant.separator|replace('/', 'slash')|replace('>', 'chevron')|replace('•', 'dot') }}" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a href="#" class="breadcrumb-link">Home</a>
+      <span class="breadcrumb-separator" aria-hidden="true">{{ variant.separator }}</span>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="#" class="breadcrumb-link">Components</a>
+      <span class="breadcrumb-separator" aria-hidden="true">{{ variant.separator }}</span>
+    </li>
+    <li class="breadcrumb-item breadcrumb-current">
+      <span class="breadcrumb-text">Breadcrumb</span>
+    </li>
+  </ol>
+</nav>
+{%- endmacro -%}
+
+{%- macro render_separator(variant) -%}
+<div class="separator separator-{{ variant.orientation }}" 
+     role="separator" 
+     aria-orientation="{{ variant.orientation }}">
+</div>
+{%- endmacro -%}
+
+{%- macro render_command(variant) -%}
+<div class="command command-{{ variant.get('type', 'default') }}">
+  <div class="command-input">
+    <input type="text" placeholder="{{ variant.placeholder }}" class="command-search">
+  </div>
+  <div class="command-list">
+    <div class="command-group">
+      <div class="command-group-heading">Suggestions</div>
+      <div class="command-item">Calendar</div>
+      <div class="command-item">Search Emoji</div>
+      <div class="command-item">Calculator</div>
+    </div>
+    <div class="command-group">
+      <div class="command-group-heading">Settings</div>
+      <div class="command-item">Profile</div>
+      <div class="command-item">Billing</div>
+      <div class="command-item">Settings</div>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_dropdown(variant) -%}
+<div class="dropdown">
+  <button class="btn btn-outline dropdown-trigger">{{ variant.trigger }}</button>
+  <div class="dropdown-content">
+    <div class="dropdown-item">Profile</div>
+    <div class="dropdown-item">Billing</div>
+    <div class="dropdown-item">Team</div>
+    {%- if variant.get('separators') %}
+    <div class="dropdown-separator"></div>
+    {%- endif %}
+    <div class="dropdown-item">Subscription</div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_menubar(variant) -%}
+<div class="menubar">
+  {%- for menu in variant.menus %}
+  <div class="menubar-menu">
+    <button class="menubar-trigger">{{ menu }}</button>
+    <div class="menubar-content">
+      <div class="menubar-item">New Tab</div>
+      <div class="menubar-item">New Window</div>
+      <div class="menubar-separator"></div>
+      <div class="menubar-item">Share</div>
+      <div class="menubar-separator"></div>
+      <div class="menubar-item">Print</div>
+    </div>
+  </div>
+  {%- endfor %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_navigation(variant) -%}
+<nav class="navigation navigation-{{ variant.orientation }}">
+  <ul class="navigation-list">
+    <li class="navigation-item">
+      <a href="#" class="navigation-link navigation-active">Getting Started</a>
+    </li>
+    <li class="navigation-item">
+      <a href="#" class="navigation-link">Installation</a>
+    </li>
+    <li class="navigation-item">
+      <a href="#" class="navigation-link">Typography</a>
+    </li>
+  </ul>
+</nav>
+{%- endmacro -%}
+
+{%- macro render_sheet(variant) -%}
+<div class="sheet-container">
+  <button class="btn btn-outline sheet-trigger" data-sheet="sheet-{{ variant.side }}">
+    Open {{ variant.label }}
+  </button>
+  <div class="sheet sheet-{{ variant.side }}" id="sheet-{{ variant.side }}" aria-hidden="true">
+    <div class="sheet-overlay"></div>
+    <div class="sheet-content">
+      <div class="sheet-header">
+        <h2 class="sheet-title">{{ variant.label }}</h2>
+        <button class="sheet-close">×</button>
+      </div>
+      <div class="sheet-body">
+        <p>This is the {{ variant.label }} content.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_skeleton(variant) -%}
+<div class="skeleton-container">
+  {%- if variant.get('avatar') %}
+  <div class="skeleton skeleton-avatar"></div>
+  {%- endif %}
+  {%- if variant.get('type') == 'card' %}
+  <div class="skeleton skeleton-card">
+    <div class="skeleton skeleton-line skeleton-title"></div>
+    <div class="skeleton skeleton-line"></div>
+    <div class="skeleton skeleton-line skeleton-short"></div>
+  </div>
+  {%- else %}
+  {%- for i in range(variant.get('lines', 3)) %}
+  <div class="skeleton skeleton-line{% if loop.last %} skeleton-short{% endif %}"></div>
+  {%- endfor %}
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_slider(variant) -%}
+<div class="slider-container">
+  <div class="slider-label">{{ variant.label }}</div>
+  <div class="slider-track">
+    <input type="range" 
+           class="slider-input" 
+           min="{{ variant.min }}" 
+           max="{{ variant.max }}" 
+           {%- if variant.get('step') %}
+           step="{{ variant.step }}"
+           {%- endif %}
+           value="{{ variant.value if variant.value is number else variant.value[0] }}">
+    <div class="slider-thumb"></div>
+    <div class="slider-range"></div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_switch(variant) -%}
+<div class="switch-container">
+  <label class="switch-label">
+    <input type="checkbox" 
+           class="switch-input" 
+           {%- if variant.get('checked') %}checked{% endif %}
+           {%- if variant.get('disabled') %}disabled{% endif %}>
+    <span class="switch-slider">
+      <span class="switch-thumb"></span>
+    </span>
+    <span class="switch-text">{{ variant.label }}</span>
+  </label>
+</div>
+{%- endmacro -%}
+
+{%- macro render_table(variant) -%}
+<div class="table-container">
+  <table class="table{% if variant.get('striped') %} table-striped{% endif %}{% if variant.get('hoverable') %} table-hoverable{% endif %}">
+    <thead class="table-header">
+      <tr class="table-row">
+        <th class="table-head">Invoice</th>
+        <th class="table-head">Status</th>
+        <th class="table-head">Method</th>
+        <th class="table-head">Amount</th>
+      </tr>
+    </thead>
+    <tbody class="table-body">
+      <tr class="table-row">
+        <td class="table-cell">INV001</td>
+        <td class="table-cell">Paid</td>
+        <td class="table-cell">Credit Card</td>
+        <td class="table-cell">$250.00</td>
+      </tr>
+      <tr class="table-row">
+        <td class="table-cell">INV002</td>
+        <td class="table-cell">Pending</td>
+        <td class="table-cell">PayPal</td>
+        <td class="table-cell">$150.00</td>
+      </tr>
+      <tr class="table-row">
+        <td class="table-cell">INV003</td>
+        <td class="table-cell">Unpaid</td>
+        <td class="table-cell">Bank Transfer</td>
+        <td class="table-cell">$350.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{%- endmacro -%}
+
+{%- macro render_chart(variant) -%}
+<div class="chart-container" data-chart-type="{{ variant.type }}">
+  <div class="chart-header">
+    <h4 class="chart-title">{{ variant.label }}</h4>
+  </div>
+  <div class="chart-content">
+    {%- if variant.type == 'line' %}
+    <svg class="chart chart-line" viewBox="0 0 400 200">
+      <polyline points="20,150 80,120 120,80 160,100 200,60 240,90 280,40 320,70 360,30" 
+                fill="none" stroke="rgba(59, 130, 246, 1)" stroke-width="2"/>
+      <g class="chart-dots">
+        <circle cx="20" cy="150" r="3" fill="rgba(59, 130, 246, 1)"/>
+        <circle cx="80" cy="120" r="3" fill="rgba(59, 130, 246, 1)"/>
+        <circle cx="120" cy="80" r="3" fill="rgba(59, 130, 246, 1)"/>
+        <circle cx="160" cy="100" r="3" fill="rgba(59, 130, 246, 1)"/>
+        <circle cx="200" cy="60" r="3" fill="rgba(59, 130, 246, 1)"/>
+        <circle cx="240" cy="90" r="3" fill="rgba(59, 130, 246, 1)"/>
+        <circle cx="280" cy="40" r="3" fill="rgba(59, 130, 246, 1)"/>
+      </g>
+    </svg>
+    {%- elif variant.type == 'bar' %}
+    <svg class="chart chart-bar" viewBox="0 0 400 200">
+      <rect x="40" y="120" width="40" height="60" fill="rgba(59, 130, 246, 1)"/>
+      <rect x="100" y="80" width="40" height="100" fill="rgba(59, 130, 246, 1)"/>
+      <rect x="160" y="100" width="40" height="80" fill="rgba(59, 130, 246, 1)"/>
+      <rect x="220" y="60" width="40" height="120" fill="rgba(59, 130, 246, 1)"/>
+      <rect x="280" y="140" width="40" height="40" fill="rgba(59, 130, 246, 1)"/>
+    </svg>
+    {%- elif variant.type == 'pie' %}
+    <svg class="chart chart-pie" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="80" fill="rgba(59, 130, 246, 1)" 
+              stroke-dasharray="125.6 376.8" stroke-dashoffset="0" 
+              stroke="rgba(34, 197, 94, 1)" stroke-width="80"/>
+      <circle cx="100" cy="100" r="80" fill="transparent" 
+              stroke-dasharray="94.2 408.2" stroke-dashoffset="-125.6" 
+              stroke="rgba(239, 68, 68, 1)" stroke-width="80"/>
+      <circle cx="100" cy="100" r="80" fill="transparent" 
+              stroke-dasharray="62.8 439.6" stroke-dashoffset="-219.8" 
+              stroke="rgba(245, 158, 11, 1)" stroke-width="80"/>
+    </svg>
+    {%- elif variant.type == 'area' %}
+    <svg class="chart chart-area" viewBox="0 0 400 200">
+      <defs>
+        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:rgba(59, 130, 246, 0.3)"/>
+          <stop offset="100%" style="stop-color:rgba(59, 130, 246, 0.0)"/>
+        </linearGradient>
+      </defs>
+      <path d="M20,150 L80,120 L120,80 L160,100 L200,60 L240,90 L280,40 L320,70 L360,30 L360,180 L20,180 Z" 
+            fill="url(#areaGradient)"/>
+      <polyline points="20,150 80,120 120,80 160,100 200,60 240,90 280,40 320,70 360,30" 
+                fill="none" stroke="rgba(59, 130, 246, 1)" stroke-width="2"/>
+    </svg>
+    {%- endif %}
+  </div>
+  <div class="chart-legend">
+    <div class="legend-item">
+      <span class="legend-color" style="background: rgba(59, 130, 246, 1);"></span>
+      <span class="legend-label">Data Series</span>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_datatable(variant) -%}
+<div class="datatable-container">
+  <div class="datatable-header">
+    <div class="datatable-search">
+      <input type="search" placeholder="Search..." class="datatable-search-input">
+    </div>
+    <div class="datatable-filters">
+      <select class="datatable-filter">
+        <option>All Status</option>
+        <option>Active</option>
+        <option>Inactive</option>
+      </select>
+    </div>
+  </div>
+  <div class="datatable-wrapper">
+    <table class="datatable">
+      <thead class="datatable-head">
+        <tr>
+          <th class="datatable-header-cell sortable" data-sort="name">
+            Name <span class="sort-indicator">↕</span>
+          </th>
+          <th class="datatable-header-cell sortable" data-sort="email">
+            Email <span class="sort-indicator">↕</span>
+          </th>
+          <th class="datatable-header-cell sortable" data-sort="status">
+            Status <span class="sort-indicator">↕</span>
+          </th>
+          <th class="datatable-header-cell">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="datatable-body">
+        <tr class="datatable-row">
+          <td class="datatable-cell">John Doe</td>
+          <td class="datatable-cell">john@example.com</td>
+          <td class="datatable-cell"><span class="badge badge-success">Active</span></td>
+          <td class="datatable-cell">
+            <button class="btn btn-sm btn-outline">Edit</button>
+          </td>
+        </tr>
+        <tr class="datatable-row">
+          <td class="datatable-cell">Jane Smith</td>
+          <td class="datatable-cell">jane@example.com</td>
+          <td class="datatable-cell"><span class="badge badge-secondary">Inactive</span></td>
+          <td class="datatable-cell">
+            <button class="btn btn-sm btn-outline">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="datatable-footer">
+    <div class="datatable-info">Showing 1-2 of 2 entries</div>
+    <div class="datatable-pagination">
+      <button class="btn btn-sm btn-outline" disabled>Previous</button>
+      <button class="btn btn-sm btn-primary">1</button>
+      <button class="btn btn-sm btn-outline" disabled>Next</button>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_calendar(variant) -%}
+<div class="calendar-container" data-type="{{ variant.type }}">
+  {%- if variant.type == 'picker' %}
+  <div class="datepicker">
+    <input type="text" class="datepicker-input" placeholder="Select date..." readonly>
+    <div class="datepicker-popup">
+      <div class="calendar-header">
+        <button class="calendar-nav-btn">‹</button>
+        <span class="calendar-title">November 2025</span>
+        <button class="calendar-nav-btn">›</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-weekdays">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="calendar-days">
+          {%- for day in range(1, 31) %}
+          <button class="calendar-day{% if day == 16 %} calendar-day-today{% endif %}{% if day == 20 %} calendar-day-selected{% endif %}">
+            {{ day }}
+          </button>
+          {%- endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- else %}
+  <div class="calendar">
+    <div class="calendar-header">
+      <button class="calendar-nav-btn">‹</button>
+      <span class="calendar-title">November 2025</span>
+      <button class="calendar-nav-btn">›</button>
+    </div>
+    <div class="calendar-grid">
+      <div class="calendar-weekdays">
+        <span>Sunday</span><span>Monday</span><span>Tuesday</span><span>Wednesday</span><span>Thursday</span><span>Friday</span><span>Saturday</span>
+      </div>
+      <div class="calendar-days">
+        {%- for day in range(1, 31) %}
+        <button class="calendar-day{% if day == 16 %} calendar-day-today{% endif %}">
+          {{ day }}
+        </button>
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_accordion(variant) -%}
+<div class="accordion{% if variant.get('style') %} accordion-{{ variant.style }}{% endif %}" 
+     data-multiple="{{ variant.get('multiple', false)|lower }}">
+  <div class="accordion-item">
+    <button class="accordion-trigger accordion-open" data-target="item1">
+      <span>Is it accessible?</span>
+      <span class="accordion-icon">▼</span>
+    </button>
+    <div class="accordion-content accordion-content-open" id="item1">
+      <div class="accordion-body">
+        Yes. It adheres to the WAI-ARIA design pattern and is fully accessible via keyboard navigation.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <button class="accordion-trigger" data-target="item2">
+      <span>Is it styled?</span>
+      <span class="accordion-icon">▼</span>
+    </button>
+    <div class="accordion-content" id="item2">
+      <div class="accordion-body">
+        Yes. It comes with default styles that matches the other components' aesthetic.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <button class="accordion-trigger" data-target="item3">
+      <span>Is it animated?</span>
+      <span class="accordion-icon">▼</span>
+    </button>
+    <div class="accordion-content" id="item3">
+      <div class="accordion-body">
+        Yes. It's animated by default, but you can disable it if you prefer.
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_carousel(variant) -%}
+<div class="carousel{% if variant.get('autoplay') %} carousel-autoplay{% endif %}" 
+     data-autoplay="{{ variant.get('autoplay', false)|lower }}">
+  <div class="carousel-container">
+    <div class="carousel-track">
+      <div class="carousel-slide carousel-slide-active">
+        <img src="https://via.placeholder.com/400x200/3b82f6/ffffff?text=Slide+1" alt="Slide 1">
+      </div>
+      <div class="carousel-slide">
+        <img src="https://via.placeholder.com/400x200/ef4444/ffffff?text=Slide+2" alt="Slide 2">
+      </div>
+      <div class="carousel-slide">
+        <img src="https://via.placeholder.com/400x200/22c55e/ffffff?text=Slide+3" alt="Slide 3">
+      </div>
+    </div>
+    <button class="carousel-nav carousel-prev">‹</button>
+    <button class="carousel-nav carousel-next">›</button>
+  </div>
+  {%- if variant.get('indicators') %}
+  <div class="carousel-indicators">
+    {%- if variant.indicators == 'dots' %}
+    <button class="carousel-dot carousel-dot-active" data-slide="0"></button>
+    <button class="carousel-dot" data-slide="1"></button>
+    <button class="carousel-dot" data-slide="2"></button>
+    {%- elif variant.indicators == 'thumbnails' %}
+    <div class="carousel-thumbnails">
+      <img src="https://via.placeholder.com/60x40/3b82f6" alt="Thumbnail 1" class="carousel-thumb carousel-thumb-active">
+      <img src="https://via.placeholder.com/60x40/ef4444" alt="Thumbnail 2" class="carousel-thumb">
+      <img src="https://via.placeholder.com/60x40/22c55e" alt="Thumbnail 3" class="carousel-thumb">
+    </div>
+    {%- endif %}
+  </div>
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_grid(variant) -%}
+<div class="grid grid-{{ variant.type }}">
+  {%- if variant.type == 'masonry' %}
+  <div class="grid-item grid-item-tall">
+    <div class="grid-content">
+      <h4>Card 1</h4>
+      <p>This is a taller card with more content to demonstrate the masonry layout.</p>
+    </div>
+  </div>
+  <div class="grid-item">
+    <div class="grid-content">
+      <h4>Card 2</h4>
+      <p>Short content.</p>
+    </div>
+  </div>
+  <div class="grid-item grid-item-medium">
+    <div class="grid-content">
+      <h4>Card 3</h4>
+      <p>Medium content height.</p>
+    </div>
+  </div>
+  <div class="grid-item">
+    <div class="grid-content">
+      <h4>Card 4</h4>
+      <p>Another short card.</p>
+    </div>
+  </div>
+  {%- elif variant.type == 'responsive' %}
+  {%- for i in range(1, 7) %}
+  <div class="grid-item">
+    <div class="grid-content">
+      <h4>Item {{ i }}</h4>
+      <p>Responsive grid item that adapts to screen size.</p>
+    </div>
+  </div>
+  {%- endfor %}
+  {%- else %}
+  {%- for i in range(1, 9) %}
+  <div class="grid-item">
+    <div class="grid-content">
+      <h4>Fixed {{ i }}</h4>
+      <p>Fixed size grid item.</p>
+    </div>
+  </div>
+  {%- endfor %}
+  {%- endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_wizard(variant) -%}
+<div class="wizard" data-steps="{{ variant.steps }}">
+  <div class="wizard-content">
+    <div class="wizard-step wizard-step-active" data-step="1">
+      <h3>Step 1: Personal Information</h3>
+      <div class="form-grid">
+        <div class="input-group">
+          <label class="input-label">First Name</label>
+          <input type="text" class="input" placeholder="Enter first name">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="wizard-navigation">
+    <button class="btn btn-outline wizard-prev" disabled>Previous</button>
+    <button class="btn btn-primary wizard-next">Next</button>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_editor(variant) -%}
+<div class="rich-editor">
+  <div class="editor-toolbar">
+    <button class="toolbar-btn"><strong>B</strong></button>
+    <button class="toolbar-btn"><em>I</em></button>
+    <button class="toolbar-btn"><u>U</u></button>
+  </div>
+  <div class="editor-content" contenteditable="true">
+    <p>This is a rich text editor.</p>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_fileupload(variant) -%}
+<div class="file-upload">
+  <div class="upload-area">
+    <div class="upload-content">
+      <div class="upload-icon">📁</div>
+      <p><strong>Click to upload</strong> or drag and drop</p>
+    </div>
+    <input type="file" class="upload-input">
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_autocomplete(variant) -%}
+<div class="autocomplete">
+  <input type="text" class="autocomplete-input" placeholder="Search...">
+  <div class="autocomplete-dropdown">
+    <div class="autocomplete-option">JavaScript</div>
+    <div class="autocomplete-option">TypeScript</div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro render_formvalidation(variant) -%}
+<div class="form-validation">
+  <form class="validation-form">
+    <div class="input-group">
+      <label class="input-label">Email *</label>
+      <input type="email" class="input" required>
+      <div class="input-feedback"></div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{%- endmacro -%}
+
+{# Theme System Components #}
+{%- macro render_themetoggle(variant) -%}
+<div class="theme-toggle" data-theme-toggle>
+  {% if variant.get('style') == 'compact' %}
+    <button type="button" class="theme-btn theme-btn-compact" data-theme="auto">
+      <span class="theme-icon">🌓</span>
+      <span class="sr-only">Toggle theme</span>
+    </button>
+  {% elif variant.get('style') == 'icon-only' %}
+    <button type="button" class="theme-btn theme-btn-icon" data-theme="auto">
+      <span class="theme-icon theme-icon-light">☀️</span>
+      <span class="theme-icon theme-icon-dark">🌙</span>
+    </button>
+  {% else %}
+    <div class="theme-selector">
+      <button type="button" class="theme-option" data-theme="light">
+        <span class="theme-icon">☀️</span>
+        <span class="theme-label">Light</span>
+      </button>
+      <button type="button" class="theme-option theme-option-active" data-theme="auto">
+        <span class="theme-icon">🌓</span>
+        <span class="theme-label">Auto</span>
+      </button>
+      <button type="button" class="theme-option" data-theme="dark">
+        <span class="theme-icon">🌙</span>
+        <span class="theme-label">Dark</span>
+      </button>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_colorgenerator(variant) -%}
+<div class="color-generator" data-color-generator>
+  {% if variant.get('type') == 'wheel' %}
+    <div class="color-wheel-container">
+      <div class="color-wheel">
+        <canvas class="wheel-canvas" width="200" height="200"></canvas>
+        <div class="wheel-picker"></div>
+      </div>
+      <div class="color-info">
+        <div class="color-preview"></div>
+        <div class="color-values">
+          <div class="input-group">
+            <label class="label">HEX</label>
+            <input type="text" class="input color-hex" value="#3b82f6">
+          </div>
+          <div class="input-group">
+            <label class="label">RGB</label>
+            <input type="text" class="input color-rgb" value="59, 130, 246">
+          </div>
+          <div class="input-group">
+            <label class="label">HSL</label>
+            <input type="text" class="input color-hsl" value="217, 91%, 60%">
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'swatches' %}
+    <div class="color-swatches">
+      <div class="swatch-grid">
+        <div class="color-swatch" style="background: #ef4444;" data-color="#ef4444"></div>
+        <div class="color-swatch" style="background: #f97316;" data-color="#f97316"></div>
+        <div class="color-swatch" style="background: #eab308;" data-color="#eab308"></div>
+        <div class="color-swatch" style="background: #22c55e;" data-color="#22c55e"></div>
+        <div class="color-swatch" style="background: #06b6d4;" data-color="#06b6d4"></div>
+        <div class="color-swatch" style="background: #3b82f6;" data-color="#3b82f6"></div>
+        <div class="color-swatch" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
+        <div class="color-swatch" style="background: #ec4899;" data-color="#ec4899"></div>
+      </div>
+      <div class="selected-color">
+        <div class="color-display" style="background: #3b82f6;"></div>
+        <span class="color-code">#3b82f6</span>
+      </div>
+    </div>
+  {% else %}
+    <div class="palette-builder">
+      <div class="palette-controls">
+        <button type="button" class="btn btn-primary" data-action="add-color">Add Color</button>
+        <button type="button" class="btn btn-secondary" data-action="generate">Generate</button>
+        <button type="button" class="btn btn-secondary" data-action="export">Export</button>
+      </div>
+      <div class="palette-colors">
+        <div class="palette-item">
+          <div class="color-block" style="background: #3b82f6;"></div>
+          <input type="text" class="color-input" value="#3b82f6">
+          <button type="button" class="remove-color">×</button>
+        </div>
+        <div class="palette-item">
+          <div class="color-block" style="background: #1e40af;"></div>
+          <input type="text" class="color-input" value="#1e40af">
+          <button type="button" class="remove-color">×</button>
+        </div>
+        <div class="palette-item">
+          <div class="color-block" style="background: #93c5fd;"></div>
+          <input type="text" class="color-input" value="#93c5fd">
+          <button type="button" class="remove-color">×</button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_typographyeditor(variant) -%}
+<div class="typography-editor" data-typography-editor>
+  {% if variant.get('mode') == 'scale' %}
+    <div class="type-scale-editor">
+      <div class="scale-controls">
+        <div class="input-group">
+          <label class="label">Base Size</label>
+          <input type="range" class="range" min="12" max="24" value="16" data-control="base-size">
+          <span class="value">16px</span>
+        </div>
+        <div class="input-group">
+          <label class="label">Scale Ratio</label>
+          <select class="select" data-control="scale-ratio">
+            <option value="1.125">1.125 - Major Second</option>
+            <option value="1.25" selected>1.25 - Major Third</option>
+            <option value="1.333">1.333 - Perfect Fourth</option>
+            <option value="1.5">1.5 - Perfect Fifth</option>
+            <option value="1.618">1.618 - Golden Ratio</option>
+          </select>
+        </div>
+      </div>
+      <div class="scale-preview">
+        <div class="type-sample" data-size="xs">Text XS (12px)</div>
+        <div class="type-sample" data-size="sm">Text SM (14px)</div>
+        <div class="type-sample" data-size="base">Text Base (16px)</div>
+        <div class="type-sample" data-size="lg">Text LG (20px)</div>
+        <div class="type-sample" data-size="xl">Text XL (25px)</div>
+        <div class="type-sample" data-size="2xl">Text 2XL (31px)</div>
+      </div>
+    </div>
+  {% elif variant.get('mode') == 'fonts' %}
+    <div class="font-selector">
+      <div class="font-categories">
+        <button type="button" class="category-btn category-btn-active" data-category="sans">Sans Serif</button>
+        <button type="button" class="category-btn" data-category="serif">Serif</button>
+        <button type="button" class="category-btn" data-category="mono">Monospace</button>
+      </div>
+      <div class="font-grid">
+        <div class="font-option font-option-active" data-font="Inter">
+          <div class="font-preview" style="font-family: Inter;">The quick brown fox</div>
+          <div class="font-name">Inter</div>
+        </div>
+        <div class="font-option" data-font="Roboto">
+          <div class="font-preview" style="font-family: Roboto;">The quick brown fox</div>
+          <div class="font-name">Roboto</div>
+        </div>
+        <div class="font-option" data-font="Open Sans">
+          <div class="font-preview" style="font-family: 'Open Sans';">The quick brown fox</div>
+          <div class="font-name">Open Sans</div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-styles-editor">
+      <div class="style-controls">
+        <div class="control-group">
+          <label class="label">Font Weight</label>
+          <select class="select" data-style="font-weight">
+            <option value="300">Light</option>
+            <option value="400" selected>Regular</option>
+            <option value="500">Medium</option>
+            <option value="600">Semi Bold</option>
+            <option value="700">Bold</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="label">Letter Spacing</label>
+          <input type="range" class="range" min="-0.05" max="0.1" step="0.01" value="0" data-style="letter-spacing">
+        </div>
+        <div class="control-group">
+          <label class="label">Line Height</label>
+          <input type="range" class="range" min="1" max="2" step="0.1" value="1.5" data-style="line-height">
+        </div>
+      </div>
+      <div class="style-preview">
+        <p class="preview-text" data-style-target>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+        </p>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_variantbuilder(variant) -%}
+<div class="variant-builder" data-variant-builder>
+  {% if variant.get('type') == 'colors' %}
+    <div class="color-variant-builder">
+      <div class="variant-controls">
+        <h4>Color Variants</h4>
+        <div class="base-color">
+          <label class="label">Base Color</label>
+          <input type="color" class="color-picker" value="#3b82f6" data-base-color>
+        </div>
+        <div class="variant-options">
+          <label class="checkbox">
+            <input type="checkbox" checked data-variant="light">
+            <span class="checkmark"></span>
+            Light variant
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" checked data-variant="dark">
+            <span class="checkmark"></span>
+            Dark variant
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" data-variant="muted">
+            <span class="checkmark"></span>
+            Muted variant
+          </label>
+        </div>
+      </div>
+      <div class="variant-preview">
+        <div class="color-variants">
+          <div class="variant-item" data-variant-type="original">
+            <div class="color-sample" style="background: #3b82f6;"></div>
+            <span class="variant-label">Original</span>
+            <code class="color-code">#3b82f6</code>
+          </div>
+          <div class="variant-item" data-variant-type="light">
+            <div class="color-sample" style="background: #93c5fd;"></div>
+            <span class="variant-label">Light</span>
+            <code class="color-code">#93c5fd</code>
+          </div>
+          <div class="variant-item" data-variant-type="dark">
+            <div class="color-sample" style="background: #1e40af;"></div>
+            <span class="variant-label">Dark</span>
+            <code class="color-code">#1e40af</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'sizes' %}
+    <div class="size-variant-builder">
+      <div class="size-controls">
+        <h4>Size Variants</h4>
+        <div class="base-size">
+          <label class="label">Base Size</label>
+          <input type="range" class="range" min="8" max="32" value="16" data-base-size>
+          <span class="size-value">16px</span>
+        </div>
+        <div class="scale-factor">
+          <label class="label">Scale Factor</label>
+          <input type="range" class="range" min="0.5" max="2" step="0.25" value="1.25" data-scale-factor>
+          <span class="scale-value">1.25</span>
+        </div>
+      </div>
+      <div class="size-preview">
+        <div class="size-variants">
+          <button class="btn btn-xs">Extra Small</button>
+          <button class="btn btn-sm">Small</button>
+          <button class="btn btn-md">Medium</button>
+          <button class="btn btn-lg">Large</button>
+          <button class="btn btn-xl">Extra Large</button>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="style-variant-builder">
+      <div class="style-controls">
+        <h4>Style Variants</h4>
+        <div class="style-options">
+          <div class="control-group">
+            <label class="label">Border Radius</label>
+            <input type="range" class="range" min="0" max="20" value="6" data-style="border-radius">
+          </div>
+          <div class="control-group">
+            <label class="label">Border Width</label>
+            <input type="range" class="range" min="0" max="4" value="1" data-style="border-width">
+          </div>
+          <div class="control-group">
+            <label class="label">Shadow Intensity</label>
+            <input type="range" class="range" min="0" max="3" value="1" data-style="shadow">
+          </div>
+        </div>
+      </div>
+      <div class="style-preview">
+        <div class="preview-grid">
+          <div class="preview-item" data-style-target>
+            <div class="preview-element">Sample Element</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{# Animation Library Components #}
+{%- macro render_animationkit(variant) -%}
+<div class="animation-kit" data-animation-kit>
+  {% if variant.get('type') == 'fade' %}
+    <div class="animation-demo-grid">
+      <div class="demo-item">
+        <div class="demo-element fade-element" data-animation="fade-in">Fade In</div>
+        <button type="button" class="demo-trigger" data-trigger="fade-in">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element fade-element" data-animation="fade-out">Fade Out</div>
+        <button type="button" class="demo-trigger" data-trigger="fade-out">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element fade-element" data-animation="fade-in-up">Fade In Up</div>
+        <button type="button" class="demo-trigger" data-trigger="fade-in-up">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element fade-element" data-animation="fade-in-down">Fade In Down</div>
+        <button type="button" class="demo-trigger" data-trigger="fade-in-down">Trigger</button>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'slide' %}
+    <div class="animation-demo-grid">
+      <div class="demo-item">
+        <div class="demo-element slide-element" data-animation="slide-in-left">Slide Left</div>
+        <button type="button" class="demo-trigger" data-trigger="slide-in-left">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element slide-element" data-animation="slide-in-right">Slide Right</div>
+        <button type="button" class="demo-trigger" data-trigger="slide-in-right">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element slide-element" data-animation="slide-up">Slide Up</div>
+        <button type="button" class="demo-trigger" data-trigger="slide-up">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element slide-element" data-animation="slide-down">Slide Down</div>
+        <button type="button" class="demo-trigger" data-trigger="slide-down">Trigger</button>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'scale' %}
+    <div class="animation-demo-grid">
+      <div class="demo-item">
+        <div class="demo-element scale-element" data-animation="scale-in">Scale In</div>
+        <button type="button" class="demo-trigger" data-trigger="scale-in">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element scale-element" data-animation="scale-out">Scale Out</div>
+        <button type="button" class="demo-trigger" data-trigger="scale-out">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element scale-element" data-animation="zoom-in">Zoom In</div>
+        <button type="button" class="demo-trigger" data-trigger="zoom-in">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element scale-element" data-animation="bounce-in">Bounce In</div>
+        <button type="button" class="demo-trigger" data-trigger="bounce-in">Trigger</button>
+      </div>
+    </div>
+  {% else %}
+    <div class="animation-demo-grid">
+      <div class="demo-item">
+        <div class="demo-element rotate-element" data-animation="rotate-in">Rotate In</div>
+        <button type="button" class="demo-trigger" data-trigger="rotate-in">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element rotate-element" data-animation="flip-in-x">Flip X</div>
+        <button type="button" class="demo-trigger" data-trigger="flip-in-x">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element rotate-element" data-animation="flip-in-y">Flip Y</div>
+        <button type="button" class="demo-trigger" data-trigger="flip-in-y">Trigger</button>
+      </div>
+      <div class="demo-item">
+        <div class="demo-element rotate-element" data-animation="swing">Swing</div>
+        <button type="button" class="demo-trigger" data-trigger="swing">Trigger</button>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_loadingstates(variant) -%}
+<div class="loading-states" data-loading-states>
+  {% if variant.get('type') == 'spinner' %}
+    <div class="loading-demo">
+      <div class="spinner-grid">
+        <div class="spinner-item">
+          <div class="spinner spinner-circle"></div>
+          <span class="spinner-label">Circle</span>
+        </div>
+        <div class="spinner-item">
+          <div class="spinner spinner-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span class="spinner-label">Dots</span>
+        </div>
+        <div class="spinner-item">
+          <div class="spinner spinner-bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+          <span class="spinner-label">Bars</span>
+        </div>
+        <div class="spinner-item">
+          <div class="spinner spinner-ring"></div>
+          <span class="spinner-label">Ring</span>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'skeleton' %}
+    <div class="skeleton-demo">
+      <div class="skeleton-card">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line skeleton-line-title"></div>
+          <div class="skeleton-line skeleton-line-text"></div>
+          <div class="skeleton-line skeleton-line-text skeleton-line-short"></div>
+        </div>
+      </div>
+      <div class="skeleton-list">
+        <div class="skeleton-item">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-text">
+            <div class="skeleton-line skeleton-line-medium"></div>
+            <div class="skeleton-line skeleton-line-small"></div>
+          </div>
+        </div>
+        <div class="skeleton-item">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-text">
+            <div class="skeleton-line skeleton-line-medium"></div>
+            <div class="skeleton-line skeleton-line-small"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'pulse' %}
+    <div class="pulse-demo">
+      <div class="pulse-grid">
+        <div class="pulse-item pulse-slow">Slow Pulse</div>
+        <div class="pulse-item pulse-medium">Medium Pulse</div>
+        <div class="pulse-item pulse-fast">Fast Pulse</div>
+        <div class="pulse-item pulse-breathing">Breathing</div>
+      </div>
+    </div>
+  {% else %}
+    <div class="progress-demo">
+      <div class="progress-loading">
+        <div class="progress-bar">
+          <div class="progress-fill progress-animated"></div>
+        </div>
+        <span class="progress-text">Loading... <span class="progress-percentage">45%</span></span>
+      </div>
+      <div class="progress-circular">
+        <svg class="circular-progress" viewBox="0 0 36 36">
+          <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+          <path class="circle-progress" stroke-dasharray="60, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+        </svg>
+        <div class="progress-text">60%</div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_transitions(variant) -%}
+<div class="transitions" data-transitions>
+  {% if variant.get('type') == 'height' %}
+    <div class="transition-demo">
+      <button type="button" class="transition-trigger" data-target="height-content">Toggle Height</button>
+      <div class="transition-content" id="height-content" data-transition="height">
+        <div class="transition-inner">
+          <p>This content will smoothly animate its height when toggled. The transition creates a natural expand and collapse effect that's perfect for accordions, dropdowns, and collapsible sections.</p>
+          <p>Height transitions are particularly useful for revealing additional content without jarring layout shifts.</p>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'opacity' %}
+    <div class="transition-demo">
+      <button type="button" class="transition-trigger" data-target="opacity-content">Toggle Opacity</button>
+      <div class="transition-content" id="opacity-content" data-transition="opacity">
+        <div class="transition-inner">
+          <p>This content fades in and out smoothly with opacity transitions. Perfect for showing and hiding content with elegant visual feedback.</p>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'transform' %}
+    <div class="transition-demo">
+      <button type="button" class="transition-trigger" data-target="transform-content">Toggle Transform</button>
+      <div class="transition-content" id="transform-content" data-transition="transform">
+        <div class="transition-inner">
+          <p>Transform transitions can scale, rotate, and translate elements smoothly. This example combines scale and translate for a dynamic effect.</p>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="transition-demo">
+      <button type="button" class="transition-trigger" data-target="color-content">Toggle Colors</button>
+      <div class="transition-content active" id="color-content" data-transition="color">
+        <div class="transition-inner">
+          <p>Color transitions smoothly change background, text, and border colors. Perfect for hover states, theme changes, and status indicators.</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_scrollanimations(variant) -%}
+<div class="scroll-animations" data-scroll-animations>
+  {% if variant.get('type') == 'reveal' %}
+    <div class="scroll-demo">
+      <div class="scroll-spacer">Scroll down to see animations</div>
+      <div class="reveal-grid">
+        <div class="reveal-item" data-reveal="fade-up" data-delay="0">
+          <h3>Fade Up</h3>
+          <p>This element fades in and moves up when scrolled into view.</p>
+        </div>
+        <div class="reveal-item" data-reveal="fade-left" data-delay="100">
+          <h3>Fade Left</h3>
+          <p>This element fades in from the left with a slight delay.</p>
+        </div>
+        <div class="reveal-item" data-reveal="fade-right" data-delay="200">
+          <h3>Fade Right</h3>
+          <p>This element fades in from the right with more delay.</p>
+        </div>
+        <div class="reveal-item" data-reveal="scale-up" data-delay="300">
+          <h3>Scale Up</h3>
+          <p>This element scales up when it enters the viewport.</p>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'parallax' %}
+    <div class="parallax-demo">
+      <div class="parallax-layer" data-parallax-speed="0.5">
+        <div class="parallax-bg">Background Layer</div>
+      </div>
+      <div class="parallax-layer" data-parallax-speed="0.8">
+        <div class="parallax-content">
+          <h3>Parallax Content</h3>
+          <p>This content moves at different speeds as you scroll.</p>
+        </div>
+      </div>
+      <div class="parallax-spacer">Scroll to see parallax effect</div>
+    </div>
+  {% elif variant.get('type') == 'stagger' %}
+    <div class="stagger-demo">
+      <div class="stagger-grid" data-stagger="true">
+        <div class="stagger-item">Item 1</div>
+        <div class="stagger-item">Item 2</div>
+        <div class="stagger-item">Item 3</div>
+        <div class="stagger-item">Item 4</div>
+        <div class="stagger-item">Item 5</div>
+        <div class="stagger-item">Item 6</div>
+      </div>
+      <p>These items animate in sequence with staggered timing.</p>
+    </div>
+  {% else %}
+    <div class="timeline-demo">
+      <div class="timeline-progress" data-timeline="true">
+        <div class="timeline-bar"></div>
+      </div>
+      <div class="timeline-content">
+        <div class="timeline-section" data-timeline-section="0">
+          <h3>Section 1</h3>
+          <p>First timeline section with scroll-based progress.</p>
+        </div>
+        <div class="timeline-section" data-timeline-section="50">
+          <h3>Section 2</h3>
+          <p>Second section that animates at 50% progress.</p>
+        </div>
+        <div class="timeline-section" data-timeline-section="100">
+          <h3>Section 3</h3>
+          <p>Final section that completes the timeline.</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{# Component Playground Components #}
+{%- macro render_componentpreview(variant) -%}
+<div class="component-preview" data-component-preview>
+  {% if variant.get('mode') == 'editor' %}
+    <div class="preview-editor">
+      <div class="editor-toolbar">
+        <div class="toolbar-section">
+          <button type="button" class="toolbar-btn toolbar-btn-active" data-tab="preview">Preview</button>
+          <button type="button" class="toolbar-btn" data-tab="code">Code</button>
+          <button type="button" class="toolbar-btn" data-tab="props">Props</button>
+        </div>
+        <div class="toolbar-section">
+          <button type="button" class="toolbar-btn" data-action="reset">Reset</button>
+          <button type="button" class="toolbar-btn" data-action="copy">Copy</button>
+          <button type="button" class="toolbar-btn" data-action="export">Export</button>
+        </div>
+      </div>
+      <div class="editor-content">
+        <div class="editor-tab editor-tab-active" data-tab-content="preview">
+          <div class="preview-frame">
+            <div class="preview-component">
+              <button class="btn btn-primary" data-preview-target>Sample Button</button>
+            </div>
+          </div>
+        </div>
+        <div class="editor-tab" data-tab-content="code">
+          <div class="code-editor">
+            <pre><code class="language-html">&lt;button class="btn btn-primary"&gt;Sample Button&lt;/button&gt;</code></pre>
+          </div>
+        </div>
+        <div class="editor-tab" data-tab-content="props">
+          <div class="props-panel">
+            <div class="prop-group">
+              <label class="prop-label">Text</label>
+              <input type="text" class="prop-input" data-prop="text" value="Sample Button">
+            </div>
+            <div class="prop-group">
+              <label class="prop-label">Variant</label>
+              <select class="prop-select" data-prop="variant">
+                <option value="primary" selected>Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="outline">Outline</option>
+              </select>
+            </div>
+            <div class="prop-group">
+              <label class="prop-label">Size</label>
+              <select class="prop-select" data-prop="size">
+                <option value="sm">Small</option>
+                <option value="md" selected>Medium</option>
+                <option value="lg">Large</option>
+              </select>
+            </div>
+            <div class="prop-group">
+              <label class="prop-checkbox">
+                <input type="checkbox" data-prop="disabled">
+                <span class="checkmark"></span>
+                Disabled
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('mode') == 'split' %}
+    <div class="preview-split">
+      <div class="split-pane split-preview">
+        <div class="pane-header">Preview</div>
+        <div class="pane-content">
+          <div class="preview-component">
+            <div class="card">
+              <div class="card-header">Sample Card</div>
+              <div class="card-content">
+                <p>This is a sample card component with various properties that can be edited in real-time.</p>
+                <button class="btn btn-primary">Action</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="split-pane split-controls">
+        <div class="pane-header">Properties</div>
+        <div class="pane-content">
+          <div class="prop-group">
+            <label class="prop-label">Title</label>
+            <input type="text" class="prop-input" data-prop="title" value="Sample Card">
+          </div>
+          <div class="prop-group">
+            <label class="prop-label">Content</label>
+            <textarea class="prop-textarea" data-prop="content">This is a sample card component...</textarea>
+          </div>
+          <div class="prop-group">
+            <label class="prop-label">Button Text</label>
+            <input type="text" class="prop-input" data-prop="button" value="Action">
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('mode') == 'responsive' %}
+    <div class="preview-responsive">
+      <div class="responsive-toolbar">
+        <div class="device-buttons">
+          <button type="button" class="device-btn device-btn-active" data-device="desktop">
+            <span class="device-icon">🖥️</span>
+            Desktop
+          </button>
+          <button type="button" class="device-btn" data-device="tablet">
+            <span class="device-icon">📱</span>
+            Tablet
+          </button>
+          <button type="button" class="device-btn" data-device="mobile">
+            <span class="device-icon">📱</span>
+            Mobile
+          </button>
+        </div>
+        <div class="size-indicator">1200px × 800px</div>
+      </div>
+      <div class="responsive-frame" data-device-frame="desktop">
+        <div class="preview-component">
+          <nav class="navbar">
+            <div class="navbar-brand">Brand</div>
+            <div class="navbar-menu">
+              <a href="#" class="navbar-item">Home</a>
+              <a href="#" class="navbar-item">About</a>
+              <a href="#" class="navbar-item">Contact</a>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="preview-fullscreen">
+      <div class="fullscreen-toolbar">
+        <button type="button" class="toolbar-btn" data-action="minimize">Minimize</button>
+        <button type="button" class="toolbar-btn" data-action="settings">Settings</button>
+      </div>
+      <div class="fullscreen-content">
+        <div class="preview-component">
+          <div class="dashboard">
+            <div class="dashboard-header">
+              <h1>Dashboard Preview</h1>
+              <p>Full-screen component preview mode</p>
+            </div>
+            <div class="dashboard-grid">
+              <div class="dashboard-card">
+                <h3>Card 1</h3>
+                <p>Sample content</p>
+              </div>
+              <div class="dashboard-card">
+                <h3>Card 2</h3>
+                <p>Sample content</p>
+              </div>
+              <div class="dashboard-card">
+                <h3>Card 3</h3>
+                <p>Sample content</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_codegenerator(variant) -%}
+<div class="code-generator" data-code-generator>
+  {% if variant.get('format') == 'html' %}
+    <div class="generator-content">
+      <div class="generator-controls">
+        <h4>HTML Generator</h4>
+        <div class="control-group">
+          <label class="label">Component Type</label>
+          <select class="select" data-setting="component">
+            <option value="button">Button</option>
+            <option value="card">Card</option>
+            <option value="form">Form</option>
+            <option value="nav">Navigation</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="label">Classes</label>
+          <input type="text" class="input" data-setting="classes" value="btn btn-primary">
+        </div>
+        <button type="button" class="btn btn-primary" data-action="generate">Generate Code</button>
+      </div>
+      <div class="generator-output">
+        <div class="output-header">
+          <span class="output-title">Generated HTML</span>
+          <button type="button" class="copy-btn" data-action="copy">
+            <span class="copy-icon">📋</span>
+            Copy
+          </button>
+        </div>
+        <div class="code-block">
+          <pre><code class="language-html" data-output>&lt;button class="btn btn-primary"&gt;Click Me&lt;/button&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('format') == 'jsx' %}
+    <div class="generator-content">
+      <div class="generator-controls">
+        <h4>React JSX Generator</h4>
+        <div class="control-group">
+          <label class="label">Component Name</label>
+          <input type="text" class="input" data-setting="name" value="MyButton">
+        </div>
+        <div class="control-group">
+          <label class="label">Props</label>
+          <textarea class="textarea" data-setting="props">variant="primary"
+size="md"
+disabled={false}</textarea>
+        </div>
+        <button type="button" class="btn btn-primary" data-action="generate">Generate JSX</button>
+      </div>
+      <div class="generator-output">
+        <div class="output-header">
+          <span class="output-title">Generated JSX</span>
+          <button type="button" class="copy-btn" data-action="copy">
+            <span class="copy-icon">📋</span>
+            Copy
+          </button>
+        </div>
+        <div class="code-block">
+          <pre><code class="language-jsx" data-output>&lt;MyButton variant="primary" size="md" disabled={false}&gt;
+  Click Me
+&lt;/MyButton&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('format') == 'vue' %}
+    <div class="generator-content">
+      <div class="generator-controls">
+        <h4>Vue Template Generator</h4>
+        <div class="control-group">
+          <label class="label">Component Tag</label>
+          <input type="text" class="input" data-setting="tag" value="v-button">
+        </div>
+        <div class="control-group">
+          <label class="label">Directives</label>
+          <textarea class="textarea" data-setting="directives">:variant="buttonVariant"
+:disabled="isDisabled"
+@click="handleClick"</textarea>
+        </div>
+        <button type="button" class="btn btn-primary" data-action="generate">Generate Template</button>
+      </div>
+      <div class="generator-output">
+        <div class="output-header">
+          <span class="output-title">Generated Vue Template</span>
+          <button type="button" class="copy-btn" data-action="copy">
+            <span class="copy-icon">📋</span>
+            Copy
+          </button>
+        </div>
+        <div class="code-block">
+          <pre><code class="language-vue" data-output>&lt;v-button 
+  :variant="buttonVariant"
+  :disabled="isDisabled"
+  @click="handleClick"&gt;
+  {{ buttonText }}
+&lt;/v-button&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="generator-content">
+      <div class="generator-controls">
+        <h4>Angular Generator</h4>
+        <div class="control-group">
+          <label class="label">Selector</label>
+          <input type="text" class="input" data-setting="selector" value="app-button">
+        </div>
+        <div class="control-group">
+          <label class="label">Inputs</label>
+          <textarea class="textarea" data-setting="inputs">[variant]="'primary'"
+[size]="'md'"
+[disabled]="false"</textarea>
+        </div>
+        <button type="button" class="btn btn-primary" data-action="generate">Generate Angular</button>
+      </div>
+      <div class="generator-output">
+        <div class="output-header">
+          <span class="output-title">Generated Angular Template</span>
+          <button type="button" class="copy-btn" data-action="copy">
+            <span class="copy-icon">📋</span>
+            Copy
+          </button>
+        </div>
+        <div class="code-block">
+          <pre><code class="language-html" data-output>&lt;app-button 
+  [variant]="'primary'"
+  [size]="'md'"
+  [disabled]="false"
+  (click)="onClick()"&gt;
+  Click Me
+&lt;/app-button&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_componentbuilder(variant) -%}
+<div class="component-builder" data-component-builder>
+  {% if variant.get('type') == 'canvas' %}
+    <div class="builder-canvas">
+      <div class="canvas-toolbar">
+        <div class="tool-group">
+          <button type="button" class="tool-btn tool-btn-active" data-tool="select">
+            <span class="tool-icon">🖱️</span>
+            Select
+          </button>
+          <button type="button" class="tool-btn" data-tool="text">
+            <span class="tool-icon">📝</span>
+            Text
+          </button>
+          <button type="button" class="tool-btn" data-tool="button">
+            <span class="tool-icon">🔘</span>
+            Button
+          </button>
+          <button type="button" class="tool-btn" data-tool="card">
+            <span class="tool-icon">📄</span>
+            Card
+          </button>
+        </div>
+        <div class="tool-group">
+          <button type="button" class="tool-btn" data-action="undo">Undo</button>
+          <button type="button" class="tool-btn" data-action="redo">Redo</button>
+          <button type="button" class="tool-btn" data-action="clear">Clear</button>
+        </div>
+      </div>
+      <div class="canvas-area" data-canvas>
+        <div class="canvas-grid">
+          <div class="canvas-component" data-component="button" style="position: absolute; top: 50px; left: 50px;">
+            <button class="btn btn-primary">Sample Button</button>
+          </div>
+          <div class="canvas-component" data-component="text" style="position: absolute; top: 120px; left: 50px;">
+            <p>Sample text element</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'layers' %}
+    <div class="builder-layers">
+      <div class="layers-header">
+        <h4>Layer Tree</h4>
+        <div class="layer-controls">
+          <button type="button" class="layer-btn" data-action="expand-all">Expand</button>
+          <button type="button" class="layer-btn" data-action="collapse-all">Collapse</button>
+        </div>
+      </div>
+      <div class="layers-tree">
+        <div class="layer-item layer-item-expanded" data-layer="container">
+          <div class="layer-content">
+            <span class="layer-toggle">▼</span>
+            <span class="layer-icon">📦</span>
+            <span class="layer-name">Container</span>
+            <div class="layer-actions">
+              <button type="button" class="layer-action" data-action="visibility">👁️</button>
+              <button type="button" class="layer-action" data-action="lock">🔒</button>
+            </div>
+          </div>
+          <div class="layer-children">
+            <div class="layer-item" data-layer="button">
+              <div class="layer-content">
+                <span class="layer-spacer"></span>
+                <span class="layer-icon">🔘</span>
+                <span class="layer-name">Button</span>
+                <div class="layer-actions">
+                  <button type="button" class="layer-action" data-action="visibility">👁️</button>
+                  <button type="button" class="layer-action" data-action="lock">🔓</button>
+                </div>
+              </div>
+            </div>
+            <div class="layer-item" data-layer="text">
+              <div class="layer-content">
+                <span class="layer-spacer"></span>
+                <span class="layer-icon">📝</span>
+                <span class="layer-name">Text Element</span>
+                <div class="layer-actions">
+                  <button type="button" class="layer-action" data-action="visibility">👁️</button>
+                  <button type="button" class="layer-action" data-action="lock">🔓</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('type') == 'properties' %}
+    <div class="builder-properties">
+      <div class="properties-header">
+        <h4>Properties Panel</h4>
+        <div class="selected-element">Button</div>
+      </div>
+      <div class="properties-content">
+        <div class="property-section">
+          <div class="section-header">Layout</div>
+          <div class="property-grid">
+            <div class="property-item">
+              <label class="property-label">X</label>
+              <input type="number" class="property-input" value="50">
+            </div>
+            <div class="property-item">
+              <label class="property-label">Y</label>
+              <input type="number" class="property-input" value="50">
+            </div>
+            <div class="property-item">
+              <label class="property-label">Width</label>
+              <input type="number" class="property-input" value="120">
+            </div>
+            <div class="property-item">
+              <label class="property-label">Height</label>
+              <input type="number" class="property-input" value="40">
+            </div>
+          </div>
+        </div>
+        <div class="property-section">
+          <div class="section-header">Appearance</div>
+          <div class="property-item">
+            <label class="property-label">Text</label>
+            <input type="text" class="property-input" value="Sample Button">
+          </div>
+          <div class="property-item">
+            <label class="property-label">Variant</label>
+            <select class="property-select">
+              <option value="primary" selected>Primary</option>
+              <option value="secondary">Secondary</option>
+              <option value="outline">Outline</option>
+            </select>
+          </div>
+          <div class="property-item">
+            <label class="property-label">Background</label>
+            <input type="color" class="property-color" value="#3b82f6">
+          </div>
+        </div>
+        <div class="property-section">
+          <div class="section-header">Typography</div>
+          <div class="property-item">
+            <label class="property-label">Font Size</label>
+            <input type="range" class="property-range" min="12" max="24" value="16">
+          </div>
+          <div class="property-item">
+            <label class="property-label">Font Weight</label>
+            <select class="property-select">
+              <option value="400">Regular</option>
+              <option value="500" selected>Medium</option>
+              <option value="600">Semibold</option>
+              <option value="700">Bold</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="builder-preview">
+      <div class="preview-header">
+        <h4>Live Preview</h4>
+        <div class="preview-controls">
+          <button type="button" class="preview-btn" data-action="refresh">Refresh</button>
+          <button type="button" class="preview-btn" data-action="fullscreen">Fullscreen</button>
+        </div>
+      </div>
+      <div class="preview-viewport">
+        <div class="preview-frame">
+          <div class="preview-content">
+            <div class="built-component">
+              <div class="component-container">
+                <button class="btn btn-primary" style="margin: 20px;">Primary Button</button>
+                <p style="margin: 20px;">Sample text element with live preview.</p>
+                <div class="card" style="margin: 20px; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+                  <h3>Card Component</h3>
+                  <p>This card was built using the component builder.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_exporttools(variant) -%}
+<div class="export-tools" data-export-tools>
+  {% if variant.get('format') == 'figma' %}
+    <div class="export-content">
+      <div class="export-header">
+        <h4>Figma Plugin Export</h4>
+        <div class="export-status">Ready to export</div>
+      </div>
+      <div class="export-options">
+        <div class="option-group">
+          <label class="option-label">Export Format</label>
+          <select class="option-select" data-option="format">
+            <option value="components">Components</option>
+            <option value="frames">Frames</option>
+            <option value="styles">Design Tokens</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-label">Scale</label>
+          <select class="option-select" data-option="scale">
+            <option value="1">1x</option>
+            <option value="2" selected>2x</option>
+            <option value="3">3x</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" checked data-option="include-variants">
+            <span class="checkmark"></span>
+            Include component variants
+          </label>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" data-option="include-tokens">
+            <span class="checkmark"></span>
+            Include design tokens
+          </label>
+        </div>
+      </div>
+      <div class="export-actions">
+        <button type="button" class="btn btn-primary" data-action="export-figma">
+          Export to Figma
+        </button>
+        <button type="button" class="btn btn-secondary" data-action="generate-plugin">
+          Generate Plugin
+        </button>
+      </div>
+      <div class="export-preview">
+        <div class="preview-header">Preview</div>
+        <div class="figma-preview">
+          <div class="figma-frame">
+            <div class="figma-component">Button Component</div>
+            <div class="figma-component">Card Component</div>
+            <div class="figma-component">Form Component</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('format') == 'code' %}
+    <div class="export-content">
+      <div class="export-header">
+        <h4>Code Export</h4>
+        <div class="export-status">3 components ready</div>
+      </div>
+      <div class="export-options">
+        <div class="option-group">
+          <label class="option-label">Framework</label>
+          <select class="option-select" data-option="framework">
+            <option value="html">HTML/CSS</option>
+            <option value="react" selected>React</option>
+            <option value="vue">Vue.js</option>
+            <option value="angular">Angular</option>
+            <option value="svelte">Svelte</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-label">Style Format</label>
+          <select class="option-select" data-option="styles">
+            <option value="css">CSS</option>
+            <option value="scss" selected>SCSS</option>
+            <option value="tailwind">Tailwind</option>
+            <option value="styled">Styled Components</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" checked data-option="typescript">
+            <span class="checkmark"></span>
+            TypeScript
+          </label>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" checked data-option="stories">
+            <span class="checkmark"></span>
+            Include Storybook stories
+          </label>
+        </div>
+      </div>
+      <div class="export-actions">
+        <button type="button" class="btn btn-primary" data-action="export-code">
+          Export Code
+        </button>
+        <button type="button" class="btn btn-secondary" data-action="download-zip">
+          Download ZIP
+        </button>
+      </div>
+      <div class="export-files">
+        <div class="file-tree">
+          <div class="file-item">📁 components/</div>
+          <div class="file-item file-nested">📄 Button.tsx</div>
+          <div class="file-item file-nested">📄 Card.tsx</div>
+          <div class="file-item file-nested">📄 Form.tsx</div>
+          <div class="file-item">📁 styles/</div>
+          <div class="file-item file-nested">📄 index.scss</div>
+          <div class="file-item">📁 stories/</div>
+          <div class="file-item file-nested">📄 Button.stories.tsx</div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('format') == 'assets' %}
+    <div class="export-content">
+      <div class="export-header">
+        <h4>Asset Export</h4>
+        <div class="export-status">12 assets ready</div>
+      </div>
+      <div class="export-options">
+        <div class="option-group">
+          <label class="option-label">Image Format</label>
+          <select class="option-select" data-option="format">
+            <option value="png" selected>PNG</option>
+            <option value="jpg">JPG</option>
+            <option value="svg">SVG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-label">Resolution</label>
+          <select class="option-select" data-option="resolution">
+            <option value="1x">1x (72 DPI)</option>
+            <option value="2x" selected>2x (144 DPI)</option>
+            <option value="3x">3x (216 DPI)</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" checked data-option="backgrounds">
+            <span class="checkmark"></span>
+            Transparent backgrounds
+          </label>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" data-option="optimize">
+            <span class="checkmark"></span>
+            Optimize file sizes
+          </label>
+        </div>
+      </div>
+      <div class="export-actions">
+        <button type="button" class="btn btn-primary" data-action="export-assets">
+          Export Assets
+        </button>
+        <button type="button" class="btn btn-secondary" data-action="preview-assets">
+          Preview Assets
+        </button>
+      </div>
+      <div class="asset-grid">
+        <div class="asset-item">
+          <div class="asset-preview">🔘</div>
+          <div class="asset-name">button-primary.png</div>
+          <div class="asset-size">120×40px</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-preview">📄</div>
+          <div class="asset-name">card-default.png</div>
+          <div class="asset-size">300×200px</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-preview">📝</div>
+          <div class="asset-name">form-input.png</div>
+          <div class="asset-size">200×40px</div>
+        </div>
+        <div class="asset-item">
+          <div class="asset-preview">🎨</div>
+          <div class="asset-name">icons-set.svg</div>
+          <div class="asset-size">Vector</div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="export-content">
+      <div class="export-header">
+        <h4>Sketch Export</h4>
+        <div class="export-status">Plugin ready</div>
+      </div>
+      <div class="export-options">
+        <div class="option-group">
+          <label class="option-label">Export Type</label>
+          <select class="option-select" data-option="type">
+            <option value="symbols" selected>Symbols</option>
+            <option value="artboards">Artboards</option>
+            <option value="library">Library</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-label">Naming Convention</label>
+          <select class="option-select" data-option="naming">
+            <option value="component">Component/Variant</option>
+            <option value="flat" selected>Flat naming</option>
+            <option value="nested">Nested folders</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" checked data-option="overrides">
+            <span class="checkmark"></span>
+            Enable text overrides
+          </label>
+        </div>
+        <div class="option-group">
+          <label class="option-checkbox">
+            <input type="checkbox" checked data-option="responsive">
+            <span class="checkmark"></span>
+            Responsive resize
+          </label>
+        </div>
+      </div>
+      <div class="export-actions">
+        <button type="button" class="btn btn-primary" data-action="export-sketch">
+          Export to Sketch
+        </button>
+        <button type="button" class="btn btn-secondary" data-action="install-plugin">
+          Install Plugin
+        </button>
+      </div>
+      <div class="sketch-preview">
+        <div class="sketch-library">
+          <div class="library-section">
+            <div class="section-title">Components</div>
+            <div class="symbol-grid">
+              <div class="symbol-item">Button/Primary</div>
+              <div class="symbol-item">Button/Secondary</div>
+              <div class="symbol-item">Card/Default</div>
+              <div class="symbol-item">Form/Input</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{# Documentation Enhancement Components #}
+{%- macro render_codeexamples(variant) -%}
+<div class="code-examples" data-code-examples>
+  {% if variant.get('mode') == 'basic' %}
+    <div class="examples-basic">
+      <div class="example-header">
+        <h4>Basic Code Example</h4>
+        <div class="example-actions">
+          <button type="button" class="example-btn" data-action="copy">Copy</button>
+          <button type="button" class="example-btn" data-action="run">Run</button>
+        </div>
+      </div>
+      <div class="code-editor-simple">
+        <pre class="code-content" contenteditable="true" data-language="html">&lt;button class="btn btn-primary"&gt;Click Me&lt;/button&gt;</pre>
+      </div>
+      <div class="code-result">
+        <div class="result-header">Result</div>
+        <div class="result-content" data-result>
+          <button class="btn btn-primary">Click Me</button>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('mode') == 'playground' %}
+    <div class="examples-playground">
+      <div class="playground-layout">
+        <div class="playground-sidebar">
+          <div class="examples-library">
+            <h4>Examples Library</h4>
+            <div class="example-items">
+              <div class="example-item" data-example="button">
+                <div class="example-thumb">🔘</div>
+                <span>Button</span>
+              </div>
+              <div class="example-item" data-example="card">
+                <div class="example-thumb">📄</div>
+                <span>Card</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="playground-main">
+          <div class="playground-editor">
+            <div class="editor-content">
+              <textarea class="code-editor-full" data-file-content="index.html">&lt;div class="container"&gt;
+  &lt;h1&gt;Code Playground&lt;/h1&gt;
+&lt;/div&gt;</textarea>
+            </div>
+          </div>
+          <div class="playground-preview">
+            <iframe class="preview-frame" data-preview-frame></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="examples-tutorial">
+      <div class="tutorial-header">
+        <div class="tutorial-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 33%;"></div>
+          </div>
+          <span class="progress-text">Step 2 of 6</span>
+        </div>
+      </div>
+      <div class="tutorial-content">
+        <div class="tutorial-step" data-step="2">
+          <div class="step-info">
+            <h3>Adding Styles</h3>
+            <p>Let's add some CSS to style our button component.</p>
+          </div>
+          <div class="step-task">
+            <div class="task-editor">
+              <textarea class="code-input task-input" placeholder="Enter your CSS here...">.btn { /* Add styles */ }</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_searchfilter(variant) -%}
+<div class="search-filter" data-search-filter>
+  {% if variant.get('scope') == 'global' %}
+    <div class="global-search">
+      <div class="search-box">
+        <input type="text" class="search-input" placeholder="Search components..." data-global-search>
+        <button type="button" class="search-btn">🔍</button>
+      </div>
+      <div class="search-results" data-search-results>
+        <div class="result-item">
+          <div class="result-icon">🔘</div>
+          <div class="result-content">
+            <h5>Button</h5>
+            <p>Interactive button component</p>
+          </div>
+        </div>
+        <div class="result-item">
+          <div class="result-icon">📄</div>
+          <div class="result-content">
+            <h5>Card</h5>
+            <p>Content container component</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('scope') == 'faceted' %}
+    <div class="faceted-search">
+      <div class="search-controls">
+        <input type="text" class="search-input" placeholder="Search..." data-faceted-search>
+        <div class="search-filters">
+          <div class="filter-group">
+            <label class="filter-option">
+              <input type="checkbox" value="component" checked>
+              <span>Components</span>
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" value="docs">
+              <span>Documentation</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="search-results-grid">
+        <div class="result-card">
+          <div class="card-icon">🔘</div>
+          <div class="card-content">
+            <h4>Button Component</h4>
+            <p>Interactive button with variants</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="visual-search">
+      <div class="component-selector">
+        <button type="button" class="component-option" data-component="button">
+          <div class="option-preview">🔘</div>
+          <span>Button</span>
+        </button>
+        <button type="button" class="component-option" data-component="card">
+          <div class="option-preview">📄</div>
+          <span>Card</span>
+        </button>
+      </div>
+      <div class="visual-results">
+        <div class="preview-item">
+          <button class="btn btn-primary">Primary Button</button>
+        </div>
+        <div class="preview-item">
+          <button class="btn btn-secondary">Secondary Button</button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro render_versionhistory(variant) -%}
+<div class="version-history" data-version-history>
+  {% if variant.get('view') == 'changelog' %}
+    <div class="changelog-view">
+      <div class="changelog-header">
+        <h3>Changelog</h3>
+        <select class="version-select">
+          <option value="v2.1.0" selected>v2.1.0 (Latest)</option>
+          <option value="v2.0.0">v2.0.0</option>
+        </select>
+      </div>
+      <div class="changelog-entries">
+        <div class="changelog-entry">
+          <div class="entry-header">
+            <h4>Version 2.1.0</h4>
+            <span class="entry-date">December 15, 2024</span>
+          </div>
+          <div class="entry-content">
+            <h5>✨ New Features</h5>
+            <ul>
+              <li>Added dark mode support</li>
+              <li>New animation library</li>
+              <li>Component playground</li>
+            </ul>
+            <h5>🐛 Bug Fixes</h5>
+            <ul>
+              <li>Fixed button focus states</li>
+              <li>Resolved card overflow issues</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elif variant.get('view') == 'timeline' %}
+    <div class="timeline-view">
+      <div class="timeline-container">
+        <div class="timeline-track">
+          <div class="timeline-item" style="left: 10%;" data-version="v1.0.0">
+            <div class="timeline-marker"></div>
+            <div class="timeline-info">
+              <h5>v1.0.0</h5>
+              <span>Initial Release</span>
+            </div>
+          </div>
+          <div class="timeline-item" style="left: 90%;" data-version="v2.1.0">
+            <div class="timeline-marker"></div>
+            <div class="timeline-info">
+              <h5>v2.1.0</h5>
+              <span>Advanced Features</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="migration-view">
+      <div class="migration-header">
+        <h3>Migration Guide</h3>
+        <div class="migration-path">
+          <select class="version-from">
+            <option value="v2.0.0">From v2.0.0</option>
+          </select>
+          <span>→</span>
+          <select class="version-to">
+            <option value="v2.1.0">To v2.1.0</option>
+          </select>
+        </div>
+      </div>
+      <div class="migration-steps">
+        <div class="migration-step">
+          <h5>Update Button Classes</h5>
+          <div class="code-comparison">
+            <div class="code-before">
+              <label>Before</label>
+              <pre>&lt;button class="btn btn-large"&gt;</pre>
+            </div>
+            <div class="code-after">
+              <label>After</label>
+              <pre>&lt;button class="btn btn-lg"&gt;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{%- endmacro -%}
+ 
+ { % -   m a c r o   r e n d e r _ a p i d o c s ( v a r i a n t )   - % } 
+ < d i v   c l a s s = " a p i - d o c s "   d a t a - a p i - d o c s > 
+     { %   i f   v a r i a n t . g e t ( " t y p e " )   = =   " r e f e r e n c e "   % } 
+         < d i v   c l a s s = " a p i - r e f e r e n c e " > 
+             < d i v   c l a s s = " a p i - s i d e b a r " > 
+                 < d i v   c l a s s = " a p i - n a v " > 
+                     < h 4 > A P I   R e f e r e n c e < / h 4 > 
+                     < d i v   c l a s s = " n a v - s e c t i o n " > 
+                         < h 5 > C o m p o n e n t s < / h 5 > 
+                         < u l   c l a s s = " n a v - i t e m s " > 
+                             < l i > < a   h r e f = " # b u t t o n "   c l a s s = " n a v - l i n k " > B u t t o n < / a > < / l i > 
+                             < l i > < a   h r e f = " # c a r d "   c l a s s = " n a v - l i n k " > C a r d < / a > < / l i > 
+                             < l i > < a   h r e f = " # f o r m "   c l a s s = " n a v - l i n k " > F o r m < / a > < / l i > 
+                         < / u l > 
+                     < / d i v > 
+                 < / d i v > 
+             < / d i v > 
+             < d i v   c l a s s = " a p i - c o n t e n t " > 
+                 < d i v   c l a s s = " a p i - s e c t i o n "   i d = " b u t t o n " > 
+                     < h 3 > B u t t o n < / h 3 > 
+                     < d i v   c l a s s = " a p i - d e s c r i p t i o n " > 
+                         < p > I n t e r a c t i v e   b u t t o n   c o m p o n e n t   w i t h   m u l t i p l e   v a r i a n t s   a n d   s t a t e s . < / p > 
+                     < / d i v > 
+                     < d i v   c l a s s = " a p i - p r o p s " > 
+                         < h 4 > P r o p s < / h 4 > 
+                         < t a b l e   c l a s s = " p r o p s - t a b l e " > 
+                             < t r > 
+                                 < t h > N a m e < / t h > 
+                                 < t h > T y p e < / t h > 
+                                 < t h > D e f a u l t < / t h > 
+                                 < t h > D e s c r i p t i o n < / t h > 
+                             < / t r > 
+                             < t r > 
+                                 < t d > v a r i a n t < / t d > 
+                                 < t d > s t r i n g < / t d > 
+                                 < t d > " p r i m a r y " < / t d > 
+                                 < t d > B u t t o n   s t y l e   v a r i a n t < / t d > 
+                             < / t r > 
+                         < / t a b l e > 
+                     < / d i v > 
+                 < / d i v > 
+             < / d i v > 
+         < / d i v > 
+     { %   e l i f   v a r i a n t . g e t ( " t y p e " )   = =   " e x p l o r e r "   % } 
+         < d i v   c l a s s = " a p i - e x p l o r e r " > 
+             < d i v   c l a s s = " e x p l o r e r - c o n t r o l s " > 
+                 < d i v   c l a s s = " m e t h o d - s e l e c t o r " > 
+                     < s e l e c t   c l a s s = " m e t h o d - s e l e c t " > 
+                         < o p t i o n   v a l u e = " G E T " > G E T < / o p t i o n > 
+                         < o p t i o n   v a l u e = " P O S T " > P O S T < / o p t i o n > 
+                     < / s e l e c t > 
+                     < i n p u t   t y p e = " t e x t "   c l a s s = " e n d p o i n t - i n p u t "   v a l u e = " / a p i / c o m p o n e n t s "   p l a c e h o l d e r = " E n d p o i n t " > 
+                 < / d i v > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t r y - b t n " > T r y   i t < / b u t t o n > 
+             < / d i v > 
+             < d i v   c l a s s = " r e s p o n s e - v i e w e r " > 
+                 < h 4 > R e s p o n s e < / h 4 > 
+                 < p r e   c l a s s = " r e s p o n s e - c o n t e n t " > { 
+     " c o m p o n e n t s " :   [ 
+         { 
+             " n a m e " :   " B u t t o n " , 
+             " v a r i a n t s " :   [ " p r i m a r y " ,   " s e c o n d a r y " ] 
+         } 
+     ] 
+ } < / p r e > 
+             < / d i v > 
+         < / d i v > 
+     { %   e l s e   % } 
+         < d i v   c l a s s = " a p i - e x a m p l e s " > 
+             < d i v   c l a s s = " e x a m p l e - t a b s " > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n   a c t i v e "   d a t a - l a n g = " h t m l " > H T M L < / b u t t o n > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n "   d a t a - l a n g = " c s s " > C S S < / b u t t o n > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n "   d a t a - l a n g = " j s " > J a v a S c r i p t < / b u t t o n > 
+             < / d i v > 
+             < d i v   c l a s s = " e x a m p l e - c o n t e n t " > 
+                 < d i v   c l a s s = " c o d e - e x a m p l e "   d a t a - e x a m p l e = " h t m l " > 
+                     < p r e   c l a s s = " c o d e - b l o c k " > & l t ; b u t t o n   c l a s s = " b t n   b t n - p r i m a r y " & g t ; 
+     C l i c k   M e 
+ & l t ; / b u t t o n & g t ; < / p r e > 
+                 < / d i v > 
+             < / d i v > 
+         < / d i v > 
+     { %   e n d i f   % } 
+ < / d i v > 
+ { % -   e n d m a c r o   - % } 
+ 
+ 
+ 
+ { #   B u i l d   S y s t e m   C o m p o n e n t s   # } 
+ { % -   m a c r o   r e n d e r _ b u n d l e r ( v a r i a n t )   - % } 
+ < d i v   c l a s s = " a s s e t - b u n d l e r "   d a t a - b u n d l e r > 
+     { %   i f   v a r i a n t . g e t ( " t y p e " )   = =   " w e b p a c k "   % } 
+         < d i v   c l a s s = " w e b p a c k - b u n d l e r " > 
+             < d i v   c l a s s = " b u n d l e r - h e a d e r " > 
+                 < h 3 > W e b p a c k   C o n f i g u r a t i o n < / h 3 > 
+                 < d i v   c l a s s = " b u n d l e r - s t a t u s " > 
+                     < s p a n   c l a s s = " s t a t u s - i n d i c a t o r   s t a t u s - r e a d y " > R e a d y < / s p a n > 
+                 < / d i v > 
+             < / d i v > 
+             < d i v   c l a s s = " b u n d l e r - c o n f i g " > 
+                 < d i v   c l a s s = " c o n f i g - t a b s " > 
+                     < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n   a c t i v e "   d a t a - t a b = " e n t r y " > E n t r y   P o i n t s < / b u t t o n > 
+                     < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n "   d a t a - t a b = " o u t p u t " > O u t p u t < / b u t t o n > 
+                     < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n "   d a t a - t a b = " l o a d e r s " > L o a d e r s < / b u t t o n > 
+                     < b u t t o n   t y p e = " b u t t o n "   c l a s s = " t a b - b t n "   d a t a - t a b = " p l u g i n s " > P l u g i n s < / b u t t o n > 
+                 < / d i v > 
+                 < d i v   c l a s s = " c o n f i g - c o n t e n t " > 
+                     < d i v   c l a s s = " c o n f i g - p a n e l   a c t i v e "   d a t a - p a n e l = " e n t r y " > 
+                         < d i v   c l a s s = " e n t r y - p o i n t s " > 
+                             < d i v   c l a s s = " e n t r y - i t e m " > 
+                                 < i n p u t   t y p e = " t e x t "   c l a s s = " e n t r y - n a m e "   p l a c e h o l d e r = " E n t r y   n a m e "   v a l u e = " m a i n " > 
+                                 < i n p u t   t y p e = " t e x t "   c l a s s = " e n t r y - p a t h "   p l a c e h o l d e r = " E n t r y   p a t h "   v a l u e = " . / s r c / i n d e x . j s " > 
+                                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " r e m o v e - e n t r y " > < / b u t t o n > 
+                             < / d i v > 
+                             < b u t t o n   t y p e = " b u t t o n "   c l a s s = " a d d - e n t r y " > +   A d d   E n t r y   P o i n t < / b u t t o n > 
+                         < / d i v > 
+                     < / d i v > 
+                     < d i v   c l a s s = " c o n f i g - p a n e l "   d a t a - p a n e l = " o u t p u t " > 
+                         < d i v   c l a s s = " o u t p u t - c o n f i g " > 
+                             < d i v   c l a s s = " c o n f i g - r o w " > 
+                                 < l a b e l > O u t p u t   P a t h < / l a b e l > 
+                                 < i n p u t   t y p e = " t e x t "   v a l u e = " . / d i s t "   c l a s s = " c o n f i g - i n p u t " > 
+                             < / d i v > 
+                             < d i v   c l a s s = " c o n f i g - r o w " > 
+                                 < l a b e l > F i l e n a m e   P a t t e r n < / l a b e l > 
+                                 < i n p u t   t y p e = " t e x t "   v a l u e = " [ n a m e ] . [ c o n t e n t h a s h ] . j s "   c l a s s = " c o n f i g - i n p u t " > 
+                             < / d i v > 
+                         < / d i v > 
+                     < / d i v > 
+                 < / d i v > 
+             < / d i v > 
+             < d i v   c l a s s = " b u n d l e r - a c t i o n s " > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - p r i m a r y "   d a t a - a c t i o n = " b u i l d " > B u i l d < / b u t t o n > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - s e c o n d a r y "   d a t a - a c t i o n = " d e v " > D e v   S e r v e r < / b u t t o n > 
+                 < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n   b t n - s e c o n d a r y "   d a t a - a c t i o n = " a n a l y z e " > A n a l y z e   B u n d l e < / b u t t o n > 
+             < / d i v > 
+         < / d i v > 
+     { %   e l i f   v a r i a n t . g e t ( " t y p e " )   = =   " r o l l u p "   % } 
+         < d i v   c l a s s = " r o l l u p - b u n d l e r " > 
+             < d i v   c l a s s = " b u n d l e r - h e a d e r " > 
+                 < h 3 > R o l l u p   C o n f i g u r a t i o n < / h 3 > 
+                 < d i v   c l a s s = " f o r m a t - s e l e c t o r " > 
+                     < s e l e c t   c l a s s = " f o r m a t - s e l e c t " > 
+                         < o p t i o n   v a l u e = " e s " > E S   M o d u l e s < / o p t i o n > 
+                         < o p t i o n   v a l u e = " c j s " > C o m m o n J S < / o p t i o n > 
+                         < o p t i o n   v a l u e = " u m d " > U M D < / o p t i o n > 
+                     < / s e l e c t > 
+                 < / d i v > 
+             < / d i v > 
+             < d i v   c l a s s = " r o l l u p - c o n f i g " > 
+                 < d i v   c l a s s = " c o n f i g - s e c t i o n " > 
+                     < h 4 > I n p u t / O u t p u t < / h 4 > 
+                     < d i v   c l a s s = " i o - c o n f i g " > 
+                         < d i v   c l a s s = " c o n f i g - i t e m " > 
+                             < l a b e l > I n p u t < / l a b e l > 
+                             < i n p u t   t y p e = " t e x t "   v a l u e = " s r c / i n d e x . j s "   c l a s s = " c o n f i g - i n p u t " > 
+                         < / d i v > 
+                         < d i v   c l a s s = " c o n f i g - i t e m " > 
+                             < l a b e l > O u t p u t   F i l e < / l a b e l > 
+                             < i n p u t   t y p e = " t e x t "   v a l u e = " d i s t / b u n d l e . j s "   c l a s s = " c o n f i g - i n p u t " > 
+                         < / d i v > 
+                     < / d i v > 
+                 < / d i v > 
+                 < d i v   c l a s s = " c o n f i g - s e c t i o n " > 
+                     < h 4 > P l u g i n s < / h 4 > 
+                     < d i v   c l a s s = " p l u g i n s - l i s t " > 
+                         < d i v   c l a s s = " p l u g i n - i t e m " > 
+                             < i n p u t   t y p e = " c h e c k b o x "   c h e c k e d > 
+                             < s p a n > @ r o l l u p / p l u g i n - n o d e - r e s o l v e < / s p a n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " p l u g i n - i t e m " > 
+                             < i n p u t   t y p e = " c h e c k b o x "   c h e c k e d > 
+                             < s p a n > @ r o l l u p / p l u g i n - c o m m o n j s < / s p a n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " p l u g i n - i t e m " > 
+                             < i n p u t   t y p e = " c h e c k b o x " > 
+                             < s p a n > r o l l u p - p l u g i n - t e r s e r < / s p a n > 
+                         < / d i v > 
+                     < / d i v > 
+                 < / d i v > 
+             < / d i v > 
+         < / d i v > 
+     { %   e l i f   v a r i a n t . g e t ( " t y p e " )   = =   " v i t e "   % } 
+         < d i v   c l a s s = " v i t e - b u n d l e r " > 
+             < d i v   c l a s s = " b u n d l e r - h e a d e r " > 
+                 < h 3 > V i t e   B u i l d   T o o l < / h 3 > 
+                 < d i v   c l a s s = " m o d e - t o g g l e " > 
+                     < b u t t o n   t y p e = " b u t t o n "   c l a s s = " m o d e - b t n   a c t i v e "   d a t a - m o d e = " d e v " > D e v e l o p m e n t < / b u t t o n > 
+                     < b u t t o n   t y p e = " b u t t o n "   c l a s s = " m o d e - b t n "   d a t a - m o d e = " b u i l d " > P r o d u c t i o n < / b u t t o n > 
+                 < / d i v > 
+             < / d i v > 
+             < d i v   c l a s s = " v i t e - d a s h b o a r d " > 
+                 < d i v   c l a s s = " d e v - s e r v e r "   d a t a - m o d e - c o n t e n t = " d e v " > 
+                     < d i v   c l a s s = " s e r v e r - i n f o " > 
+                         < d i v   c l a s s = " s e r v e r - u r l " > 
+                             < s t r o n g > L o c a l : < / s t r o n g >   h t t p : / / l o c a l h o s t : 3 0 0 0 / 
+                         < / d i v > 
+                         < d i v   c l a s s = " s e r v e r - s t a t u s " > 
+                             < s p a n   c l a s s = " s t a t u s - i n d i c a t o r   s t a t u s - r u n n i n g " > R u n n i n g < / s p a n > 
+                             < s p a n > H o t   M o d u l e   R e p l a c e m e n t   e n a b l e d < / s p a n > 
+                         < / d i v > 
+                     < / d i v > 
+                     < d i v   c l a s s = " h m r - s t a t s " > 
+                         < d i v   c l a s s = " s t a t - i t e m " > 
+                             < s p a n   c l a s s = " s t a t - v a l u e " > 4 7 m s < / s p a n > 
+                             < s p a n   c l a s s = " s t a t - l a b e l " > B u i l d   T i m e < / s p a n > 
+                         < / d i v > 
+                         < d i v   c l a s s = " s t a t - i t e m " > 
+                             < s p a n   c l a s s = " s t a t - v a l u e " > 1 2 < / s p a n > 
+                             < s p a n   c l a s s = " s t a t - l a b e l " > M o d u l e s < / s p a n > 
+                         < / d i v > 
+                     < / d i v > 
+                 < / d i v > 
+                 < d i v   c l a s s = " b u i l d - o u t p u t "   d a t a - m o d e - c o n t e n t = " b u i l d " > 
+                     < d i v   c l a s s = " b u i l d - s t a t s " > 
+                         < d i v   c l a s s = " o u t p u t - f i l e s " > 
+                             < d i v   c l a s s = " f i l e - i t e m " > 
+                                 < s p a n   c l a s s = " f i l e - n a m e " > i n d e x . h t m l < / s p a n > 
+                                 < s p a n   c l a s s = " f i l e - s i z e " > 2 . 1   K B < / s p a n > 
+                             < / d i v > 
+                             < d i v   c l a s s = " f i l e - i t e m " > 
+                                 < s p a n   c l a s s = " f i l e - n a m e " > a s s e t s / i n d e x - a b c 1 2 3 . j s < / s p a n > 
+                                 < s p a n   c l a s s = " f i l e - s i z e " > 4 5 . 2   K B < / s p a n > 
+                             < / d i v > 
+                             < d i v   c l a s s = " f i l e - i t e m " > 
+                                 < s p a n   c l a s s = " f i l e - n a m e " > a s s e t s / i n d e x - d e f 4 5 6 . c s s < / s p a n > 
+                                 < s p a n   c l a s s = " f i l e - s i z e " > 8 . 7   K B < / s p a n > 
+                             < / d i v > 
+                         < / d i v > 
+                     < / d i v > 
+                 < / d i v > 
+             < / d i v > 
+         < / d i v > 
+     { %   e l s e   % } 
+         < d i v   c l a s s = " p a r c e l - b u n d l e r " > 
+             < d i v   c l a s s = " b u n d l e r - h e a d e r " > 
+                 < h 3 > P a r c e l   Z e r o - C o n f i g   B u n d l e r < / h 3 > 
+                 < d i v   c l a s s = " a u t o - c o n f i g " > 
+                     < s p a n   c l a s s = " b a d g e   b a d g e - s u c c e s s " > Z e r o   C o n f i g u r a t i o n < / s p a n > 
+                 < / d i v > 
+             < / d i v > 
+             < d i v   c l a s s = " p a r c e l - d a s h b o a r d " > 
+                 < d i v   c l a s s = " b u i l d - p r o g r e s s " > 
+                     < d i v   c l a s s = " p r o g r e s s - b a r " > 
+                         < d i v   c l a s s = " p r o g r e s s - f i l l "   s t y l e = " w i d t h :   7 5 % ; " > < / d i v > 
+                     < / d i v > 
+                     < s p a n   c l a s s = " p r o g r e s s - t e x t " > B u i l d i n g . . .   7 5 % < / s p a n > 
+                 < / d i v > 
+                 < d i v   c l a s s = " d e t e c t e d - f i l e s " > 
+                     < h 4 > A u t o - d e t e c t e d   A s s e t s < / h 4 > 
+                     < d i v   c l a s s = " f i l e - t r e e " > 
+                         < d i v   c l a s s = " t r e e - i t e m " >   i n d e x . h t m l < / d i v > 
+                         < d i v   c l a s s = " t r e e - i t e m " >   s t y l e . c s s < / d i v > 
+                         < d i v   c l a s s = " t r e e - i t e m " >   a p p . j s < / d i v > 
+                         < d i v   c l a s s = " t r e e - i t e m " >   l o g o . p n g < / d i v > 
+                     < / d i v > 
+                 < / d i v > 
+             < / d i v > 
+         < / d i v > 
+     { %   e n d i f   % } 
+ < / d i v > 
+ { % -   e n d m a c r o   - % }  
+ 

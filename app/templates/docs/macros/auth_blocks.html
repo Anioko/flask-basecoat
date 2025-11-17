@@ -1,0 +1,145 @@
+{# Authentication block macros for docs previews #}
+
+{%- macro auth_form(data) -%}
+<form class="auth-form" method="post">
+  <div class="auth-form__header">
+    <h1 class="auth-form__title">{{ data.title }}</h1>
+    {%- if data.subtitle %}
+    <span class="auth-form__subtitle">{{ data.subtitle }}</span>
+    {%- endif %}
+    {%- if data.description %}
+    <p class="auth-form__description">{{ data.description }}</p>
+    {%- endif %}
+  </div>
+
+  {%- if data.get('social') %}
+  <div class="auth-social">
+    {%- for provider in data.social %}
+    <button type="button" class="auth-social__button">
+      <span class="auth-social__icon">{{ provider.provider[0] }}</span>
+      Continue with {{ provider.provider }}
+    </button>
+    {%- endfor %}
+  </div>
+  {%- if data.get('divider') %}
+  <div class="auth-divider">
+    <span class="auth-divider__text">{{ data.divider }}</span>
+  </div>
+  {%- endif %}
+  {%- endif %}
+
+  <div class="auth-form__fields">
+    {%- for field in data.fields %}
+    <div class="form-field">
+      <label class="form-field__label" for="field-{{ loop.index }}">{{ field.label }}</label>
+      {%- if field.type == 'email' %}
+      <input 
+        class="form-field__input" 
+        type="email" 
+        id="field-{{ loop.index }}" 
+        placeholder="{{ field.placeholder }}" 
+        required
+      />
+      {%- elif field.type == 'password' %}
+      <input 
+        class="form-field__input" 
+        type="password" 
+        id="field-{{ loop.index }}" 
+        placeholder="Enter your password"
+        required
+      />
+      {%- if field.get('requirements') %}
+      <p class="form-field__hint">Must be at least 8 characters</p>
+      {%- endif %}
+      {%- else %}
+      <input 
+        class="form-field__input" 
+        type="text" 
+        id="field-{{ loop.index }}" 
+        placeholder="{{ field.placeholder }}" 
+        required
+      />
+      {%- endif %}
+    </div>
+    {%- endfor %}
+  </div>
+
+  {%- if data.get('terms') %}
+  <div class="auth-terms">
+    <p class="auth-terms__text">
+      {{ data.terms.text }}
+      {%- for link in data.terms.links %}
+      <a href="{{ link.url }}" class="auth-terms__link">{{ link.label }}</a>{% if not loop.last %} and {% endif %}
+      {%- endfor %}
+    </p>
+  </div>
+  {%- endif %}
+
+  <div class="auth-form__actions">
+    {%- for action in data.actions %}
+    <button 
+      type="{{ action.type or 'button' }}" 
+      class="btn btn-{{ action.style }}"
+    >
+      {{ action.label }}
+    </button>
+    {%- endfor %}
+  </div>
+
+  {%- if data.get('links') %}
+  <div class="auth-form__links">
+    {%- for link in data.links %}
+    <a href="{{ link.url }}" class="auth-link">{{ link.label }}</a>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+
+  {%- if data.get('footer') %}
+  <div class="auth-form__footer">
+    <p class="auth-footer__text">
+      {{ data.footer.text }} 
+      <a href="{{ data.footer.link.url }}" class="auth-footer__link">{{ data.footer.link.label }}</a>
+    </p>
+  </div>
+  {%- endif %}
+</form>
+{%- endmacro -%}
+
+{%- macro auth_cover(cover) -%}
+<div class="auth-cover">
+  <div class="auth-cover__content">
+    <h2 class="auth-cover__title">{{ cover.title }}</h2>
+    <p class="auth-cover__description">{{ cover.description }}</p>
+    
+    {%- if cover.get('stats') %}
+    <div class="auth-stats">
+      {%- for stat in cover.stats %}
+      <div class="auth-stats__item">
+        <span class="auth-stats__value">{{ stat.value }}</span>
+        <span class="auth-stats__label">{{ stat.label }}</span>
+      </div>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+  </div>
+  
+  <div class="auth-cover__media">
+    <div class="auth-cover__image">
+      {{ cover.get('image', 'Design System Preview') }}
+    </div>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro auth_benefits(benefits) -%}
+<div class="auth-benefits">
+  <ul class="auth-benefits__list">
+    {%- for benefit in benefits %}
+    <li class="auth-benefits__item">
+      <span class="auth-benefits__check">✓</span>
+      {{ benefit }}
+    </li>
+    {%- endfor %}
+  </ul>
+</div>
+{%- endmacro -%}

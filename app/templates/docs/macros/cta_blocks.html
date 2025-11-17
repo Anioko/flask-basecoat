@@ -1,0 +1,61 @@
+{% macro cta_actions(actions) -%}
+<div class="cta-actions">
+  {% for action in actions %}
+  <button class="btn btn-{{ action.get('style', 'primary') }}" type="button">{{ action.get('label') }}</button>
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro cta_supporting(supporting) -%}
+<aside class="cta-supporting">
+  <p class="cta-supporting__label">{{ supporting.get('label') }}</p>
+  <ul class="cta-supporting__logos">
+    {% for logo in supporting.get('logos', []) %}
+    <li>{{ logo }}</li>
+    {% endfor %}
+  </ul>
+</aside>
+{%- endmacro %}
+
+{% macro cta_split(bullets, media) -%}
+<div class="cta-split">
+  <ul class="cta-bullets">
+    {% for bullet in bullets %}
+    <li>{{ bullet }}</li>
+    {% endfor %}
+  </ul>
+  <div class="cta-media">
+    <div class="cta-media__surface">
+      <span class="cta-media__badge">Live preview</span>
+      <p class="cta-media__meta">{{ media.get('meta', 'Composable layout updates in realtime.') }}</p>
+    </div>
+    {% if media.get('caption') %}
+    <p class="cta-media__caption">{{ media['caption'] }}</p>
+    {% endif %}
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro cta_metrics(metrics) -%}
+<ul class="cta-metrics">
+  {% for metric in metrics %}
+  <li>
+    <p class="cta-metrics__value">{{ metric.get('value') }}</p>
+    <p class="cta-metrics__label">{{ metric.get('label') }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro cta_inline_form(form, actions) -%}
+<form class="cta-inline" role="form" aria-label="{{ form.get('aria_label', 'Call to action form') }}">
+  <label class="sr-only" for="cta-inline-email">{{ form.get('aria_label', 'Email address') }}</label>
+  <input id="cta-inline-email" class="cta-inline__input" type="email" name="email" placeholder="{{ form.get('placeholder', 'Enter email') }}" required>
+  {% if actions %}
+  <button class="btn btn-{{ actions[0].get('style', 'primary') }}" type="submit">{{ actions[0].get('label', 'Submit') }}</button>
+  {% endif %}
+</form>
+{% if form.get('disclaimer') %}
+<p class="cta-inline__disclaimer">{{ form['disclaimer'] }}</p>
+{% endif %}
+{%- endmacro %}

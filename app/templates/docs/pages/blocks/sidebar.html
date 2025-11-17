@@ -1,0 +1,130 @@
+{% extends 'docs/layout.html' %}
+{% block content %}
+<section class="docs-section">
+  <p>The Basecoat implementation mirrors the shadcn sidebar layout: a fixed navigation rail, top toolbar, and scrollable content pane. Flexbox plus clamp-based padding keep the layout sharp on every breakpoint.</p>
+</section>
+<section class="docs-section">
+  <div class="docs-preview" data-preview>
+    <aside class="preview-sidebar">
+      <div class="preview-sidebar__header">
+        <span class="preview-logo">🚀</span>
+        <span class="preview-title">LaunchCtrl</span>
+      </div>
+      <nav class="preview-nav">
+        <a class="preview-nav__item is-active" href="#">
+          <span class="preview-nav__icon">🏠</span>
+          Overview
+        </a>
+        <a class="preview-nav__item" href="#">
+          <span class="preview-nav__icon">📊</span>
+          Analytics
+        </a>
+        <a class="preview-nav__item" href="#">
+          <span class="preview-nav__icon">👥</span>
+          Team
+        </a>
+        <a class="preview-nav__item" href="#">
+          <span class="preview-nav__icon">⚙️</span>
+          Settings
+        </a>
+      </nav>
+      <div class="preview-sidebar__footer">
+        <button class="btn btn-secondary w-full" type="button">New project</button>
+      </div>
+    </aside>
+    <section class="preview-main">
+      <header class="preview-main__header">
+        <div>
+          <h2 class="preview-main__title">Analytics overview</h2>
+          <p class="preview-main__subtitle">Detailed breakdown of active launches this quarter.</p>
+        </div>
+        <div class="preview-actions">
+          <button class="btn btn-ghost">Download</button>
+          <button class="btn btn-primary">Share dashboard</button>
+        </div>
+      </header>
+      <div class="preview-grid">
+        <div class="preview-card">
+          <p class="preview-card__label">Active campaigns</p>
+          <p class="preview-card__value">12</p>
+          <p class="preview-card__delta">+18% vs last month</p>
+        </div>
+        <div class="preview-card">
+          <p class="preview-card__label">Conversion rate</p>
+          <p class="preview-card__value">4.7%</p>
+          <p class="preview-card__delta is-positive">+0.6% vs goal</p>
+        </div>
+        <div class="preview-card">
+          <p class="preview-card__label">Avg. session</p>
+          <p class="preview-card__value">5m 24s</p>
+          <p class="preview-card__delta is-negative">-0.3m vs last week</p>
+        </div>
+      </div>
+      <div class="preview-table">
+    <div class="preview-table__row preview-table__row--header">
+          <span>Campaign</span>
+          <span>Status</span>
+          <span>Budget</span>
+          <span>Spend</span>
+        </div>
+        <div class="preview-table__row">
+          <span>Summer lift-off</span>
+          <span class="preview-status is-success">On track</span>
+          <span>$120K</span>
+          <span>$83K</span>
+        </div>
+        <div class="preview-table__row">
+          <span>Retention pulse</span>
+          <span class="preview-status is-warning">At risk</span>
+          <span>$64K</span>
+          <span>$49K</span>
+        </div>
+        <div class="preview-table__row">
+          <span>Referral booster</span>
+          <span class="preview-status">Planning</span>
+          <span>$32K</span>
+          <span>$0</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+<section class="docs-section">
+  <h2>Markup</h2>
+  <p>The following snippet renders the exact layout shown above. Copy it into any Flask template and swap the data with live content.</p>
+  <div class="docs-code" data-code>
+    <button type="button" class="docs-copy" data-copy>Copy</button>
+<pre><code class="language-html">&lt;div class=&quot;flex h-screen bg-slate-50 dark:bg-slate-900&quot;&gt;
+  &lt;aside class=&quot;flex w-72 flex-col border-r border-slate-200/70 bg-white/70 p-6 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/70&quot;&gt;
+    &lt;div class=&quot;flex items-center gap-2 text-lg font-semibold&quot;&gt;
+      &lt;span class=&quot;inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500/15 text-sm text-primary-500&quot;&gt;🚀&lt;/span&gt;
+      LaunchCtrl
+    &lt;/div&gt;
+    &lt;nav class=&quot;mt-6 flex flex-1 flex-col gap-1 text-sm&quot;&gt;
+      &lt;a class=&quot;docs-link-active&quot; href=&quot;#&quot;&gt;Overview&lt;/a&gt;
+      &lt;a class=&quot;docs-link&quot; href=&quot;#&quot;&gt;Analytics&lt;/a&gt;
+      &lt;a class=&quot;docs-link&quot; href=&quot;#&quot;&gt;Team&lt;/a&gt;
+      &lt;a class=&quot;docs-link&quot; href=&quot;#&quot;&gt;Settings&lt;/a&gt;
+    &lt;/nav&gt;
+    &lt;button class=&quot;btn btn-secondary mt-auto w-full&quot;&gt;New project&lt;/button&gt;
+  &lt;/aside&gt;
+  &lt;main class=&quot;flex flex-1 flex-col overflow-y-auto bg-slate-50 px-10 py-8 dark:bg-slate-950&quot;&gt;
+    &lt;header class=&quot;flex flex-wrap items-center justify-between gap-4&quot;&gt;
+      &lt;div&gt;
+  &lt;h2 class=&quot;text-xl font-semibold text-slate-900 dark:text-slate-100&quot;&gt;Analytics overview&lt;/h2&gt;
+  &lt;p class=&quot;text-sm text-slate-500 dark:text-slate-400&quot;&gt;Detailed breakdown of active launches this quarter.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;flex gap-2&quot;&gt;
+        &lt;button class=&quot;btn btn-ghost&quot;&gt;Download&lt;/button&gt;
+        &lt;button class=&quot;btn btn-primary&quot;&gt;Share dashboard&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+    &lt;section class=&quot;mt-8 grid gap-6 md:grid-cols-3&quot;&gt;
+      &lt;article class=&quot;docs-metric&quot;&gt;...&lt;/article&gt;
+      &lt;!-- Repeat metric cards --&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+&lt;/div&gt;</code></pre>
+  </div>
+</section>
+{% endblock %}

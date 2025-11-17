@@ -1,0 +1,98 @@
+{% extends 'docs/layout.html' %}
+{% from 'docs/macros/components.html' import component_showcase %}
+
+{% block content %}
+<section class="docs-section">
+  <div class="docs-callout docs-callout--info">
+    <h2>shadcn/ui Components</h2>
+    <p>
+      Beautifully designed components built using Radix UI and Tailwind CSS, adapted for Flask-Basecoat.
+      Copy and paste into your apps or use as reference for building your own component library.
+    </p>
+    <p><strong>{{ total_component_count }}</strong> components available with multiple variants each.</p>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2>Available Components</h2>
+  <p>
+    Each component includes multiple variants, comprehensive styling, and accessibility features.
+    Click on any component to see all available variants and usage examples.
+  </p>
+  
+  {% if components %}
+  <div class="docs-grid">
+    {% for component in components %}
+    <article class="docs-card">
+      <h3><a href="{{ component.url }}" class="docs-link">{{ component.title }}</a></h3>
+      <p>{{ component.description }}</p>
+      <p class="docs-meta">{{ component.variant_count }} variant{{ component.variant_count != 1 and 's' or '' }}</p>
+      <p><a class="docs-link" href="{{ component.url }}">View component &rarr;</a></p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="docs-empty">No components are currently available.</p>
+  {% endif %}
+</section>
+
+<section class="docs-section">
+  <h2>Quick Preview</h2>
+  <p>Here's a preview of some common components:</p>
+  
+  <div class="docs-preview" data-preview>
+    <div class="component-preview">
+      <!-- Button examples -->
+      <div class="component-group">
+        <h4>Buttons</h4>
+        <div class="component-row">
+          <button class="btn btn-primary" type="button">Primary</button>
+          <button class="btn btn-secondary" type="button">Secondary</button>
+          <button class="btn btn-outline" type="button">Outline</button>
+          <button class="btn btn-ghost" type="button">Ghost</button>
+        </div>
+      </div>
+      
+      <!-- Badge examples -->
+      <div class="component-group">
+        <h4>Badges</h4>
+        <div class="component-row">
+          <span class="badge">Default</span>
+          <span class="badge badge-secondary">Secondary</span>
+          <span class="badge badge-outline">Outline</span>
+          <span class="badge badge-destructive">Destructive</span>
+        </div>
+      </div>
+      
+      <!-- Alert example -->
+      <div class="component-group">
+        <h4>Alert</h4>
+        <div class="alert" role="alert">
+          <div class="alert-icon">ℹ️</div>
+          <div class="alert-content">
+            <h4 class="alert-title">Components are ready!</h4>
+            <p class="alert-description">You can now use these components in your Flask-Basecoat application.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2>Getting Started</h2>
+  <p>
+    These components are built to work with Basecoat CSS. To use them in your Flask application:
+  </p>
+  <ol class="docs-list docs-list--ordered">
+    <li>Include the Basecoat CSS framework in your project</li>
+    <li>Copy the component HTML structure from the examples</li>
+    <li>Customize the styling using Basecoat design tokens</li>
+    <li>Add interactive behavior with JavaScript as needed</li>
+  </ol>
+  
+  <p>
+    <a class="docs-link" href="https://basecoatui.dev" target="_blank" rel="noreferrer">Learn more about Basecoat CSS &rarr;</a>
+  </p>
+</section>
+{% endblock %}

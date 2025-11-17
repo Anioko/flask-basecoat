@@ -1,0 +1,211 @@
+{% macro calendar_day(day) -%}
+  {% set classes = ['calendar-block__day'] %}
+  {% if day.is_outside %}
+    {% set _ = classes.append('is-outside') %}
+  {% endif %}
+  {% if day.from_next %}
+    {% set _ = classes.append('is-outside-next') %}
+  {% endif %}
+  {% if day.is_disabled %}
+    {% set _ = classes.append('is-disabled') %}
+  {% endif %}
+  {% if day.is_in_range %}
+    {% set _ = classes.append('is-in-range') %}
+  {% endif %}
+  {% if day.is_range_start %}
+    {% set _ = classes.append('is-range-start') %}
+  {% endif %}
+  {% if day.is_range_end %}
+    {% set _ = classes.append('is-range-end') %}
+  {% endif %}
+  {% if day.is_selected %}
+    {% set _ = classes.append('is-selected') %}
+  {% endif %}
+  {% if day.is_today %}
+    {% set _ = classes.append('is-today') %}
+  {% endif %}
+  {% if day.badge %}
+    {% set _ = classes.append('has-badge') %}
+  {% endif %}
+  {% if day.custom %}
+    {% set _ = classes.append('has-custom') %}
+  {% endif %}
+  <span class="{{ classes | join(' ') }}">
+    <span class="calendar-block__day-number">{{ day.label }}</span>
+    {% if day.badge %}
+      <span class="calendar-block__day-badge">{{ day.badge }}</span>
+    {% endif %}
+    {% if day.custom %}
+        {% set tone = 'info' %}
+        {% if day.custom.tone is defined %}
+          {% set tone = day.custom.tone %}
+        {% elif 'tone' in day.custom %}
+          {% set tone = day.custom['tone'] %}
+        {% endif %}
+        <span class="calendar-block__day-pill calendar-block__day-pill--{{ tone }}">{{ day.custom.label }}</span>
+    {% endif %}
+  </span>
+{%- endmacro %}
+
+
+{% macro calendar_month(month, data) -%}
+  {% set has_weeks = month.week_numbers %}
+  <section class="calendar-block__month">
+    <header class="calendar-block__month-header">
+      <div>
+        <h3 class="calendar-block__month-title">{{ month.label }}</h3>
+        {% if data.navigation.dropdowns %}
+        <p class="calendar-block__month-caption">Adjust month and year</p>
+        {% endif %}
+      </div>
+      {% if data.navigation.dropdowns %}
+      <div class="calendar-block__month-controls" aria-hidden="true">
+        <button type="button" class="calendar-block__select">October</button>
+        <button type="button" class="calendar-block__select">2025</button>
+      </div>
+      {% endif %}
+    </header>
+    <div class="calendar-block__weekdays{% if has_weeks %} calendar-block__weekdays--with-weeks{% endif %}">
+      {% if has_weeks %}
+        <span class="calendar-block__weekday calendar-block__weekday--spacer">Wk</span>
+      {% endif %}
+      {% for label in month.weekday_labels %}
+        <span class="calendar-block__weekday">{{ label }}</span>
+      {% endfor %}
+    </div>
+    <div class="calendar-block__weeks">
+      {% for week in month.weeks %}
+      <div class="calendar-block__week{% if has_weeks %} calendar-block__week--with-weeks{% endif %}">
+        {% if has_weeks %}
+          <span class="calendar-block__week-number">{{ month.week_numbers[loop.index0] }}</span>
+        {% endif %}
+        {% for day in week %}
+          {{ calendar_day(day) }}
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {% if month.time_inline %}
+    <div class="calendar-block__time-inline">
+      <label>{{ month.time_inline.label }}</label>
+      <input type="time" value="{{ month.time_inline.value }}" />
+    </div>
+    {% endif %}
+  </section>
+{%- endmacro %}
+
+
+{% macro render_calendar_preview(variant) -%}
+  {% set data = variant.data or {} %}
+  {% set columns = data.columns or 1 %}
+  {% set size = data.size or 'standard' %}
+  <section class="docs-section">
+    <div class="docs-preview docs-preview--calendar docs-preview--{{ variant.name }}" data-preview data-block="{{ variant.name }}" data-calendar-mode="{{ data.mode }}">
+      <article class="calendar-block calendar-block--cols-{{ columns }} calendar-block--size-{{ size }}">
+        <header class="calendar-block__header">
+          <div class="calendar-block__heading">
+            <p class="calendar-block__title">{{ data.header.title }}</p>
+            {% if data.header.subtitle %}
+            <p class="calendar-block__subtitle">{{ data.header.subtitle }}</p>
+            {% endif %}
+            {% if data.header.meta %}
+            <span class="calendar-block__meta-tag">{{ data.header.meta }}</span>
+            {% endif %}
+          </div>
+          <div class="calendar-block__nav" aria-hidden="true">
+            {% if data.navigation.dropdowns %}
+            <button type="button" class="calendar-block__select">October</button>
+            <button type="button" class="calendar-block__select">2025</button>
+            {% endif %}
+            {% if data.navigation.chevrons %}
+            <button type="button" class="calendar-block__chevron">‹</button>
+            <button type="button" class="calendar-block__chevron">›</button>
+            {% endif %}
+          </div>
+        </header>
+        {% if data.inline_actions %}
+        <div class="calendar-block__inline-actions" aria-label="Calendar quick actions">
+          {% for action in data.inline_actions %}
+          <button type="button">{{ action }}</button>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="calendar-block__months calendar-block__months--{{ columns }}">
+          {% for month in data.months %}
+            {{ calendar_month(month, data) }}
+          {% endfor %}
+        </div>
+        {% if data.time_picker %}
+        <div class="calendar-block__time">
+          <label>{{ data.time_picker.label }}</label>
+          <input type="text" value="{{ data.time_picker.value }}" readonly />
+        </div>
+        {% endif %}
+        {% if data.presets %}
+        <div class="calendar-block__presets" aria-label="Date presets">
+          {% for preset in data.presets %}
+          <button type="button">{{ preset }}</button>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if data.inputs %}
+        <div class="calendar-block__inputs">
+          {% for field in data.inputs %}
+          <label>
+            <span>{{ field.label }}</span>
+            <input type="text" value="{{ field.value }}" readonly />
+          </label>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if data.filters %}
+        <div class="calendar-block__filters">
+          <label>{{ data.filters.label }}</label>
+          <select>
+            {% for option in data.filters.options %}
+            <option>{{ option }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        {% if data.events %}
+        <div class="calendar-block__events">
+          {% for event in data.events %}
+          <article>
+            <h4>{{ event.title }}</h4>
+            <p>{{ event.meta }}</p>
+          </article>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if data.notes %}
+        <div class="calendar-block__notes">
+          <h3>Upcoming</h3>
+          <ul>
+            {% for note in data.notes %}
+            <li>
+              <span class="calendar-block__note-label">{{ note.label }}</span>
+              <span class="calendar-block__note-meta">{{ note.meta }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% if data.drawer %}
+        <div class="calendar-block__drawer">
+          <h3>{{ data.drawer.title }}</h3>
+          <p>{{ data.drawer.copy }}</p>
+          <button type="button">{{ data.drawer.cta }}</button>
+        </div>
+        {% endif %}
+        {% if data.constraint or data.brand or (data.locale and data.locale != 'en') %}
+        <div class="calendar-block__meta-row">
+          {% if data.constraint %}<span>{{ data.constraint }}</span>{% endif %}
+          {% if data.brand %}<span>Powered by {{ data.brand }}</span>{% endif %}
+          {% if data.locale and data.locale != 'en' %}<span>Locale: {{ data.locale | upper }}</span>{% endif %}
+        </div>
+        {% endif %}
+      </article>
+    </div>
+  </section>
+{%- endmacro %}

@@ -1,0 +1,121 @@
+{% set data = variant.data or {} %}
+{% set versions = data.versions or [] %}
+{% set nav_groups = data.nav_main or [] %}
+{% set breadcrumbs = data.breadcrumbs or [] %}
+{% set cards = data.cards or [] %}
+{% set canvas = data.canvas or {} %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--sidebar-01 docs-preview--sidebar-02" data-preview data-block="sidebar-02">
+    <aside class="sidebar-01__aside">
+      <div class="sidebar-01__controls">
+        <button class="sidebar-01__version" type="button" aria-haspopup="listbox">
+          <span class="sidebar-01__version-label">{{ versions[0] if versions else 'v1.0.1' }}</span>
+          <span class="sidebar-01__version-meta">Version</span>
+          <span class="sidebar-01__version-icon">▾</span>
+        </button>
+        <div class="sidebar-01__search" role="search">
+          <span class="sidebar-01__search-icon" aria-hidden="true">⌕</span>
+          <input class="sidebar-01__search-input" type="search" placeholder="Search docs..." aria-label="Search documentation" />
+          <kbd class="sidebar-01__search-hint">⌘K</kbd>
+        </div>
+      </div>
+      <nav class="sidebar-01__nav sidebar-02__nav" aria-label="Primary">
+        {% for group in nav_groups %}
+  {% set is_open = group.get('is_open', True) %}
+        <details class="sidebar-02__group" {% if is_open %}open{% endif %}>
+          <summary class="sidebar-02__summary">
+            <span class="sidebar-02__summary-label">{{ group.title }}</span>
+            {% if group.action %}
+            <a class="sidebar-02__summary-action" href="{{ group.action.url or '#' }}" data-sidebar-02-action>{{ group.action.label }}</a>
+            {% endif %}
+            <span class="sidebar-02__summary-icon" aria-hidden="true">▸</span>
+          </summary>
+          <div class="sidebar-02__panel">
+            <ul class="sidebar-01__menu">
+              {% for item in group.get("items", []) %}
+              <li>
+                <a class="sidebar-01__link{% if item.is_active %} is-active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+        {% endfor %}
+      </nav>
+    </aside>
+    <section class="sidebar-01__main">
+      <header class="sidebar-01__main-header">
+        <button class="sidebar-01__trigger" type="button" aria-label="Toggle sidebar">
+          <span class="sidebar-01__trigger-icon">☰</span>
+        </button>
+        <div class="sidebar-01__breadcrumb" role="navigation" aria-label="Breadcrumb">
+          {% for crumb in breadcrumbs %}
+            {% if crumb.url %}
+            <a class="sidebar-01__breadcrumb-link" href="{{ crumb.url }}">{{ crumb.label }}</a>
+            {% if not loop.last %}<span class="sidebar-01__breadcrumb-sep">/</span>{% endif %}
+            {% else %}
+            <span class="sidebar-01__breadcrumb-current">{{ crumb.label }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </header>
+      <div class="sidebar-01__grid">
+        {% for card in cards %}
+        <article class="sidebar-01__card">
+          <p class="sidebar-01__card-label">{{ card.title }}</p>
+          <p class="sidebar-01__card-copy">{{ card['copy'] }}</p>
+        </article>
+        {% endfor %}
+      </div>
+      <div class="sidebar-01__canvas">
+        <div class="sidebar-01__canvas-header">
+          <h3>{{ canvas.title or 'Platform delivery timeline' }}</h3>
+          <p>{{ canvas['copy'] if 'copy' in canvas else 'Upcoming milestones for the documentation platform.' }}</p>
+        </div>
+        <div class="sidebar-01__canvas-body">
+          <div class="sidebar-01__timeline">
+            {% for milestone in canvas.timeline or [] %}
+            <div class="sidebar-01__timeline-item">
+              <span class="sidebar-01__timeline-dot" aria-hidden="true"></span>
+              <div>
+                <p class="sidebar-01__timeline-title">{{ milestone.title }}</p>
+                <p class="sidebar-01__timeline-meta">{{ milestone.meta }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="sidebar-01__activity">
+            {% for activity in canvas.activity or [] %}
+            <div class="sidebar-01__activity-row">
+              <span class="sidebar-01__activity-label">{{ activity.label }}</span>
+              <span class="sidebar-01__activity-value">{{ activity.value }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      (function() {
+        var script = document.currentScript;
+        if (!script) {
+          return;
+        }
+        var previewRoot = script.closest('[data-preview]');
+        if (!previewRoot) {
+          return;
+        }
+        var preventToggle = function(event) {
+          if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') {
+            return;
+          }
+          event.stopPropagation();
+        };
+        previewRoot.querySelectorAll('[data-sidebar-02-action]').forEach(function(action) {
+          action.addEventListener('click', preventToggle);
+          action.addEventListener('keydown', preventToggle);
+        });
+      })();
+    </script>
+  </div>
+</section>

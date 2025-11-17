@@ -1,0 +1,160 @@
+{
+  "groups": [
+    {
+      "id": "frontend",
+      "name": "Frontend Development",
+      "color": "blue"
+    },
+    {
+      "id": "backend",
+      "name": "Backend Development",
+      "color": "green"
+    },
+    {
+      "id": "design",
+      "name": "Design & UX",
+      "color": "purple"
+    },
+    {
+      "id": "qa",
+      "name": "Quality Assurance",
+      "color": "orange"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-1",
+      "group": "design",
+      "name": "User Research & Analysis",
+      "startDate": "2025-01-15",
+      "endDate": "2025-01-28",
+      "progress": 100,
+      "assignee": "Sarah Chen"
+    },
+    {
+      "id": "task-2",
+      "group": "design",
+      "name": "Wireframing & Prototyping",
+      "startDate": "2025-01-29",
+      "endDate": "2025-02-12",
+      "progress": 75,
+      "assignee": "Sarah Chen"
+    },
+    {
+      "id": "task-3",
+      "group": "design",
+      "name": "UI Design System",
+      "startDate": "2025-02-05",
+      "endDate": "2025-02-20",
+      "progress": 50,
+      "assignee": "Mike Johnson"
+    },
+    {
+      "id": "task-4",
+      "group": "frontend",
+      "name": "Component Library Setup",
+      "startDate": "2025-01-20",
+      "endDate": "2025-02-05",
+      "progress": 100,
+      "assignee": "David Kim"
+    },
+    {
+      "id": "task-5",
+      "group": "frontend",
+      "name": "Dashboard Implementation",
+      "startDate": "2025-02-06",
+      "endDate": "2025-02-25",
+      "progress": 60,
+      "assignee": "David Kim"
+    },
+    {
+      "id": "task-6",
+      "group": "frontend",
+      "name": "Authentication UI",
+      "startDate": "2025-02-15",
+      "endDate": "2025-03-01",
+      "progress": 30,
+      "assignee": "Lisa Wong"
+    },
+    {
+      "id": "task-7",
+      "group": "backend",
+      "name": "API Design & Documentation",
+      "startDate": "2025-01-18",
+      "endDate": "2025-02-02",
+      "progress": 100,
+      "assignee": "Alex Rivera"
+    },
+    {
+      "id": "task-8",
+      "group": "backend",
+      "name": "Database Schema",
+      "startDate": "2025-02-01",
+      "endDate": "2025-02-10",
+      "progress": 90,
+      "assignee": "Alex Rivera"
+    },
+    {
+      "id": "task-9",
+      "group": "backend",
+      "name": "Authentication Service",
+      "startDate": "2025-02-08",
+      "endDate": "2025-02-22",
+      "progress": 70,
+      "assignee": "Jordan Lee"
+    },
+    {
+      "id": "task-10",
+      "group": "backend",
+      "name": "Payment Integration",
+      "startDate": "2025-02-20",
+      "endDate": "2025-03-10",
+      "progress": 20,
+      "assignee": "Jordan Lee"
+    },
+    {
+      "id": "task-11",
+      "group": "qa",
+      "name": "Test Strategy & Planning",
+      "startDate": "2025-02-01",
+      "endDate": "2025-02-08",
+      "progress": 100,
+      "assignee": "Taylor Swift"
+    },
+    {
+      "id": "task-12",
+      "group": "qa",
+      "name": "Automated Testing Setup",
+      "startDate": "2025-02-10",
+      "endDate": "2025-02-25",
+      "progress": 65,
+      "assignee": "Taylor Swift"
+    },
+    {
+      "id": "task-13",
+      "group": "qa",
+      "name": "User Acceptance Testing",
+      "startDate": "2025-02-26",
+      "endDate": "2025-03-15",
+      "progress": 0,
+      "assignee": "Morgan Blake"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "milestone-1",
+      "name": "Design Complete",
+      "date": "2025-02-12"
+    },
+    {
+      "id": "milestone-2",
+      "name": "Alpha Release",
+      "date": "2025-02-25"
+    },
+    {
+      "id": "milestone-3",
+      "name": "Beta Launch",
+      "date": "2025-03-10"
+    }
+  ]
+}

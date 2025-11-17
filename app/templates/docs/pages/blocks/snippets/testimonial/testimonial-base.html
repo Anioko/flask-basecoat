@@ -1,0 +1,48 @@
+{% from 'docs/macros/testimonial_blocks.html' import testimonial_quote_collection, testimonial_featured, testimonial_logo_wall, testimonial_stats %}
+{% set data = variant.data or {} %}
+{% set layout = data.get('layout', 'grid') %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--testimonial" data-preview data-testimonial-layout="{{ layout }}">
+    <header class="testimonial-block__header">
+      {% if data.get('eyebrow') %}<span class="testimonial-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
+      <h2 class="testimonial-block__headline">{{ data.get('headline', 'What teams are saying') }}</h2>
+      {% if data.get('description') %}<p class="testimonial-block__description">{{ data['description'] }}</p>{% endif %}
+    </header>
+
+    {% if layout == 'highlight' %}
+      {{ testimonial_featured(data.get('featured', {}), layout) }}
+      {% if data.get('supporting') %}
+        {{ testimonial_quote_collection(data['supporting'], 'supporting') }}
+      {% endif %}
+    {% elif layout == 'logo-wall' %}
+      {% if data.get('logos') %}
+      {{ testimonial_logo_wall(data['logos']) }}
+      {% endif %}
+      {{ testimonial_quote_collection(data.get('quotes', []), layout) }}
+    {% elif layout == 'split' %}
+      <div class="testimonial-split">
+        {{ testimonial_featured(data.get('featured', {}), layout) }}
+        <div class="testimonial-split__aside">
+          {% if data.get('stats') %}
+          {{ testimonial_stats(data['stats']) }}
+          {% endif %}
+          {% if data.get('secondary') %}
+          {{ testimonial_quote_collection(data['secondary'], 'secondary') }}
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      {{ testimonial_quote_collection(data.get('quotes', []), layout) }}
+    {% endif %}
+
+    {% if data.get('cta') %}
+    <div class="testimonial-block__cta">
+      <button class="btn btn-{{ data['cta'].get('style', 'primary') }}" type="button">{{ data['cta'].get('label', 'Learn more') }}</button>
+    </div>
+    {% endif %}
+
+    {% if data.get('meta') %}
+    <p class="testimonial-block__meta">{{ data['meta'] }}</p>
+    {% endif %}
+  </div>
+</section>

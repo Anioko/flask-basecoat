@@ -1,0 +1,42 @@
+{% extends 'docs/layout.html' %}
+{% block content %}
+<section class="docs-section">
+  <div class="docs-callout docs-callout--info">
+    <h2>Shadcn blocks inventory</h2>
+    <p>
+      Pulled <strong>{{ total_block_count }}</strong> blocks across
+      <strong>{{ block_categories|length }}</strong> categories from the upstream shadcn/ui registry.
+      Every entry below includes a Basecoat-coded preview and copy-ready markup.
+    </p>
+  </div>
+</section>
+<section class="docs-section">
+  <h2>Category coverage</h2>
+  <p>
+    Each card jumps to a detailed page with Basecoat previews and production-ready markup
+    mirroring the original shadcn block.
+  </p>
+  {% if block_categories %}
+  <div class="docs-grid">
+    {% for category in block_categories %}
+    <article class="docs-card">
+      <h3><a href="{{ category.url }}" class="docs-link">{{ category.title }}</a></h3>
+  <p>{{ category.count }} block{{ category.count != 1 and 's' or '' }}</p>
+      <p>Coverage: Basecoat previews available</p>
+      <p><a class="docs-link" href="{{ category.url }}">Browse blocks &rarr;</a></p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="docs-empty">Block registry data could not be loaded.</p>
+  {% endif %}
+</section>
+<section class="docs-section">
+  <h2>Customization playbook</h2>
+  <ul class="docs-list">
+    <li>Lift snippets into your app by copying the markup blocks from each preview.</li>
+    <li>Swap Basecoat utility classes for project tokens as needed.</li>
+    <li>Extend the catalogue with product-specific variants by following the snippet registry pattern.</li>
+  </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,104 @@
+{#
+    Layout Macros - Reusable layout components for consistent page structure
+
+    These macros provide card-based layouts that can be used across all pages
+    to ensure consistent styling without manually adding card markup to each page.
+#}
+
+{% macro page_container(title="", description="", back_url="", back_text="Back") %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="w-full">
+            {% if back_url %}
+                <a class="btn btn--ghost inline-flex items-center" href="{{ back_url }}">
+                    ← {{ back_text }}
+                </a>
+            {% endif %}
+
+            <div class="card {% if back_url %}mt-6{% endif %}">
+                {% if title or description %}
+                    <div class="card-header">
+                        {% if title %}
+                            <h2 class="text-2xl font-semibold">{{ title }}</h2>
+                        {% endif %}
+                        {% if description %}
+                            <p class="text-sm text-slate-600 dark:text-slate-400">{{ description }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div class="card-content">
+                    {{ caller() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro simple_card(title="", description="", max_width="max-w-4xl") %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="{{ max_width }} mx-auto w-full">
+            <div class="card">
+                {% if title or description %}
+                    <div class="card-header">
+                        {% if title %}
+                            <h2 class="text-2xl font-semibold">{{ title }}</h2>
+                        {% endif %}
+                        {% if description %}
+                            <p class="text-sm text-slate-600 dark:text-slate-400">{{ description }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div class="card-content">
+                    {{ caller() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro two_column_layout(left_title="", right_title="") %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {# Left column (1/3 width) #}
+            <div class="lg:col-span-1">
+                <div class="card">
+                    {% if left_title %}
+                        <div class="card-header">
+                            <h3 class="text-lg font-semibold">{{ left_title }}</h3>
+                        </div>
+                    {% endif %}
+                    <div class="card-content">
+                        {{ caller('left') }}
+                    </div>
+                </div>
+            </div>
+
+            {# Right column (2/3 width) #}
+            <div class="lg:col-span-2">
+                <div class="card">
+                    {% if right_title %}
+                        <div class="card-header">
+                            <h3 class="text-lg font-semibold">{{ right_title }}</h3>
+                        </div>
+                    {% endif %}
+                    <div class="card-content">
+                        {{ caller('right') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro section_header(title, description="", action_url="", action_text="") %}
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="text-2xl font-semibold">{{ title }}</h2>
+            {% if description %}
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">{{ description }}</p>
+            {% endif %}
+        </div>
+        {% if action_url and action_text %}
+            <a href="{{ action_url }}" class="btn btn--sm">{{ action_text }}</a>
+        {% endif %}
+    </div>
+{% endmacro %}

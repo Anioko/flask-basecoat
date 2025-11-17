@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% block content %}
+    <div class="container mx-auto prose">
+
+        <div class="p-6 bg-white shadow rounded">
+            <h3 class="text-lg font-semibold">You need to confirm your account before continuing.</h3>
+
+            <p>When you created an account, you should have received an email from us at {{ current_user.email }} with a link to confirm your email address.</p>
+
+            <hr class="my-4" />
+
+            <h3 class="text-lg font-semibold">I didn't receive an email!</h3>
+
+            <p>No problem! Just click the button below and we'll send you another one.</p>
+            <a class="btn btn--sm mt-2 inline-block" href="{{ url_for('account.confirm_request') }}">Resend confirmation email</a>
+        </div>
+    </div>
+{% endblock %}

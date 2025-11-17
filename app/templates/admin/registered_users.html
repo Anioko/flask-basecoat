@@ -1,0 +1,104 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="w-full">
+            <a class="btn btn--ghost inline-flex items-center" href="{{ url_for('admin.index') }}">
+                ← Back to dashboard
+            </a>
+
+            <div class="card mt-6">
+                <div class="card-header">
+                    <h2 class="text-2xl font-semibold">Registered Users</h2>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">View and manage currently registered users.</p>
+                </div>
+                <div class="card-content">
+                    <div class="flex items-center gap-3 mb-4">
+                        <label for="select-role" class="sr-only">Filter by role</label>
+                        <select id="select-role" class="input w-64">
+                            <option value="">All account types</option>
+                            {% for r in roles %}
+                                <option value="{{ r.name }}">{{ r.name }}s</option>
+                            {% endfor %}
+                        </select>
+                        <div class="ml-auto">
+                            <input id="search-users" type="text" placeholder="Search users…" class="input w-64">
+                        </div>
+                    </div>
+
+                    {# Use overflow-x: scroll so that mobile views don't freak out
+                     # when the table is too wide #}
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th>First name</th>
+                                    <th class="sorted ascending">Last name</th>
+                                    <th>Email address</th>
+                                    <th>Account type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for u in users | sort(attribute='last_name') %}
+                                <tr data-href="{{ url_for('admin.user_info', user_id=u.id) }}" class="cursor-pointer">
+                                    <td>{{ u.first_name }}</td>
+                                    <td>{{ u.last_name }}</td>
+                                    <td>{{ u.email }}</td>
+                                    <td class="user role">{{ u.role.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function(){
+        var search = document.getElementById('search-users');
+        var selectRole = document.getElementById('select-role');
+        var tbody = document.querySelector('table tbody');
+        var rows = Array.from(tbody ? tbody.querySelectorAll('tr') : []);
+
+        function matchesSearch(row, q){
+            if(!q) return true;
+            q = q.toLowerCase();
+            return Array.from(row.querySelectorAll('td')).some(function(td){
+                return td.textContent.toLowerCase().indexOf(q) !== -1;
+            });
+        }
+
+        function matchesRole(row, role){
+            if(!role) return true;
+            var roleCell = row.querySelector('td.user.role');
+            return roleCell && roleCell.textContent.trim() === role;
+        }
+
+        function filterRows(){
+            var q = search ? search.value.trim() : '';
+            var role = selectRole ? selectRole.value : '';
+            rows.forEach(function(row){
+                var show = matchesSearch(row, q) && matchesRole(row, role);
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        if(search){
+            search.addEventListener('input', filterRows);
+        }
+        if(selectRole){
+            selectRole.addEventListener('change', filterRows);
+        }
+
+        // Attach click navigation to rows using data-href
+        rows.forEach(function(row){
+            var href = row.getAttribute('data-href');
+            if(href){
+                row.addEventListener('click', function(){ window.location.href = href; });
+            }
+        });
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'layouts/base.html' %}
+
+{% macro dashboard_option(title, endpoint, description=None) %}
+    <a class="block w-full" href="{{ url_for(endpoint) }}">
+        <div class="card">
+            <header>
+                <h2>{{ title }}</h2>
+                {% if description is not none %}
+                    <p>{{ description }}</p>
+                {% endif %}
+            </header>
+        </div>
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto w-full">
+            <h2 class="text-2xl font-semibold">Admin Dashboard</h2>
+            <div class="grid grid-cols-2 gap-6 mt-4">
+                {{ dashboard_option('Registered Users', 'admin.registered_users',
+                                    description='View and manage user accounts') }}
+                {{ dashboard_option('Add New User', 'admin.new_user',
+                                    description='Create a new user account') }}
+                {{ dashboard_option('Invite New User', 'admin.invite_user',
+                                    description='Invites a new user to create their own account') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

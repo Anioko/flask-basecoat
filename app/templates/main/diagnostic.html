@@ -1,0 +1,95 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Basecoat Diagnostic Page</h1>
+    
+    <div class="space-y-8">
+        <!-- Test 1: Direct .input class -->
+        <section class="border border-gray-300 p-4 rounded">
+            <h2 class="text-xl font-semibold mb-4">Test 1: Direct .input class</h2>
+            <input type="text" class="input" placeholder="This should have Basecoat styling" />
+            <p class="text-sm text-gray-600 mt-2">Expected: Border, padding, rounded corners</p>
+        </section>
+
+        <!-- Test 2: Input inside .form parent -->
+        <section class="border border-gray-300 p-4 rounded">
+            <h2 class="text-xl font-semibold mb-4">Test 2: Input inside .form parent</h2>
+            <form class="form">
+                <input type="text" placeholder="Input inside .form parent" />
+            </form>
+            <p class="text-sm text-gray-600 mt-2">Expected: Border, padding, rounded corners (even without .input class)</p>
+        </section>
+
+        <!-- Test 3: Button with .btn class -->
+        <section class="border border-gray-300 p-4 rounded">
+            <h2 class="text-xl font-semibold mb-4">Test 3: Button with .btn class</h2>
+            <button class="btn">Click Me</button>
+            <p class="text-sm text-gray-600 mt-2">Expected: Blue background, white text, padding</p>
+        </section>
+
+        <!-- Test 4: Alert component -->
+        <section class="border border-gray-300 p-4 rounded">
+            <h2 class="text-xl font-semibold mb-4">Test 4: Alert component</h2>
+            <div class="alert">
+                <h2>Alert Title</h2>
+                <p>This is an alert message</p>
+            </div>
+            <p class="text-sm text-gray-600 mt-2">Expected: Card-like box with border and padding</p>
+        </section>
+
+        <!-- Test 5: Card component -->
+        <section class="border border-gray-300 p-4 rounded">
+            <h2 class="text-xl font-semibold mb-4">Test 5: Card component</h2>
+            <div class="card">
+                <header>
+                    <h2>Card Title</h2>
+                    <p>Card description</p>
+                </header>
+            </div>
+            <p class="text-sm text-gray-600 mt-2">Expected: Card with shadow, border, padding</p>
+        </section>
+
+        <!-- Test 6: Complete form with proper structure -->
+        <section class="border border-gray-300 p-4 rounded">
+            <h2 class="text-xl font-semibold mb-4">Test 6: Complete form (Basecoat structure)</h2>
+            <form class="form grid gap-6">
+                <div class="grid gap-2">
+                    <label for="test-name">Full Name</label>
+                    <input type="text" id="test-name" class="input" placeholder="Enter your name" />
+                </div>
+                <div class="grid gap-2">
+                    <label for="test-email">Email</label>
+                    <input type="email" id="test-email" class="input" placeholder="Enter your email" />
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            <p class="text-sm text-gray-600 mt-2">Expected: All inputs styled, button styled, proper spacing</p>
+        </section>
+
+        <!-- CSS Check -->
+        <section class="border border-red-300 p-4 rounded bg-red-50">
+            <h2 class="text-xl font-semibold mb-4">CSS Loading Check</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Open DevTools (F12)</li>
+                <li>Go to Network tab</li>
+                <li>Refresh page (Ctrl+R)</li>
+                <li>Check if basecoat.cdn.min.css loaded (200 status)</li>
+                <li>Check if cdn.tailwindcss.com loaded (200 status)</li>
+            </ul>
+        </section>
+
+        <!-- Inspect Element Instructions -->
+        <section class="border border-blue-300 p-4 rounded bg-blue-50">
+            <h2 class="text-xl font-semibold mb-4">How to Inspect</h2>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Right-click on an input field above</li>
+                <li>Select "Inspect" or "Inspect Element"</li>
+                <li>Check the Styles panel on the right</li>
+                <li>Look for .input or :is(.form,.field) input[type=text] selectors</li>
+                <li>Check if border-width: 1px is shown (not crossed out)</li>
+            </ol>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% macro pricing_plan_card(plan, data, layout='classic') -%}
+<article class="pricing-plan{% if plan.get('highlighted') %} is-highlighted{% endif %}" data-layout="{{ layout }}">
+  {% if plan.get('badge') %}
+  <span class="pricing-plan__badge">{{ plan['badge'] }}</span>
+  {% endif %}
+  <h3 class="pricing-plan__title">{{ plan['name'] }}</h3>
+  {% if plan.get('description') %}
+  <p class="pricing-plan__description">{{ plan['description'] }}</p>
+  {% endif %}
+  <div class="pricing-plan__price">
+    {% set active_cycle = (data.get('billing_toggle') or {}).get('active') %}
+    {% set yearly_label = plan.get('price_yearly') if plan.get('price_yearly') else None %}
+    {% if active_cycle == 'yearly' and yearly_label %}
+    <span class="pricing-plan__amount">{{ yearly_label }}</span>
+    {% elif plan.get('price') %}
+    <span class="pricing-plan__amount">{{ plan['price'] }}</span>
+    {% else %}
+    <span class="pricing-plan__amount">Custom</span>
+    {% endif %}
+    {% if plan.get('period') %}
+    <span class="pricing-plan__period">/{{ plan['period'] }}</span>
+    {% endif %}
+  </div>
+  {% if plan.get('meta') %}
+  <p class="pricing-plan__meta">{{ plan['meta'] }}</p>
+  {% endif %}
+  {% if plan.get('features') %}
+  <ul class="pricing-plan__features">
+    {% for feature in plan['features'] %}
+    <li>{{ feature }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if plan.get('cta') %}
+  <div class="pricing-plan__actions">
+    <a class="btn btn-{{ plan['cta'].get('style', 'primary') }} w-full" href="{{ plan['cta'].get('url', '#') }}">{{ plan['cta'].get('label', 'Select plan') }}</a>
+  </div>
+  {% endif %}
+</article>
+{%- endmacro %}
+
+{% macro pricing_feature_matrix(matrix, plans, comparisons) -%}
+<section class="pricing-comparison" aria-label="Plan comparison">
+  <header class="pricing-comparison__header">
+    {% for plan in plans %}
+    <div class="pricing-comparison__plan{% if plan.get('highlighted') %} is-highlighted{% endif %}">
+      {% if plan.get('badge') %}<span class="pricing-plan__badge">{{ plan['badge'] }}</span>{% endif %}
+      <h3>{{ plan['name'] }}</h3>
+      <p class="pricing-plan__amount">{{ plan.get('price', 'Custom') }}{% if plan.get('period') %}<span class="pricing-plan__period">/{{ plan['period'] }}</span>{% endif %}</p>
+    </div>
+    {% endfor %}
+  </header>
+  <div class="pricing-comparison__body">
+    {% for row in matrix %}
+    <div class="pricing-comparison__row">
+      <p class="pricing-comparison__feature">{{ row['label'] }}</p>
+      {% for value in row['tiers'] %}
+      <div class="pricing-comparison__value">
+        {% if value is sameas False %}
+        <span class="pricing-icon pricing-icon--no" aria-hidden="true">✕</span>
+        {% elif value is sameas True %}
+        <span class="pricing-icon pricing-icon--yes" aria-hidden="true">✔</span>
+        {% else %}
+        <span>{{ value }}</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  {% if comparisons %}
+  <footer class="pricing-comparison__footer">
+    {% for comparison in comparisons %}
+    <a class="btn btn-{{ comparison['cta'].get('style', 'primary') }}" href="{{ comparison['cta'].get('url', '#') }}">{{ comparison['cta'].get('label', 'Select') }}</a>
+    {% endfor %}
+  </footer>
+  {% endif %}
+</section>
+{%- endmacro %}
+
+{% macro pricing_sidebar(sidebar) -%}
+<aside class="pricing-sidebar">
+  <h3 class="pricing-sidebar__title">{{ sidebar['title'] }}</h3>
+  <ul class="pricing-sidebar__list">
+    {% for item in sidebar.get('items', []) %}
+    <li>
+      <h4>{{ item['label'] }}</h4>
+      <p>{{ item['detail'] }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>
+{%- endmacro %}
+
+{% macro pricing_faq(faq_items) -%}
+<section class="pricing-faq" aria-label="Pricing FAQs">
+  <h3>Frequently asked questions</h3>
+  <div class="pricing-faq__grid">
+    {% for item in faq_items %}
+    <article>
+      <h4>{{ item['question'] }}</h4>
+      <p>{{ item['answer'] }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{%- endmacro %}

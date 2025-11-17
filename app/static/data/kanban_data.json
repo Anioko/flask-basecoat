@@ -1,0 +1,134 @@
+{
+  "columns": [
+    {
+      "id": "todo",
+      "name": "To Do",
+      "color": "slate"
+    },
+    {
+      "id": "in-progress",
+      "name": "In Progress",
+      "color": "blue"
+    },
+    {
+      "id": "review",
+      "name": "Review",
+      "color": "yellow"
+    },
+    {
+      "id": "done",
+      "name": "Done",
+      "color": "green"
+    }
+  ],
+  "cards": [
+    {
+      "id": "task-1",
+      "column": "todo",
+      "title": "Design new landing page",
+      "description": "Create wireframes and mockups for the new marketing site",
+      "priority": "high",
+      "assignee": {
+        "name": "Sarah Chen",
+        "avatar": "SC"
+      },
+      "dueDate": "2025-02-15"
+    },
+    {
+      "id": "task-2",
+      "column": "todo",
+      "title": "Update documentation",
+      "description": "Add API reference docs for new endpoints",
+      "priority": "medium",
+      "assignee": {
+        "name": "Mike Johnson",
+        "avatar": "MJ"
+      },
+      "dueDate": "2025-02-20"
+    },
+    {
+      "id": "task-3",
+      "column": "todo",
+      "title": "Fix responsive issues",
+      "description": "Mobile layout breaks on tablets",
+      "priority": "high",
+      "assignee": {
+        "name": "Lisa Wong",
+        "avatar": "LW"
+      },
+      "dueDate": "2025-02-12"
+    },
+    {
+      "id": "task-4",
+      "column": "in-progress",
+      "title": "Implement dark mode",
+      "description": "Add theme toggle and dark mode styles",
+      "priority": "medium",
+      "assignee": {
+        "name": "David Kim",
+        "avatar": "DK"
+      },
+      "dueDate": "2025-02-18"
+    },
+    {
+      "id": "task-5",
+      "column": "in-progress",
+      "title": "Build authentication flow",
+      "description": "Implement OAuth2 login with Google and GitHub",
+      "priority": "high",
+      "assignee": {
+        "name": "Sarah Chen",
+        "avatar": "SC"
+      },
+      "dueDate": "2025-02-14"
+    },
+    {
+      "id": "task-6",
+      "column": "review",
+      "title": "Add user analytics",
+      "description": "Track page views and user interactions",
+      "priority": "low",
+      "assignee": {
+        "name": "Mike Johnson",
+        "avatar": "MJ"
+      },
+      "dueDate": "2025-02-10"
+    },
+    {
+      "id": "task-7",
+      "column": "review",
+      "title": "Optimize database queries",
+      "description": "Add indexes and optimize slow queries",
+      "priority": "high",
+      "assignee": {
+        "name": "Lisa Wong",
+        "avatar": "LW"
+      },
+      "dueDate": "2025-02-11"
+    },
+    {
+      "id": "task-8",
+      "column": "done",
+      "title": "Setup CI/CD pipeline",
+      "description": "Configure GitHub Actions for automated testing",
+      "priority": "high",
+      "assignee": {
+        "name": "David Kim",
+        "avatar": "DK"
+      },
+      "dueDate": "2025-02-05"
+    },
+    {
+      "id": "task-9",
+      "column": "done",
+      "title": "Create component library",
+      "description": "Build reusable UI components",
+      "priority": "medium",
+      "assignee": {
+        "name": "Sarah Chen",
+        "avatar": "SC"
+      },
+      "dueDate": "2025-02-03"
+    }
+  ]
+}

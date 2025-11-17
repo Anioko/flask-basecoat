@@ -1,0 +1,91 @@
+{% macro feature_icon_grid(features) -%}
+<section class="feature-grid">
+  {% for item in features %}
+  <article class="feature-card">
+    {% if item.get('icon') %}
+    <span class="feature-icon">{{ item['icon'] }}</span>
+    {% endif %}
+    <div class="feature-card__body">
+      <h3 class="feature-card__title">{{ item.get('title') }}</h3>
+      <p class="feature-card__description">{{ item.get('description') }}</p>
+    </div>
+    {% if item.get('badge') %}
+    <span class="feature-card__badge">{{ item['badge'] }}</span>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{%- endmacro %}
+
+{% macro feature_list(features, variant='list') -%}
+<ul class="feature-list" data-variant="{{ variant }}">
+  {% for item in features %}
+  <li>
+    <h3>{{ item.get('title') }}</h3>
+    <p>{{ item.get('description') }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro feature_split(features, media) -%}
+<div class="feature-split">
+  <div class="feature-split__content">
+    {{ feature_list(features, 'split') }}
+  </div>
+  <aside class="feature-media">
+    <div class="feature-media__surface">
+      <h3 class="feature-media__title">{{ media.get('title') }}</h3>
+      <p class="feature-media__description">{{ media.get('description') }}</p>
+      {% if media.get('items') %}
+      <ul class="feature-media__stats">
+        {% for item in media.get('items', []) %}
+        <li>
+          <p class="feature-media__value">{{ item.get('value') }}</p>
+          <p class="feature-media__label">{{ item.get('label') }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% if media.get('caption') %}
+    <p class="feature-media__caption">{{ media.get('caption') }}</p>
+    {% endif %}
+  </aside>
+</div>
+{%- endmacro %}
+
+{% macro feature_metrics(metrics, highlights) -%}
+<section class="feature-metrics">
+  <div class="feature-metrics__grid">
+    {% for metric in metrics %}
+    <article>
+      <p class="feature-metrics__value">{{ metric.get('value') }}</p>
+      <p class="feature-metrics__label">{{ metric.get('label') }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% if highlights %}
+  <div class="feature-metrics__details">
+    {{ feature_list(highlights, 'metrics') }}
+  </div>
+  {% endif %}
+</section>
+{%- endmacro %}
+
+{% macro feature_timeline(steps) -%}
+<section class="feature-timeline">
+  {% for step in steps %}
+  <article class="feature-timeline__item">
+    <span class="feature-timeline__marker">{{ loop.index }}</span>
+    <div class="feature-timeline__body">
+      <h3 class="feature-timeline__title">{{ step.get('title') }}</h3>
+      <p class="feature-timeline__description">{{ step.get('description') }}</p>
+      {% if step.get('note') %}
+      <p class="feature-timeline__note">{{ step.get('note') }}</p>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</section>
+{%- endmacro %}

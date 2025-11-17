@@ -1,0 +1,238 @@
+{% macro _section_header(section) -%}
+  {% if section.title or section.description %}
+    <div class="drawer-block__section-heading">
+      {% if section.title %}
+        <h4 class="drawer-block__section-title">{{ section.title }}</h4>
+      {% endif %}
+      {% if section.description %}
+        <p class="drawer-block__section-description">{{ section.description }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+{%- endmacro %}
+
+{% macro _field_icon(field) -%}
+  {% if field.type == 'select' %}
+    <svg class="drawer-block__chevron" viewBox="0 0 20 20" aria-hidden="true">
+      <path d="M6.2 7.3a.75.75 0 0 1 1.06 0L10 10.02l2.74-2.72a.75.75 0 0 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L6.2 8.36a.75.75 0 0 1 0-1.06Z"></path>
+    </svg>
+  {% endif %}
+{%- endmacro %}
+
+{% macro _render_fields(section) -%}
+  <div class="drawer-block__fields">
+    {% for field in section.fields %}
+      <div class="drawer-block__field drawer-block__field--{{ field.type|default('text') }}">
+        <label class="drawer-block__field-label">{{ field.label }}</label>
+        <div class="drawer-block__field-control">
+          <span class="drawer-block__field-value">{{ field.value }}</span>
+          {{ _field_icon(field) }}
+        </div>
+        {% if field.hint %}
+          <p class="drawer-block__field-hint">{{ field.hint }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{%- endmacro %}
+
+{% macro _render_toggles(section) -%}
+  <div class="drawer-block__toggles">
+    {% for toggle in section.toggles %}
+      {% set is_checked = toggle.checked %}
+      <div class="drawer-block__toggle" data-state="{{ 'on' if is_checked else 'off' }}">
+        <span class="drawer-block__toggle-switch"></span>
+        <div class="drawer-block__toggle-copy">
+          <span class="drawer-block__toggle-label">{{ toggle.label }}</span>
+          {% if toggle.description %}
+            <span class="drawer-block__toggle-description">{{ toggle.description }}</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{%- endmacro %}
+
+{% macro _render_options(section) -%}
+  {% set control = section.control or 'checkbox' %}
+  <div class="drawer-block__options drawer-block__options--{{ control }}">
+    {% for option in section.options %}
+      {% set is_checked = option.checked %}
+      <div class="drawer-block__option" data-state="{{ 'on' if is_checked else 'off' }}">
+        <span class="drawer-block__option-control"></span>
+        <div class="drawer-block__option-copy">
+          <span class="drawer-block__option-label">{{ option.label }}</span>
+          {% if option.description %}
+            <span class="drawer-block__option-description">{{ option.description }}</span>
+          {% endif %}
+        </div>
+        {% if option.meta %}
+          <span class="drawer-block__option-meta">{{ option.meta }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{%- endmacro %}
+
+{% macro _render_list(section) -%}
+  <ul class="drawer-block__list">
+    {% for item in section.list_items %}
+      <li class="drawer-block__list-item{% if item.active %} is-active{% endif %}">
+        <div class="drawer-block__list-text">
+          <span class="drawer-block__list-title">{{ item.title }}</span>
+          {% if item.description %}
+            <span class="drawer-block__list-description">{{ item.description }}</span>
+          {% endif %}
+        </div>
+        {% if item.meta %}
+          <span class="drawer-block__list-meta">{{ item.meta }}</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{%- endmacro %}
+
+{% macro _render_summary(section) -%}
+  <dl class="drawer-block__summary">
+    {% for item in section.summary_items %}
+      <div class="drawer-block__summary-item">
+        <dt class="drawer-block__summary-label">{{ item.label }}</dt>
+        <dd class="drawer-block__summary-value">
+          <span>{{ item.value }}</span>
+          {% if item.badge_tone %}
+            <span class="drawer-block__summary-badge" data-tone="{{ item.badge_tone }}"></span>
+          {% endif %}
+        </dd>
+      </div>
+    {% endfor %}
+  </dl>
+{%- endmacro %}
+
+{% macro _render_timeline(section) -%}
+  <ol class="drawer-block__timeline">
+    {% for item in section.timeline %}
+      <li class="drawer-block__timeline-item">
+        <span class="drawer-block__timeline-marker"></span>
+        <div class="drawer-block__timeline-content">
+          <div class="drawer-block__timeline-heading">
+            <span class="drawer-block__timeline-title">{{ item.title }}</span>
+            {% if item.time %}
+              <span class="drawer-block__timeline-time">{{ item.time }}</span>
+            {% endif %}
+          </div>
+          {% if item.description %}
+            <p class="drawer-block__timeline-description">{{ item.description }}</p>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+{%- endmacro %}
+
+{% macro _render_pills(section) -%}
+  <div class="drawer-block__pills">
+    <div class="drawer-block__pill-collection">
+      {% for pill in section.pills %}
+        <span class="drawer-block__pill{% if pill.selected %} is-selected{% endif %}">{{ pill.label }}</span>
+      {% endfor %}
+    </div>
+    {% if section.add_label %}
+      <button class="drawer-block__pill-add" type="button">{{ section.add_label }}</button>
+    {% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro _render_section(section) -%}
+  <section class="drawer-block__section drawer-block__section--{{ section.kind|default('generic') }}">
+    {{ _section_header(section) }}
+    {% if section.kind == 'fields' and section.fields %}
+      {{ _render_fields(section) }}
+    {% elif section.kind == 'toggles' and section.toggles %}
+      {{ _render_toggles(section) }}
+    {% elif section.kind == 'options' and section.options %}
+      {{ _render_options(section) }}
+    {% elif section.kind == 'list' and section.list_items %}
+      {{ _render_list(section) }}
+    {% elif section.kind == 'summary' and section.summary_items %}
+      {{ _render_summary(section) }}
+    {% elif section.kind == 'timeline' and section.timeline %}
+      {{ _render_timeline(section) }}
+    {% elif section.kind == 'pills' and section.pills %}
+      {{ _render_pills(section) }}
+    {% endif %}
+  </section>
+{%- endmacro %}
+
+{% macro _render_avatar(header) -%}
+  {% set avatar = header.avatar %}
+  {% if avatar %}
+    <span class="drawer-block__avatar" data-tone="{{ avatar.tone|default('slate') }}">{{ avatar.initials }}</span>
+  {% endif %}
+{%- endmacro %}
+
+{% macro _render_badge(header) -%}
+  {% set badge = header.badge %}
+  {% if badge %}
+    <span class="drawer-block__badge" data-tone="{{ badge.tone|default('neutral') }}">{{ badge.label }}</span>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_drawer_preview(variant) -%}
+  {% set data = variant.get('data', {}) %}
+  {% set placement = data.get('placement', 'right') %}
+  {% set size = data.get('size', 'md') %}
+  {% set backdrop = data.get('backdrop', True) %}
+  <div class="drawer-block" data-placement="{{ placement }}" data-size="{{ size }}">
+    <div class="drawer-block__canvas">
+      {% if backdrop %}
+        <div class="drawer-block__scrim"></div>
+      {% endif %}
+      <div class="drawer-block__panel drawer-block__panel--{{ placement }} drawer-block__panel-size-{{ size }}">
+        {% set header = data.get('header') %}
+        {% if header %}
+          <header class="drawer-block__header">
+            <div class="drawer-block__header-top">
+              {{ _render_avatar(header) }}
+              <div class="drawer-block__header-titles">
+                {% if header.eyebrow %}
+                  <span class="drawer-block__eyebrow">{{ header.eyebrow }}</span>
+                {% endif %}
+                <div class="drawer-block__title-row">
+                  <h3 class="drawer-block__title">{{ header.title }}</h3>
+                  {{ _render_badge(header) }}
+                </div>
+                {% if header.meta %}
+                  <span class="drawer-block__meta">{{ header.meta }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% if header.description %}
+              <p class="drawer-block__description">{{ header.description }}</p>
+            {% endif %}
+          </header>
+        {% endif %}
+
+        <div class="drawer-block__body">
+          {% for section in data.get('body_sections', []) %}
+            {{ _render_section(section) }}
+          {% endfor %}
+        </div>
+
+        {% set footer = data.get('footer') %}
+        {% if footer %}
+          <footer class="drawer-block__footer">
+            {% if footer.primary %}
+              <button type="button" class="drawer-block__action drawer-block__action--primary" data-tone="{{ footer.primary.tone|default('primary') }}">{{ footer.primary.label }}</button>
+            {% endif %}
+            {% if footer.secondary %}
+              <button type="button" class="drawer-block__action drawer-block__action--secondary">{{ footer.secondary.label }}</button>
+            {% endif %}
+            {% if footer.tertiary %}
+              <button type="button" class="drawer-block__action drawer-block__action--tertiary" data-tone="{{ footer.tertiary.tone|default('neutral') }}">{{ footer.tertiary.label }}</button>
+            {% endif %}
+          </footer>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{%- endmacro %}

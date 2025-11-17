@@ -1,0 +1,46 @@
+{% from 'docs/macros/hero_blocks.html' import hero_actions, hero_highlights, hero_social_proof, hero_stats, hero_announcement, hero_badges, hero_enterprise, hero_media %}
+{% set data = variant.data or {} %}
+{% set layout = data.get('layout', 'centered') %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--hero" data-preview data-hero-layout="{{ layout }}">
+    {% if data.get('announcement') %}
+    {{ hero_announcement(data['announcement']) }}
+    {% endif %}
+    
+    <header class="hero-block__header">
+      {% if data.get('eyebrow') %}<span class="hero-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
+      <h1 class="hero-block__headline">{{ data.get('headline', 'Welcome to the future') }}</h1>
+      {% if data.get('description') %}<p class="hero-block__description">{{ data['description'] }}</p>{% endif %}
+    </header>
+
+    {% if layout == 'split' %}
+      <div class="hero-split">
+        <div class="hero-split__content">
+          {{ hero_actions(data.get('actions', [])) }}
+          {% if data.get('stats') %}
+          {{ hero_stats(data['stats']) }}
+          {% endif %}
+        </div>
+        <div class="hero-split__media">
+          {{ hero_media(data.get('media', {})) }}
+        </div>
+      </div>
+    {% elif layout == 'gradient' %}
+      {% if data.get('badges') %}
+      {{ hero_badges(data['badges']) }}
+      {% endif %}
+      {{ hero_actions(data.get('actions', [])) }}
+      {% if data.get('enterprise') %}
+      {{ hero_enterprise(data['enterprise']) }}
+      {% endif %}
+    {% else %}
+      {{ hero_actions(data.get('actions', [])) }}
+      {% if data.get('highlights') %}
+      {{ hero_highlights(data['highlights']) }}
+      {% endif %}
+      {% if data.get('social_proof') %}
+      {{ hero_social_proof(data['social_proof']) }}
+      {% endif %}
+    {% endif %}
+  </div>
+</section>

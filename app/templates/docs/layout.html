@@ -1,0 +1,109 @@
+{% set current_slug = page.slug if page else none %}
+<!DOCTYPE html>
+<html lang="en" data-color-theme="light">
+  <head>
+    {% include 'partials/_head.html' %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.3/dist/basecoat.cdn.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/docs.css') }}">
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="docs-shell">
+    <button class="docs-mobile-toggle" type="button" data-mobile-toggle aria-label="Toggle navigation">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    </button>
+    <aside class="docs-sidebar" data-sidebar>
+      <div class="docs-sidebar__header">
+        <a href="{{ url_for('main.index') }}" class="docs-brand">
+          <span class="docs-brand__logo">🌗</span>
+          <span class="docs-brand__label">Basecoat Design System</span>
+        </a>
+      </div>
+      <nav class="docs-nav" aria-label="Documentation navigation">
+        {% for section in docs_nav %}
+          <div class="docs-nav__section">
+            <h2 class="docs-nav__heading">{{ section.title }}</h2>
+            <ul class="docs-nav__list">
+              {% for item in section.pages %}
+                {% set is_blocks_descendant = page.slug and page.slug.startswith('blocks/') %}
+                {% set is_active = item.slug == page.slug or (is_blocks_descendant and item.slug == 'blocks') %}
+                <li>
+                  <a href="{{ url_for('docs.page', slug=item.slug) }}" class="docs-nav__link {% if is_active %}is-active{% endif %}" {% if is_active %}aria-current="page"{% endif %}>
+                    <span class="docs-nav__title">{{ item.title }}</span>
+                    <span class="docs-nav__description">{{ item.description }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </nav>
+      <div class="docs-sidebar__footer">
+        <a class="docs-sidebar__cta" href="https://github.com/hack4impact/flask-base" target="_blank" rel="noreferrer">View Original Flask-Base</a>
+        <a class="docs-sidebar__cta" href="https://basecoatui.dev" target="_blank" rel="noreferrer">Basecoat UI</a>
+      </div>
+    </aside>
+    <div class="docs-main" data-main>
+      <header class="docs-topbar">
+        <div class="docs-breadcrumbs" aria-label="Breadcrumb">
+          {% for crumb in breadcrumbs %}
+            {% if not loop.last %}
+              {% if crumb.is_link %}
+                <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+              {% else %}
+                <span>{{ crumb.label }}</span>
+              {% endif %}
+              <span class="divider">/</span>
+            {% else %}
+              <span aria-current="page">{{ crumb.label }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <form class="docs-search" role="search" aria-label="Docs search">
+          <label class="sr-only" for="docs-search">Search docs</label>
+          <svg class="docs-search__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-5.197-5.197m0 0A6.75 6.75 0 1 0 5.25 5.25a6.75 6.75 0 0 0 10.553 8.053Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="docs-search" class="docs-search__input" type="search" name="query" placeholder="Search docs…" autocomplete="off" spellcheck="false" data-docs-search>
+          <div class="docs-search__results" data-docs-search-results aria-live="polite"></div>
+        </form>
+        <div class="docs-actions">
+          <button type="button" class="docs-action" data-theme-toggle>
+            <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5V3m0 18v-1.5M6.52 6.52 5.4 5.4m13.2 13.2-1.12-1.12M4.5 12H3m18 0h-1.5M6.52 17.48 5.4 18.6m13.2-13.2-1.12 1.12M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.25a8.25 8.25 0 0 0 13.72 6.12 8.25 8.25 0 0 1-8.09-11.17A8.25 8.25 0 0 0 4 12.25Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            <span class="sr-only">Toggle theme</span>
+          </button>
+          <a class="docs-action" href="https://github.com/hack4impact/flask-basecoat" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </header>
+      <main class="docs-content" id="content">
+        <div class="docs-content__inner">
+          <article class="docs-article">
+            <header class="docs-page-header">
+              <p class="docs-eyebrow">{{ page.section if page.section else 'Basecoat Docs' }}</p>
+              <h1>{{ page.title }}</h1>
+              <p class="docs-page-description">{{ page.description }}</p>
+            </header>
+            {% block content %}{% endblock %}
+          </article>
+          <aside class="docs-toc" data-docs-toc aria-label="On this page" role="navigation"></aside>
+        </div>
+        <nav class="docs-pagination" aria-label="Pagination">
+          {% if prev_page %}
+            <a class="docs-pagination__link prev" href="{{ url_for('docs.page', slug=prev_page.slug) }}">
+              <span class="label">Previous</span>
+              <span class="title">{{ prev_page.title }}</span>
+            </a>
+          {% endif %}
+          {% if next_page %}
+            <a class="docs-pagination__link next" href="{{ url_for('docs.page', slug=next_page.slug) }}">
+              <span class="label">Next</span>
+              <span class="title">{{ next_page.title }}</span>
+            </a>
+          {% endif %}
+        </nav>
+      </main>
+    </div>
+    <script src="{{ url_for('static', filename='scripts/docs.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scripts/components.js') }}" defer></script>
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

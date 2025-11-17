@@ -1,0 +1,59 @@
+{% extends 'docs/layout.html' %}
+{% block content %}
+<section class="docs-section">
+  <div class="docs-callout docs-callout--info">
+    <h2>{{ block.title }}</h2>
+    <p>{{ block.description or 'No description provided by the upstream registry.' }}</p>
+    <p>
+      Primary category:
+      <a class="docs-link" href="{{ url_for('docs.page', slug='blocks/' ~ category.id) }}">{{ category.title }}</a>
+    </p>
+    <p>
+      Upstream reference:
+      <a class="docs-link" href="https://ui.shadcn.com/blocks/{{ block.name }}" target="_blank" rel="noreferrer">ui.shadcn.com/blocks/{{ block.name }}</a>
+    </p>
+  </div>
+</section>
+<section class="docs-section">
+  <h2>Categories</h2>
+  {% if block.categories %}
+  <ul class="docs-list">
+    {% for item in block.categories %}
+    <li>
+      {% if item.is_current %}
+      <span class="docs-link-active">{{ item.title }} (current)</span>
+      {% else %}
+      <a class="docs-link" href="{{ item.url }}">{{ item.title }}</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No categories attached to this block.</p>
+  {% endif %}
+</section>
+{% set variant = block.snippet_context.variant %}
+{% include block.snippet_template %}
+<section class="docs-section">
+  <h2>Related blocks</h2>
+  {% if related_blocks %}
+  <div class="docs-grid">
+    {% for item in related_blocks %}
+    <article class="docs-card">
+      <h3><a class="docs-link" href="{{ item.url }}">{{ item.title }}</a></h3>
+      <p><a class="docs-link" href="{{ item.url }}">Open block &rarr;</a></p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>There are no related blocks in the {{ category.title }} category yet.</p>
+  {% endif %}
+</section>
+<section class="docs-section">
+  <h2>Next steps</h2>
+  <ul class="docs-list">
+    <li>Embed additional Basecoat previews for related variants in this family.</li>
+    <li>Mark coverage status in <code>app/docs/catalog.py</code> when the block ships.</li>
+  </ul>
+</section>
+{% endblock %}

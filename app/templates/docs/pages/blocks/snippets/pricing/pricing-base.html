@@ -1,0 +1,82 @@
+{% from 'docs/macros/pricing_blocks.html' import pricing_plan_card, pricing_feature_matrix, pricing_sidebar, pricing_faq %}
+{% set data = variant.data or {} %}
+{% set plans = data.get('plans', []) %}
+<section class="docs-section">
+  <div class="docs-preview docs-preview--pricing" data-preview data-pricing-layout="{{ data.get('layout', 'classic') }}">
+    <header class="pricing-header">
+      <div class="pricing-header__meta">
+        {% if data.get('eyebrow') %}<span class="pricing-eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
+        <h2 class="pricing-headline">{{ data.get('headline', 'Pricing plans') }}</h2>
+        {% if data.get('description') %}<p class="pricing-description">{{ data['description'] }}</p>{% endif %}
+      </div>
+      {% if data.get('announcement') %}
+      <aside class="pricing-announcement">
+        <h3>{{ data['announcement'].get('heading') }}</h3>
+        <p>{{ data['announcement'].get('copy') }}</p>
+        {% if data['announcement'].get('action') %}
+  <a class="btn btn-ghost" href="{{ data['announcement']['action'].get('url', '#') }}">{{ data['announcement']['action'].get('label', 'Learn more') }}</a>
+        {% endif %}
+      </aside>
+      {% endif %}
+    </header>
+
+    {% if data.get('billing_toggle') %}
+    {% set toggle = data['billing_toggle'] %}
+    <div class="pricing-toggle" role="group" aria-label="{{ toggle.get('label', 'Billing options') }}">
+      {% for option in toggle.get('options', []) %}
+      {% set is_active = option.get('value') == toggle.get('active') %}
+      <button type="button" class="pricing-toggle__option{% if is_active %} is-active{% endif %}">
+        <span>{{ option.get('label') }}</span>
+        {% if option.get('badge') %}<span class="pricing-toggle__badge">{{ option['badge'] }}</span>{% endif %}
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if data.get('layout') == 'comparison' %}
+    {{ pricing_feature_matrix(data.get('feature_matrix', []), plans, data.get('comparisons', [])) }}
+    {% elif data.get('layout') == 'split' %}
+    <div class="pricing-split">
+      <div class="pricing-split__primary">
+        {% for plan in plans %}
+        {{ pricing_plan_card(plan, data, data.get('layout')) }}
+        {% endfor %}
+      </div>
+      {% if data.get('sidebar') %}
+      {{ pricing_sidebar(data['sidebar']) }}
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="pricing-grid{% if data.get('layout') %} pricing-grid--{{ data['layout'] }}{% endif %}">
+      {% for plan in plans %}
+      {{ pricing_plan_card(plan, data, data.get('layout')) }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if data.get('addons') %}
+    <section class="pricing-addons" aria-label="Add-ons">
+      <h3>Optional add-ons</h3>
+      <ul>
+        {% for addon in data['addons'] %}
+        <li>
+          <div>
+            <h4>{{ addon['name'] }}</h4>
+            <p>{{ addon['detail'] }}</p>
+          </div>
+          <span class="pricing-addons__price">{{ addon['price'] }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    {% if data.get('faq') %}
+    {{ pricing_faq(data['faq']) }}
+    {% endif %}
+
+    {% if data.get('footnote') %}
+    <p class="pricing-footnote">{{ data['footnote'] }}</p>
+    {% endif %}
+  </div>
+</section>

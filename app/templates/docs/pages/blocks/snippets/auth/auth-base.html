@@ -1,0 +1,22 @@
+{%- from "docs/macros/auth_blocks.html" import auth_form, auth_cover, auth_benefits -%}
+
+{%- set data = variant.data -%}
+
+{%- if data.layout == 'split' -%}
+<div class="auth-split">
+  <div class="auth-split__form">
+    {{ auth_form(data) }}
+    {%- if data.get('benefits') %}
+    {{ auth_benefits(data.benefits) }}
+    {%- endif %}
+  </div>
+  <div class="auth-split__cover">
+    {{ auth_cover(data.cover) }}
+  </div>
+</div>
+
+{%- else -%}
+<div class="auth-simple">
+  {{ auth_form(data) }}
+</div>
+{%- endif -%}
