@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - shadcn/ui Example</title>
+    <title>Stonewind Trekker - Product Detail - shadcn/ui Example</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,132 +23,182 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+
+        let currentQty = 1;
+        function updateQuantity(delta) {
+            currentQty = Math.max(1, currentQty + delta);
+            document.getElementById('qty-display').textContent = currentQty;
+        }
+
+        const images = [
+            'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=1000&q=80',
+            'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1000&q=80',
+            'https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1000&q=80',
+            'https://images.unsplash.com/photo-1578932750294-f5075e85f44a?auto=format&fit=crop&w=1000&q=80'
+        ];
+        let currentImgIdx = 0;
+
+        function setMainImage(index) {
+            currentImgIdx = (index + images.length) % images.length;
+            document.getElementById('main-product-img').src = images[currentImgIdx];
+            document.querySelectorAll('[data-thumb-idx]').forEach(el => {
+                const idx = parseInt(el.getAttribute('data-thumb-idx'));
+                if (idx === currentImgIdx) {
+                    el.classList.add('border-primary', 'ring-2', 'ring-primary');
+                    el.classList.remove('border-border');
+                } else {
+                    el.classList.remove('border-primary', 'ring-2', 'ring-primary');
+                    el.classList.add('border-border');
+                }
+            });
+        }
+
+        function cycleImage(delta) {
+            setMainImage(currentImgIdx + delta);
+        }
+
+        function selectSize(btn) {
+            document.querySelectorAll('.size-pill').forEach(b => {
+                b.className = "size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer";
+            });
+            btn.className = "size-pill flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-primary text-primary-foreground text-sm font-medium transition-colors shadow-xs cursor-pointer";
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-8 flex flex-col justify-between">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
     {{ bc.toast_container() }}
 
-    <div class="max-w-6xl mx-auto w-full space-y-6">
-        {# Top Navigation #}
-        <div class="flex items-center justify-between border-b border-border pb-4">
-            <div class="flex items-center gap-2 text-sm text-muted-foreground">
-                <a href="{{ url_for('basecoat_examples.product_list') }}" class="hover:text-foreground">Store</a>
-                <span>/</span>
-                <a href="{{ url_for('basecoat_examples.product_list') }}" class="hover:text-foreground">Audio</a>
-                <span>/</span>
-                <span class="text-foreground font-medium">Studio Pro Active</span>
+    <div class="max-w-7xl mx-auto space-y-6">
+        {# Top Navigation and Actions #}
+        <div class="flex items-center justify-between border-b border-border pb-6">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Store</span>
             </div>
             <div class="flex items-center gap-3">
-                {{ bc.button('Back to Catalog', href=url_for('basecoat_examples.product_list'), variant='ghost', size='sm', icon='arrow-left') }}
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
                 {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
             </div>
         </div>
 
-        {# Product Main Section #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-            {# Left: Gallery #}
-            <div class="space-y-4">
-                <div class="h-96 rounded-xl border border-border bg-muted/40 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="headphones" class="h-32 w-32 text-muted-foreground/30"></i>
-                    <div class="absolute top-4 left-4">
-                        {{ bc.badge('Flagship Edition', variant='default') }}
+        {# Title and Category Header #}
+        <div class="flex items-start justify-between">
+            <div class="grid gap-1">
+                <div class="text-sm font-medium text-muted-foreground uppercase tracking-wide">Jacket</div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-foreground">Stonewind Trekker</h1>
+                <div class="flex items-center gap-2 mt-1">
+                    <div class="flex items-center gap-0.5">
+                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-muted-foreground/30"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-foreground">4.9</span>
+                    <span class="text-xs text-muted-foreground">(128 reviews)</span>
+                </div>
+            </div>
+            {{ bc.button(variant='ghost', size='icon', class='rounded-full text-muted-foreground hover:text-foreground', icon='share-2') }}
+        </div>
+
+        <div class="border-t border-border"></div>
+
+        {# Main Grid #}
+        <div class="grid items-start gap-8 md:grid-cols-2 lg:gap-12 pt-4">
+            {# Image Gallery #}
+            <div class="grid gap-4 md:grid-cols-[100px_1fr] lg:grid-cols-[110px_1fr]">
+                {# Thumbnails #}
+                <div class="hidden flex-col gap-3 md:flex">
+                    <div data-thumb-idx="0" onclick="setMainImage(0)" class="overflow-hidden rounded-lg border-2 border-primary ring-2 ring-primary cursor-pointer transition-all">
+                        <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 1" class="aspect-4/3 object-cover h-20 w-full">
+                    </div>
+                    <div data-thumb-idx="1" onclick="setMainImage(1)" class="overflow-hidden rounded-lg border border-border cursor-pointer transition-all hover:border-foreground/50">
+                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 2" class="aspect-4/3 object-cover h-20 w-full">
+                    </div>
+                    <div data-thumb-idx="2" onclick="setMainImage(2)" class="overflow-hidden rounded-lg border border-border cursor-pointer transition-all hover:border-foreground/50">
+                        <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 3" class="aspect-4/3 object-cover h-20 w-full">
+                    </div>
+                    <div data-thumb-idx="3" onclick="setMainImage(3)" class="overflow-hidden rounded-lg border border-border cursor-pointer transition-all hover:border-foreground/50">
+                        <img src="https://images.unsplash.com/photo-1578932750294-f5075e85f44a?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 4" class="aspect-4/3 object-cover h-20 w-full">
                     </div>
                 </div>
-                <div class="grid grid-cols-4 gap-3">
-                    {% for idx in range(1, 5) %}
-                        <div class="h-20 rounded-lg border {{ 'border-primary ring-2 ring-primary/20' if idx == 1 else 'border-border' }} bg-muted/30 flex items-center justify-center cursor-pointer hover:border-primary/60 transition-colors">
-                            <i data-lucide="image" class="h-6 w-6 text-muted-foreground/40"></i>
-                        </div>
-                    {% endfor %}
+
+                {# Main Image #}
+                <div class="relative overflow-hidden rounded-xl border border-border bg-muted/20">
+                    <img id="main-product-img" src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=1000&q=80" alt="Stonewind Trekker Jacket" class="aspect-4/3 h-[410px] w-full object-cover">
+                    
+                    <div class="absolute top-4 left-4 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                        New Arrival
+                    </div>
+
+                    <div class="absolute top-1/2 left-3 -translate-y-1/2">
+                        {{ bc.button(variant='secondary', size='icon', class='rounded-full h-9 w-9 bg-background/80 backdrop-blur-xs hover:bg-background shadow-sm', icon='chevron-left', on_click='cycleImage(-1)') }}
+                    </div>
+                    <div class="absolute top-1/2 right-3 -translate-y-1/2">
+                        {{ bc.button(variant='secondary', size='icon', class='rounded-full h-9 w-9 bg-background/80 backdrop-blur-xs hover:bg-background shadow-sm', icon='chevron-right', on_click='cycleImage(1)') }}
+                    </div>
                 </div>
             </div>
 
-            {# Right: Purchase & Configuration #}
-            <div class="space-y-6">
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between">
-                        {{ bc.badge('In Stock', variant='secondary') }}
-                        <div class="flex items-center gap-1 text-sm text-amber-500 font-semibold">
-                            <i data-lucide="star" class="h-4 w-4 fill-amber-500"></i>
-                            <span>4.9</span>
-                            <span class="text-muted-foreground font-normal">(128 customer reviews)</span>
-                        </div>
+            {# Product Details & Purchase Controls #}
+            <div class="grid gap-6">
+                {# Pricing #}
+                <div class="flex items-baseline gap-3">
+                    <span class="text-4xl font-extrabold tracking-tight text-foreground">$99.29</span>
+                    <span class="text-lg text-muted-foreground line-through font-medium">$129.99</span>
+                    <span class="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">Save 24%</span>
+                </div>
+
+                {# Color Options #}
+                <div class="grid gap-2">
+                    <label class="text-sm font-semibold text-foreground">Color</label>
+                    <div class="flex items-center gap-3">
+                        <button type="button" class="h-8 w-8 rounded-full bg-neutral-900 border-2 border-primary ring-2 ring-primary ring-offset-2 ring-offset-background cursor-pointer"></button>
+                        <button type="button" class="h-8 w-8 rounded-full bg-[#1e3a8a] border border-border ring-offset-2 ring-offset-background hover:scale-105 transition-transform cursor-pointer"></button>
+                        <button type="button" class="h-8 w-8 rounded-full bg-[#3f6212] border border-border ring-offset-2 ring-offset-background hover:scale-105 transition-transform cursor-pointer"></button>
                     </div>
-                    <h1 class="text-3xl font-bold tracking-tight">Studio Pro Active Headphones</h1>
-                    <div class="text-3xl font-extrabold text-foreground pt-1">$349.00</div>
-                    <p class="text-sm text-muted-foreground leading-relaxed pt-2">
-                        Engineered with custom dual-driver acoustic architecture and high-performance active noise cancellation. Features lossless USB-C audio and up to 40 hours of battery life.
+                </div>
+
+                {# Size Selection #}
+                <div class="grid gap-2">
+                    <label class="text-sm font-semibold text-foreground">Size</label>
+                    <div class="flex items-center gap-2">
+                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">S</div>
+                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-primary text-primary-foreground text-sm font-medium transition-colors shadow-xs cursor-pointer" onclick="selectSize(this)">M</div>
+                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">L</div>
+                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">XL</div>
+                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">2XL</div>
+                    </div>
+                </div>
+
+                {# Composition #}
+                <div class="grid gap-1">
+                    <label class="text-sm font-semibold text-foreground">Composition</label>
+                    <p class="text-sm text-muted-foreground">
+                        Premium Fabric Blend: 70% Merino Wool & 30% Acrylic with weather-resistant DWR coating.
                     </p>
                 </div>
 
-                {# Color Selection #}
-                <div class="space-y-2 pt-2 border-t border-border">
-                    <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Finish</label>
-                    <div class="flex items-center gap-3">
-                        <div class="h-7 w-7 rounded-full bg-zinc-900 border-2 border-primary ring-2 ring-primary/20 cursor-pointer" title="Space Black"></div>
-                        <div class="h-7 w-7 rounded-full bg-zinc-300 border border-border cursor-pointer hover:scale-105 transition-transform" title="Silver"></div>
-                        <div class="h-7 w-7 rounded-full bg-indigo-950 border border-border cursor-pointer hover:scale-105 transition-transform" title="Midnight"></div>
-                        <div class="h-7 w-7 rounded-full bg-amber-100 border border-border cursor-pointer hover:scale-105 transition-transform" title="Starlight"></div>
+                {# Quantity #}
+                <div class="grid gap-2">
+                    <label class="text-sm font-semibold text-foreground">Quantity</label>
+                    <div class="flex items-center gap-2">
+                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='minus', on_click='updateQuantity(-1)') }}
+                        <div id="qty-display" class="flex h-8 w-12 items-center justify-center rounded-md border border-border bg-card text-sm font-semibold text-foreground">
+                            1
+                        </div>
+                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='plus', on_click='updateQuantity(1)') }}
                     </div>
                 </div>
 
-                {# Actions #}
-                <div class="space-y-3 pt-4 border-t border-border">
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center border border-border rounded-md bg-background">
-                            <button type="button" class="px-3 py-2 text-muted-foreground hover:text-foreground">&minus;</button>
-                            <span class="px-3 py-2 text-sm font-semibold">1</span>
-                            <button type="button" class="px-3 py-2 text-muted-foreground hover:text-foreground">&plus;</button>
-                        </div>
-                        <div class="flex-1">
-                            {{ bc.button('Add to Cart', variant='default', class='w-full justify-center', icon='shopping-bag') }}
-                        </div>
-                    </div>
-                    {{ bc.button('Instant Checkout with Apple Pay', variant='outline', class='w-full justify-center') }}
-                </div>
-
-                {# Value Badges #}
-                <div class="grid grid-cols-2 gap-3 pt-2">
-                    <div class="flex items-center gap-2 p-3 rounded-lg border border-border bg-muted/20 text-xs">
-                        <i data-lucide="truck" class="h-4 w-4 text-primary"></i>
-                        <span>Free 2-day delivery</span>
-                    </div>
-                    <div class="flex items-center gap-2 p-3 rounded-lg border border-border bg-muted/20 text-xs">
-                        <i data-lucide="shield-check" class="h-4 w-4 text-primary"></i>
-                        <span>2-year warranty included</span>
-                    </div>
+                {# CTA Buttons #}
+                <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+                    {{ bc.button('Add to Cart', variant='default', class='h-12 flex-1 text-base font-semibold justify-center', icon='shopping-bag') }}
+                    {{ bc.button('Buy Now', class='h-12 flex-1 bg-[#D9FF66] hover:bg-[#c6eb5e] text-neutral-900 border-0 text-base font-bold justify-center shadow-xs') }}
                 </div>
             </div>
-        </div>
-
-        {# Specifications Data Table #}
-        <div class="space-y-4 pt-8 border-t border-border">
-            <h2 class="text-xl font-bold tracking-tight">Technical Specifications</h2>
-            {% set spec_headers = [('property', 'Specification'), ('detail', 'Metric / Value')] %}
-            {% set specs = [
-                ('Acoustic Driver', '40mm custom planar transducer with ultra-low distortion'),
-                ('Active Noise Cancellation', 'Continuous adaptive real-time acoustic monitoring'),
-                ('Battery Life', '40 hours ANC on / 50 hours ANC off'),
-                ('Fast Charging', '10-minute charge delivers 4 hours playback via USB-C'),
-                ('Microphones', '6 beamforming microphones for voice clarity in noisy environments'),
-                ('Weight', '260 grams (9.17 ounces)')
-            ] %}
-            {% call bc.table() %}
-                <thead>
-                    <tr class="border-b border-border bg-muted/50">
-                        <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground w-1/3">Specification</th>
-                        <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Metric / Value</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                    {% for prop, val in specs %}
-                        <tr class="hover:bg-muted/50 transition-colors">
-                            <td class="p-4 align-middle font-semibold text-foreground">{{ prop }}</td>
-                            <td class="p-4 align-middle text-muted-foreground">{{ val }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% endcall %}
         </div>
     </div>
 </body>

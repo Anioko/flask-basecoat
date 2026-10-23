@@ -9,6 +9,7 @@
     loading=false,
     icon=none,
     icon_position='left',
+    icon_right=none,
     href=none,
     id=none,
     name=none,
@@ -16,6 +17,10 @@
     on_click=none,
     aria_label=none
 ) %}
+    {% if icon_right and not icon %}
+        {% set icon = icon_right %}
+        {% set icon_position = 'right' %}
+    {% endif %}
     {% set base_classes = 'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 cursor-pointer' %}
 
     {% set variant_map = {

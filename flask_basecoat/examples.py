@@ -197,78 +197,35 @@ def dashboard():
 @examples_bp.route('/tasks')
 def tasks():
     """Shadcn Tasks Data Table screen."""
-    task_items = [
-        {
-            'code': 'TASK-8782',
-            'title': "You can't compress the program without quantifying the open-source SSD pixel!",
-            'status': 'in-progress',
-            'status_label': 'In Progress',
-            'priority': 'medium'
-        },
-        {
-            'code': 'TASK-7878',
-            'title': 'Try to calculate the EXE feed, maybe it will index the multi-byte pixel!',
-            'status': 'backlog',
-            'status_label': 'Backlog',
-            'priority': 'medium'
-        },
-        {
-            'code': 'TASK-7839',
-            'title': 'We need to bypass the neural TCP card!',
-            'status': 'todo',
-            'status_label': 'Todo',
-            'priority': 'high'
-        },
-        {
-            'code': 'TASK-5562',
-            'title': 'The SAS interface is down, bypass the open-source pixel so we can back up the PNG bandwidth!',
-            'status': 'backlog',
-            'status_label': 'Backlog',
-            'priority': 'medium'
-        },
-        {
-            'code': 'TASK-8686',
-            'title': "I'll parse the wireless SSL protocol, that should driver the API panel!",
-            'status': 'canceled',
-            'status_label': 'Canceled',
-            'priority': 'medium'
-        },
-        {
-            'code': 'TASK-1280',
-            'title': 'Use the digital TLS panel, then you can transmit the haptic system!',
-            'status': 'done',
-            'status_label': 'Done',
-            'priority': 'high'
-        },
-        {
-            'code': 'TASK-7262',
-            'title': 'The UTF8 array is down, navigate the neural transmitter so we can generate the RAM microchip!',
-            'status': 'done',
-            'status_label': 'Done',
-            'priority': 'low'
-        },
-        {
-            'code': 'TASK-1138',
-            'title': "Generating the driver won't do anything, we need to index the open-source TCP microchip!",
-            'status': 'in-progress',
-            'status_label': 'In Progress',
-            'priority': 'medium'
-        },
-        {
-            'code': 'TASK-7184',
-            'title': 'We need to program the back-end GB pixel!',
-            'status': 'todo',
-            'status_label': 'Todo',
-            'priority': 'low'
-        },
-        {
-            'code': 'TASK-5160',
-            'title': "Calculating the bus won't do anything, we need to navigate the back-end JSON protocol!",
-            'status': 'in-progress',
-            'status_label': 'In Progress',
-            'priority': 'high'
-        }
-    ]
+    import json, os
+    json_path = os.path.join(os.path.dirname(__file__), 'data', 'tasks.json')
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                raw_tasks = json.load(f)
+            task_items = []
+            for t in raw_tasks:
+                st = t.get('status', 'todo').lower()
+                st_norm = st.replace(' ', '-')
+                task_items.append({
+                    'code': t.get('id', ''),
+                    'title': t.get('title', ''),
+                    'status': st_norm,
+                    'status_label': t.get('status', '').title(),
+                    'priority': t.get('priority', 'medium').lower(),
+                    'label': t.get('label', 'feature')
+                })
+        except Exception:
+            task_items = []
+    else:
+        task_items = []
+
+    if not task_items:
+        task_items = [
+            {'code': 'TASK-8782', 'title': "You can't compress the program without quantifying the open-source SSD pixel!", 'status': 'in-progress', 'status_label': 'In Progress', 'priority': 'medium', 'label': 'documentation'},
+            {'code': 'TASK-7878', 'title': 'Try to calculate the EXE feed, maybe it will index the multi-byte pixel!', 'status': 'backlog', 'status_label': 'Backlog', 'priority': 'medium', 'label': 'documentation'},
+            {'code': 'TASK-7839', 'title': 'We need to bypass the neural TCP card!', 'status': 'todo', 'status_label': 'Todo', 'priority': 'high', 'label': 'bug'}
+        ]
 
     return render_template('examples/tasks.html', tasks=task_items)
 

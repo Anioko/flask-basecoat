@@ -23,139 +23,154 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+        function updateSliderVal(sliderId, displayId) {
+            const val = document.getElementById(sliderId).value;
+            document.getElementById(displayId).textContent = val;
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-6 flex flex-col justify-between">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 lg:p-8">
     {{ bc.toast_container() }}
 
-    <div class="max-w-7xl mx-auto w-full space-y-4">
-        {# Top Navigation Bar #}
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-4">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                    </svg>
-                    <span>Playground</span>
-                </div>
-                {{ bc.badge('Interactive Lab', variant='outline', class='text-xs') }}
+    <div class="max-w-7xl mx-auto space-y-6">
+        {# Top Navigation and Actions #}
+        <div class="flex items-center justify-between border-b border-border pb-4">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Playground</span>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-3">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Save Preset', variant='outline', size='sm', icon='save') }}
-                {{ bc.button('View Code', variant='outline', size='sm', icon='code') }}
-                {{ bc.button('Share', variant='outline', size='sm', icon='share-2') }}
                 {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
             </div>
         </div>
 
-        {# Main Grid: Prompt Canvas + Model Tuning Sidebar #}
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {# Left: Prompt Canvas #}
-            <div class="lg:col-span-8 space-y-4">
-                {% call bc.card() %}
-                    <div class="space-y-4">
-                        <div class="space-y-1.5">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-semibold">System Instructions</label>
-                                <span class="text-xs text-muted-foreground">Sets model persona and operational guardrails</span>
-                            </div>
-                            <textarea
-                                rows="3"
-                                class="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >You are an expert full-stack Python software engineer specializing in Flask, Basecoat UI, and shadcn component architecture. Provide clean, production-ready code with comprehensive typing and zero component drift.</textarea>
+        {# Header & Toolbar from playground/page.tsx #}
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-foreground">Playground</h1>
+                <p class="text-xs text-muted-foreground mt-0.5">The OpenAI playground is an interface for experimenting with GPT-4 and reasoning models.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <select class="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                    <option>Load a preset...</option>
+                    <option>Grammar correction</option>
+                    <option>Code generation</option>
+                    <option>Structured JSON extractor</option>
+                </select>
+                {{ bc.button('Save', variant='secondary', size='sm', icon='save') }}
+                {{ bc.button('View Code', variant='outline', size='sm', icon='code') }}
+                {{ bc.button('Share', variant='outline', size='sm', icon='share-2') }}
+                {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='rotate-ccw') }}
+            </div>
+        </div>
+
+        {# Main Grid: Canvas (Left) + Sliders Sidebar (Right) #}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
+            {# Left Prompt Canvas #}
+            <div class="space-y-6">
+                {# System Prompt Card #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-semibold text-foreground">System Prompt</label>
+                        <span class="text-xs text-muted-foreground">Instructions & Context</span>
+                    </div>
+                    <textarea
+                        rows="4"
+                        class="w-full rounded-md border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none font-mono"
+                    >You are an expert full-stack engineer and UI architect. You output clean, canonical components that strictly adhere to shadcn design tokens and accessibility standards.</textarea>
+                </div>
+
+                {# User Input & Response Canvas #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-semibold text-foreground">User Prompt</label>
+                        <span class="text-xs text-muted-foreground">Prompt completion</span>
+                    </div>
+                    <textarea
+                        rows="8"
+                        placeholder="Enter your prompt here..."
+                        class="w-full rounded-md border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                    >Refactor the pricing table into a 4-tier responsive grid with monthly and yearly toggling. Include custom accent borders for the Solo tier.</textarea>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span>Tokens: ~42</span>
                         </div>
-
-                        <div class="space-y-1.5">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-semibold">User Prompt &amp; Completion</label>
-                                <span class="text-xs text-muted-foreground">Input prompts and streamed tokens</span>
-                            </div>
-                            <textarea
-                                rows="12"
-                                class="w-full rounded-md border border-input bg-background p-3 font-mono text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >Write a Jinja2 macro demonstrating caller slot composability for an enterprise Basecoat UI data table.
-
-Macro requirements:
-1. Support headers list [('col_id', 'Column Title')].
-2. Support custom row rendering via Jinja2 caller().
-3. Include striped and hover variant states matching shadcn design tokens.</textarea>
-                        </div>
-
-                        <div class="flex items-center justify-between pt-2 border-t border-border">
-                            <div class="flex items-center gap-3 text-xs text-muted-foreground">
-                                <span>Tokens: <strong>384 / 2048</strong></span>
-                                <span>Latency: <strong>210ms</strong></span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                {{ bc.button('Clear Canvas', variant='ghost', size='sm') }}
-                                {{ bc.button('Submit Prompt', variant='default', size='sm', icon='play') }}
-                            </div>
+                        <div class="flex items-center gap-2">
+                            {{ bc.button('Submit', variant='default', size='sm', icon='sparkles') }}
                         </div>
                     </div>
-                {% endcall %}
+                </div>
             </div>
 
-            {# Right: Hyperparameter Tuning Sidebar #}
-            <div class="lg:col-span-4 space-y-4">
-                {% call bc.card(title='Model Settings', description='Configure inference parameters and token budgets.') %}
-                    <div class="space-y-5 pt-2">
-                        {# Model Selector #}
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-semibold">Model Architecture</label>
-                            <select class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                                <option>gpt-4o (Omni multimodal)</option>
-                                <option>claude-3-5-sonnet (Anthropic)</option>
-                                <option>gemini-1.5-pro (Google DeepMind)</option>
-                                <option>deepseek-coder-v2 (Specialized)</option>
-                            </select>
-                        </div>
+            {# Right Tuning Sidebar #}
+            <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Model</label>
+                    <select class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                        <option>gpt-4o</option>
+                        <option>gpt-4-turbo</option>
+                        <option>claude-3-5-sonnet</option>
+                        <option>o1-preview</option>
+                    </select>
+                </div>
 
-                        {# Temperature Slider #}
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="font-semibold">Temperature</span>
-                                <span class="font-mono text-muted-foreground">0.7</span>
-                            </div>
-                            <input type="range" min="0" max="1" step="0.05" value="0.7" class="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer">
-                            <p class="text-[11px] text-muted-foreground">Controls randomness: lowering results in less random completions.</p>
-                        </div>
-
-                        {# Maximum Length Slider #}
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="font-semibold">Maximum Tokens</span>
-                                <span class="font-mono text-muted-foreground">2048</span>
-                            </div>
-                            <input type="range" min="256" max="4096" step="128" value="2048" class="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer">
-                            <p class="text-[11px] text-muted-foreground">The maximum number of tokens to generate.</p>
-                        </div>
-
-                        {# Top P Slider #}
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="font-semibold">Top P</span>
-                                <span class="font-mono text-muted-foreground">0.9</span>
-                            </div>
-                            <input type="range" min="0" max="1" step="0.05" value="0.9" class="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer">
-                            <p class="text-[11px] text-muted-foreground">Controls diversity via nucleus sampling.</p>
-                        </div>
-
-                        {# Stop Sequences #}
-                        <div class="space-y-1.5 pt-2 border-t border-border">
-                            <label class="text-xs font-semibold">Stop Sequences</label>
-                            <div class="flex flex-wrap gap-1.5 mb-1.5">
-                                {{ bc.badge('### END', variant='secondary', class='text-[10px]') }}
-                                {{ bc.badge('<stop>', variant='secondary', class='text-[10px]') }}
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Enter sequence and hit Return"
-                                class="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                            />
-                        </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="font-semibold text-foreground">Temperature</label>
+                        <span id="temp-val" class="font-mono text-xs text-muted-foreground">0.70</span>
                     </div>
-                {% endcall %}
+                    <input
+                        id="temp-slider"
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value="0.70"
+                        class="w-full accent-primary cursor-pointer"
+                        oninput="updateSliderVal('temp-slider', 'temp-val')"
+                    >
+                    <p class="text-[11px] text-muted-foreground">Controls randomness: lowering results in less random completions.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="font-semibold text-foreground">Maximum Length</label>
+                        <span id="len-val" class="font-mono text-xs text-muted-foreground">256</span>
+                    </div>
+                    <input
+                        id="len-slider"
+                        type="range"
+                        min="1"
+                        max="4096"
+                        step="1"
+                        value="256"
+                        class="w-full accent-primary cursor-pointer"
+                        oninput="updateSliderVal('len-slider', 'len-val')"
+                    >
+                    <p class="text-[11px] text-muted-foreground">The maximum number of tokens to generate.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="font-semibold text-foreground">Top P</label>
+                        <span id="topp-val" class="font-mono text-xs text-muted-foreground">0.90</span>
+                    </div>
+                    <input
+                        id="topp-slider"
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value="0.90"
+                        class="w-full accent-primary cursor-pointer"
+                        oninput="updateSliderVal('topp-slider', 'topp-val')"
+                    >
+                    <p class="text-[11px] text-muted-foreground">Controls diversity via nucleus sampling.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Changelog & Updates - shadcn/ui Example</title>
+    <title>Changelog - shadcn/ui Example</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,17 +25,17 @@
         }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 lg:p-8">
     {{ bc.toast_container() }}
 
-    <div class="max-w-5xl mx-auto space-y-12">
-        {# Top Navigation #}
+    <div class="max-w-6xl mx-auto space-y-8">
+        {# Top Navigation and Actions #}
         <div class="flex items-center justify-between border-b border-border pb-6">
             <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
                 <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
                 </svg>
-                <span>Product Release Notes</span>
+                <span>Phosphorus Platform</span>
             </div>
             <div class="flex items-center gap-3">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
@@ -43,62 +43,118 @@
             </div>
         </div>
 
-        {# Header Banner #}
-        <header class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 p-8 md:p-14 text-white shadow-xl dark:border border-border">
-            <div class="relative z-10 space-y-3 max-w-2xl">
-                <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-sm">Release Stream</span>
-                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">What&apos;s new in Entelim?</h1>
-                <p class="text-zinc-300 text-sm md:text-base leading-relaxed">
-                    A chronicle of feature releases, architectural ratchets, design system upgrades, and platform enhancements.
+        {# Vibrant Gradient Hero Header #}
+        <header class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-8 text-center text-white shadow-lg md:p-14 lg:p-18">
+            <div class="relative z-10 mx-auto max-w-3xl space-y-4">
+                <h1 class="text-3xl font-extrabold tracking-tight md:text-5xl">What&apos;s new?</h1>
+                <p class="text-base text-balance opacity-90 sm:text-lg">
+                    A rundown of the latest Phosphorus feature releases, product enhancements, design updates and important bug fixes.
                 </p>
             </div>
         </header>
 
-        {# Timeline Entries #}
-        <div class="space-y-12 pt-4">
-            {% for entry in changelog %}
-                <div class="grid gap-4 md:grid-cols-[140px_1fr] md:gap-8 border-b border-border pb-12 last:border-b-0">
-                    {# Date Column #}
-                    <div class="text-muted-foreground text-sm font-medium pt-1">
-                        {{ entry.date }}
-                    </div>
-
-                    {# Details Column #}
-                    <div class="space-y-4">
-                        <div class="flex flex-wrap items-center gap-3">
-                            <h2 class="text-2xl font-bold tracking-tight text-foreground">{{ entry.version }}</h2>
-                            {% for tag in entry.tags %}
-                                {{ bc.badge(tag.name, variant=tag.variant or 'secondary') }}
-                            {% endfor %}
+        {# Main Changelog Entries #}
+        <main class="mx-auto max-w-5xl px-2 py-8 sm:px-4">
+            <div class="grid gap-12">
+                {# Entry 1: Mar 22, 2023 #}
+                <div class="grid gap-4 md:grid-cols-[140px_1fr] md:gap-8">
+                    <div class="text-sm font-semibold text-muted-foreground mt-1 md:text-right">Mar 22, 2023</div>
+                    <div class="grid gap-4">
+                        <h2 class="text-2xl font-bold tracking-tight text-foreground">Version 4.2.92</h2>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="inline-flex items-center rounded-full bg-purple-500/20 px-2.5 py-0.5 text-xs font-semibold text-purple-600 dark:text-purple-400">
+                                Improvements
+                            </span>
+                            <span class="inline-flex items-center rounded-full bg-red-500/20 px-2.5 py-0.5 text-xs font-semibold text-red-600 dark:text-red-400">
+                                Bug Fixes
+                            </span>
+                        </div>
+                        
+                        <div class="grid gap-2">
+                            <h3 class="text-base font-semibold text-foreground">Improvements</h3>
+                            <ul class="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
+                                <li>Improved tooltip UI in settings.</li>
+                            </ul>
                         </div>
 
-                        <p class="text-sm text-muted-foreground leading-relaxed">{{ entry.summary }}</p>
+                        <div class="grid gap-2">
+                            <h3 class="text-base font-semibold text-foreground">Bugfixes</h3>
+                            <ul class="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
+                                <li>SAML request signing support.</li>
+                                <li>SAML encrypted claims support.</li>
+                            </ul>
+                        </div>
 
-                        {% if entry.improvements %}
-                            <div class="space-y-2 pt-2">
-                                <h3 class="text-sm font-semibold tracking-tight text-foreground">Improvements</h3>
-                                <ul class="space-y-1.5 text-sm text-muted-foreground list-disc pl-5">
-                                    {% for item in entry.improvements %}
-                                        <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
+                        <div class="mt-4 overflow-hidden rounded-xl border border-border bg-card shadow-xs">
+                            <div class="h-48 w-full bg-muted/40 flex items-center justify-center p-6 text-center text-muted-foreground text-sm">
+                                <div class="space-y-1">
+                                    <i data-lucide="layout-dashboard" class="h-8 w-8 mx-auto text-primary/70"></i>
+                                    <p class="font-medium text-foreground">Phosphorus Tooltip UI Preview</p>
+                                    <p class="text-xs">Settings & Governance Module v4.2.92</p>
+                                </div>
                             </div>
-                        {% endif %}
-
-                        {% if entry.fixes %}
-                            <div class="space-y-2 pt-2">
-                                <h3 class="text-sm font-semibold tracking-tight text-foreground">Bug Fixes</h3>
-                                <ul class="space-y-1.5 text-sm text-muted-foreground list-disc pl-5">
-                                    {% for item in entry.fixes %}
-                                        <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+
+                <div class="border-t border-border"></div>
+
+                {# Entry 2: Mar 15, 2023 #}
+                <div class="grid gap-4 md:grid-cols-[140px_1fr] md:gap-8">
+                    <div class="text-sm font-semibold text-muted-foreground mt-1 md:text-right">Mar 15, 2023</div>
+                    <div class="grid gap-4">
+                        <h2 class="text-2xl font-bold tracking-tight text-foreground">Version 4.2.88</h2>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="inline-flex items-center rounded-full bg-purple-500/20 px-2.5 py-0.5 text-xs font-semibold text-purple-600 dark:text-purple-400">
+                                Improvements
+                            </span>
+                            <span class="inline-flex items-center rounded-full bg-red-500/20 px-2.5 py-0.5 text-xs font-semibold text-red-600 dark:text-red-400">
+                                Bug Fixes
+                            </span>
+                        </div>
+                        
+                        <div class="grid gap-2">
+                            <h3 class="text-base font-semibold text-foreground">Improvements</h3>
+                            <ul class="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
+                                <li>Enhanced dashboard loading performance.</li>
+                                <li>New filtering options for user management.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid gap-2">
+                            <h3 class="text-base font-semibold text-foreground">Bugfixes</h3>
+                            <ul class="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
+                                <li>Fixed an issue with report generation for large datasets.</li>
+                                <li>Resolved minor UI glitches on mobile devices.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-border"></div>
+
+                {# Entry 3: Mar 08, 2023 #}
+                <div class="grid gap-4 md:grid-cols-[140px_1fr] md:gap-8">
+                    <div class="text-sm font-semibold text-muted-foreground mt-1 md:text-right">Mar 08, 2023</div>
+                    <div class="grid gap-4">
+                        <h2 class="text-2xl font-bold tracking-tight text-foreground">Version 4.2.85</h2>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="inline-flex items-center rounded-full bg-purple-500/20 px-2.5 py-0.5 text-xs font-semibold text-purple-600 dark:text-purple-400">
+                                New Features
+                            </span>
+                        </div>
+                        
+                        <div class="grid gap-2">
+                            <h3 class="text-base font-semibold text-foreground">New Features</h3>
+                            <ul class="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
+                                <li>Introduced dark mode support across the application.</li>
+                                <li>Added customizable notification preferences.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 </body>
 </html>

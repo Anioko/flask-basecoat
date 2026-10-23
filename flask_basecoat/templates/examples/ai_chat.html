@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Assistant - shadcn/ui Example</title>
+    <title>AI Chat - shadcn/ui Example</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,20 +23,67 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+
+        function pickPrompt(text) {
+            document.getElementById('ai-prompt-input').value = text;
+            submitPrompt();
+        }
+
+        function submitPrompt(e) {
+            if (e) e.preventDefault();
+            const input = document.getElementById('ai-prompt-input');
+            const q = input.value.trim();
+            if (!q) return;
+
+            const welcome = document.getElementById('welcome-pane');
+            const thread = document.getElementById('chat-thread');
+            if (welcome) welcome.classList.add('hidden');
+            if (thread) thread.classList.remove('hidden');
+
+            const container = document.getElementById('stream-container');
+            const userMsg = document.createElement('div');
+            userMsg.className = "flex items-start justify-end gap-3";
+            userMsg.innerHTML = `
+                <div class="max-w-[75%] rounded-2xl rounded-br-none bg-primary text-primary-foreground p-4 text-sm shadow-xs">
+                    ${q}
+                </div>
+            `;
+            container.appendChild(userMsg);
+
+            // simulate assistant response
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = "flex items-start gap-3";
+                aiMsg.innerHTML = `
+                    <div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary shrink-0">AI</div>
+                    <div class="max-w-[80%] rounded-2xl rounded-bl-none border border-border bg-card p-4 text-sm text-foreground space-y-2 shadow-2xs">
+                        <p>I processed your prompt: <strong>"${q}"</strong>. Here is the verified analysis and reference architecture based on your requirements.</p>
+                        <div class="rounded-md bg-muted/60 p-3 font-mono text-xs text-muted-foreground border border-border">
+                            // Verified response token streaming completed.<br>
+                            Status: OK (200) | Latency: 142ms
+                        </div>
+                    </div>
+                `;
+                container.appendChild(aiMsg);
+                if (window.lucide) { lucide.createIcons(); }
+                container.scrollTop = container.scrollHeight;
+            }, 600);
+
+            input.value = '';
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-8 flex flex-col justify-between">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 lg:p-8">
     {{ bc.toast_container() }}
 
-    <div class="max-w-6xl mx-auto w-full space-y-6">
-        {# Top Navigation #}
+    <div class="max-w-6xl mx-auto space-y-6">
+        {# Top Navigation and Actions #}
         <div class="flex items-center justify-between border-b border-border pb-4">
-            <div class="flex items-center gap-3 font-bold tracking-tight text-lg">
-                <div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center text-white">
-                    <i data-lucide="sparkles" class="h-4 w-4"></i>
-                </div>
-                <span>Acme Copilot AI</span>
-                {{ bc.badge('Claude 3.5 Sonnet', variant='secondary', class='text-xs') }}
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme AI Assistant</span>
             </div>
             <div class="flex items-center gap-3">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
@@ -44,117 +91,152 @@
             </div>
         </div>
 
-        {# Main AI Chat Workspace #}
-        <div class="grid grid-cols-1 md:grid-cols-12 rounded-xl border border-border bg-card shadow-sm overflow-hidden h-[720px]">
-            {# Left Chat History Sidebar #}
-            <div class="md:col-span-3 border-r border-border flex flex-col h-full bg-muted/10">
-                <div class="p-3 border-b border-border">
-                    {{ bc.button('New Chat', variant='default', size='sm', icon='plus', class='w-full justify-start') }}
+        {# AI Chat Layout #}
+        <div class="grid grid-cols-1 md:grid-cols-[280px_1fr] rounded-2xl border border-border bg-card shadow-xs overflow-hidden h-[740px]">
+            {# Left Sidebar (Recent Chats) #}
+            <aside class="border-r border-border bg-muted/20 flex flex-col justify-between hidden md:flex">
+                <div class="p-4 border-b border-border space-y-3">
+                    {{ bc.button('New Chat', variant='default', class='w-full justify-center', icon='plus') }}
+                    <div class="relative">
+                        <input
+                            type="text"
+                            placeholder="Search chats..."
+                            class="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                        >
+                    </div>
                 </div>
-                <div class="flex-1 overflow-y-auto p-2 space-y-1 text-sm">
-                    <div class="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Recent Queries</div>
-                    {% set history = [
-                        ('Can you optimize Basecoat macros?', '30m ago', true),
-                        ('Jinja2 caller slot patterns', '2h ago', false),
-                        ('Anti-drift CI ratchet rules', '5h ago', false),
-                        ('Playwright snapshot setup', '1d ago', false),
-                        ('SQLAlchemy connection pooling', '2d ago', false),
-                        ('Dark mode CSS variables', '3d ago', false)
-                    ] %}
-                    {% for item, time, active in history %}
-                        <div class="px-3 py-2 rounded-lg cursor-pointer flex items-center justify-between text-xs transition-colors {{ 'bg-muted font-medium' if active else 'hover:bg-muted/50 text-muted-foreground hover:text-foreground' }}">
-                            <div class="flex items-center gap-2 truncate">
-                                <i data-lucide="message-square" class="h-3.5 w-3.5 shrink-0"></i>
-                                <span class="truncate">{{ item }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
 
-            {# AI Chat Feed & Composer #}
-            <div class="md:col-span-9 flex flex-col h-full bg-card">
-                {# Scrollable Conversation #}
-                <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                    {# Welcome Hero #}
-                    <div class="text-center py-4 space-y-3">
-                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                            <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                                Welcome, John Doe
+                <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                    <div class="px-2 py-1 text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                        Recent Chats
+                    </div>
+                    
+                    {# Chat 1 #}
+                    <button type="button" class="w-full text-left p-3 rounded-lg hover:bg-muted transition-colors bg-muted/60 flex items-start gap-2.5 cursor-pointer">
+                        <i data-lucide="message-square" class="h-4 w-4 text-primary shrink-0 mt-0.5"></i>
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate text-xs font-semibold text-foreground">Can you fly?</div>
+                            <div class="truncate text-[10px] text-muted-foreground mt-0.5">Not on my own! I exist o...</div>
+                        </div>
+                    </button>
+
+                    {# Chat 2 #}
+                    <button type="button" class="w-full text-left p-3 rounded-lg hover:bg-muted transition-colors flex items-start gap-2.5 cursor-pointer">
+                        <i data-lucide="message-square" class="h-4 w-4 text-muted-foreground shrink-0 mt-0.5"></i>
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate text-xs font-semibold text-foreground">Do you have emotions...</div>
+                            <div class="truncate text-[10px] text-muted-foreground mt-0.5">I can&apos;t feel emotions my...</div>
+                        </div>
+                    </button>
+
+                    {# Chat 3 #}
+                    <button type="button" class="w-full text-left p-3 rounded-lg hover:bg-muted transition-colors flex items-start gap-2.5 cursor-pointer">
+                        <i data-lucide="message-square" class="h-4 w-4 text-muted-foreground shrink-0 mt-0.5"></i>
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate text-xs font-semibold text-foreground">Will robots take over...</div>
+                            <div class="truncate text-[10px] text-muted-foreground mt-0.5">Science fiction is fun, b...</div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="p-3 border-t border-border space-y-1 text-xs text-muted-foreground">
+                    <a href="#" class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted hover:text-foreground transition-colors">
+                        <i data-lucide="settings" class="h-4 w-4"></i>
+                        <span>Settings</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted hover:text-foreground transition-colors">
+                        <i data-lucide="help-circle" class="h-4 w-4"></i>
+                        <span>Help & Support</span>
+                    </a>
+                </div>
+            </aside>
+
+            {# Main Interactive Area #}
+            <main class="flex flex-col justify-between h-full bg-card">
+                {# Top Header #}
+                <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                        <span class="text-xs font-semibold text-foreground">GPT-4o Omnimodel</span>
+                        <span class="rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">Ready</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='share-2') }}
+                    </div>
+                </div>
+
+                {# Welcome Screen & Suggestions (welcome-screen.tsx) #}
+                <div id="welcome-pane" class="flex-1 overflow-y-auto p-6 flex flex-col justify-center items-center max-w-2xl mx-auto space-y-8">
+                    <div class="text-center space-y-2">
+                        <div class="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto text-primary mb-4 shadow-2xs">
+                            <i data-lucide="sparkles" class="h-6 w-6"></i>
+                        </div>
+                        <h2 class="text-3xl font-extrabold tracking-tight text-foreground">How can I help you today?</h2>
+                        <p class="text-sm text-muted-foreground">Ask anything or select one of the suggested prompts below</p>
+                    </div>
+
+                    {# 2x2 Suggestion Cards #}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                        <button type="button" onclick="pickPrompt('Don\'t worry, this update is quicker than your internet history deletion!')" class="flex flex-col justify-between p-4 rounded-xl border border-border bg-muted/30 hover:bg-muted/70 text-left transition-colors cursor-pointer group shadow-2xs">
+                            <span class="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
+                                Don&apos;t worry, this update is quicker than your internet history deletion!
                             </span>
-                        </h1>
-                        <p class="text-sm text-muted-foreground">What software engineering task would you like to accelerate?</p>
-                    </div>
-
-                    {# Suggestion Prompt Cards #}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
-                        {% set suggestions = [
-                            ('Audit macro component compliance against anti-drift CI baseline', 'Architecture'),
-                            ('Generate WTForms validation schema for user registration endpoints', 'Forms & Security'),
-                            ('Optimize database queries in SQLAlchemy with Basecoat caching', 'Performance'),
-                            ('Draft Playwright visual snapshot test for mobile viewports', 'Testing & QA')
-                        ] %}
-                        {% for prompt_text, category in suggestions %}
-                            {% call bc.card(class='p-3.5 hover:bg-muted/50 transition-colors cursor-pointer group border border-border/80') %}
-                                <div class="flex items-start justify-between gap-2">
-                                    <div class="space-y-1">
-                                        {{ bc.badge(category, variant='outline', class='text-[10px] px-1.5 py-0') }}
-                                        <p class="text-xs text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed">{{ prompt_text }}</p>
-                                    </div>
-                                    <i data-lucide="arrow-up-right" class="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0 transition-colors"></i>
-                                </div>
-                            {% endcall %}
-                        {% endfor %}
-                    </div>
-
-                    {# Turn 1: User #}
-                    <div class="flex items-start justify-end gap-3 pt-4">
-                        <div class="max-w-[80%] rounded-2xl rounded-tr-none bg-primary text-primary-foreground p-3.5 text-sm">
-                            How do I ensure that newly ported templates in Flask 100% adhere to shadcn design guidelines?
-                        </div>
-                    </div>
-
-                    {# Turn 1: AI Assistant #}
-                    <div class="flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center text-white shrink-0">
-                            <i data-lucide="sparkles" class="h-4 w-4"></i>
-                        </div>
-                        <div class="space-y-3 max-w-[85%]">
-                            <div class="rounded-2xl rounded-tl-none bg-muted p-4 text-sm space-y-2 leading-relaxed">
-                                <p>To guarantee 100% adherence to shadcn design principles in Flask, follow these core rules:</p>
-                                <ul class="list-disc list-inside space-y-1 text-xs text-muted-foreground">
-                                    <li><strong class="text-foreground">Canonical Basecoat Macros:</strong> Always render UI components through <code class="px-1 py-0.5 rounded bg-background border text-primary">flask_basecoat/templates/basecoat/</code> macros (<code class="text-foreground">bc.button</code>, <code class="text-foreground">bc.card</code>, <code class="text-foreground">bc.badge</code>).</li>
-                                    <li><strong class="text-foreground">Inter Typography:</strong> Configure clean font metrics with Inter at weights 400, 500, 600, 700.</li>
-                                    <li><strong class="text-foreground">Anti-drift CI Enforcement:</strong> Run the AST/regex ratchet script on pull requests to fail immediately if unapproved raw HTML tags appear.</li>
-                                </ul>
+                            <div class="flex items-center justify-between pt-3 text-[10px] text-muted-foreground">
+                                <span>Tech Help</span>
+                                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
                             </div>
-                            <div class="flex items-center gap-2 text-muted-foreground text-xs">
-                                {{ bc.button('Copy', variant='ghost', size='sm', icon='copy') }}
-                                {{ bc.button('Good response', variant='ghost', size='sm', icon='thumbs-up') }}
-                                {{ bc.button('Retry', variant='ghost', size='sm', icon='rotate-cw') }}
+                        </button>
+
+                        <button type="button" onclick="pickPrompt('Write a Python script to automate weekly project updates')" class="flex flex-col justify-between p-4 rounded-xl border border-border bg-muted/30 hover:bg-muted/70 text-left transition-colors cursor-pointer group shadow-2xs">
+                            <span class="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
+                                Write a Python script to automate weekly project updates
+                            </span>
+                            <div class="flex items-center justify-between pt-3 text-[10px] text-muted-foreground">
+                                <span>Development</span>
+                                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
                             </div>
-                        </div>
+                        </button>
+
+                        <button type="button" onclick="pickPrompt('Analyze cloud infrastructure bottlenecks in microservices')" class="flex flex-col justify-between p-4 rounded-xl border border-border bg-muted/30 hover:bg-muted/70 text-left transition-colors cursor-pointer group shadow-2xs">
+                            <span class="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
+                                Analyze cloud infrastructure bottlenecks in microservices
+                            </span>
+                            <div class="flex items-center justify-between pt-3 text-[10px] text-muted-foreground">
+                                <span>DevOps</span>
+                                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="pickPrompt('Explain the quantum computing superposition principle simply')" class="flex flex-col justify-between p-4 rounded-xl border border-border bg-muted/30 hover:bg-muted/70 text-left transition-colors cursor-pointer group shadow-2xs">
+                            <span class="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
+                                Explain the quantum computing superposition principle simply
+                            </span>
+                            <div class="flex items-center justify-between pt-3 text-[10px] text-muted-foreground">
+                                <span>Science</span>
+                                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                            </div>
+                        </button>
                     </div>
                 </div>
 
-                {# Prompt Bar #}
-                <div class="p-4 border-t border-border bg-card">
-                    <div class="relative rounded-lg border border-input bg-background p-2 focus-within:ring-2 focus-within:ring-ring">
-                        <textarea
-                            rows="2"
-                            placeholder="Ask Acme Copilot anything or type / for slash commands..."
-                            class="w-full resize-none border-none bg-transparent p-1 text-sm outline-none placeholder:text-muted-foreground"
-                        ></textarea>
-                        <div class="flex items-center justify-between pt-2 border-t border-border/40 text-xs text-muted-foreground">
-                            <div class="flex items-center gap-2">
-                                {{ bc.badge('Model: Claude 3.5 Sonnet', variant='outline', class='text-[10px]') }}
-                                <span>Shift + Enter for new line</span>
-                            </div>
-                            {{ bc.button('Generate', variant='default', size='sm', icon='send') }}
-                        </div>
-                    </div>
+                {# Live Stream Messages Container (Initially hidden until user prompts) #}
+                <div id="chat-thread" class="flex-1 overflow-y-auto p-6 space-y-4 hidden">
+                    <div id="stream-container" class="space-y-4 max-w-3xl mx-auto"></div>
                 </div>
-            </div>
+
+                {# Prompt Input Form #}
+                <form onsubmit="submitPrompt(event)" class="p-4 border-t border-border bg-card">
+                    <div class="flex items-center gap-2 rounded-xl border border-border p-2 bg-background shadow-xs focus-within:ring-2 focus-within:ring-ring">
+                        <input
+                            id="ai-prompt-input"
+                            type="text"
+                            placeholder="Message Acme Copilot..."
+                            class="flex-1 border-0 bg-transparent px-3 py-1 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                        >
+                        {{ bc.button(variant='default', size='icon', class='rounded-lg h-9 w-9 shrink-0', icon='arrow-up') }}
+                    </div>
+                </form>
+            </main>
         </div>
     </div>
 </body>

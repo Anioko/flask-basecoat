@@ -23,19 +23,32 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn flex-1 rounded-md px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors";
+            });
+            const activeTab = document.getElementById(`tab-content-${tabId}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = "tab-btn flex-1 rounded-md bg-background px-3 py-1.5 text-xs font-semibold text-foreground shadow-xs transition-colors";
+            }
+        }
     </script>
 </head>
 <body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
     {{ bc.toast_container() }}
 
-    <div class="max-w-5xl mx-auto space-y-8">
-        {# Top Navigation #}
+    <div class="max-w-4xl mx-auto space-y-8">
+        {# Top Navigation and Actions #}
         <div class="flex items-center justify-between border-b border-border pb-6">
             <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
                 <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
                 </svg>
-                <span>Account Center</span>
+                <span>Acme Account</span>
             </div>
             <div class="flex items-center gap-3">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
@@ -43,148 +56,186 @@
             </div>
         </div>
 
-        {# Profile Header Card #}
-        {% call bc.card() %}
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                    {# Avatar #}
-                    <div class="relative">
-                        <div class="h-24 w-24 rounded-full bg-primary/10 text-primary flex items-center justify-center text-3xl font-bold border border-border">
-                            JD
-                        </div>
-                        <button type="button" class="absolute -right-1 -bottom-1 h-8 w-8 rounded-full border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-foreground shadow-sm" aria-label="Upload photo">
-                            <i data-lucide="camera" class="h-4 w-4"></i>
-                        </button>
+        {# Profile Header Card with Cover Banner #}
+        <div class="rounded-xl border border-border bg-card overflow-hidden shadow-xs">
+            {# Cover Photo Gradient #}
+            <div class="h-32 sm:h-44 w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 relative">
+                <div class="absolute inset-0 bg-black/10"></div>
+            </div>
+
+            {# Profile Details #}
+            <div class="px-6 pb-6 pt-0 relative flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                <div class="flex items-end gap-4 -mt-12 sm:-mt-16">
+                    <div class="h-24 w-24 sm:h-28 sm:w-28 rounded-full border-4 border-card bg-primary text-primary-foreground flex items-center justify-center font-bold text-2xl shadow-md">
+                        SA
+                    </div>
+                    <div class="space-y-0.5 pb-1">
+                        <h1 class="text-2xl font-bold tracking-tight text-foreground">Sophia Anderson</h1>
+                        <p class="text-xs font-medium text-muted-foreground">@sophia • Lead UI/UX Architect</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    {{ bc.button('Edit Profile', variant='outline', size='sm', icon='edit') }}
+                </div>
+            </div>
+        </div>
+
+        {# Tab Switcher (Personal, Account, Security, Notifications) #}
+        <div class="space-y-6">
+            <div class="flex rounded-lg border border-border bg-muted/40 p-1">
+                <button id="tab-btn-personal" class="tab-btn flex-1 rounded-md bg-background px-3 py-1.5 text-xs font-semibold text-foreground shadow-xs transition-colors" onclick="switchTab('personal')">
+                    Personal
+                </button>
+                <button id="tab-btn-account" class="tab-btn flex-1 rounded-md px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors" onclick="switchTab('account')">
+                    Account
+                </button>
+                <button id="tab-btn-security" class="tab-btn flex-1 rounded-md px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors" onclick="switchTab('security')">
+                    Security
+                </button>
+                <button id="tab-btn-notifications" class="tab-btn flex-1 rounded-md px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors" onclick="switchTab('notifications')">
+                    Notifications
+                </button>
+            </div>
+
+            {# Tab 1: Personal #}
+            <div id="tab-content-personal" class="tab-content space-y-6">
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-5">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-bold tracking-tight text-foreground">Personal Information</h2>
+                        <p class="text-xs text-muted-foreground">Update your personal details and contact preferences.</p>
                     </div>
 
-                    {# User details #}
-                    <div class="space-y-1.5">
-                        <div class="flex items-center gap-3">
-                            <h2 class="text-2xl font-bold tracking-tight">John Doe</h2>
-                            {{ bc.badge('Pro Member', variant='secondary') }}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-foreground">First Name</label>
+                            <input type="text" value="Sophia" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
                         </div>
-                        <p class="text-sm text-muted-foreground">Lead Systems Architect &bull; Entelim Platform</p>
-                        <div class="flex flex-wrap gap-4 text-xs text-muted-foreground pt-1">
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="mail" class="h-3.5 w-3.5"></i>
-                                <span>john.doe@company.com</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="map-pin" class="h-3.5 w-3.5"></i>
-                                <span>San Francisco, CA</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <i data-lucide="calendar" class="h-3.5 w-3.5"></i>
-                                <span>Joined March 2024</span>
-                            </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-foreground">Last Name</label>
+                            <input type="text" value="Anderson" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-foreground">Email Address</label>
+                        <input type="email" value="sophia.anderson@example.com" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-foreground">Bio</label>
+                        <textarea rows="3" class="w-full rounded-md border border-border bg-background p-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none">Product design architect focusing on design systems, token automation, and accessible web standards.</textarea>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        {{ bc.button('Save Changes', variant='default', size='sm') }}
+                    </div>
+                </div>
+            </div>
+
+            {# Tab 2: Account #}
+            <div id="tab-content-account" class="tab-content space-y-6 hidden">
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-5">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-bold tracking-tight text-foreground">Account Preferences</h2>
+                        <p class="text-xs text-muted-foreground">Language, localization and regional options.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-foreground">Language</label>
+                            <select class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground">
+                                <option>English (United States)</option>
+                                <option>Français</option>
+                                <option>Deutsch</option>
+                                <option>Español</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold text-foreground">Timezone</label>
+                            <select class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground">
+                                <option>Pacific Time (US & Canada) (GMT-8)</option>
+                                <option>Eastern Time (US & Canada) (GMT-5)</option>
+                                <option>UTC (GMT+0)</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-
-                {{ bc.button('Edit Profile', variant='default', size='sm') }}
             </div>
-        {% endcall %}
 
-        {# Profile Settings Tabs #}
-        {% set profile_tabs = [
-            ('profile', 'General'),
-            ('account', 'Account'),
-            ('appearance', 'Appearance'),
-            ('notifications', 'Notifications')
-        ] %}
+            {# Tab 3: Security #}
+            <div id="tab-content-security" class="tab-content space-y-6 hidden">
+                {# Change Password #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-5">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-bold tracking-tight text-foreground">Password</h2>
+                        <p class="text-xs text-muted-foreground">Ensure your account is using a long, random password.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <input type="password" placeholder="Current password" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                        <input type="password" placeholder="New password" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                    </div>
+                    <div class="flex justify-end pt-2">
+                        {{ bc.button('Update Password', variant='default', size='sm') }}
+                    </div>
+                </div>
 
-        {% call bc.tabs(tabs_list=profile_tabs, default_tab='profile', id='profile-settings-tabs') %}
-            {# General Profile Tab #}
-            {% call bc.tab_panel('profile', default_tab='profile', tabs_id='profile-settings-tabs') %}
-                {% call bc.card(title='Profile Details', description='This information will be displayed on your team directory.') %}
-                    <form method="POST" action="" class="space-y-4 pt-2">
-                        <div class="field form-group space-y-1.5">
-                            <label class="text-sm font-medium leading-none">Username</label>
-                            <input type="text" class="input flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value="johndoe">
-                            <p class="text-[0.8rem] text-muted-foreground">Your public handle across all project repositories.</p>
-                        </div>
-
-                        <div class="field form-group space-y-1.5">
-                            <label class="text-sm font-medium leading-none">Email Address</label>
-                            <input type="email" class="input flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value="john.doe@company.com">
-                        </div>
-
-                        <div class="field form-group space-y-1.5">
-                            <label class="text-sm font-medium leading-none">Bio</label>
-                            <textarea class="textarea flex min-h-[90px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm">Building next-generation enterprise intelligence architecture and real-time governance tooling.</textarea>
-                            <p class="text-[0.8rem] text-muted-foreground">Brief summary of your responsibilities and expertise.</p>
-                        </div>
-
-                        <div class="pt-2 flex justify-end">
-                            {{ bc.button('Save Changes', variant='default') }}
-                        </div>
-                    </form>
-                {% endcall %}
-            {% endcall %}
-
-            {# Account Tab #}
-            {% call bc.tab_panel('account', default_tab='profile', tabs_id='profile-settings-tabs') %}
-                {% call bc.card(title='Security & Credentials', description='Manage your authentication keys and session security.') %}
-                    <div class="space-y-4 pt-2">
-                        <div class="flex items-center justify-between py-2 border-b border-border">
-                            <div>
-                                <p class="text-sm font-medium">Two-Factor Authentication (2FA)</p>
-                                <p class="text-xs text-muted-foreground">Hardware key and authenticator app enforcement.</p>
+                {# Active Sessions #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-4">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-bold tracking-tight text-foreground">Active Sessions</h2>
+                        <p class="text-xs text-muted-foreground">Manage devices currently authenticated into your account.</p>
+                    </div>
+                    <div class="divide-y divide-border/60">
+                        <div class="py-3 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="laptop" class="h-5 w-5 text-muted-foreground"></i>
+                                <div>
+                                    <p class="text-xs font-semibold text-foreground">MacBook Pro 16&quot; • San Francisco, CA</p>
+                                    <p class="text-[11px] text-muted-foreground">Chrome • Active now</p>
+                                </div>
                             </div>
-                            {{ bc.badge('Enabled', variant='default') }}
+                            <span class="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600">This Device</span>
                         </div>
-                        <div class="flex items-center justify-between py-2">
-                            <div>
-                                <p class="text-sm font-medium">Session Invalidation</p>
-                                <p class="text-xs text-muted-foreground">Sign out of all other active browser sessions.</p>
+                        <div class="py-3 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="smartphone" class="h-5 w-5 text-muted-foreground"></i>
+                                <div>
+                                    <p class="text-xs font-semibold text-foreground">iPhone 14 Pro • San Francisco, CA</p>
+                                    <p class="text-[11px] text-muted-foreground">Safari • 2 hours ago</p>
+                                </div>
                             </div>
-                            {{ bc.button('Sign Out Other Devices', variant='outline', size='sm') }}
+                            {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-rose-500', icon='trash-2') }}
                         </div>
                     </div>
-                {% endcall %}
-            {% endcall %}
+                </div>
+            </div>
 
-            {# Appearance Tab #}
-            {% call bc.tab_panel('appearance', default_tab='profile', tabs_id='profile-settings-tabs') %}
-                {% call bc.card(title='Theme & Typography', description='Customize the visual presentation of your workspace.') %}
-                    <div class="space-y-4 pt-2">
-                        <p class="text-sm font-medium">Theme Mode</p>
-                        <div class="flex gap-4">
-                            <div class="flex-1 p-4 border border-border rounded-lg bg-card text-center cursor-pointer hover:border-primary" onclick="document.documentElement.classList.remove('dark')">
-                                <i data-lucide="sun" class="h-6 w-6 mx-auto mb-2 text-amber-500"></i>
-                                <div class="text-sm font-semibold">Light Mode</div>
-                            </div>
-                            <div class="flex-1 p-4 border border-border rounded-lg bg-zinc-900 text-white text-center cursor-pointer hover:border-primary" onclick="document.documentElement.classList.add('dark')">
-                                <i data-lucide="moon" class="h-6 w-6 mx-auto mb-2 text-purple-400"></i>
-                                <div class="text-sm font-semibold">Dark Mode</div>
-                            </div>
-                        </div>
+            {# Tab 4: Notifications #}
+            <div id="tab-content-notifications" class="tab-content space-y-6 hidden">
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-5">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-bold tracking-tight text-foreground">Notification Preferences</h2>
+                        <p class="text-xs text-muted-foreground">Choose when and how you receive alerts.</p>
                     </div>
-                {% endcall %}
-            {% endcall %}
-
-            {# Notifications Tab #}
-            {% call bc.tab_panel('notifications', default_tab='profile', tabs_id='profile-settings-tabs') %}
-                {% call bc.card(title='Notification Preferences', description='Configure how and when you receive system alerts.') %}
-                    <div class="space-y-4 pt-2">
-                        <div class="flex items-center justify-between py-2 border-b border-border">
+                    <div class="space-y-4 divide-y divide-border/60">
+                        <div class="flex items-center justify-between pt-2">
                             <div>
-                                <p class="text-sm font-medium">Architecture Drift Alerts</p>
-                                <p class="text-xs text-muted-foreground">Notify when raw components exceed established CI baseline.</p>
+                                <p class="text-xs font-semibold text-foreground">Security alerts</p>
+                                <p class="text-[11px] text-muted-foreground">Receive critical notifications about sign-ins from new devices.</p>
                             </div>
                             <input type="checkbox" checked class="h-4 w-4 rounded border-border text-primary focus:ring-ring">
                         </div>
-                        <div class="flex items-center justify-between py-2">
+                        <div class="flex items-center justify-between pt-4">
                             <div>
-                                <p class="text-sm font-medium">Weekly Release Digest</p>
-                                <p class="text-xs text-muted-foreground">Summary of all merged architectural improvements.</p>
+                                <p class="text-xs font-semibold text-foreground">Product updates</p>
+                                <p class="text-[11px] text-muted-foreground">Weekly digests of new features, enhancements and releases.</p>
                             </div>
                             <input type="checkbox" checked class="h-4 w-4 rounded border-border text-primary focus:ring-ring">
                         </div>
                     </div>
-                {% endcall %}
-            {% endcall %}
-        {% endcall %}
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

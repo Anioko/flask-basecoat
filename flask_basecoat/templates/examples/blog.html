@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog & Insights - shadcn/ui Example</title>
+    <title>Blog - shadcn/ui Example</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,143 +28,140 @@
 <body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
     {{ bc.toast_container() }}
 
-    <div class="max-w-6xl mx-auto space-y-8">
-        {# Top Navigation #}
+    <div class="max-w-7xl mx-auto space-y-8">
+        {# Top Navigation and Actions #}
         <div class="flex items-center justify-between border-b border-border pb-6">
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                    </svg>
-                    <span>Acme Journal</span>
-                </div>
-                <nav class="hidden md:flex items-center gap-4 text-sm text-muted-foreground font-medium">
-                    <a href="#" class="text-foreground hover:text-primary transition-colors">Engineering</a>
-                    <a href="#" class="hover:text-primary transition-colors">Design Systems</a>
-                    <a href="#" class="hover:text-primary transition-colors">Product</a>
-                    <a href="#" class="hover:text-primary transition-colors">Culture</a>
-                </nav>
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Publications</span>
             </div>
             <div class="flex items-center gap-3">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Subscribe', variant='default', size='sm') }}
                 {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
             </div>
         </div>
 
-        {# Hero Featured Post & Sidebar Grid #}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {# Main Feature Article #}
-            <div class="lg:col-span-2">
-                {% call bc.card(class='overflow-hidden border group cursor-pointer hover:shadow-md transition-shadow') %}
-                    <div class="relative h-64 sm:h-80 w-full bg-gradient-to-tr from-zinc-800 via-zinc-900 to-primary/30 flex items-end p-6 text-white">
-                        <div class="space-y-3">
-                            {{ bc.badge('Architecture', variant='default') }}
-                            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight leading-snug">
-                                Unlocking Business Efficiency with Basecoat UI & Flask Micro-Frontends
-                            </h1>
-                            <p class="text-sm text-zinc-300 line-clamp-2">
-                                Discover how enterprise engineering teams consolidate disparate Python stacks into uniform shadcn component primitives with zero JavaScript overhead.
-                            </p>
-                            <div class="flex items-center gap-3 pt-2 text-xs text-zinc-300">
-                                <div class="h-7 w-7 rounded-full bg-white/20 flex items-center justify-center font-bold text-white">JT</div>
-                                <span class="font-medium text-white">Jennifer Taylor</span>
-                                <span>&bull;</span>
-                                <span>5 min read</span>
-                                <span>&bull;</span>
-                                <span>Oct 23, 2026</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endcall %}
+        {# Top 2/3 + 1/3 Featured Posts Grid #}
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            {# Left 2/3: Primary Featured Post Hero #}
+            <div class="relative h-[400px] md:h-[480px] overflow-hidden rounded-xl shadow-md lg:col-span-2 group cursor-pointer border border-border">
+                <img
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80"
+                    alt="Unlocking Business Efficiency with SaaS Solutions"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 sm:p-8 text-white">
+                    <span class="mb-3 w-fit rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm text-white">
+                        Business
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight tracking-tight">
+                        Unlocking Business Efficiency with SaaS Solutions
+                    </h2>
+                    <p class="mt-2 text-sm text-neutral-300 max-w-xl line-clamp-2">
+                        Discover modern architecture strategies, workflow automation primitives, and design heuristics that elevate developer operations.
+                    </p>
+                </div>
             </div>
 
-            {# Featured Sidebar #}
-            <div class="space-y-4">
-                <h2 class="text-lg font-bold tracking-tight">Trending Articles</h2>
-                <div class="space-y-3">
-                    {% set trending = [
-                        ('Revolutionizing Component Pipelines with Pre-compiled CSS', 'DevOps', '3 min'),
-                        ('Synergizing Basecoat UI and Flask WTForms Validation', 'Frontend', '4 min'),
-                        ('Enterprise Role-Based Access Control Pattern Guide', 'Security', '6 min'),
-                        ('Automated Anti-drift CI Ratchets in Enterprise Repos', 'Testing', '4 min')
+            {# Right 1/3: Other Featured Posts Sidebar #}
+            <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-5 lg:col-span-1">
+                <h3 class="text-lg font-bold tracking-tight text-foreground">Other featured posts</h3>
+                
+                <div class="space-y-4">
+                    {% set sidebar_items = [
+                        {'title': 'Revolutionizing industries through SaaS implementation', 'img': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=200&q=80'},
+                        {'title': 'Synergizing SaaS and UX design for elevating digital experiences', 'img': 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=200&q=80'},
+                        {'title': 'Navigating SaaS waters with intuitive UI and UX', 'img': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=200&q=80'},
+                        {'title': 'Sculpting SaaS success - the art of UI and UX design', 'img': 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=200&q=80'},
+                        {'title': 'Transforming SaaS platforms - a UI/UX design odyssey', 'img': 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=200&q=80'}
                     ] %}
-                    {% for title, category, time in trending %}
-                        {% call bc.card(class='p-3.5 hover:bg-muted/40 transition-colors cursor-pointer') %}
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="space-y-1">
-                                    {{ bc.badge(category, variant='outline', class='text-[10px] px-1.5 py-0') }}
-                                    <h3 class="text-sm font-semibold line-clamp-2 leading-snug">{{ title }}</h3>
-                                    <p class="text-xs text-muted-foreground">{{ time }} read</p>
-                                </div>
-                                <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground shrink-0 mt-1"></i>
-                            </div>
-                        {% endcall %}
+                    {% for item in sidebar_items %}
+                        <a href="#" class="flex items-center gap-3 group">
+                            <img src="{{ item.img }}" alt="" class="h-14 w-14 rounded-md object-cover border border-border shrink-0">
+                            <p class="text-xs font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                {{ item.title }}
+                            </p>
+                        </a>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        {# Recent Posts Section #}
-        <div class="space-y-6 pt-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold tracking-tight">Recent Articles</h2>
-                    <p class="text-sm text-muted-foreground">Practical architectural guides and engineering deep-dives.</p>
-                </div>
-                {{ bc.button('View All', variant='outline', size='sm') }}
+        {# Bottom: Recent Posts Section #}
+        <div class="space-y-6 pt-4">
+            <div class="flex items-center justify-between border-b border-border pb-4">
+                <h2 class="text-2xl font-bold tracking-tight text-foreground">Recent Posts</h2>
+                {{ bc.button('All Posts', variant='outline', size='sm', icon_right='arrow-right') }}
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {% set posts = [
-                    {
-                        'title': 'Mastering Jinja2 Component Macros for Scalable Web Apps',
-                        'desc': 'A deep dive into caller slots, keyword defaults, and clean encapsulation patterns in modern server-side rendering.',
-                        'tag': 'Frontend',
-                        'author': 'Marcus Vance',
-                        'initials': 'MV',
-                        'time': '4 min read'
-                    },
-                    {
-                        'title': 'Defending Against Component Drift with Playwright & Pytest',
-                        'desc': 'How to implement automated anti-drift CI ratchets that lock baseline raw HTML tag counts and ensure zero visual regressions.',
-                        'tag': 'DevOps',
-                        'author': 'Sarah Chen',
-                        'initials': 'SC',
-                        'time': '6 min read'
-                    },
-                    {
-                        'title': 'Beyond Aesthetics: Native Accessible Focus Management',
-                        'desc': 'Designing accessible web experiences that comply with WCAG 2.1 AA using native dialog primitives and focus rings.',
-                        'tag': 'Design Systems',
-                        'author': 'Alex Rivera',
-                        'initials': 'AR',
-                        'time': '5 min read'
-                    }
-                ] %}
-                {% for post in posts %}
-                    {% call bc.card(class='flex flex-col justify-between hover:shadow-md transition-shadow') %}
-                        <div class="space-y-3">
-                            <div class="h-36 rounded-md bg-muted/60 flex items-center justify-center text-muted-foreground">
-                                <i data-lucide="book-open" class="h-8 w-8 opacity-40"></i>
-                            </div>
-                            <div class="space-y-1.5">
-                                {{ bc.badge(post.tag, variant='secondary') }}
-                                <h3 class="text-base font-bold tracking-tight line-clamp-2 leading-snug">{{ post.title }}</h3>
-                                <p class="text-xs text-muted-foreground line-clamp-3 leading-relaxed">{{ post.desc }}</p>
-                            </div>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {# Post 1 #}
+                <div class="rounded-xl border border-border bg-card overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+                    <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=600&q=80" alt="" class="h-48 w-full object-cover group-hover:scale-102 transition-transform duration-300">
+                    <div class="p-6 space-y-4">
+                        <div class="space-y-2">
+                            <h3 class="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                                Mastering UI Elements: A Practical Guide for Designers
+                            </h3>
+                            <p class="text-xs text-muted-foreground line-clamp-2">
+                                Dive into the world of user interfaces with our expert guides, latest trends, and practical tips.
+                            </p>
                         </div>
-                        <div class="flex items-center justify-between border-t border-border pt-4 mt-4 text-xs text-muted-foreground">
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
                             <div class="flex items-center gap-2">
-                                <div class="h-6 w-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[10px]">
-                                    {{ post.initials }}
-                                </div>
-                                <span class="font-medium text-foreground">{{ post.author }}</span>
+                                <div class="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary">JT</div>
+                                <span class="font-medium text-foreground">Jennifer Taylor</span>
                             </div>
-                            <span>{{ post.time }}</span>
+                            <span>3 min read</span>
                         </div>
-                    {% endcall %}
-                {% endfor %}
+                    </div>
+                </div>
+
+                {# Post 2 #}
+                <div class="rounded-xl border border-border bg-card overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+                    <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=600&q=80" alt="" class="h-48 w-full object-cover group-hover:scale-102 transition-transform duration-300">
+                    <div class="p-6 space-y-4">
+                        <div class="space-y-2">
+                            <h3 class="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                                Crafting Seamless Experiences: The Art of Intuitive UI Design
+                            </h3>
+                            <p class="text-xs text-muted-foreground line-clamp-2">
+                                Explore the principles and techniques that drive user-centric UI design, ensuring a seamless and intuitive experience for your audience.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="flex items-center gap-2">
+                                <div class="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary">JT</div>
+                                <span class="font-medium text-foreground">Jennifer Taylor</span>
+                            </div>
+                            <span>5 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# Post 3 #}
+                <div class="rounded-xl border border-border bg-card overflow-hidden shadow-xs hover:shadow-md transition-shadow group">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80" alt="" class="h-48 w-full object-cover group-hover:scale-102 transition-transform duration-300">
+                    <div class="p-6 space-y-4">
+                        <div class="space-y-2">
+                            <h3 class="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                                Beyond Aesthetics: The Power of Emotional UX Design
+                            </h3>
+                            <p class="text-xs text-muted-foreground line-clamp-2">
+                                Delve into the realm of emotional design and discover how incorporating empathy and psychological insights can elevate user experiences.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="flex items-center gap-2">
+                                <div class="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary">RA</div>
+                                <span class="font-medium text-foreground">Ryan A.</span>
+                            </div>
+                            <span>2 min read</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

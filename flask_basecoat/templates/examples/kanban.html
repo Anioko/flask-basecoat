@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Project Board - shadcn/ui Example</title>
+    <title>Kanban Board - shadcn/ui Example</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,204 +23,193 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+            e.target.classList.add('opacity-50');
+        }
+        function dragEnd(e) {
+            e.target.classList.remove('opacity-50');
+        }
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        function dropCard(e, colId) {
+            e.preventDefault();
+            const cardId = e.dataTransfer.getData('text/plain');
+            const card = document.getElementById(cardId);
+            const targetCol = document.getElementById(colId);
+            if (card && targetCol) {
+                targetCol.appendChild(card);
+            }
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-6 flex flex-col justify-between">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
     {{ bc.toast_container() }}
 
-    <div class="max-w-7xl mx-auto w-full space-y-6">
-        {# Top Navigation & Board Controls #}
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-4">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                    </svg>
-                    <span>Sprint 42 &bull; Basecoat UI Parity</span>
-                </div>
-                {{ bc.badge('Active Sprint', variant='secondary', class='text-xs') }}
+    <div class="max-w-7xl mx-auto space-y-8">
+        {# Top Navigation and Actions #}
+        <div class="flex items-center justify-between border-b border-border pb-6">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Sprint Board</span>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-3">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Filter', variant='outline', size='sm', icon='filter') }}
-                {{ bc.button('New Task', variant='default', size='sm', icon='plus') }}
                 {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
             </div>
         </div>
 
-        {# Kanban Columns Container #}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
-            {# Column: Backlog #}
-            <div class="rounded-xl border border-border bg-muted/20 p-3 space-y-3">
-                <div class="flex items-center justify-between px-1">
+        {# Header Section #}
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-foreground">Sprint 42 Kanban</h1>
+                <p class="text-sm text-muted-foreground">Sprint deliverables, status flow, and assignees</p>
+            </div>
+            <div class="flex items-center gap-2">
+                {{ bc.button('Add Task', variant='default', size='sm', icon='plus') }}
+            </div>
+        </div>
+
+        {# 4 Kanban Columns #}
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 items-start">
+            
+            {# Column 1: Backlog #}
+            <div class="rounded-xl border border-border bg-muted/30 p-4 space-y-4">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-slate-400"></span>
-                        <h3 class="font-bold text-sm">Backlog</h3>
+                        <span class="h-2 w-2 rounded-full bg-muted-foreground"></span>
+                        <h3 class="font-bold text-sm text-foreground">Backlog</h3>
+                        <span class="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">3</span>
                     </div>
-                    {{ bc.badge('3', variant='outline', class='text-xs') }}
+                    {{ bc.button(variant='ghost', size='icon', class='h-7 w-7 text-muted-foreground', icon='plus') }}
                 </div>
 
-                <div class="space-y-3">
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab') %}
+                <div id="col-backlog" class="space-y-3 min-h-[350px]" ondragover="dragOver(event)" ondrop="dropCard(event, 'col-backlog')">
+                    <div id="card-1" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="rounded-lg border border-border bg-card p-4 shadow-xs space-y-3 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors">
                         <div class="flex items-center justify-between">
-                            {{ bc.badge('High', variant='destructive', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-101</span>
+                            <span class="rounded bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-600 dark:text-rose-400">High</span>
+                            <span class="font-mono text-[11px] text-muted-foreground">KAN-12</span>
                         </div>
-                        <h4 class="text-xs font-semibold leading-snug">Implement OAuth SSO bridge for Okta and SAML 2.0</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px]"><i data-lucide="calendar" class="h-3 w-3"></i> Nov 02</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">JD</div>
+                        <h4 class="text-sm font-semibold text-foreground leading-snug">Implement JWT refresh rotation strategy</h4>
+                        <p class="text-xs text-muted-foreground line-clamp-2">Migrate session handlers to cryptographically signed refresh tokens with Redis revocation checks.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary">SC</div>
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1"><i data-lucide="message-square" class="h-3 w-3"></i> 4</span>
+                                <span class="flex items-center gap-1"><i data-lucide="paperclip" class="h-3 w-3"></i> 1</span>
+                            </div>
                         </div>
-                    {% endcall %}
+                    </div>
 
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab') %}
+                    <div id="card-2" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="rounded-lg border border-border bg-card p-4 shadow-xs space-y-3 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors">
                         <div class="flex items-center justify-between">
-                            {{ bc.badge('Low', variant='outline', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-102</span>
+                            <span class="rounded bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">Low</span>
+                            <span class="font-mono text-[11px] text-muted-foreground">KAN-19</span>
                         </div>
-                        <h4 class="text-xs font-semibold leading-snug">Audit color contrast ratios for light mode muted text</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px]"><i data-lucide="calendar" class="h-3 w-3"></i> Nov 05</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">AR</div>
+                        <h4 class="text-sm font-semibold text-foreground leading-snug">Update OpenAPI docs schema spec</h4>
+                        <p class="text-xs text-muted-foreground line-clamp-2">Regenerate public API endpoint schemas and add Swagger UI sandbox examples.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="h-6 w-6 rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-[10px] text-amber-600">EW</div>
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1"><i data-lucide="message-square" class="h-3 w-3"></i> 1</span>
+                            </div>
                         </div>
-                    {% endcall %}
-
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab') %}
-                        <div class="flex items-center justify-between">
-                            {{ bc.badge('Medium', variant='secondary', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-103</span>
-                        </div>
-                        <h4 class="text-xs font-semibold leading-snug">Export SVG icon sprite sheet for offline air-gapped deployments</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px]"><i data-lucide="calendar" class="h-3 w-3"></i> Nov 10</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">SC</div>
-                        </div>
-                    {% endcall %}
+                    </div>
                 </div>
             </div>
 
-            {# Column: Todo #}
-            <div class="rounded-xl border border-border bg-muted/20 p-3 space-y-3">
-                <div class="flex items-center justify-between px-1">
+            {# Column 2: Todo #}
+            <div class="rounded-xl border border-border bg-muted/30 p-4 space-y-4">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-blue-500"></span>
-                        <h3 class="font-bold text-sm">To Do</h3>
+                        <h3 class="font-bold text-sm text-foreground">Todo</h3>
+                        <span class="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">2</span>
                     </div>
-                    {{ bc.badge('2', variant='outline', class='text-xs') }}
+                    {{ bc.button(variant='ghost', size='icon', class='h-7 w-7 text-muted-foreground', icon='plus') }}
                 </div>
 
-                <div class="space-y-3">
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab') %}
+                <div id="col-todo" class="space-y-3 min-h-[350px]" ondragover="dragOver(event)" ondrop="dropCard(event, 'col-todo')">
+                    <div id="card-3" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="rounded-lg border border-border bg-card p-4 shadow-xs space-y-3 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors">
                         <div class="flex items-center justify-between">
-                            {{ bc.badge('High', variant='destructive', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-104</span>
+                            <span class="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 dark:text-amber-400">Medium</span>
+                            <span class="font-mono text-[11px] text-muted-foreground">KAN-08</span>
                         </div>
-                        <h4 class="text-xs font-semibold leading-snug">Refactor Basecoat dropdown macro to support arrow-key navigation</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px]"><i data-lucide="calendar" class="h-3 w-3"></i> Oct 28</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">MV</div>
+                        <h4 class="text-sm font-semibold text-foreground leading-snug">Audit Tailwind v3 color-mix opacity</h4>
+                        <p class="text-xs text-muted-foreground line-clamp-2">Verify transparent backgrounds and color token calculations across high-contrast themes.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="h-6 w-6 rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-[10px] text-purple-600">MH</div>
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1"><i data-lucide="message-square" class="h-3 w-3"></i> 6</span>
+                            </div>
                         </div>
-                    {% endcall %}
-
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab') %}
-                        <div class="flex items-center justify-between">
-                            {{ bc.badge('Medium', variant='secondary', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-105</span>
-                        </div>
-                        <h4 class="text-xs font-semibold leading-snug">Generate Playwright visual regression snapshots for 390px mobile</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px]"><i data-lucide="calendar" class="h-3 w-3"></i> Oct 29</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">SB</div>
-                        </div>
-                    {% endcall %}
+                    </div>
                 </div>
             </div>
 
-            {# Column: In Progress #}
-            <div class="rounded-xl border border-border bg-muted/20 p-3 space-y-3">
-                <div class="flex items-center justify-between px-1">
+            {# Column 3: In Progress #}
+            <div class="rounded-xl border border-border bg-muted/30 p-4 space-y-4">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-amber-500"></span>
-                        <h3 class="font-bold text-sm">In Progress</h3>
+                        <h3 class="font-bold text-sm text-foreground">In Progress</h3>
+                        <span class="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">2</span>
                     </div>
-                    {{ bc.badge('2', variant='outline', class='text-xs') }}
+                    {{ bc.button(variant='ghost', size='icon', class='h-7 w-7 text-muted-foreground', icon='plus') }}
                 </div>
 
-                <div class="space-y-3">
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab border-primary/40') %}
+                <div id="col-inprogress" class="space-y-3 min-h-[350px]" ondragover="dragOver(event)" ondrop="dropCard(event, 'col-inprogress')">
+                    <div id="card-4" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="rounded-lg border border-border bg-card p-4 shadow-xs space-y-3 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors">
                         <div class="flex items-center justify-between">
-                            {{ bc.badge('High', variant='destructive', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-106</span>
+                            <span class="rounded bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-600 dark:text-rose-400">High</span>
+                            <span class="font-mono text-[11px] text-muted-foreground">KAN-04</span>
                         </div>
-                        <h4 class="text-xs font-semibold leading-snug">Port 16 application templates from shadcn-examples to Flask</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px] text-amber-500 font-semibold"><i data-lucide="clock" class="h-3 w-3"></i> Due Today</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">JD</div>
+                        <h4 class="text-sm font-semibold text-foreground leading-snug">Design anti-drift CI ratchet hook</h4>
+                        <p class="text-xs text-muted-foreground line-clamp-2">Ensure zero raw HTML tag regressions with strict Python regex AST scanner.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center font-bold text-[10px] text-emerald-600">AL</div>
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1"><i data-lucide="message-square" class="h-3 w-3"></i> 12</span>
+                                <span class="flex items-center gap-1"><i data-lucide="paperclip" class="h-3 w-3"></i> 3</span>
+                            </div>
                         </div>
-                    {% endcall %}
-
-                    {% call bc.card(class='p-3.5 space-y-2.5 hover:border-primary/50 transition-colors cursor-grab border-primary/40') %}
-                        <div class="flex items-center justify-between">
-                            {{ bc.badge('Medium', variant='secondary', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-107</span>
-                        </div>
-                        <h4 class="text-xs font-semibold leading-snug">Enforce zero raw HTML component anti-drift CI ratchet</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="flex items-center gap-1 text-[11px]"><i data-lucide="calendar" class="h-3 w-3"></i> Oct 25</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">MV</div>
-                        </div>
-                    {% endcall %}
+                    </div>
                 </div>
             </div>
 
-            {# Column: Done #}
-            <div class="rounded-xl border border-border bg-muted/20 p-3 space-y-3">
-                <div class="flex items-center justify-between px-1">
+            {# Column 4: Done #}
+            <div class="rounded-xl border border-border bg-muted/30 p-4 space-y-4">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                        <h3 class="font-bold text-sm">Done</h3>
+                        <h3 class="font-bold text-sm text-foreground">Done</h3>
+                        <span class="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">3</span>
                     </div>
-                    {{ bc.badge('3', variant='outline', class='text-xs') }}
+                    {{ bc.button(variant='ghost', size='icon', class='h-7 w-7 text-muted-foreground', icon='plus') }}
                 </div>
 
-                <div class="space-y-3">
-                    {% call bc.card(class='p-3.5 space-y-2.5 opacity-80 hover:opacity-100 transition-opacity') %}
+                <div id="col-done" class="space-y-3 min-h-[350px]" ondragover="dragOver(event)" ondrop="dropCard(event, 'col-done')">
+                    <div id="card-5" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="rounded-lg border border-border bg-card p-4 shadow-xs space-y-3 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors">
                         <div class="flex items-center justify-between">
-                            {{ bc.badge('Completed', variant='secondary', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-98</span>
+                            <span class="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Done</span>
+                            <span class="font-mono text-[11px] text-muted-foreground">KAN-01</span>
                         </div>
-                        <h4 class="text-xs font-semibold leading-snug line-through text-muted-foreground">Fix Jinja2 macro barrel re-export namespace in basecoat/index.html</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="text-[11px] text-emerald-500 font-semibold flex items-center gap-1"><i data-lucide="check" class="h-3 w-3"></i> Verified</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">JD</div>
+                        <h4 class="text-sm font-semibold text-foreground leading-snug line-through opacity-70">Initialize Basecoat Jinja Macro Engine</h4>
+                        <p class="text-xs text-muted-foreground line-clamp-2">Port all canonical components to typed, slot-based Jinja2 templates.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground">
+                            <div class="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary">SC</div>
+                            <div class="flex items-center gap-3">
+                                <span class="flex items-center gap-1"><i data-lucide="check" class="h-3.5 w-3.5 text-emerald-500"></i> Verified</span>
+                            </div>
                         </div>
-                    {% endcall %}
-
-                    {% call bc.card(class='p-3.5 space-y-2.5 opacity-80 hover:opacity-100 transition-opacity') %}
-                        <div class="flex items-center justify-between">
-                            {{ bc.badge('Completed', variant='secondary', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-99</span>
-                        </div>
-                        <h4 class="text-xs font-semibold leading-snug line-through text-muted-foreground">Align Basecoat dialog centering with modal container wrapper</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="text-[11px] text-emerald-500 font-semibold flex items-center gap-1"><i data-lucide="check" class="h-3 w-3"></i> Verified</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">AR</div>
-                        </div>
-                    {% endcall %}
-
-                    {% call bc.card(class='p-3.5 space-y-2.5 opacity-80 hover:opacity-100 transition-opacity') %}
-                        <div class="flex items-center justify-between">
-                            {{ bc.badge('Completed', variant='secondary', class='text-[10px] px-1.5 py-0') }}
-                            <span class="text-[11px] text-muted-foreground font-mono">TASK-100</span>
-                        </div>
-                        <h4 class="text-xs font-semibold leading-snug line-through text-muted-foreground">Implement Inter font tokens and WTForms destructive focus rings</h4>
-                        <div class="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                            <span class="text-[11px] text-emerald-500 font-semibold flex items-center gap-1"><i data-lucide="check" class="h-3 w-3"></i> Verified</span>
-                            <div class="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[9px]">SC</div>
-                        </div>
-                    {% endcall %}
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </body>

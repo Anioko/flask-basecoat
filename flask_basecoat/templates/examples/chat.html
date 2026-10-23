@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application - shadcn/ui Example</title>
+    <title>Chat App - shadcn/ui Example</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,13 +23,30 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+        function sendMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            const container = document.getElementById('messages-container');
+            const bubble = document.createElement('div');
+            bubble.className = "flex items-start gap-3 justify-end";
+            bubble.innerHTML = `
+                <div class="max-w-[70%] rounded-xl rounded-br-none bg-primary text-primary-foreground p-3.5 shadow-xs">
+                    <p class="text-sm font-normal">${text}</p>
+                </div>
+            `;
+            container.appendChild(bubble);
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-8 flex flex-col justify-between">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 lg:p-8">
     {{ bc.toast_container() }}
 
-    <div class="max-w-6xl mx-auto w-full space-y-6">
-        {# Top Navigation #}
+    <div class="max-w-6xl mx-auto space-y-6">
+        {# Top Navigation and Actions #}
         <div class="flex items-center justify-between border-b border-border pb-4">
             <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
                 <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -43,174 +60,152 @@
             </div>
         </div>
 
-        {# Main Chat Container #}
-        <div class="grid grid-cols-1 md:grid-cols-12 rounded-xl border border-border bg-card shadow-sm overflow-hidden h-[700px]">
-            {# Sidebar: Conversations list #}
-            <div class="md:col-span-4 border-r border-border flex flex-col h-full bg-muted/10">
+        {# Chat Layout (Sidebar + Main Chat) #}
+        <div class="grid grid-cols-1 md:grid-cols-[300px_1fr] rounded-2xl border border-border bg-card shadow-xs overflow-hidden h-[720px]">
+            {# Contacts Sidebar #}
+            <aside class="border-r border-border bg-muted/20 flex flex-col justify-between hidden md:flex">
                 <div class="p-4 border-b border-border space-y-3">
                     <div class="flex items-center justify-between">
-                        <h2 class="font-bold text-base tracking-tight">Messages</h2>
-                        {{ bc.badge('4 New', variant='secondary') }}
+                        <h2 class="text-base font-bold tracking-tight text-foreground">Messages</h2>
+                        {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='edit') }}
                     </div>
                     <div class="relative">
-                        <i data-lucide="search" class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"></i>
                         <input
                             type="text"
                             placeholder="Search contacts..."
-                            class="flex h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                        />
+                            class="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                        >
                     </div>
                 </div>
 
-                <div class="flex-1 overflow-y-auto divide-y divide-border/60">
-                    {% set channels = [
-                        {
-                            'name': 'Shannon Baker',
-                            'role': 'Product Lead',
-                            'msg': 'I think you should go for it. You\'re more than capable!',
-                            'time': '10:42 AM',
-                            'active': true,
-                            'unread': 0,
-                            'initials': 'SB'
-                        },
-                        {
-                            'name': 'Marcus Vance',
-                            'role': 'Core Infra',
-                            'msg': 'PR #42 for Basecoat ratchets has passed all unit tests.',
-                            'time': '09:15 AM',
-                            'active': false,
-                            'unread': 2,
-                            'initials': 'MV'
-                        },
-                        {
-                            'name': 'Design Systems Team',
-                            'role': 'Channel',
-                            'msg': 'New shadcn color tokens are published to main.',
-                            'time': 'Yesterday',
-                            'active': false,
-                            'unread': 0,
-                            'initials': 'DS'
-                        },
-                        {
-                            'name': 'Alex Rivera',
-                            'role': 'QA Architect',
-                            'msg': 'Visual regression passed across 1440px desktop viewports.',
-                            'time': 'Oct 22',
-                            'active': false,
-                            'unread': 0,
-                            'initials': 'AR'
-                        }
-                    ] %}
-                    {% for c in channels %}
-                        <div class="p-3.5 flex items-start gap-3 cursor-pointer transition-colors {{ 'bg-muted' if c.active else 'hover:bg-muted/50' }}">
-                            <div class="relative shrink-0">
-                                <div class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs border border-border">
-                                    {{ c.initials }}
-                                </div>
-                                {% if c.active %}
-                                    <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"></span>
-                                {% endif %}
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-sm font-semibold truncate">{{ c.name }}</h3>
-                                    <span class="text-[11px] text-muted-foreground">{{ c.time }}</span>
-                                </div>
-                                <p class="text-xs text-muted-foreground truncate mt-0.5">{{ c.msg }}</p>
-                            </div>
-                            {% if c.unread > 0 %}
-                                {{ bc.badge(c.unread|string, variant='default', class='h-5 w-5 p-0 flex items-center justify-center text-[10px] rounded-full') }}
-                            {% endif %}
+                <div class="flex-1 overflow-y-auto divide-y divide-border/50">
+                    {# Contact 1: Shannon Baker (Active) #}
+                    <div class="flex items-center gap-3 p-4 bg-muted/60 cursor-pointer transition-colors">
+                        <div class="relative">
+                            <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary">SB</div>
+                            <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"></span>
                         </div>
-                    {% endfor %}
-                </div>
-            </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold text-foreground truncate">Shannon Baker</span>
+                                <span class="text-[10px] text-muted-foreground">12:45 PM</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground truncate mt-0.5">Will do. Appreciate it!</p>
+                        </div>
+                    </div>
 
-            {# Chat Thread & Active Stream #}
-            <div class="md:col-span-8 flex flex-col h-full bg-card">
-                {# Header #}
-                <div class="p-4 border-b border-border flex items-center justify-between">
+                    {# Contact 2: Mark Henderson #}
+                    <div class="flex items-center gap-3 p-4 hover:bg-muted/40 cursor-pointer transition-colors">
+                        <div class="relative">
+                            <div class="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-xs text-purple-600">MH</div>
+                            <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"></span>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold text-foreground truncate">Mark Henderson</span>
+                                <span class="text-[10px] text-muted-foreground">Yesterday</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground truncate mt-0.5">Anytime! Let me know if you need...</p>
+                        </div>
+                    </div>
+
+                    {# Contact 3: Emily Watson #}
+                    <div class="flex items-center gap-3 p-4 hover:bg-muted/40 cursor-pointer transition-colors">
+                        <div class="relative">
+                            <div class="h-10 w-10 rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-xs text-amber-600">EW</div>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold text-foreground truncate">Emily Watson</span>
+                                <span class="text-[10px] text-muted-foreground">Oct 21</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground truncate mt-0.5">The design files have been uploaded.</p>
+                        </div>
+                        <span class="h-4 w-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center">2</span>
+                    </div>
+                </div>
+
+                <div class="p-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Connected via WebSocket</span>
+                    <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Online</span>
+                </div>
+            </aside>
+
+            {# Main Active Chat #}
+            <main class="flex flex-col justify-between h-full bg-card">
+                {# Chat Header #}
+                <div class="flex items-center justify-between border-b border-border p-4">
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            <div class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs border border-border">
-                                SB
-                            </div>
+                            <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary">SB</div>
                             <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"></span>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-sm">Shannon Baker</h3>
-                            <p class="text-xs text-emerald-500 font-medium">Online &bull; Product Lead</p>
+                            <h2 class="text-base font-semibold text-foreground leading-tight">Shannon Baker</h2>
+                            <p class="text-xs text-muted-foreground">last seen recently</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-1">
-                        {{ bc.button(variant='ghost', size='sm', icon='phone') }}
-                        {{ bc.button(variant='ghost', size='sm', icon='video') }}
-                        {{ bc.button(variant='ghost', size='sm', icon='more-vertical') }}
+                        {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='phone') }}
+                        {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='video') }}
+                        {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='more-vertical') }}
                     </div>
                 </div>
 
-                {# Messages Feed #}
-                <div class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div class="flex justify-center">
-                        {{ bc.badge('Today', variant='outline', class='text-[11px]') }}
-                    </div>
-
-                    {# Message from Shannon #}
+                {# Messages Container (Verbatim Transcript from chat-main.tsx) #}
+                <div id="messages-container" class="flex-1 space-y-4 overflow-y-auto p-6">
+                    {# Message 1 (Other) #}
                     <div class="flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">SB</div>
-                        <div class="space-y-1 max-w-[75%]">
-                            <div class="rounded-2xl rounded-tl-none bg-muted p-3 text-sm">
-                                Hey John! I checked out the new Basecoat UI port in Flask. The styling looks 100% faithful to shadcn.
-                            </div>
-                            <span class="text-[10px] text-muted-foreground ml-1">10:35 AM</span>
+                        <div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary shrink-0">SB</div>
+                        <div class="max-w-[70%] rounded-xl rounded-bl-none bg-muted text-foreground p-3.5 shadow-2xs">
+                            <p class="text-sm">I think you should go for it. You&apos;re more than capable and it sounds like a great opportunity for growth.</p>
                         </div>
                     </div>
 
-                    {# User Reply #}
-                    <div class="flex items-start justify-end gap-3">
-                        <div class="space-y-1 max-w-[75%] text-right">
-                            <div class="rounded-2xl rounded-tr-none bg-primary text-primary-foreground p-3 text-sm text-left">
-                                Thanks Shannon! We verified all macros match the upstream Basecoat specs and have zero raw components in CI.
-                            </div>
-                            <span class="text-[10px] text-muted-foreground mr-1">10:38 AM &bull; Read</span>
+                    {# Message 2 (User) #}
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="max-w-[70%] rounded-xl rounded-br-none bg-primary text-primary-foreground p-3.5 shadow-xs">
+                            <p class="text-sm">It&apos;s a bigger company and a more challenging role. I&apos;m worried it might be too much to handle.</p>
                         </div>
                     </div>
 
-                    {# Message from Shannon #}
+                    {# Message 3 (User) #}
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="max-w-[70%] rounded-xl rounded-br-none bg-primary text-primary-foreground p-3.5 shadow-xs">
+                            <p class="text-sm">Thanks, Mark. I needed that encouragement. I&apos;ll start working on my application tonight.</p>
+                        </div>
+                    </div>
+
+                    {# Message 4 (Other) #}
                     <div class="flex items-start gap-3">
-                        <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">SB</div>
-                        <div class="space-y-1 max-w-[75%]">
-                            <div class="rounded-2xl rounded-tl-none bg-muted p-3 text-sm">
-                                I think you should go for it. You're more than capable and it sounds like a great opportunity for growth.
-                            </div>
-                            <span class="text-[10px] text-muted-foreground ml-1">10:42 AM</span>
+                        <div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center font-bold text-[10px] text-primary shrink-0">SB</div>
+                        <div class="max-w-[70%] rounded-xl rounded-bl-none bg-muted text-foreground p-3.5 shadow-2xs">
+                            <p class="text-sm">Anytime! Let me know if you need any help with your resume or cover letter.</p>
                         </div>
                     </div>
 
-                    {# User Reply #}
-                    <div class="flex items-start justify-end gap-3">
-                        <div class="space-y-1 max-w-[75%] text-right">
-                            <div class="rounded-2xl rounded-tr-none bg-primary text-primary-foreground p-3 text-sm text-left">
-                                Will do. Appreciate the support! Shipping the full 16-screen suite today.
-                            </div>
-                            <span class="text-[10px] text-muted-foreground mr-1">10:43 AM &bull; Sent</span>
+                    {# Message 5 (User) #}
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="max-w-[70%] rounded-xl rounded-br-none bg-primary text-primary-foreground p-3.5 shadow-xs">
+                            <p class="text-sm">Will do. Appreciate it!</p>
                         </div>
                     </div>
                 </div>
 
                 {# Message Composer #}
-                <div class="p-3 border-t border-border bg-card">
-                    <form class="flex items-center gap-2">
-                        {{ bc.button(variant='ghost', size='sm', icon='paperclip', class='shrink-0') }}
-                        <input
-                            type="text"
-                            placeholder="Type your message..."
-                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                        />
-                        {{ bc.button('Send', variant='default', size='sm', icon='send', class='shrink-0') }}
-                    </form>
-                </div>
-            </div>
+                <form onsubmit="sendMessage(event)" class="flex items-center gap-3 border-t border-border p-4 bg-muted/10">
+                    <button type="button" class="text-muted-foreground hover:text-foreground transition-colors cursor-pointer p-1">
+                        <i data-lucide="image" class="h-5 w-5"></i>
+                    </button>
+                    <input
+                        id="chat-input"
+                        type="text"
+                        placeholder="Enter a prompt here"
+                        class="flex-1 rounded-md border-0 bg-transparent px-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                    >
+                    {{ bc.button(variant='default', size='icon', class='rounded-full h-9 w-9 shrink-0', icon='arrow-right') }}
+                </form>
+            </main>
         </div>
     </div>
 </body>

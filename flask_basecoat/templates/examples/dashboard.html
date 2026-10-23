@@ -23,135 +23,286 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+        function toggleSidebar() {
+            const sb = document.getElementById('app-sidebar');
+            sb.classList.toggle('hidden');
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
+<body class="min-h-full bg-background text-foreground antialiased font-sans flex">
     {{ bc.toast_container() }}
 
-    {# Top App Bar #}
-    <header class="border-b border-border bg-card/50 sticky top-0 z-40 backdrop-blur-sm">
-        <div class="flex h-16 items-center px-6 gap-4 justify-between max-w-7xl mx-auto">
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                    </svg>
-                    <span>Acme Dashboard</span>
+    {# Collapsible App Sidebar #}
+    <aside id="app-sidebar" class="w-64 border-r border-border bg-sidebar shrink-0 flex flex-col justify-between hidden md:flex min-h-screen">
+        <div class="space-y-6">
+            {# Sidebar Header #}
+            <div class="h-14 border-b border-border flex items-center px-4 gap-2 font-semibold text-sidebar-foreground">
+                <div class="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-sm">
+                    A
                 </div>
-                <nav class="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
-                    <a href="#" class="text-foreground transition-colors hover:text-foreground">Overview</a>
-                    <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Customers</a>
-                    <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Products</a>
-                    <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Settings</a>
-                </nav>
+                <span class="text-base font-semibold tracking-tight">Acme Inc.</span>
             </div>
 
+            {# Nav Main #}
+            <div class="px-3 space-y-1">
+                <div class="px-2 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Main</div>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium bg-sidebar-accent text-sidebar-accent-foreground shadow-2xs">
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="list-todo" class="h-4 w-4"></i>
+                    <span>Lifecycle</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="bar-chart-3" class="h-4 w-4"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="folder" class="h-4 w-4"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="users" class="h-4 w-4"></i>
+                    <span>Team</span>
+                </a>
+            </div>
+
+            {# Nav Documents #}
+            <div class="px-3 space-y-1">
+                <div class="px-2 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Documents</div>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="database" class="h-4 w-4"></i>
+                    <span>Data Library</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="file-text" class="h-4 w-4"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                    <i data-lucide="file-code" class="h-4 w-4"></i>
+                    <span>Word Assistant</span>
+                </a>
+            </div>
+        </div>
+
+        {# Sidebar Footer with User #}
+        <div class="p-3 border-t border-border space-y-2">
+            <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors">
+                <i data-lucide="settings" class="h-4 w-4"></i>
+                <span>Settings</span>
+            </a>
+            <div class="flex items-center gap-3 rounded-md p-2 bg-sidebar-accent/40">
+                <div class="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs">
+                    SC
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div class="truncate text-xs font-semibold text-foreground">shadcn</div>
+                    <div class="truncate text-[10px] text-muted-foreground">m@example.com</div>
+                </div>
+                <i data-lucide="more-vertical" class="h-4 w-4 text-muted-foreground cursor-pointer"></i>
+            </div>
+        </div>
+    </aside>
+
+    {# Main Inset Content Area #}
+    <div class="flex-1 flex flex-col min-w-0">
+        {# Sticky Site Header #}
+        <header class="bg-background/90 sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between border-b border-border px-4 lg:px-6 backdrop-blur-xs">
             <div class="flex items-center gap-3">
+                {{ bc.button(variant='ghost', size='icon', class='md:hidden', icon='menu', on_click='toggleSidebar()') }}
+                <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <span>Documents</span>
+                    <span>/</span>
+                    <span class="text-foreground font-semibold">Overview</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('Quick Create', variant='default', size='sm', icon='plus') }}
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-                
-                <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold">
-                    JD
-                </div>
+                {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='moon', on_click='toggleDarkMode()') }}
             </div>
-        </div>
-    </header>
+        </header>
 
-    {# Dashboard Main Body #}
-    <main class="max-w-7xl mx-auto p-6 md:p-8 space-y-8">
-        {# Page Title & Primary Actions #}
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
-                <p class="text-sm text-muted-foreground mt-1">Real-time revenue metrics, active subscriptions, and recent sales activity.</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="relative">
-                    <input type="text" placeholder="Jan 20, 2026 - Feb 09, 2026" class="input h-9 px-3 text-xs w-56 bg-background rounded-md border border-input" readonly>
-                </div>
-                {{ bc.button('Download Report', variant='default', size='sm', icon='download') }}
-            </div>
-        </div>
-
-        {# KPI Cards Row #}
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {% for card in kpi_cards %}
-                {% call bc.card() %}
-                    <div class="flex items-center justify-between pb-2">
-                        <span class="text-sm font-medium text-muted-foreground">{{ card.title }}</span>
-                        <i data-lucide="{{ card.icon }}" class="h-4 w-4 text-muted-foreground"></i>
+        {# Dashboard Body #}
+        <main class="flex-1 p-4 lg:p-6 space-y-6 max-w-7xl">
+            {# 1. SectionCards (4 KPI Cards from shadcn-examples) #}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {# Card 1: Total Revenue #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total Revenue</span>
+                        <span class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            <i data-lucide="trending-up" class="h-3 w-3"></i>
+                            +12.5%
+                        </span>
                     </div>
-                    <div class="text-2xl font-bold tracking-tight">{{ card.value }}</div>
-                    <p class="text-xs text-muted-foreground mt-1">{{ card.change }}</p>
-                {% endcall %}
-            {% endfor %}
-        </div>
-
-        {# Analytics & Recent Sales Grid #}
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            {# Chart & Overview Panel (4 cols on lg) #}
-            <div class="col-span-4 space-y-4">
-                {% set tab_items = [
-                    {'id': 'overview', 'label': 'Overview', 'active': true},
-                    {'id': 'analytics', 'label': 'Analytics'},
-                    {'id': 'reports', 'label': 'Reports'}
-                ] %}
-
-                {% call bc.tabs(tabs_list=[('overview', 'Overview'), ('analytics', 'Analytics'), ('reports', 'Reports')], default_tab='overview', id='dashboard-tabs') %}
-                    {% call bc.tab_panel('overview', default_tab='overview', tabs_id='dashboard-tabs', class='p-6 space-y-4') %}
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="font-semibold text-lg tracking-tight">Monthly Revenue Overview</h3>
-                                <p class="text-xs text-muted-foreground">Total transaction volume across the current operational quarter.</p>
-                            </div>
-                            <span class="text-xs font-medium text-muted-foreground">2026 YTD</span>
+                    <div class="text-3xl font-bold tracking-tight text-foreground">$1,250.00</div>
+                    <div class="space-y-0.5 pt-1">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                            <span>Trending up this month</span>
+                            <i data-lucide="trending-up" class="h-3 w-3 text-emerald-500"></i>
                         </div>
+                        <div class="text-[11px] text-muted-foreground">Visitors for the last 6 months</div>
+                    </div>
+                </div>
 
-                        {# CSS Bar Chart #}
-                        <div class="h-[240px] w-full flex items-end gap-2 pt-8 pb-2 px-2 border-b border-border">
-                            {% set heights = [35, 60, 45, 80, 65, 90, 75, 85, 95, 70, 85, 100] %}
-                            {% set months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %}
-                            {% for h in heights %}
-                                <div class="flex-1 flex flex-col items-center gap-1 group">
-                                    <div class="w-full bg-primary/80 group-hover:bg-primary transition-all rounded-t-sm" style="height: {{ h }}%;"></div>
-                                    <span class="text-[10px] text-muted-foreground mt-1">{{ months[loop.index0] }}</span>
-                                </div>
-                            {% endfor %}
+                {# Card 2: New Customers #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">New Customers</span>
+                        <span class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-rose-600 dark:text-rose-400">
+                            <i data-lucide="trending-down" class="h-3 w-3"></i>
+                            -20%
+                        </span>
+                    </div>
+                    <div class="text-3xl font-bold tracking-tight text-foreground">1,234</div>
+                    <div class="space-y-0.5 pt-1">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                            <span>Down 20% this period</span>
+                            <i data-lucide="trending-down" class="h-3 w-3 text-rose-500"></i>
                         </div>
-                    {% endcall %}
+                        <div class="text-[11px] text-muted-foreground">Acquisition needs attention</div>
+                    </div>
+                </div>
 
-                    {% call bc.tab_panel('analytics', default_tab='overview', tabs_id='dashboard-tabs', class='p-6') %}
-                        <p class="text-sm text-muted-foreground">Analytics telemetry shows 99.98% platform uptime and 42ms p95 latency across all API endpoints.</p>
-                    {% endcall %}
+                {# Card 3: Active Accounts #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Active Accounts</span>
+                        <span class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            <i data-lucide="trending-up" class="h-3 w-3"></i>
+                            +12.5%
+                        </span>
+                    </div>
+                    <div class="text-3xl font-bold tracking-tight text-foreground">45,678</div>
+                    <div class="space-y-0.5 pt-1">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                            <span>Strong user retention</span>
+                            <i data-lucide="trending-up" class="h-3 w-3 text-emerald-500"></i>
+                        </div>
+                        <div class="text-[11px] text-muted-foreground">Engagement exceed targets</div>
+                    </div>
+                </div>
 
-                    {% call bc.tab_panel('reports', default_tab='overview', tabs_id='dashboard-tabs', class='p-6') %}
-                        <p class="text-sm text-muted-foreground">No compliance incidents reported in the last 90 billing cycles.</p>
-                    {% endcall %}
-                {% endcall %}
+                {# Card 4: Growth Rate #}
+                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Growth Rate</span>
+                        <span class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            <i data-lucide="trending-up" class="h-3 w-3"></i>
+                            +4.5%
+                        </span>
+                    </div>
+                    <div class="text-3xl font-bold tracking-tight text-foreground">4.5%</div>
+                    <div class="space-y-0.5 pt-1">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                            <span>Steady performance increase</span>
+                            <i data-lucide="trending-up" class="h-3 w-3 text-emerald-500"></i>
+                        </div>
+                        <div class="text-[11px] text-muted-foreground">Meets growth projections</div>
+                    </div>
+                </div>
             </div>
 
-            {# Recent Sales Feed (3 cols on lg) #}
-            <div class="col-span-3">
-                {% call bc.card(title='Recent Sales', description='You made 265 sales this month.') %}
-                    <div class="space-y-6 pt-2">
-                        {% for sale in recent_sales %}
-                            <div class="flex items-center justify-between gap-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">
-                                        {{ sale.initials }}
-                                    </div>
-                                    <div class="space-y-1">
-                                        <p class="text-sm font-medium leading-none">{{ sale.name }}</p>
-                                        <p class="text-xs text-muted-foreground">{{ sale.email }}</p>
-                                    </div>
-                                </div>
-                                <div class="font-semibold text-sm tracking-tight text-foreground">{{ sale.amount }}</div>
-                            </div>
+            {# 2. ChartAreaInteractive (Area Chart with Selector) #}
+            <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-4">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold tracking-tight text-foreground">Interactive Visitor Traffic</h3>
+                        <p class="text-xs text-muted-foreground">Showing total visitors for the selected timeframe</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select class="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                            <option>Last 3 months</option>
+                            <option>Last 30 days</option>
+                            <option>Last 7 days</option>
+                        </select>
+                    </div>
+                </div>
+
+                {# Area Chart Graphic #}
+                <div class="h-64 w-full pt-4">
+                    <svg class="h-full w-full overflow-visible" viewBox="0 0 800 200" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.35"/>
+                                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        {# Grid lines #}
+                        <line x1="0" y1="50" x2="800" y2="50" stroke="currentColor" stroke-opacity="0.1" stroke-dasharray="3 3"/>
+                        <line x1="0" y1="100" x2="800" y2="100" stroke="currentColor" stroke-opacity="0.1" stroke-dasharray="3 3"/>
+                        <line x1="0" y1="150" x2="800" y2="150" stroke="currentColor" stroke-opacity="0.1" stroke-dasharray="3 3"/>
+                        
+                        {# Area polygon #}
+                        <path d="M 0 170 Q 100 120 200 140 T 400 80 T 600 90 T 800 30 L 800 200 L 0 200 Z" fill="url(#areaGradient)"/>
+                        {# Line curve #}
+                        <path d="M 0 170 Q 100 120 200 140 T 400 80 T 600 90 T 800 30" fill="none" stroke="var(--primary)" stroke-width="3"/>
+                    </svg>
+                    <div class="flex justify-between text-[11px] text-muted-foreground pt-3 font-medium">
+                        <span>Jan 01</span>
+                        <span>Jan 15</span>
+                        <span>Feb 01</span>
+                        <span>Feb 15</span>
+                        <span>Mar 01</span>
+                        <span>Mar 15</span>
+                        <span>Mar 31</span>
+                    </div>
+                </div>
+            </div>
+
+            {# 3. DataTable (Verbatim records from admin-dashboard/data.json) #}
+            <div class="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
+                <div class="p-6 border-b border-border flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold tracking-tight text-foreground">Documents Register</h3>
+                        <p class="text-xs text-muted-foreground">Active proposals, compliance files and reviewer sign-offs</p>
+                    </div>
+                    {{ bc.button('Export Table', variant='outline', size='sm', icon='download') }}
+                </div>
+
+                {% call bc.table() %}
+                    <thead>
+                        <tr class="border-b border-border bg-muted/40">
+                            <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Header</th>
+                            <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Type</th>
+                            <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Status</th>
+                            <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Target</th>
+                            <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Limit</th>
+                            <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Reviewer</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-border text-sm">
+                        {% set docs = [
+                            {'header': 'Cover page', 'type': 'Cover page', 'status': 'In Process', 'target': '18', 'limit': '5', 'reviewer': 'Eddie Lake'},
+                            {'header': 'Executive summary', 'type': 'Executive summary', 'status': 'Done', 'target': '24', 'limit': '10', 'reviewer': 'Sarah Chen'},
+                            {'header': 'Technical approach', 'type': 'Approach', 'status': 'In Process', 'target': '35', 'limit': '12', 'reviewer': 'Alex Rivera'},
+                            {'header': 'Cost proposal', 'type': 'Financials', 'status': 'Review', 'target': '40', 'limit': '15', 'reviewer': 'Maria Garcia'},
+                            {'header': 'Past performance', 'type': 'Experience', 'status': 'Done', 'target': '12', 'limit': '4', 'reviewer': 'James Wilson'}
+                        ] %}
+                        {% for doc in docs %}
+                            <tr class="hover:bg-muted/30 transition-colors">
+                                <td class="p-4 align-middle font-medium text-foreground">{{ doc.header }}</td>
+                                <td class="p-4 align-middle text-muted-foreground">{{ doc.type }}</td>
+                                <td class="p-4 align-middle">
+                                    {% if doc.status == 'Done' %}
+                                        {{ bc.badge(doc.status, variant='secondary') }}
+                                    {% elif doc.status == 'In Process' %}
+                                        {{ bc.badge(doc.status, variant='default') }}
+                                    {% else %}
+                                        {{ bc.badge(doc.status, variant='outline') }}
+                                    {% endif %}
+                                </td>
+                                <td class="p-4 align-middle font-mono text-xs">{{ doc.target }}</td>
+                                <td class="p-4 align-middle font-mono text-xs">{{ doc.limit }}</td>
+                                <td class="p-4 align-middle text-muted-foreground">{{ doc.reviewer }}</td>
+                            </tr>
                         {% endfor %}
-                    </div>
+                    </tbody>
                 {% endcall %}
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </body>
 </html>

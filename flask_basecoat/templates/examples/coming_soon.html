@@ -19,109 +19,128 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) { lucide.createIcons(); }
+            startCountdown();
         });
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+
+        function startCountdown() {
+            let days = 28, hours = 14, mins = 36, secs = 45;
+            setInterval(() => {
+                secs--;
+                if (secs < 0) { secs = 59; mins--; }
+                if (mins < 0) { mins = 59; hours--; }
+                if (hours < 0) { hours = 23; days--; }
+                document.getElementById('c-days').textContent = String(days).padStart(2, '0');
+                document.getElementById('c-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('c-mins').textContent = String(mins).padStart(2, '0');
+                document.getElementById('c-secs').textContent = String(secs).padStart(2, '0');
+            }, 1000);
+        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10 flex flex-col justify-between">
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
     {{ bc.toast_container() }}
 
-    <div class="max-w-5xl mx-auto w-full space-y-12">
-        {# Top Navigation #}
-        <div class="flex items-center justify-between border-b border-border pb-6">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Launchpad</span>
+    <div class="grid min-h-screen lg:grid-cols-2">
+        {# Left Section (Photo Hero + Navigation) #}
+        <div class="relative flex flex-1 flex-col items-start justify-between bg-neutral-900 p-8 lg:p-12 text-white overflow-hidden">
+            {# Background Photo Overlay #}
+            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
+
+            {# Brand Logo #}
+            <div class="relative z-10 flex w-full items-center justify-between">
+                <div class="flex items-center gap-2 font-bold tracking-tight text-lg text-white">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                    </svg>
+                    <span>Acme Logo</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm', class='text-white hover:text-white hover:bg-white/10') }}
+                    {{ bc.button(variant='outline', size='sm', class='text-white border-white/20 hover:bg-white/10', icon='moon', on_click='toggleDarkMode()') }}
+                </div>
             </div>
-            <div class="flex items-center gap-3">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+
+            {# Middle Inspiration Quote #}
+            <div class="relative z-10 space-y-3 max-w-md my-auto py-12">
+                <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-sm text-white">
+                    Coming Soon
+                </span>
+                <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl text-white">
+                    Designing the future of developer tools.
+                </h2>
+                <p class="text-sm text-neutral-300">
+                    We are building a unified workspace for real-time collaboration, generative workflows, and automated release verification.
+                </p>
             </div>
+
+            {# Bottom Nav Links #}
+            <nav class="relative z-10 flex w-full gap-6 text-sm text-neutral-400">
+                <a href="#" class="hover:text-white transition-colors">About</a>
+                <a href="#" class="hover:text-white transition-colors">Contact</a>
+                <a href="#" class="hover:text-white transition-colors">Feedback</a>
+                <a href="#" class="hover:text-white transition-colors">Help</a>
+            </nav>
         </div>
 
-        {# Hero Coming Soon Section #}
-        <div class="text-center space-y-6 max-w-2xl mx-auto py-8">
-            {{ bc.badge('Launching Q4 2026', variant='secondary') }}
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-                Something extraordinary is on the way.
-            </h1>
-            <p class="text-lg text-muted-foreground">
-                We are crafting an enterprise-grade developer platform with native Basecoat UI components and shadcn aesthetic precision.
-            </p>
-
-            {# Countdown Timer Cards #}
-            <div class="grid grid-cols-4 gap-3 sm:gap-4 max-w-md mx-auto pt-4">
-                {% set time_blocks = [
-                    ('29', 'Days'),
-                    ('14', 'Hours'),
-                    ('42', 'Minutes'),
-                    ('18', 'Seconds')
-                ] %}
-                {% for num, label in time_blocks %}
-                    {% call bc.card(class='p-4 text-center') %}
-                        <div class="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">{{ num }}</div>
-                        <div class="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-1">{{ label }}</div>
-                    {% endcall %}
-                {% endfor %}
+        {# Right Section (Countdown + Subscription) #}
+        <div class="relative flex flex-1 flex-col items-center justify-between p-8 lg:p-12 bg-card">
+            <div class="flex w-full items-center justify-end">
+                {{ bc.button(variant='ghost', size='icon', class='rounded-full text-muted-foreground hover:text-foreground', icon='share-2') }}
             </div>
 
-            {# Waitlist Email Form #}
-            <div class="pt-6 max-w-md mx-auto">
-                <form method="POST" action="{{ url_for('basecoat_examples.coming_soon') }}" class="flex flex-col sm:flex-row gap-2">
-                    <input
-                        type="email"
-                        name="email"
-                        required
-                        placeholder="Enter your work email"
-                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                    {{ bc.button('Join Waitlist', type='submit', variant='default') }}
-                </form>
-                <p class="text-xs text-muted-foreground mt-2">No spam. Only early access releases and feature announcements.</p>
+            <div class="flex flex-col items-center space-y-12 text-center max-w-md my-auto py-12">
+                {# Heading #}
+                <div class="space-y-2">
+                    <h1 class="text-4xl font-extrabold tracking-tight text-[#6a5acd] lg:text-5xl">Coming Soon</h1>
+                    <p class="text-muted-foreground text-base">Stay Connected, Stay Updated!</p>
+                </div>
+
+                {# Countdown Timer Display #}
+                <div class="grid grid-cols-4 gap-3 sm:gap-4 w-full">
+                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
+                        <span id="c-days" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">28</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Days</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
+                        <span id="c-hours" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">14</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Hours</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
+                        <span id="c-mins" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">36</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Mins</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
+                        <span id="c-secs" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#6a5acd] tabular-nums">45</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Secs</span>
+                    </div>
+                </div>
+
+                {# Email Capture Form #}
+                <div class="space-y-4 w-full">
+                    <h2 class="text-xl font-bold tracking-tight text-foreground sm:text-2xl">Get Updates!</h2>
+                    <form class="flex w-full rounded-full border border-border p-1 bg-background shadow-xs focus-within:ring-2 focus-within:ring-ring" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+                        <input
+                            type="email"
+                            required
+                            placeholder="Email Address"
+                            class="flex-1 rounded-full border-none bg-transparent px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                        >
+                        {{ bc.button('Send Now', variant='default', class='rounded-full px-5 text-sm font-semibold') }}
+                    </form>
+                </div>
             </div>
-        </div>
 
-        {# Feature Teasers Grid #}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-border">
-            {% call bc.card() %}
-                <div class="space-y-2">
-                    <div class="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
-                        <i data-lucide="zap" class="h-5 w-5"></i>
-                    </div>
-                    <h3 class="font-semibold text-base">Instant SSR Performance</h3>
-                    <p class="text-sm text-muted-foreground">Pre-rendered HTML with zero hydration lag and blazing fast TTFB.</p>
-                </div>
-            {% endcall %}
-
-            {% call bc.card() %}
-                <div class="space-y-2">
-                    <div class="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
-                        <i data-lucide="shield-check" class="h-5 w-5"></i>
-                    </div>
-                    <h3 class="font-semibold text-base">Type-Safe Macros</h3>
-                    <p class="text-sm text-muted-foreground">Rigid macro contracts matching upstream Basecoat UI specifications.</p>
-                </div>
-            {% endcall %}
-
-            {% call bc.card() %}
-                <div class="space-y-2">
-                    <div class="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
-                        <i data-lucide="palette" class="h-5 w-5"></i>
-                    </div>
-                    <h3 class="font-semibold text-base">Pixel-Perfect Theming</h3>
-                    <p class="text-sm text-muted-foreground">100% fidelity with modern shadcn neutral, dark mode, and focus rings.</p>
-                </div>
-            {% endcall %}
+            {# Social Icons #}
+            <div class="flex w-full justify-center gap-6 lg:justify-end text-muted-foreground pt-6">
+                <a href="#" class="hover:text-foreground transition-colors"><i data-lucide="facebook" class="h-5 w-5"></i></a>
+                <a href="#" class="hover:text-foreground transition-colors"><i data-lucide="twitter" class="h-5 w-5"></i></a>
+                <a href="#" class="hover:text-foreground transition-colors"><i data-lucide="linkedin" class="h-5 w-5"></i></a>
+            </div>
         </div>
     </div>
-
-    {# Footer #}
-    <footer class="mt-16 text-center text-xs text-muted-foreground border-t border-border pt-6">
-        &copy; 2026 Acme Inc. All rights reserved. Built with Basecoat UI.
-    </footer>
 </body>
 </html>
