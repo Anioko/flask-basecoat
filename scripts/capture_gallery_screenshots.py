@@ -32,7 +32,6 @@ class ServerThread(threading.Thread):
 
 
 def create_gallery_app():
-    # Configure Flask app pointing to flask-basecoat assets
     app = Flask(
         __name__,
         static_folder=r'C:\flask-basecoat\app\static',
@@ -67,35 +66,29 @@ def capture_screenshots():
             print(f"Captured: {light_path}")
 
             # 2. Desktop Dark Mode (1440x900)
-            # Click Toggle Dark Mode
-            page.click("button:has-text('Toggle Dark Mode')")
+            page.evaluate("document.documentElement.classList.add('dark')")
             page.wait_for_timeout(500)
             dark_path = OUTPUT_DIR / "gallery-dark-1440.png"
             page.screenshot(path=str(dark_path), full_page=True)
             print(f"Captured: {dark_path}")
 
-            # 3. Interactive Modal Dialog
-            # Switch back to light mode for crisp component details
-            page.click("button:has-text('Toggle Dark Mode')")
-            page.wait_for_timeout(300)
-            
-            # Click Open Modal Dialog
-            page.click("button:has-text('Open Modal Dialog')")
+            # 3. Interactive Modal Dialog (in light mode)
+            page.evaluate("document.documentElement.classList.remove('dark')")
+            page.evaluate("window.scrollTo(0, 0)")
+            page.evaluate("document.getElementById('demo-dialog').showModal()")
             page.wait_for_timeout(600)
             dialog_path = OUTPUT_DIR / "dialog-modal.png"
-            # Capture modal region
-            modal_el = page.locator("#demo-dialog")
-            if modal_el.is_visible():
-                page.screenshot(path=str(dialog_path))
-                print(f"Captured: {dialog_path}")
+            page.screenshot(path=str(dialog_path))
+            print(f"Captured: {dialog_path}")
             
-            # Close Dialog
-            page.click("#demo-dialog button:has-text('Cancel')")
+            page.evaluate("document.getElementById('demo-dialog').close()")
             page.wait_for_timeout(300)
 
-            # 4. Form Validation Errors (Submit empty form)
+            # 4. Form Validation Errors (Submit invalid form)
+            page.evaluate("document.querySelector('form').scrollIntoView()")
+            page.wait_for_timeout(300)
             page.click("button:has-text('Submit Form')")
-            page.wait_for_timeout(600)
+            page.wait_for_timeout(800)
             form_path = OUTPUT_DIR / "form-validation.png"
             page.screenshot(path=str(form_path))
             print(f"Captured: {form_path}")

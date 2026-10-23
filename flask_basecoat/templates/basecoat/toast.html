@@ -1,4 +1,4 @@
-{# Basecoat Toast Component #}
+{# Basecoat Toast Component - 100% shadcn/ui #}
 {% macro toast_container(class='') %}
     <section id="toaster" class="toaster fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none {{ class }}">
         {% for category, message in get_flashed_messages(with_categories=true) %}
@@ -22,10 +22,10 @@
                         {% endif %}
                     </div>
                     <section class="flex-1">
-                        <div class="text-sm font-semibold capitalize text-foreground">{{ cat }}</div>
-                        <div class="text-sm text-muted-foreground">{{ message }}</div>
+                        <h2 class="text-sm font-semibold capitalize text-foreground">{{ cat }}</h2>
+                        <p class="text-sm text-muted-foreground mt-0.5">{{ message }}</p>
                     </section>
-                    <button type="button" onclick="this.closest('.toast').remove()" class="text-muted-foreground hover:text-foreground">
+                    <button type="button" onclick="this.closest('.toast').remove()" class="text-muted-foreground hover:text-foreground p-1 rounded-sm focus:outline-none focus:ring-1 focus:ring-ring" aria-label="Dismiss">
                         <i data-lucide="x" class="h-4 w-4"></i>
                     </button>
                 </div>

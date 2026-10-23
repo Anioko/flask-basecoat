@@ -1,51 +1,51 @@
-{# Basecoat Card Component #}
+{# Basecoat Card Component - 100% shadcn/ui #}
 {% macro card(title=none, description=none, footer=none, class='', id=none) %}
-    <div class="card {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
+    <div class="card rounded-xl border bg-card text-card-foreground shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
         {% if title or description %}
-            <div class="card-header">
+            <header class="card-header flex flex-col space-y-1.5 p-6">
                 {% if title %}
-                    <h3 class="card-title">{{ title }}</h3>
+                    <h2 class="card-title font-semibold leading-none tracking-tight text-lg">{{ title }}</h2>
                 {% endif %}
                 {% if description %}
-                    <p class="card-description">{{ description }}</p>
+                    <p class="card-description text-sm text-muted-foreground">{{ description }}</p>
                 {% endif %}
-            </div>
+            </header>
         {% endif %}
         
-        <div class="card-content">
+        <section class="card-content p-6 pt-0">
             {{ caller() if caller }}
-        </div>
+        </section>
         
         {% if footer %}
-            <div class="card-footer">
+            <footer class="card-footer flex items-center p-6 pt-0">
                 {{ footer }}
-            </div>
+            </footer>
         {% endif %}
     </div>
 {% endmacro %}
 
 {% macro card_header(class='') %}
-    <div class="card-header {{ class }}">
+    <header class="card-header flex flex-col space-y-1.5 p-6 {{ class }}">
         {{ caller() if caller }}
-    </div>
+    </header>
 {% endmacro %}
 
 {% macro card_title(text='', class='') %}
-    <h3 class="card-title {{ class }}">{{ text }}{{ caller() if caller }}</h3>
+    <h2 class="card-title font-semibold leading-none tracking-tight text-lg {{ class }}">{{ text }}{{ caller() if caller }}</h2>
 {% endmacro %}
 
 {% macro card_description(text='', class='') %}
-    <p class="card-description {{ class }}">{{ text }}{{ caller() if caller }}</p>
+    <p class="card-description text-sm text-muted-foreground {{ class }}">{{ text }}{{ caller() if caller }}</p>
 {% endmacro %}
 
 {% macro card_content(class='') %}
-    <div class="card-content {{ class }}">
+    <section class="card-content p-6 pt-0 {{ class }}">
         {{ caller() if caller }}
-    </div>
+    </section>
 {% endmacro %}
 
 {% macro card_footer(class='') %}
-    <div class="card-footer {{ class }}">
+    <footer class="card-footer flex items-center p-6 pt-0 {{ class }}">
         {{ caller() if caller }}
-    </div>
+    </footer>
 {% endmacro %}

@@ -1,4 +1,4 @@
-{# Basecoat Dropdown Component #}
+{# Basecoat Dropdown Component - 100% shadcn/ui #}
 {% macro dropdown(
     trigger_text='Actions',
     items=[],
@@ -8,8 +8,6 @@
     class='',
     id=none
 ) %}
-    {% set align_classes = 'right-0' if align == 'right' else 'left-0' %}
-    
     <div class="dropdown-menu relative inline-block {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
         {% from 'basecoat/button.html' import button %}
         {{ button(
@@ -19,7 +17,7 @@
             aria_label=trigger_text
         ) }}
         
-        <div data-popover aria-hidden="true" class="popover absolute z-50 {{ align_classes }} mt-2 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all">
+        <div data-popover aria-hidden="true" class="absolute z-50 {% if align == 'right' %}right-0{% else %}left-0{% endif %} mt-2 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
             <div role="menu" class="flex flex-col space-y-0.5">
                 {% if caller %}
                     {{ caller() }}
@@ -28,7 +26,7 @@
                         {% if item.divider %}
                             <div class="-mx-1 my-1 h-px bg-border" role="separator"></div>
                         {% elif item.header %}
-                            <div class="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{{ item.header }}</div>
+                            <div class="px-2 py-1.5 text-xs font-semibold text-muted-foreground" role="heading">{{ item.header }}</div>
                         {% else %}
                             <a
                                 href="{{ item.href or '#' }}"
@@ -39,7 +37,7 @@
                                 {% if item.icon %}
                                     <i data-lucide="{{ item.icon }}" class="mr-2 h-4 w-4"></i>
                                 {% endif %}
-                                {{ item.text }}
+                                <span>{{ item.text }}</span>
                             </a>
                         {% endif %}
                     {% endfor %}
@@ -47,4 +45,18 @@
             </div>
         </div>
     </div>
+{% endmacro %}
+
+{% macro dropdown_item(text='', href='#', icon=none, variant='default', onclick=none, class='') %}
+    <a
+        href="{{ href }}"
+        role="menuitem"
+        class="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 {% if variant == 'destructive' %}text-destructive hover:text-destructive hover:bg-destructive/10{% endif %} {{ class }}"
+        {% if onclick %}onclick="{{ onclick }}"{% endif %}
+    >
+        {% if icon %}
+            <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4"></i>
+        {% endif %}
+        <span>{{ text }}{{ caller() if caller }}</span>
+    </a>
 {% endmacro %}

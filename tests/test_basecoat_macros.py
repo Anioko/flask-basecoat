@@ -54,8 +54,11 @@ class BasecoatMacrosTestCase(unittest.TestCase):
         """
         rendered = render_template_string(tmpl)
         self.assertIn('card', rendered)
+        self.assertIn('<header class="card-header', rendered)
+        self.assertIn('<h2 class="card-title', rendered)
         self.assertIn('Card Title', rendered)
         self.assertIn('Card Desc', rendered)
+        self.assertIn('<section class="card-content', rendered)
         self.assertIn('Body Content', rendered)
 
     def test_empty_state(self):
@@ -70,6 +73,19 @@ class BasecoatMacrosTestCase(unittest.TestCase):
         rendered = render_template_string(tmpl)
         self.assertIn('Alice', rendered)
         self.assertIn('Admin', rendered)
+        self.assertIn('<table class="table', rendered)
+
+    def test_table_with_caller(self):
+        tmpl = """
+        {% from 'basecoat/table.html' import table %}
+        {% call table() %}
+            <thead><tr><th>Custom Header</th></tr></thead>
+            <tbody><tr><td>Custom Cell</td></tr></tbody>
+        {% endcall %}
+        """
+        rendered = render_template_string(tmpl)
+        self.assertIn('Custom Header', rendered)
+        self.assertIn('Custom Cell', rendered)
         self.assertIn('<table class="table', rendered)
 
     def test_table_empty_state_fallback(self):
@@ -88,6 +104,7 @@ class BasecoatMacrosTestCase(unittest.TestCase):
         rendered = render_template_string(tmpl)
         self.assertIn('id="modal-1"', rendered)
         self.assertIn('showModal()', rendered)
+        self.assertIn('<header', rendered)
         self.assertIn('Warning', rendered)
         self.assertIn('Confirmation message', rendered)
 

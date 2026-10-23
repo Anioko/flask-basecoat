@@ -1,7 +1,11 @@
-{# Basecoat Table Component #}
+{# Basecoat Table Component - 100% shadcn/ui #}
 {% macro table(columns=[], rows=[], empty_title='No records found', empty_description='', class='', id=none) %}
     <div class="w-full overflow-x-auto rounded-md border border-border bg-card {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if rows and rows|length > 0 %}
+        {% if caller %}
+            <table class="table w-full text-sm">
+                {{ caller() }}
+            </table>
+        {% elif rows and rows|length > 0 %}
             <table class="table w-full text-sm">
                 <thead>
                     <tr class="border-b border-border bg-muted/50">
