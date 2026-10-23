@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flask-basecoat"
+version = "0.1.0"
+description = "Canonical shadcn/ui-aligned Jinja macros wrapping Basecoat UI for Flask and Entelim"
+readme = "README.md"
+authors = [{ name = "Anioko" }]
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "Flask>=3.0.0",
+    "WTForms>=3.0.0",
+    "Flask-WTF>=1.2.0"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "playwright>=1.40.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["flask_basecoat*"]
+
+[tool.setuptools.package-data]
+flask_basecoat = ["templates/**/*.html", "static/**/*"]

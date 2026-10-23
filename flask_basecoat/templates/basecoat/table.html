@@ -1,0 +1,28 @@
+{# Basecoat Table Component #}
+{% macro table(columns=[], rows=[], empty_title='No records found', empty_description='', class='', id=none) %}
+    <div class="w-full overflow-x-auto rounded-md border border-border bg-card {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
+        {% if rows and rows|length > 0 %}
+            <table class="table w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border bg-muted/50">
+                        {% for col in columns %}
+                            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for row in rows %}
+                        <tr class="hover:bg-muted/50 transition-colors">
+                            {% for cell in row %}
+                                <td class="p-4 align-middle">{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            {% from 'basecoat/empty_state.html' import empty_state %}
+            {{ empty_state(title=empty_title, description=empty_description) }}
+        {% endif %}
+    </div>
+{% endmacro %}

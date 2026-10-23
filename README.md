@@ -1,366 +1,380 @@
-# Flask-Basecoat
+# Flask-Basecoat: Canonical shadcn/ui for Flask & Jinja2
 
-A modern Flask application boilerplate with **BasecoatUI** and **Tailwind CSS** - providing a clean, component-based UI similar to shadcn/ui.
+A production-grade component system and application boilerplate that brings **shadcn/ui** aesthetics and ergonomics to **Flask** and **Jinja2**.
 
-## ✨ What's Different?
+Powered by upstream [Basecoat UI](https://basecoatui.com/) (`basecoat-css`), `flask-basecoat` provides composable Jinja2 macros with caller slots, an automatic WTForms field adapter, tokenized HSL/oklch themes (Light & Dark), and an interactive component gallery.
 
-This is a modernized fork of the original [flask-base](https://github.com/hack4impact/flask-base) project, updated with:
+---
 
-- ✅ **BasecoatUI** - Modern component library with shadcn/ui-like aesthetics
-- ✅ **Tailwind CSS** - Utility-first CSS framework
-- ✅ **Python 3.11+** - Modern Python version
-- ✅ **Updated Dependencies** - All packages updated with version pins for security
-- ✅ **Removed jQuery/Semantic UI** - Vanilla JavaScript and modern CSS
-- ✅ **Clean Boilerplate** - Removed fork-specific features for general use
+## 📸 Visual Showcase
 
-## 🚀 Features
+Explore the canonical components running in the live interactive gallery (`/basecoat/gallery`).
 
-### Core Functionality
-- **Blueprints** - Modular application structure
-- **User Management** - Registration, login, password reset
-- **Role-Based Access Control** - Admin and user roles with permissions
-- **Flask-SQLAlchemy** - Database ORM (supports SQLite, PostgreSQL)
-- **Flask-WTF** - Forms with CSRF protection
-- **Flask-Assets** - Asset management and SCSS compilation
-- **Flask-Mail** - Email sending (SendGrid/SMTP)
-- **Redis Queue** - Asynchronous task processing
-- **ZXCVBN** - Password strength checker
-- **CKEditor** - Rich text editor for admin pages
+### 🌓 Desktop Gallery — Light & Dark Mode (1440px)
 
-### Modern UI
-- **BasecoatUI Components** - Pre-styled, accessible components
-- **Tailwind CSS** - Utility-first styling
-- **Responsive Design** - Mobile-friendly out of the box
-- **Dark Mode Ready** - Easy theming support
+| Light Theme | Dark Theme |
+| :---: | :---: |
+| ![Flask-Basecoat Component Gallery - Light Mode](readme_media/gallery-light-1440.png) | ![Flask-Basecoat Component Gallery - Dark Mode](readme_media/gallery-dark-1440.png) |
 
-### Developer Experience
-- **Docker Support** - Complete docker-compose setup
-- **Heroku Ready** - One-click deployment configuration
-- **Code Formatting** - Integrated code formatting tools
-- **Environment Config** - Easy environment variable management
+---
 
-## 📋 Requirements
+### 📱 Responsive Mobile Layout & Native Dialog Modal
 
-- Python 3.11+
-- Redis
-- PostgreSQL (production) or SQLite (development)
+| Mobile Viewport (390px) | Native Accessible Modal Dialog (`<dialog>`) |
+| :---: | :---: |
+| ![Flask-Basecoat Mobile Gallery](readme_media/gallery-mobile-390.png) | ![Flask-Basecoat Accessible Dialog Modal](readme_media/dialog-modal.png) |
 
-## 🔧 Quick Start
+---
 
-### 1. Clone the Repository
+### 🛡️ WTForms Integration & Server-Side Validation State
 
-```bash
-git clone https://github.com/YOUR_USERNAME/flask-basecoat.git
-cd flask-basecoat
-```
+Zero hand-written markup. The WTForms adapter automatically connects labels, help text, input validation rings, error summaries, and ARIA attributes:
 
-### 2. Create Virtual Environment
+![Flask-Basecoat WTForms Server-side Validation](readme_media/form-validation.png)
 
-**Windows:**
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
+---
 
-**Unix/MacOS:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+## 💡 Why Flask-Basecoat?
 
-### 3. Install Dependencies
+Traditional Flask applications either hand-code raw HTML tags across dozens of templates (causing visual drift and accessibility regressions) or rely on heavy client-side JavaScript frameworks.
+
+`flask-basecoat` takes a modern server-rendered approach:
+
+1. **Wrap, Don't Re-invent**: [Basecoat UI](https://basecoatui.com/) is our CSS and micro-JS upstream. Focus traps, keyboard navigation, dialog backdrops, and dropdown positioning are solved upstream—no bespoke Alpine.js state machines to debug.
+2. **Jinja2 Macros with Caller Slots**: Every component is a single macro call with standard arguments and caller slots for composable markup.
+3. **Deep WTForms Integration**: `{{ bc.render_field(form.email) }}` inspects the WTForm field type, renders semantic labels, inputs, validation errors, and focus rings with zero template boilerplate.
+4. **shadcn/ui Design Tokens**: 100% tokenized CSS variables matching shadcn/ui (`--primary`, `--background`, `--card`, `--destructive`, `--ring`, `--radius`), with full Dark mode support (`.dark`).
+5. **Anti-Drift Governance**: Includes a CI ratchet script (`check_raw_components.py`) ensuring pages adopt canonical macros instead of raw `<button>` and `<input>` tags.
+
+---
+
+## 📦 Installation & Setup
+
+### 1. Install as a Python Package
+
+Install directly from Git or your local checkout:
 
 ```bash
-pip install -r requirements.txt
+pip install -e /path/to/flask-basecoat
+# or from GitHub:
+pip install git+https://github.com/Anioko/flask-basecoat.git
 ```
 
-### 4. Set Up Environment Variables
+### 2. Initialize in your Flask Application
 
-Create a `config.env` file in the root directory (do NOT commit this file):
+```python
+from flask import Flask
+from flask_basecoat import Basecoat
 
-```bash
-# Required
-SECRET_KEY=your-secret-key-here
-
-# Email Configuration (for SendGrid or SMTP)
-MAIL_USERNAME=your-email@example.com
-MAIL_PASSWORD=your-password
-
-# Admin Account
-ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=secure-password
-
-# Optional
-DATABASE_URL=sqlite:///data-dev.sqlite
-REDISTOGO_URL=http://localhost:6379
-FLASK_CONFIG=development
+app = Flask(__name__)
+basecoat = Basecoat(app)
 ```
 
-**Generate a secure SECRET_KEY:**
-```bash
-python3 -c "import secrets; print(secrets.token_hex(16))"
-```
+The `Basecoat` extension automatically:
+- Registers the `basecoat` static blueprint (`/static/basecoat/*`).
+- Configures Jinja's `ChoiceLoader` so all `basecoat/*.html` templates are instantly importable by any template.
+- Mounts the interactive gallery at `/basecoat/gallery` (in development mode or when explicitly enabled).
 
-### 5. Install Redis
+### 3. Include Assets in your Base Template
 
-**Mac (using Homebrew):**
-```bash
-brew install redis
-brew services start redis
-```
-
-**Linux:**
-```bash
-sudo apt-get install redis-server
-sudo systemctl start redis
-```
-
-**Windows:**
-Use [Redis for Windows](https://github.com/microsoftarchive/redis/releases) or Docker
-
-### 6. Initialize Database
-
-```bash
-python manage.py recreate_db
-python manage.py setup_dev
-```
-
-Optionally add fake data for testing:
-```bash
-python manage.py add_fake_data
-```
-
-### 7. Run the Application
-
-```bash
-honcho start -e config.env -f Local
-```
-
-Visit [http://localhost:5000](http://localhost:5000)
-
-## 🐳 Docker Setup (Recommended)
-
-### Quick Start with Docker
-
-```bash
-# Build and start all services
-docker-compose up
-
-# Initialize database (in another terminal)
-docker-compose exec server ./init_database.sh
-```
-
-This deploys 5 containers:
-- **server** - Flask app at [http://localhost:5000](http://localhost:5000)
-- **worker** - Background task worker
-- **postgres** - PostgreSQL database
-- **adminer** - Database UI at [http://localhost:8080](http://localhost:8080)
-- **redis** - Redis server
-
-## 📁 Project Structure
-
-```
-flask-basecoat/
-├── app/
-│   ├── account/          # Authentication & user management
-│   ├── admin/            # Admin dashboard
-│   ├── main/             # Public pages
-│   ├── models/           # Database models
-│   │   ├── user.py       # User & Role models
-│   │   ├── miscellaneous.py  # EditableHTML model
-│   │   └── models.py     # Your custom models
-│   ├── templates/        # Jinja2 templates with BasecoatUI
-│   ├── static/           # Static files
-│   └── assets/           # SCSS and JS source files
-├── tests/                # Unit tests
-├── migrations/           # Database migrations
-├── config.py             # Configuration management
-├── manage.py             # CLI commands
-├── requirements.txt      # Python dependencies
-├── Dockerfile            # Docker configuration
-└── docker-compose.yml    # Multi-container setup
-```
-
-## 🎨 Using BasecoatUI
-
-BasecoatUI components are loaded via CDN in the base template. Here's a quick example:
+In your `layout.html` or `base.html`:
 
 ```html
-<!-- Button -->
-<button class="btn btn-primary">Click Me</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}My App{% endblock %}</title>
 
-<!-- Card -->
-<div class="card">
-  <div class="card-header">
-    <h3 class="card-title">Card Title</h3>
-  </div>
-  <div class="card-body">
-    Card content here
-  </div>
+    {# Basecoat & Tailwind CSS assets #}
+    {{ basecoat.css() }}
+</head>
+<body class="bg-background text-foreground antialiased min-h-screen">
+    {% block content %}{% endblock %}
+
+    {# Basecoat micro-JS #}
+    {{ basecoat.js() }}
+</body>
+</html>
+```
+
+---
+
+## 🧩 Component Catalog & Macro Usage
+
+Import the canonical macros once at the top of any template:
+
+```jinja2
+{% import 'basecoat/index.html' as bc %}
+```
+
+Or import individual modules:
+```jinja2
+{% from 'basecoat/button.html' import button %}
+{% from 'basecoat/form.html' import render_field, render_form %}
+```
+
+---
+
+### 1. Button
+
+Supports 6 shadcn variants (`default`, `secondary`, `destructive`, `outline`, `ghost`, `link`), 4 sizes (`sm`, `md`, `lg`, `icon`), and loading states.
+
+```jinja2
+{# Standard buttons #}
+{{ bc.button('Save Changes', variant='default') }}
+{{ bc.button('Cancel', variant='outline') }}
+{{ bc.button('Delete Account', variant='destructive') }}
+
+{# Icon button with caller slot #}
+{% call bc.button(variant='ghost', size='icon') %}
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+{% endcall %}
+
+{# Link styled as button #}
+{{ bc.button('Back to Dashboard', href=url_for('main.index'), variant='ghost') }}
+```
+
+---
+
+### 2. Form & WTForms Adapter
+
+Zero-boilerplate rendering for `Flask-WTF` forms with automatic validation error feedback, CSRF token handling, and focus rings:
+
+```jinja2
+{# Render entire WTForms form automatically #}
+{{ bc.render_form(form, action=url_for('account.login'), submit_text='Sign In') }}
+
+{# Or render fields individually with fine control #}
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    
+    {{ bc.render_field(form.email, placeholder='user@company.com') }}
+    {{ bc.render_field(form.password) }}
+    {{ bc.render_field(form.remember_me) }}
+    
+    <div class="mt-4">
+        {{ bc.button('Sign In', type='submit') }}
+    </div>
+</form>
+```
+
+---
+
+### 3. Card
+
+Composable container with header, title, description, content, and footer slots:
+
+```jinja2
+{% call bc.card(title='Account Settings', description='Manage your email preferences and security keys.') %}
+    <div class="space-y-4">
+        <p class="text-sm text-muted-foreground">Your primary email is verified.</p>
+    </div>
+    
+    {% block card_footer %}
+        {{ bc.button('Save Preferences') }}
+    {% endblock %}
+{% endcall %}
+```
+
+---
+
+### 4. Badge
+
+Semantic status indicators:
+
+```jinja2
+{{ bc.badge('Active', variant='default') }}
+{{ bc.badge('Pending', variant='secondary') }}
+{{ bc.badge('Failed', variant='destructive') }}
+{{ bc.badge('Draft', variant='outline') }}
+```
+
+---
+
+### 5. Dialog Modal
+
+Accessible native HTML5 `<dialog>` component with trigger button, backdrop click dismissal, title, and action buttons:
+
+```jinja2
+{% call bc.dialog(id='invite-modal', trigger_text='Invite Teammate', title='Invite Team Member', description='Send an invitation link to collaborate.') %}
+    <div class="py-4 space-y-3">
+        <label class="text-sm font-medium">Email address</label>
+        <input type="email" class="input w-full" placeholder="colleague@domain.com">
+    </div>
+    
+    {% block dialog_footer %}
+        {{ bc.button('Send Invite', type='button') }}
+    {% endblock %}
+{% endcall %}
+```
+
+---
+
+### 6. Dropdown Menu
+
+Keyboard-navigable dropdown menu with trigger slot and action items:
+
+```jinja2
+{% call bc.dropdown(id='actions-menu', trigger_text='Options') %}
+    {{ bc.dropdown_item('Edit Details', href=url_for('main.index')) }}
+    {{ bc.dropdown_item('Duplicate', href='#') }}
+    <div class="my-1 border-t border-border"></div>
+    {{ bc.dropdown_item('Delete', href='#', variant='destructive') }}
+{% endcall %}
+```
+
+---
+
+### 7. Tabs
+
+Accessible tab navigation for switching content panels:
+
+```jinja2
+{% set tab_items = [
+    {'id': 'overview', 'label': 'Overview', 'active': true},
+    {'id': 'security', 'label': 'Security'},
+    {'id': 'billing', 'label': 'Billing'}
+] %}
+
+{% call bc.tabs(id='account-tabs', items=tab_items) %}
+    <div id="overview" class="tab-panel">Overview content...</div>
+    <div id="security" class="tab-panel hidden">Security content...</div>
+    <div id="billing" class="tab-panel hidden">Billing content...</div>
+{% endcall %}
+```
+
+---
+
+### 8. Data Table & Empty State
+
+Accessible data tables with headers, zebra striping, and canonical empty states:
+
+```jinja2
+{% call bc.table() %}
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td class="font-medium">{{ user.name }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ bc.badge('Active', variant='default') }}</td>
+            <td>{{ bc.button('Edit', variant='ghost', size='sm') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">
+                {{ bc.empty_state(
+                    title='No team members found',
+                    description='Get started by adding your first team member.',
+                    action_text='Add Member',
+                    action_href='#'
+                ) }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+{% endcall %}
+```
+
+---
+
+### 9. Toast Notifications
+
+Renders Flask flash messages (`get_flashed_messages(with_categories=true)`) with auto-dismiss animations and severity variants:
+
+```jinja2
+{# Include once in layout.html #}
+{{ bc.toast_container() }}
+```
+
+In your Flask routes:
+```python
+flash("Changes saved successfully!", "success")
+flash("Invalid credentials provided.", "error")
+```
+
+---
+
+### 10. Skeleton Loader
+
+Accessible placeholder shapes for async content:
+
+```jinja2
+<div class="space-y-3">
+    {{ bc.skeleton(width='w-48', height='h-6') }}
+    {{ bc.skeleton(width='w-full', height='h-4') }}
+    {{ bc.skeleton(width='w-3/4', height='h-4') }}
 </div>
-
-<!-- Form Input -->
-<div class="form-group">
-  <label for="email">Email</label>
-  <input type="email" id="email" class="form-control" />
-</div>
 ```
 
-For more components, see [BasecoatUI Documentation](https://basecoatui.com/).
+---
 
-## 🛠️ Available Commands
+## 🏛️ Anti-Drift CI Ratchet
+
+To prevent codebases from regressing to raw HTML tags (`<button>`, `<input>`), `flask-basecoat` includes a strict CI ratchet check:
 
 ```bash
-# Database
-python manage.py recreate_db      # Recreate database (DEV ONLY!)
-python manage.py setup_dev         # Setup development data
-python manage.py add_fake_data     # Add test users
-
-# Development
-python manage.py format            # Auto-format code (YAPF + isort)
-python manage.py run_worker        # Start background worker
-python manage.py test              # Run tests
-
-# Database Migrations
-flask db init                      # Initialize migrations
-flask db migrate -m "message"      # Create migration
-flask db upgrade                   # Apply migrations
+python scripts/ops/ci/check_raw_components.py
 ```
 
-## 📧 Email Configuration
+The ratchet verifies that the count of raw tags never exceeds the baseline established in `raw_components_baseline.json`. As templates are refactored to use `bc.*` macros, update the baseline with `--update`:
 
-### Using SendGrid (Recommended)
-
-1. Sign up at [SendGrid](https://sendgrid.com)
-2. Create an API key
-3. Add to `config.env`:
 ```bash
-MAIL_USERNAME=apikey
-MAIL_PASSWORD=your-sendgrid-api-key
-MAIL_SERVER=smtp.sendgrid.net
-MAIL_PORT=587
+python scripts/ops/ci/check_raw_components.py --update
 ```
 
-### Using Gmail
-
-1. Enable 2FA on your Google account
-2. Create an [App Password](https://support.google.com/accounts/answer/185833)
-3. Add to `config.env`:
-```bash
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_SERVER=smtp.gmail.com
-MAIL_PORT=587
-```
-
-## 🚀 Deployment
-
-### Heroku
-
-1. Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
-2. Create a new Heroku app:
-```bash
-heroku create your-app-name
-```
-
-3. Add PostgreSQL and Redis addons:
-```bash
-heroku addons:create heroku-postgresql:hobby-dev
-heroku addons:create redistogo:nano
-```
-
-4. Set environment variables:
-```bash
-heroku config:set FLASK_CONFIG=heroku
-heroku config:set SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(16))")
-heroku config:set MAIL_USERNAME=your-email
-heroku config:set MAIL_PASSWORD=your-password
-```
-
-5. Deploy:
-```bash
-git push heroku main
-```
-
-### Traditional Server
-
-See [deployment documentation](docs/deploy.md) for detailed instructions.
+---
 
 ## 🧪 Testing
 
-Run tests:
-```bash
-python manage.py test
-```
-
-Add new tests in the `tests/` directory.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-Please refer to our [Code of Conduct](./CONDUCT.md).
-
-## 📝 Code Formatting
-
-Before submitting PRs, format your code:
+Run the automated test suite with pytest:
 
 ```bash
-python manage.py format
+pytest tests/test_basecoat_macros.py tests/test_wtforms_adapter.py tests/test_basecoat_extension.py
 ```
 
-## 🙏 Credits
+All 21 unit and integration tests verify:
+- Macro output HTML and ARIA attribute presence.
+- WTForms rendering and server validation feedback.
+- Extension blueprint registration and ChoiceLoader setup.
 
-This project is a modernized fork of [flask-base](https://github.com/hack4impact/flask-base) by Hack4Impact. The original boilerplate was inspired by Miguel Grinberg's [Flask Web Development](http://flaskbook.com).
+---
 
-### What Changed?
-- Updated to Python 3.11+ with modern dependencies
-- Replaced Semantic UI with BasecoatUI + Tailwind CSS
-- Removed jQuery in favor of vanilla JavaScript
-- Added comprehensive version pinning for security
-- Fixed deprecated imports and configurations
-- Cleaned up for general boilerplate use
+## 🚀 Running the Development Server & Gallery
+
+```bash
+# 1. Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate   # Windows
+source venv/bin/activate # Unix/macOS
+
+# 2. Install dependencies
+pip install -r requirements.txt
+pip install -e .
+
+# 3. Setup database
+python manage.py recreate_db
+python manage.py setup_dev
+
+# 4. Start the server
+python manage.py runserver
+```
+
+Visit the component gallery at: **`http://localhost:5000/basecoat/gallery`**
+
+---
 
 ## 📄 License
 
-[MIT License](LICENSE.md)
-
-## 🆘 Troubleshooting
-
-### Redis Connection Issues (Windows)
-If you encounter Redis binding issues on Windows, use WSL2 or Docker instead.
-
-### Database Migration Errors
-Delete the `migrations/` folder and re-run:
-```bash
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
-```
-
-### Import Errors
-Make sure your virtual environment is activated and dependencies are installed:
-```bash
-source venv/bin/activate  # Unix/MacOS
-venv\Scripts\activate     # Windows
-pip install -r requirements.txt
-```
-
-## 📚 Documentation
-
-For detailed documentation on specific features:
-- [Setup Guide](docs/setup.md)
-- [Configuration Options](docs/config.md)
-- [Template Usage](docs/templates.md)
-- [Database Models](docs/models.md)
-- [Deployment](docs/deploy.md)
-
-## ⭐ Show Your Support
-
-If this project helped you, please consider giving it a ⭐️ on GitHub!
+MIT License. Upstream [Basecoat UI](https://basecoatui.com/) CSS and components are MIT licensed.
