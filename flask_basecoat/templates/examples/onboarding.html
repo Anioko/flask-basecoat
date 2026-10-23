@@ -19,85 +19,186 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (window.lucide) { lucide.createIcons(); }
+            updateStepperUI();
         });
+
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
 
-        let currentStep = 1;
-        const totalSteps = 5;
+        const state = {
+            currentStep: 1,
+            totalSteps: 5,
+            accountType: 'corporate',
+            teamSize: '10-50',
+            accountPlan: 'developer',
+            saveCard: true
+        };
+
+        const steps = [
+            { id: 1, title: 'Account Type', desc: 'Select your account type' },
+            { id: 2, title: 'Account Info', desc: 'Setup your account settings' },
+            { id: 3, title: 'Business Details', desc: 'Setup your business details' },
+            { id: 4, title: 'Billing Details', desc: 'Provide your payment info' },
+            { id: 5, title: 'Completed', desc: 'Your account is created' }
+        ];
 
         function setStep(step) {
-            currentStep = step;
-            // update visibility
-            for (let i = 1; i <= totalSteps; i++) {
+            if (step < 1 || step > state.totalSteps) return;
+            state.currentStep = step;
+            updateStepperUI();
+        }
+
+        function nextStep() {
+            if (state.currentStep < state.totalSteps) {
+                setStep(state.currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (state.currentStep > 1) {
+                setStep(state.currentStep - 1);
+            }
+        }
+
+        function selectAccountType(type) {
+            state.accountType = type;
+            const personalCard = document.getElementById('card-personal');
+            const corporateCard = document.getElementById('card-corporate');
+            
+            if (type === 'personal') {
+                personalCard.className = "cursor-pointer rounded-xl border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-6 transition-all shadow-sm";
+                corporateCard.className = "cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-border/80";
+            } else {
+                corporateCard.className = "cursor-pointer rounded-xl border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-6 transition-all shadow-sm";
+                personalCard.className = "cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-border/80";
+            }
+        }
+
+        function selectTeamSize(size) {
+            state.teamSize = size;
+            ['1-1', '2-10', '10-50', '50+'].forEach(s => {
+                const pill = document.getElementById(`pill-size-${s}`);
+                if (pill) {
+                    if (s === size) {
+                        pill.className = "rounded-lg border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-4 text-center font-semibold text-foreground transition-all cursor-pointer shadow-xs";
+                    } else {
+                        pill.className = "rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer";
+                    }
+                }
+            });
+        }
+
+        function selectPlan(plan) {
+            state.accountPlan = plan;
+            ['company', 'developer', 'testing'].forEach(p => {
+                const row = document.getElementById(`plan-row-${p}`);
+                const dot = document.getElementById(`plan-dot-${p}`);
+                if (row && dot) {
+                    if (p === plan) {
+                        row.className = "flex items-center space-x-3 rounded-lg border-2 border-purple-500 ring-2 ring-purple-500/30 bg-muted/40 p-4 cursor-pointer transition-all";
+                        dot.className = "h-4 w-4 rounded-full border-2 border-purple-600 bg-purple-600 flex items-center justify-center";
+                        dot.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>';
+                    } else {
+                        row.className = "flex items-center space-x-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/30 cursor-pointer transition-all";
+                        dot.className = "h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center";
+                        dot.innerHTML = '';
+                    }
+                }
+            });
+        }
+
+        function toggleSaveCard() {
+            state.saveCard = !state.saveCard;
+            const toggle = document.getElementById('switch-save-card');
+            const knob = document.getElementById('switch-knob');
+            if (state.saveCard) {
+                toggle.className = "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-purple-600 transition-colors duration-200 ease-in-out focus:outline-hidden";
+                knob.className = "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out translate-x-5";
+            } else {
+                toggle.className = "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-muted-foreground/30 transition-colors duration-200 ease-in-out focus:outline-hidden";
+                knob.className = "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out translate-x-0";
+            }
+        }
+
+        function updateStepperUI() {
+            // Update pane visibility
+            for (let i = 1; i <= state.totalSteps; i++) {
                 const pane = document.getElementById(`step-pane-${i}`);
                 if (pane) {
-                    if (i === currentStep) {
+                    if (i === state.currentStep) {
                         pane.classList.remove('hidden');
                     } else {
                         pane.classList.add('hidden');
                     }
                 }
 
-                // update stepper header
-                const indicator = document.getElementById(`step-ind-${i}`);
+                // Update Stepper circles & connecting lines
+                const ind = document.getElementById(`step-ind-${i}`);
                 const label = document.getElementById(`step-label-${i}`);
-                if (indicator) {
-                    if (i < currentStep) {
-                        indicator.className = "flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-white font-bold text-xs shadow-xs";
-                        indicator.innerHTML = '<i data-lucide="check" class="h-4 w-4"></i>';
-                    } else if (i === currentStep) {
-                        indicator.className = "flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-xs ring-4 ring-primary/20";
-                        indicator.innerHTML = i;
+                if (ind) {
+                    if (i < state.currentStep) {
+                        ind.className = "flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 text-white font-semibold text-sm transition-colors duration-300 shadow-xs cursor-pointer hover:bg-purple-700";
+                        ind.innerHTML = '<i data-lucide="check" class="h-5 w-5"></i>';
+                    } else if (i === state.currentStep) {
+                        ind.className = "flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 text-white font-bold text-sm ring-4 ring-purple-500/20 shadow-xs cursor-pointer";
+                        ind.innerHTML = i;
                     } else {
-                        indicator.className = "flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-xs";
-                        indicator.innerHTML = i;
+                        ind.className = "flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm transition-colors duration-300 cursor-pointer hover:border-foreground/40";
+                        ind.innerHTML = i;
+                    }
+                }
+                if (label) {
+                    if (i <= state.currentStep) {
+                        label.className = "mt-2 text-center text-xs font-semibold text-foreground hidden sm:block";
+                    } else {
+                        label.className = "mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block";
+                    }
+                }
+
+                // Line connectors
+                const line = document.getElementById(`step-line-${i}`);
+                if (line) {
+                    if (i < state.currentStep) {
+                        line.className = "h-0.5 flex-1 mx-2 bg-purple-500 transition-colors duration-300";
+                    } else {
+                        line.className = "h-0.5 flex-1 mx-2 bg-border transition-colors duration-300";
                     }
                 }
             }
 
-            // update nav buttons
+            // Update bottom navigation buttons
             const btnPrev = document.getElementById('btn-prev');
             const btnNext = document.getElementById('btn-next');
+            const nextText = document.getElementById('btn-next-text');
+
             if (btnPrev) {
-                btnPrev.disabled = (currentStep === 1 || currentStep === 5);
-                if (currentStep === 1 || currentStep === 5) {
+                if (state.currentStep === 1 || state.currentStep === 5) {
+                    btnPrev.disabled = true;
                     btnPrev.classList.add('opacity-40', 'cursor-not-allowed');
                 } else {
+                    btnPrev.disabled = false;
                     btnPrev.classList.remove('opacity-40', 'cursor-not-allowed');
                 }
             }
 
             if (btnNext) {
-                if (currentStep === 4) {
-                    btnNext.textContent = 'Submit';
+                if (state.currentStep === 4) {
                     btnNext.classList.remove('hidden');
-                } else if (currentStep === 5) {
+                    if (nextText) nextText.textContent = 'Submit';
+                } else if (state.currentStep === 5) {
                     btnNext.classList.add('hidden');
                 } else {
-                    btnNext.textContent = 'Continue';
                     btnNext.classList.remove('hidden');
+                    if (nextText) nextText.textContent = 'Continue';
                 }
             }
 
             if (window.lucide) { lucide.createIcons(); }
         }
-
-        function nextStep() {
-            if (currentStep < totalSteps) {
-                setStep(currentStep + 1);
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 1) {
-                setStep(currentStep - 1);
-            }
-        }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-12">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-8 md:p-12">
     {{ bc.toast_container() }}
 
     <div class="max-w-3xl mx-auto space-y-8">
@@ -117,72 +218,81 @@
 
         {# Step Progress Stepper #}
         <div class="flex items-center justify-between px-2 sm:px-6">
-            <div class="flex items-center gap-2">
-                <div id="step-ind-1" class="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-xs ring-4 ring-primary/20">1</div>
-                <span class="hidden sm:inline text-xs font-semibold text-foreground">Type</span>
+            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(1)">
+                <div id="step-ind-1" class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 text-white font-bold text-sm ring-4 ring-purple-500/20 shadow-xs">1</div>
+                <span id="step-label-1" class="mt-2 text-center text-xs font-semibold text-foreground hidden sm:block">Account Type</span>
             </div>
-            <div class="h-0.5 flex-1 mx-2 bg-border"></div>
-            <div class="flex items-center gap-2">
-                <div id="step-ind-2" class="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-xs">2</div>
-                <span class="hidden sm:inline text-xs font-semibold text-muted-foreground">Account</span>
+            <div id="step-line-1" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
+
+            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(2)">
+                <div id="step-ind-2" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">2</div>
+                <span id="step-label-2" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Account Info</span>
             </div>
-            <div class="h-0.5 flex-1 mx-2 bg-border"></div>
-            <div class="flex items-center gap-2">
-                <div id="step-ind-3" class="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-xs">3</div>
-                <span class="hidden sm:inline text-xs font-semibold text-muted-foreground">Company</span>
+            <div id="step-line-2" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
+
+            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(3)">
+                <div id="step-ind-3" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">3</div>
+                <span id="step-label-3" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Business Details</span>
             </div>
-            <div class="h-0.5 flex-1 mx-2 bg-border"></div>
-            <div class="flex items-center gap-2">
-                <div id="step-ind-4" class="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-xs">4</div>
-                <span class="hidden sm:inline text-xs font-semibold text-muted-foreground">Billing</span>
+            <div id="step-line-3" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
+
+            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(4)">
+                <div id="step-ind-4" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">4</div>
+                <span id="step-label-4" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Billing Details</span>
             </div>
-            <div class="h-0.5 flex-1 mx-2 bg-border"></div>
-            <div class="flex items-center gap-2">
-                <div id="step-ind-5" class="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-xs">5</div>
-                <span class="hidden sm:inline text-xs font-semibold text-muted-foreground">Complete</span>
+            <div id="step-line-4" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
+
+            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(5)">
+                <div id="step-ind-5" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">5</div>
+                <span id="step-label-5" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Completed</span>
             </div>
         </div>
 
         {# Card Wrapper for Content #}
-        <div class="rounded-xl border border-border bg-card p-6 sm:p-8 shadow-xs">
+        <div class="rounded-xl border border-border bg-card p-6 sm:p-8 shadow-sm">
             
             {# STEP 1: Choose Account Type #}
             <div id="step-pane-1" class="space-y-6">
                 <div class="space-y-1">
                     <h2 class="text-2xl font-bold tracking-tight text-foreground">Choose Account Type</h2>
-                    <p class="text-sm text-muted-foreground">Choose the type of account you want to create</p>
+                    <p class="text-sm text-muted-foreground">
+                        If you need more info, please check out 
+                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                    <label class="relative flex flex-col justify-between rounded-xl border-2 border-primary bg-primary/5 p-6 cursor-pointer shadow-xs hover:border-primary transition-all">
-                        <input type="radio" name="account_type" value="freelance" checked class="sr-only">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                                <i data-lucide="user" class="h-6 w-6"></i>
+                    <div id="card-personal" 
+                         onclick="selectAccountType('personal')"
+                         class="cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-border/80">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                                    <i data-lucide="user" class="h-6 w-6"></i>
+                                </div>
                             </div>
-                            <span class="h-4 w-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
-                                <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
-                            </span>
+                            <div class="space-y-1">
+                                <h3 class="font-semibold text-foreground">Personal Account</h3>
+                                <p class="text-xs text-muted-foreground">If you need more info, please check it out</p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <h3 class="font-bold text-foreground">Freelance Account</h3>
-                            <p class="text-xs text-muted-foreground">For individuals, contractors, and creators shipping solo projects.</p>
-                        </div>
-                    </label>
+                    </div>
 
-                    <label class="relative flex flex-col justify-between rounded-xl border border-border bg-card p-6 cursor-pointer shadow-2xs hover:border-foreground/40 transition-all">
-                        <input type="radio" name="account_type" value="business" class="sr-only">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                                <i data-lucide="building" class="h-6 w-6"></i>
+                    <div id="card-corporate" 
+                         onclick="selectAccountType('corporate')"
+                         class="cursor-pointer rounded-xl border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-6 transition-all shadow-sm">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                                    <i data-lucide="briefcase" class="h-6 w-6"></i>
+                                </div>
                             </div>
-                            <span class="h-4 w-4 rounded-full border border-muted-foreground"></span>
+                            <div class="space-y-1">
+                                <h3 class="font-semibold text-foreground">Corporate Account</h3>
+                                <p class="text-xs text-muted-foreground">Create corporate account to manage users</p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <h3 class="font-bold text-foreground">Business Account</h3>
-                            <p class="text-xs text-muted-foreground">For registered entities, agencies, and cross-functional engineering teams.</p>
-                        </div>
-                    </label>
+                    </div>
                 </div>
             </div>
 
@@ -190,26 +300,71 @@
             <div id="step-pane-2" class="space-y-6 hidden">
                 <div class="space-y-1">
                     <h2 class="text-2xl font-bold tracking-tight text-foreground">Account Info</h2>
-                    <p class="text-sm text-muted-foreground">Enter your personal account details</p>
+                    <p class="text-sm text-muted-foreground">
+                        If you need more info, please check out 
+                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
+                    </p>
                 </div>
 
-                <div class="space-y-4 pt-2">
-                    <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Email Address</label>
-                        <input type="email" value="alex@example.com" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                <div class="space-y-6 pt-2">
+                    {# Team Size #}
+                    <div>
+                        <label class="mb-3 block text-sm font-semibold text-foreground">Specify Team Size</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div id="pill-size-1-1" onclick="selectTeamSize('1-1')" class="rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer">
+                                1-1
+                            </div>
+                            <div id="pill-size-2-10" onclick="selectTeamSize('2-10')" class="rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer">
+                                2-10
+                            </div>
+                            <div id="pill-size-10-50" onclick="selectTeamSize('10-50')" class="rounded-lg border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-4 text-center font-semibold text-foreground transition-all cursor-pointer shadow-xs">
+                                10-50
+                            </div>
+                            <div id="pill-size-50+" onclick="selectTeamSize('50+')" class="rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer">
+                                50+
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-muted-foreground">Customers will see this shortened version of your statement descriptor</p>
                     </div>
+
+                    {# Team Account Name #}
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Username</label>
-                        <input type="text" value="alexsmith" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                        <label for="teamName" class="text-sm font-semibold text-foreground">Team Account Name</label>
+                        <input id="teamName" type="text" value="Acme Engineering" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Password</label>
-                        <input type="password" value="SuperSecretPassword123!" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                        <div class="flex items-center gap-2 pt-1">
-                            <div class="h-1.5 flex-1 rounded-full bg-emerald-500"></div>
-                            <div class="h-1.5 flex-1 rounded-full bg-emerald-500"></div>
-                            <div class="h-1.5 flex-1 rounded-full bg-emerald-500"></div>
-                            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Strong</span>
+
+                    {# Account Plan #}
+                    <div>
+                        <label class="mb-3 block text-sm font-semibold text-foreground">Select Account Plan</label>
+                        <div class="space-y-3">
+                            <div id="plan-row-company" onclick="selectPlan('company')" class="flex items-center space-x-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/30 cursor-pointer transition-all">
+                                <i data-lucide="factory" class="h-6 w-6 text-muted-foreground"></i>
+                                <div class="flex-1">
+                                    <div class="font-medium text-foreground text-sm">Company Account</div>
+                                    <div class="text-xs text-muted-foreground">Use images to enhance your post flow</div>
+                                </div>
+                                <div id="plan-dot-company" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
+                            </div>
+
+                            <div id="plan-row-developer" onclick="selectPlan('developer')" class="flex items-center space-x-3 rounded-lg border-2 border-purple-500 ring-2 ring-purple-500/30 bg-muted/40 p-4 cursor-pointer transition-all">
+                                <i data-lucide="user" class="h-6 w-6 text-purple-600 dark:text-purple-400"></i>
+                                <div class="flex-1">
+                                    <div class="font-medium text-foreground text-sm">Developer Account</div>
+                                    <div class="text-xs text-muted-foreground">Use images to your post time</div>
+                                </div>
+                                <div id="plan-dot-developer" class="h-4 w-4 rounded-full border-2 border-purple-600 bg-purple-600 flex items-center justify-center">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                                </div>
+                            </div>
+
+                            <div id="plan-row-testing" onclick="selectPlan('testing')" class="flex items-center space-x-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/30 cursor-pointer transition-all">
+                                <i data-lucide="globe" class="h-6 w-6 text-muted-foreground"></i>
+                                <div class="flex-1">
+                                    <div class="font-medium text-foreground text-sm">Testing Account</div>
+                                    <div class="text-xs text-muted-foreground">Use images to enhance time travel rivers</div>
+                                </div>
+                                <div id="plan-dot-testing" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -219,31 +374,29 @@
             <div id="step-pane-3" class="space-y-6 hidden">
                 <div class="space-y-1">
                     <h2 class="text-2xl font-bold tracking-tight text-foreground">Business Details</h2>
-                    <p class="text-sm text-muted-foreground">Tell us about your organization</p>
+                    <p class="text-sm text-muted-foreground">
+                        If you need more info, please check out 
+                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
+                    </p>
                 </div>
 
                 <div class="space-y-4 pt-2">
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Company Name</label>
-                        <input type="text" placeholder="Acme Studio, Inc." class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                        <label for="companyName" class="text-sm font-semibold text-foreground">Company Name</label>
+                        <input id="companyName" type="text" value="Acme Studio, Inc." placeholder="Enter your company name" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Number of Employees</label>
-                        <div class="grid grid-cols-3 gap-3">
-                            <label class="flex items-center justify-center rounded-md border border-border p-3 text-sm font-medium hover:bg-muted cursor-pointer">
-                                1 - 10
-                            </label>
-                            <label class="flex items-center justify-center rounded-md border-2 border-primary bg-primary/5 p-3 text-sm font-medium text-foreground cursor-pointer">
-                                11 - 50
-                            </label>
-                            <label class="flex items-center justify-center rounded-md border border-border p-3 text-sm font-medium hover:bg-muted cursor-pointer">
-                                50+
-                            </label>
-                        </div>
+                        <label for="industry" class="text-sm font-semibold text-foreground">Industry</label>
+                        <select id="industry" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="technology" selected>Technology</option>
+                            <option value="finance">Finance</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="retail">Retail</option>
+                        </select>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Website URL</label>
-                        <input type="url" placeholder="https://acme.org" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                        <label for="website" class="text-sm font-semibold text-foreground">Website</label>
+                        <input id="website" type="url" value="https://acme.org" placeholder="https://yourcompany.com" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                 </div>
             </div>
@@ -252,60 +405,138 @@
             <div id="step-pane-4" class="space-y-6 hidden">
                 <div class="space-y-1">
                     <h2 class="text-2xl font-bold tracking-tight text-foreground">Billing Details</h2>
-                    <p class="text-sm text-muted-foreground">Set up your primary payment method</p>
+                    <p class="text-sm text-muted-foreground">
+                        If you need more info, please check out 
+                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
+                    </p>
                 </div>
 
-                <div class="space-y-4 pt-2">
+                <div class="space-y-5 pt-2">
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Cardholder Name</label>
-                        <input type="text" placeholder="Alex Smith" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                        <label for="nameOnCard" class="text-sm font-medium text-foreground">
+                            Name On Card <span class="text-red-500">*</span>
+                        </label>
+                        <input id="nameOnCard" type="text" value="Max Doe" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
+
                     <div class="space-y-2">
-                        <label class="text-sm font-semibold text-foreground">Card Number</label>
-                        <input type="text" placeholder="4242 •••• •••• 4242" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground font-mono focus:outline-none focus:ring-2 focus:ring-ring">
+                        <label for="cardNumber" class="text-sm font-medium text-foreground">
+                            Card Number <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input id="cardNumber" type="text" value="4111 1111 1111 1111" class="w-full rounded-md border border-border bg-background pl-3 pr-24 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <div class="absolute inset-y-0 right-3 flex items-center gap-1.5 pointer-events-none">
+                                <span class="flex h-5 w-8 items-center justify-center rounded bg-blue-600 text-[10px] font-bold text-white tracking-wider">VISA</span>
+                                <span class="h-5 w-4 rounded-sm bg-rose-500"></span>
+                                <span class="h-5 w-4 rounded-sm bg-amber-400 -ml-2.5 opacity-90"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-2">
-                            <label class="text-sm font-semibold text-foreground">Expiration</label>
-                            <input type="text" placeholder="MM/YY" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground font-mono focus:outline-none focus:ring-2 focus:ring-ring">
+                            <label class="text-sm font-medium text-foreground">
+                                Expiration Date <span class="text-red-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12" selected>12</option>
+                                </select>
+                                <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028" selected>2028</option>
+                                    <option value="2029">2029</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-semibold text-foreground">CVC</label>
-                            <input type="text" placeholder="123" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground font-mono focus:outline-none focus:ring-2 focus:ring-ring">
+                            <label for="cvv" class="text-sm font-medium text-foreground">
+                                CVV <span class="text-red-500">*</span>
+                            </label>
+                            <input id="cvv" type="text" value="123" placeholder="CVV" maxlength="4" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                    </div>
+
+                    {# Save Card Switch #}
+                    <div class="flex items-center justify-between pt-2">
+                        <div>
+                            <div class="font-medium text-sm text-foreground">Save Card for further billing?</div>
+                            <div class="text-xs text-muted-foreground">If you need more info, please check budget planning</div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button type="button" 
+                                    id="switch-save-card" 
+                                    onclick="toggleSaveCard()"
+                                    class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-purple-600 transition-colors duration-200 ease-in-out focus:outline-hidden">
+                                <span id="switch-knob" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+                            </button>
+                            <span class="text-xs text-muted-foreground font-medium">Save Card</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {# STEP 5: You Are Done! #}
+            {# STEP 5: Your Are Done! #}
             <div id="step-pane-5" class="space-y-6 text-center py-6 hidden">
-                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    <i data-lucide="check-circle-2" class="h-10 w-10"></i>
-                </div>
-                <div class="space-y-2 max-w-md mx-auto">
-                    <h2 class="text-3xl font-bold tracking-tight text-foreground">You Are Done!</h2>
+                <div class="space-y-1 text-center">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-foreground">Your Are Done!</h2>
                     <p class="text-sm text-muted-foreground">
-                        Your account has been configured with all required governance and billing controls.
+                        If you need more info, please 
+                        <a href="#" class="text-purple-600 hover:underline">Sign In</a>.
                     </p>
                 </div>
-                <div class="pt-4">
+
+                <div class="space-y-5 max-w-xl mx-auto text-left pt-2">
+                    <p class="text-sm text-muted-foreground leading-relaxed">
+                        Writing headlines for blog posts is as much an art as it is a science and probably
+                        warrants its own post, but for all advise is with what works for your great &
+                        amazing audience.
+                    </p>
+
+                    <div class="rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800 p-4 flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"></i>
+                        <div class="text-xs text-amber-900 dark:text-amber-200 leading-normal">
+                            <strong class="font-bold">We need your attention!</strong><br />
+                            To start using great tools, please, 
+                            <a href="#" class="font-semibold text-purple-600 hover:underline dark:text-purple-400">Create Team Platform</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-6">
                     {{ bc.button('Go to Dashboard', href=url_for('basecoat_examples.dashboard'), variant='default', class='px-8 font-semibold') }}
                 </div>
             </div>
 
-            {# Footer Buttons #}
+            {# Stepper Footer Controls #}
             <div class="flex items-center justify-between border-t border-border pt-6 mt-8">
                 <button
                     id="btn-prev"
-                    class="rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors opacity-40 cursor-not-allowed"
+                    class="rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors opacity-40 cursor-not-allowed inline-flex items-center gap-1.5"
                     onclick="prevStep()">
-                    Previous
+                    <i data-lucide="chevron-left" class="h-4 w-4"></i>
+                    <span>Previous</span>
                 </button>
                 <button
                     id="btn-next"
-                    class="rounded-md bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors"
+                    class="rounded-md bg-purple-600 px-6 py-2 text-sm font-semibold text-white shadow-xs hover:bg-purple-700 transition-colors inline-flex items-center gap-1.5"
                     onclick="nextStep()">
-                    Continue
+                    <span id="btn-next-text">Continue</span>
+                    <i data-lucide="chevron-right" class="h-4 w-4"></i>
                 </button>
             </div>
         </div>

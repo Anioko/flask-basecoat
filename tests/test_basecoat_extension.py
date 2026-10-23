@@ -142,7 +142,8 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         resp_onboard = client.get('/examples/onboarding')
         self.assertEqual(resp_onboard.status_code, 200)
         self.assertIn('Choose Account Type', resp_onboard.get_data(as_text=True))
-        self.assertIn('Freelance Account', resp_onboard.get_data(as_text=True))
+        self.assertIn('Personal Account', resp_onboard.get_data(as_text=True))
+        self.assertIn('Corporate Account', resp_onboard.get_data(as_text=True))
 
         # 12. /examples/chat
         resp_chat = client.get('/examples/chat')
