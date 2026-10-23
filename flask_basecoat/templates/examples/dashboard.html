@@ -1,0 +1,157 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
+    {{ bc.toast_container() }}
+
+    {# Top App Bar #}
+    <header class="border-b border-border bg-card/50 sticky top-0 z-40 backdrop-blur-sm">
+        <div class="flex h-16 items-center px-6 gap-4 justify-between max-w-7xl mx-auto">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                    </svg>
+                    <span>Acme Dashboard</span>
+                </div>
+                <nav class="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
+                    <a href="#" class="text-foreground transition-colors hover:text-foreground">Overview</a>
+                    <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Customers</a>
+                    <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Products</a>
+                    <a href="#" class="text-muted-foreground transition-colors hover:text-foreground">Settings</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+                
+                <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold">
+                    JD
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {# Dashboard Main Body #}
+    <main class="max-w-7xl mx-auto p-6 md:p-8 space-y-8">
+        {# Page Title & Primary Actions #}
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
+                <p class="text-sm text-muted-foreground mt-1">Real-time revenue metrics, active subscriptions, and recent sales activity.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="relative">
+                    <input type="text" placeholder="Jan 20, 2026 - Feb 09, 2026" class="input h-9 px-3 text-xs w-56 bg-background rounded-md border border-input" readonly>
+                </div>
+                {{ bc.button('Download Report', variant='default', size='sm', icon='download') }}
+            </div>
+        </div>
+
+        {# KPI Cards Row #}
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {% for card in kpi_cards %}
+                {% call bc.card() %}
+                    <div class="flex items-center justify-between pb-2">
+                        <span class="text-sm font-medium text-muted-foreground">{{ card.title }}</span>
+                        <i data-lucide="{{ card.icon }}" class="h-4 w-4 text-muted-foreground"></i>
+                    </div>
+                    <div class="text-2xl font-bold tracking-tight">{{ card.value }}</div>
+                    <p class="text-xs text-muted-foreground mt-1">{{ card.change }}</p>
+                {% endcall %}
+            {% endfor %}
+        </div>
+
+        {# Analytics & Recent Sales Grid #}
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            {# Chart & Overview Panel (4 cols on lg) #}
+            <div class="col-span-4 space-y-4">
+                {% set tab_items = [
+                    {'id': 'overview', 'label': 'Overview', 'active': true},
+                    {'id': 'analytics', 'label': 'Analytics'},
+                    {'id': 'reports', 'label': 'Reports'}
+                ] %}
+
+                {% call bc.tabs(tabs_list=[('overview', 'Overview'), ('analytics', 'Analytics'), ('reports', 'Reports')], default_tab='overview', id='dashboard-tabs') %}
+                    {% call bc.tab_panel('overview', default_tab='overview', tabs_id='dashboard-tabs', class='p-6 space-y-4') %}
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-semibold text-lg tracking-tight">Monthly Revenue Overview</h3>
+                                <p class="text-xs text-muted-foreground">Total transaction volume across the current operational quarter.</p>
+                            </div>
+                            <span class="text-xs font-medium text-muted-foreground">2026 YTD</span>
+                        </div>
+
+                        {# CSS Bar Chart #}
+                        <div class="h-[240px] w-full flex items-end gap-2 pt-8 pb-2 px-2 border-b border-border">
+                            {% set heights = [35, 60, 45, 80, 65, 90, 75, 85, 95, 70, 85, 100] %}
+                            {% set months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %}
+                            {% for h in heights %}
+                                <div class="flex-1 flex flex-col items-center gap-1 group">
+                                    <div class="w-full bg-primary/80 group-hover:bg-primary transition-all rounded-t-sm" style="height: {{ h }}%;"></div>
+                                    <span class="text-[10px] text-muted-foreground mt-1">{{ months[loop.index0] }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endcall %}
+
+                    {% call bc.tab_panel('analytics', default_tab='overview', tabs_id='dashboard-tabs', class='p-6') %}
+                        <p class="text-sm text-muted-foreground">Analytics telemetry shows 99.98% platform uptime and 42ms p95 latency across all API endpoints.</p>
+                    {% endcall %}
+
+                    {% call bc.tab_panel('reports', default_tab='overview', tabs_id='dashboard-tabs', class='p-6') %}
+                        <p class="text-sm text-muted-foreground">No compliance incidents reported in the last 90 billing cycles.</p>
+                    {% endcall %}
+                {% endcall %}
+            </div>
+
+            {# Recent Sales Feed (3 cols on lg) #}
+            <div class="col-span-3">
+                {% call bc.card(title='Recent Sales', description='You made 265 sales this month.') %}
+                    <div class="space-y-6 pt-2">
+                        {% for sale in recent_sales %}
+                            <div class="flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">
+                                        {{ sale.initials }}
+                                    </div>
+                                    <div class="space-y-1">
+                                        <p class="text-sm font-medium leading-none">{{ sale.name }}</p>
+                                        <p class="text-xs text-muted-foreground">{{ sale.email }}</p>
+                                    </div>
+                                </div>
+                                <div class="font-semibold text-sm tracking-tight text-foreground">{{ sale.amount }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endcall %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

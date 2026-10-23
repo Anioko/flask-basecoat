@@ -34,6 +34,31 @@ Zero hand-written markup. The WTForms adapter automatically connects labels, hel
 
 ---
 
+## 🚀 Ported shadcn/ui Application Screens
+
+Live production screens ported directly from official [shadcn-examples](https://github.com/shadcn-examples/shadcn-examples). Every screen is built 100% with canonical macros and design tokens. Accessible at `/examples/`.
+
+### 1. Split-Screen Authentication (`/examples/authentication`)
+Split hero layout with Acme Inc brand artwork, customer testimonial, WTForms email input, and GitHub OAuth buttons:
+
+![shadcn Authentication Screen](readme_media/examples-auth-1440.png)
+
+---
+
+### 2. Executive Admin Dashboard (`/examples/dashboard`)
+KPI revenue metrics, monthly overview chart, tabbed analytics, and customer transaction feed:
+
+![shadcn Admin Dashboard](readme_media/examples-dashboard-1440.png)
+
+---
+
+### 3. Tasks & Data Management (`/examples/tasks`)
+Search filter toolbar, status facet badges, priority icons, and row action dropdowns:
+
+![shadcn Tasks Data Table](readme_media/examples-tasks-1440.png)
+
+---
+
 ## 💡 Why Flask-Basecoat?
 
 Traditional Flask applications either hand-code raw HTML tags across dozens of templates (causing visual drift and accessibility regressions) or rely on heavy client-side JavaScript frameworks.
