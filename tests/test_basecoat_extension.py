@@ -178,7 +178,8 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         # 17. /examples/kanban
         resp_kanban = client.get('/examples/kanban')
         self.assertEqual(resp_kanban.status_code, 200)
-        self.assertIn('Sprint 42 Kanban', resp_kanban.get_data(as_text=True))
+        self.assertIn('Sprint Board', resp_kanban.get_data(as_text=True))
+        self.assertIn('Q2 2025', resp_kanban.get_data(as_text=True))
         self.assertIn('Backlog', resp_kanban.get_data(as_text=True))
 
 

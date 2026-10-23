@@ -29,18 +29,26 @@
         const state = {
             currentStep: 1,
             totalSteps: 5,
-            accountType: 'corporate',
+            accountType: 'personal',
             teamSize: '10-50',
+            teamName: 'Acme Corp',
             accountPlan: 'developer',
-            saveCard: true
+            companyName: 'Acme Inc.',
+            industry: 'technology',
+            website: 'https://acme.org',
+            nameOnCard: 'John Doe',
+            cardNumber: '4242 4242 4242 4242',
+            expirationMonth: '12',
+            expirationYear: '2027',
+            cvv: '123'
         };
 
         const steps = [
-            { id: 1, title: 'Account Type', desc: 'Select your account type' },
-            { id: 2, title: 'Account Info', desc: 'Setup your account settings' },
-            { id: 3, title: 'Business Details', desc: 'Setup your business details' },
-            { id: 4, title: 'Billing Details', desc: 'Provide your payment info' },
-            { id: 5, title: 'Completed', desc: 'Your account is created' }
+            { id: 1, title: 'Account Type' },
+            { id: 2, title: 'Account Info' },
+            { id: 3, title: 'Business' },
+            { id: 4, title: 'Billing' },
+            { id: 5, title: 'Complete' }
         ];
 
         function setStep(step) {
@@ -63,15 +71,23 @@
 
         function selectAccountType(type) {
             state.accountType = type;
-            const personalCard = document.getElementById('card-personal');
-            const corporateCard = document.getElementById('card-corporate');
-            
+            const btnPersonal = document.getElementById('btn-account-personal');
+            const btnCorporate = document.getElementById('btn-account-corporate');
+            const iconPersonal = document.getElementById('icon-account-personal');
+            const iconCorporate = document.getElementById('icon-account-corporate');
+
             if (type === 'personal') {
-                personalCard.className = "cursor-pointer rounded-xl border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-6 transition-all shadow-sm";
-                corporateCard.className = "cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-border/80";
+                btnPersonal.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-primary bg-primary/5 ring-2 ring-primary cursor-pointer";
+                iconPersonal.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary";
+                
+                btnCorporate.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-border hover:border-primary/50 hover:bg-muted/50 cursor-pointer";
+                iconCorporate.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground";
             } else {
-                corporateCard.className = "cursor-pointer rounded-xl border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-6 transition-all shadow-sm";
-                personalCard.className = "cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-border/80";
+                btnCorporate.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-primary bg-primary/5 ring-2 ring-primary cursor-pointer";
+                iconCorporate.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary";
+                
+                btnPersonal.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-border hover:border-primary/50 hover:bg-muted/50 cursor-pointer";
+                iconPersonal.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground";
             }
         }
 
@@ -81,9 +97,9 @@
                 const pill = document.getElementById(`pill-size-${s}`);
                 if (pill) {
                     if (s === size) {
-                        pill.className = "rounded-lg border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-4 text-center font-semibold text-foreground transition-all cursor-pointer shadow-xs";
+                        pill.className = "rounded-lg border py-3 text-sm font-medium transition-all border-primary bg-primary/5 text-primary ring-2 ring-primary cursor-pointer";
                     } else {
-                        pill.className = "rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer";
+                        pill.className = "rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer";
                     }
                 }
             });
@@ -92,15 +108,15 @@
         function selectPlan(plan) {
             state.accountPlan = plan;
             ['company', 'developer', 'testing'].forEach(p => {
-                const row = document.getElementById(`plan-row-${p}`);
+                const label = document.getElementById(`plan-label-${p}`);
                 const dot = document.getElementById(`plan-dot-${p}`);
-                if (row && dot) {
+                if (label && dot) {
                     if (p === plan) {
-                        row.className = "flex items-center space-x-3 rounded-lg border-2 border-purple-500 ring-2 ring-purple-500/30 bg-muted/40 p-4 cursor-pointer transition-all";
-                        dot.className = "h-4 w-4 rounded-full border-2 border-purple-600 bg-purple-600 flex items-center justify-center";
+                        label.className = "flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-primary bg-primary/5";
+                        dot.className = "h-4 w-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center";
                         dot.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>';
                     } else {
-                        row.className = "flex items-center space-x-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/30 cursor-pointer transition-all";
+                        label.className = "flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-border hover:bg-muted/50";
                         dot.className = "h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center";
                         dot.innerHTML = '';
                     }
@@ -108,17 +124,16 @@
             });
         }
 
-        function toggleSaveCard() {
-            state.saveCard = !state.saveCard;
-            const toggle = document.getElementById('switch-save-card');
-            const knob = document.getElementById('switch-knob');
-            if (state.saveCard) {
-                toggle.className = "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-purple-600 transition-colors duration-200 ease-in-out focus:outline-hidden";
-                knob.className = "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out translate-x-5";
-            } else {
-                toggle.className = "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-muted-foreground/30 transition-colors duration-200 ease-in-out focus:outline-hidden";
-                knob.className = "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out translate-x-0";
-            }
+        function updateSummary() {
+            const sumType = document.getElementById('summary-account-type');
+            const sumPlan = document.getElementById('summary-plan');
+            const sumCompany = document.getElementById('summary-company');
+            const sumTeam = document.getElementById('summary-team');
+
+            if (sumType) sumType.textContent = state.accountType === 'corporate' ? 'Corporate Account' : 'Personal Account';
+            if (sumPlan) sumPlan.textContent = state.accountPlan === 'company' ? 'Company' : state.accountPlan === 'developer' ? 'Developer' : 'Testing';
+            if (sumCompany) sumCompany.textContent = state.companyName || 'Acme Inc.';
+            if (sumTeam) sumTeam.textContent = state.teamName || 'Acme Corp';
         }
 
         function updateStepperUI() {
@@ -133,38 +148,60 @@
                     }
                 }
 
-                // Update Stepper circles & connecting lines
+                // Desktop Stepper circles & lines
                 const ind = document.getElementById(`step-ind-${i}`);
                 const label = document.getElementById(`step-label-${i}`);
+                const line = document.getElementById(`step-line-${i}`);
+
                 if (ind) {
                     if (i < state.currentStep) {
-                        ind.className = "flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 text-white font-semibold text-sm transition-colors duration-300 shadow-xs cursor-pointer hover:bg-purple-700";
-                        ind.innerHTML = '<i data-lucide="check" class="h-5 w-5"></i>';
+                        ind.className = "relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground cursor-pointer shadow-xs";
+                        ind.innerHTML = '<i data-lucide="check" class="size-4"></i>';
                     } else if (i === state.currentStep) {
-                        ind.className = "flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 text-white font-bold text-sm ring-4 ring-purple-500/20 shadow-xs cursor-pointer";
+                        ind.className = "relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground ring-4 ring-primary/20 cursor-pointer shadow-xs";
                         ind.innerHTML = i;
                     } else {
-                        ind.className = "flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm transition-colors duration-300 cursor-pointer hover:border-foreground/40";
+                        ind.className = "relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer hover:bg-muted/80";
                         ind.innerHTML = i;
-                    }
-                }
-                if (label) {
-                    if (i <= state.currentStep) {
-                        label.className = "mt-2 text-center text-xs font-semibold text-foreground hidden sm:block";
-                    } else {
-                        label.className = "mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block";
                     }
                 }
 
-                // Line connectors
-                const line = document.getElementById(`step-line-${i}`);
-                if (line) {
-                    if (i < state.currentStep) {
-                        line.className = "h-0.5 flex-1 mx-2 bg-purple-500 transition-colors duration-300";
+                if (label) {
+                    if (i <= state.currentStep) {
+                        label.className = "mt-2 text-center text-xs font-medium text-foreground";
                     } else {
-                        line.className = "h-0.5 flex-1 mx-2 bg-border transition-colors duration-300";
+                        label.className = "mt-2 text-center text-xs font-medium text-muted-foreground";
                     }
                 }
+
+                if (line) {
+                    if (i <= state.currentStep) {
+                        line.className = "absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-primary transition-all duration-300";
+                    } else {
+                        line.className = "absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border transition-all duration-300";
+                    }
+                }
+
+                // Mobile Stepper segment pills
+                const mobPill = document.getElementById(`mob-step-${i}`);
+                if (mobPill) {
+                    if (i <= state.currentStep) {
+                        mobPill.className = "h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary/60";
+                    } else {
+                        mobPill.className = "h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted";
+                    }
+                }
+            }
+
+            // Mobile step text
+            const mobTitle = document.getElementById('mob-step-title');
+            const mobCount = document.getElementById('mob-step-count');
+            if (mobTitle) mobTitle.textContent = steps[state.currentStep - 1].title;
+            if (mobCount) mobCount.textContent = `Step ${state.currentStep} of 5`;
+
+            // If Step 5 reached, update summary
+            if (state.currentStep === 5) {
+                updateSummary();
             }
 
             // Update bottom navigation buttons
@@ -173,12 +210,14 @@
             const nextText = document.getElementById('btn-next-text');
 
             if (btnPrev) {
-                if (state.currentStep === 1 || state.currentStep === 5) {
+                if (state.currentStep === 1) {
                     btnPrev.disabled = true;
-                    btnPrev.classList.add('opacity-40', 'cursor-not-allowed');
+                    btnPrev.classList.add('opacity-50', 'pointer-events-none');
+                } else if (state.currentStep === 5) {
+                    btnPrev.classList.add('hidden');
                 } else {
                     btnPrev.disabled = false;
-                    btnPrev.classList.remove('opacity-40', 'cursor-not-allowed');
+                    btnPrev.classList.remove('opacity-50', 'pointer-events-none', 'hidden');
                 }
             }
 
@@ -198,346 +237,335 @@
         }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-8 md:p-12">
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 md:p-10">
     {{ bc.toast_container() }}
 
-    <div class="max-w-3xl mx-auto space-y-8">
+    <div class="max-w-4xl mx-auto space-y-6">
         {# Top Navigation and Actions #}
-        <div class="flex items-center justify-between border-b border-border pb-6">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="flex items-center justify-between border-b border-border pb-4">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-base">
+                <svg class="size-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
                 </svg>
                 <span>Acme Platform</span>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
                 {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
                 {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
             </div>
         </div>
 
-        {# Step Progress Stepper #}
-        <div class="flex items-center justify-between px-2 sm:px-6">
-            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(1)">
-                <div id="step-ind-1" class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 text-white font-bold text-sm ring-4 ring-purple-500/20 shadow-xs">1</div>
-                <span id="step-label-1" class="mt-2 text-center text-xs font-semibold text-foreground hidden sm:block">Account Type</span>
-            </div>
-            <div id="step-line-1" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
-
-            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(2)">
-                <div id="step-ind-2" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">2</div>
-                <span id="step-label-2" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Account Info</span>
-            </div>
-            <div id="step-line-2" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
-
-            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(3)">
-                <div id="step-ind-3" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">3</div>
-                <span id="step-label-3" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Business Details</span>
-            </div>
-            <div id="step-line-3" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
-
-            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(4)">
-                <div id="step-ind-4" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">4</div>
-                <span id="step-label-4" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Billing Details</span>
-            </div>
-            <div id="step-line-4" class="h-0.5 flex-1 mx-2 bg-border transition-colors duration-300"></div>
-
-            <div class="flex flex-col items-center cursor-pointer" onclick="setStep(5)">
-                <div id="step-ind-5" class="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground font-semibold text-sm">5</div>
-                <span id="step-label-5" class="mt-2 text-center text-xs font-medium text-muted-foreground hidden sm:block">Completed</span>
-            </div>
-        </div>
-
-        {# Card Wrapper for Content #}
-        <div class="rounded-xl border border-border bg-card p-6 sm:p-8 shadow-sm">
+        {# Exact 5-Step Signup Wizard Card matching shadcnexamples.com/demo/onboarding-flow #}
+        <div class="w-full max-w-2xl mx-auto overflow-hidden rounded-xl bg-card py-6 text-sm text-card-foreground ring-1 ring-foreground/10 shadow-sm">
             
-            {# STEP 1: Choose Account Type #}
-            <div id="step-pane-1" class="space-y-6">
-                <div class="space-y-1">
-                    <h2 class="text-2xl font-bold tracking-tight text-foreground">Choose Account Type</h2>
-                    <p class="text-sm text-muted-foreground">
-                        If you need more info, please check out 
-                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                    <div id="card-personal" 
-                         onclick="selectAccountType('personal')"
-                         class="cursor-pointer rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md hover:border-border/80">
-                        <div class="flex items-start space-x-4">
-                            <div class="flex-shrink-0">
-                                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                                    <i data-lucide="user" class="h-6 w-6"></i>
-                                </div>
-                            </div>
-                            <div class="space-y-1">
-                                <h3 class="font-semibold text-foreground">Personal Account</h3>
-                                <p class="text-xs text-muted-foreground">If you need more info, please check it out</p>
-                            </div>
+            {# Header / Stepper #}
+            <div class="px-6 pb-2 md:px-8">
+                <div class="w-full">
+                    {# Desktop Stepper #}
+                    <div class="flex items-center">
+                        {# Step 1 #}
+                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(1)">
+                            <div id="step-ind-1" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground ring-4 ring-primary/20 cursor-pointer">1</div>
+                            <span id="step-label-1" class="mt-2 text-center text-xs font-medium text-foreground">Account Type</span>
+                        </div>
+                        {# Step 2 #}
+                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(2)">
+                            <div id="step-line-2" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
+                            <div id="step-ind-2" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">2</div>
+                            <span id="step-label-2" class="mt-2 text-center text-xs font-medium text-muted-foreground">Account Info</span>
+                        </div>
+                        {# Step 3 #}
+                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(3)">
+                            <div id="step-line-3" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
+                            <div id="step-ind-3" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">3</div>
+                            <span id="step-label-3" class="mt-2 text-center text-xs font-medium text-muted-foreground">Business</span>
+                        </div>
+                        {# Step 4 #}
+                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(4)">
+                            <div id="step-line-4" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
+                            <div id="step-ind-4" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">4</div>
+                            <span id="step-label-4" class="mt-2 text-center text-xs font-medium text-muted-foreground">Billing</span>
+                        </div>
+                        {# Step 5 #}
+                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(5)">
+                            <div id="step-line-5" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
+                            <div id="step-ind-5" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">5</div>
+                            <span id="step-label-5" class="mt-2 text-center text-xs font-medium text-muted-foreground">Complete</span>
                         </div>
                     </div>
 
-                    <div id="card-corporate" 
-                         onclick="selectAccountType('corporate')"
-                         class="cursor-pointer rounded-xl border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-6 transition-all shadow-sm">
-                        <div class="flex items-start space-x-4">
-                            <div class="flex-shrink-0">
-                                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                                    <i data-lucide="briefcase" class="h-6 w-6"></i>
-                                </div>
-                            </div>
-                            <div class="space-y-1">
-                                <h3 class="font-semibold text-foreground">Corporate Account</h3>
-                                <p class="text-xs text-muted-foreground">Create corporate account to manage users</p>
-                            </div>
+                    {# Mobile Stepper #}
+                    <div class="hidden">
+                        <div class="mb-2 flex items-center justify-between">
+                            <span id="mob-step-title" class="text-sm font-semibold">Account Type</span>
+                            <span id="mob-step-count" class="text-muted-foreground text-xs">Step 1 of 5</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            {# STEP 2: Account Info #}
-            <div id="step-pane-2" class="space-y-6 hidden">
-                <div class="space-y-1">
-                    <h2 class="text-2xl font-bold tracking-tight text-foreground">Account Info</h2>
-                    <p class="text-sm text-muted-foreground">
-                        If you need more info, please check out 
-                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
-                    </p>
-                </div>
-
-                <div class="space-y-6 pt-2">
-                    {# Team Size #}
-                    <div>
-                        <label class="mb-3 block text-sm font-semibold text-foreground">Specify Team Size</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div id="pill-size-1-1" onclick="selectTeamSize('1-1')" class="rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer">
-                                1-1
-                            </div>
-                            <div id="pill-size-2-10" onclick="selectTeamSize('2-10')" class="rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer">
-                                2-10
-                            </div>
-                            <div id="pill-size-10-50" onclick="selectTeamSize('10-50')" class="rounded-lg border-2 border-purple-500 ring-2 ring-purple-500 bg-muted/60 p-4 text-center font-semibold text-foreground transition-all cursor-pointer shadow-xs">
-                                10-50
-                            </div>
-                            <div id="pill-size-50+" onclick="selectTeamSize('50+')" class="rounded-lg border border-border bg-card p-4 text-center text-muted-foreground hover:border-foreground/30 hover:text-foreground transition-all cursor-pointer">
-                                50+
-                            </div>
-                        </div>
-                        <p class="mt-2 text-xs text-muted-foreground">Customers will see this shortened version of your statement descriptor</p>
-                    </div>
-
-                    {# Team Account Name #}
-                    <div class="space-y-2">
-                        <label for="teamName" class="text-sm font-semibold text-foreground">Team Account Name</label>
-                        <input id="teamName" type="text" value="Acme Engineering" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    </div>
-
-                    {# Account Plan #}
-                    <div>
-                        <label class="mb-3 block text-sm font-semibold text-foreground">Select Account Plan</label>
-                        <div class="space-y-3">
-                            <div id="plan-row-company" onclick="selectPlan('company')" class="flex items-center space-x-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/30 cursor-pointer transition-all">
-                                <i data-lucide="factory" class="h-6 w-6 text-muted-foreground"></i>
-                                <div class="flex-1">
-                                    <div class="font-medium text-foreground text-sm">Company Account</div>
-                                    <div class="text-xs text-muted-foreground">Use images to enhance your post flow</div>
-                                </div>
-                                <div id="plan-dot-company" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
-                            </div>
-
-                            <div id="plan-row-developer" onclick="selectPlan('developer')" class="flex items-center space-x-3 rounded-lg border-2 border-purple-500 ring-2 ring-purple-500/30 bg-muted/40 p-4 cursor-pointer transition-all">
-                                <i data-lucide="user" class="h-6 w-6 text-purple-600 dark:text-purple-400"></i>
-                                <div class="flex-1">
-                                    <div class="font-medium text-foreground text-sm">Developer Account</div>
-                                    <div class="text-xs text-muted-foreground">Use images to your post time</div>
-                                </div>
-                                <div id="plan-dot-developer" class="h-4 w-4 rounded-full border-2 border-purple-600 bg-purple-600 flex items-center justify-center">
-                                    <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
-                                </div>
-                            </div>
-
-                            <div id="plan-row-testing" onclick="selectPlan('testing')" class="flex items-center space-x-3 rounded-lg border border-border bg-card p-4 hover:border-foreground/30 cursor-pointer transition-all">
-                                <i data-lucide="globe" class="h-6 w-6 text-muted-foreground"></i>
-                                <div class="flex-1">
-                                    <div class="font-medium text-foreground text-sm">Testing Account</div>
-                                    <div class="text-xs text-muted-foreground">Use images to enhance time travel rivers</div>
-                                </div>
-                                <div id="plan-dot-testing" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
-                            </div>
+                        <div class="flex gap-1">
+                            <div id="mob-step-1" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary/60"></div>
+                            <div id="mob-step-2" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
+                            <div id="mob-step-3" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
+                            <div id="mob-step-4" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
+                            <div id="mob-step-5" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {# STEP 3: Business Details #}
-            <div id="step-pane-3" class="space-y-6 hidden">
-                <div class="space-y-1">
-                    <h2 class="text-2xl font-bold tracking-tight text-foreground">Business Details</h2>
-                    <p class="text-sm text-muted-foreground">
-                        If you need more info, please check out 
-                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
-                    </p>
-                </div>
-
-                <div class="space-y-4 pt-2">
-                    <div class="space-y-2">
-                        <label for="companyName" class="text-sm font-semibold text-foreground">Company Name</label>
-                        <input id="companyName" type="text" value="Acme Studio, Inc." placeholder="Enter your company name" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    </div>
-                    <div class="space-y-2">
-                        <label for="industry" class="text-sm font-semibold text-foreground">Industry</label>
-                        <select id="industry" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <option value="technology" selected>Technology</option>
-                            <option value="finance">Finance</option>
-                            <option value="healthcare">Healthcare</option>
-                            <option value="retail">Retail</option>
-                        </select>
-                    </div>
-                    <div class="space-y-2">
-                        <label for="website" class="text-sm font-semibold text-foreground">Website</label>
-                        <input id="website" type="url" value="https://acme.org" placeholder="https://yourcompany.com" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    </div>
-                </div>
-            </div>
-
-            {# STEP 4: Billing Details #}
-            <div id="step-pane-4" class="space-y-6 hidden">
-                <div class="space-y-1">
-                    <h2 class="text-2xl font-bold tracking-tight text-foreground">Billing Details</h2>
-                    <p class="text-sm text-muted-foreground">
-                        If you need more info, please check out 
-                        <a href="#" class="text-purple-600 hover:underline">Help Page</a>.
-                    </p>
-                </div>
-
-                <div class="space-y-5 pt-2">
-                    <div class="space-y-2">
-                        <label for="nameOnCard" class="text-sm font-medium text-foreground">
-                            Name On Card <span class="text-red-500">*</span>
-                        </label>
-                        <input id="nameOnCard" type="text" value="Max Doe" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="cardNumber" class="text-sm font-medium text-foreground">
-                            Card Number <span class="text-red-500">*</span>
-                        </label>
-                        <div class="relative">
-                            <input id="cardNumber" type="text" value="4111 1111 1111 1111" class="w-full rounded-md border border-border bg-background pl-3 pr-24 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <div class="absolute inset-y-0 right-3 flex items-center gap-1.5 pointer-events-none">
-                                <span class="flex h-5 w-8 items-center justify-center rounded bg-blue-600 text-[10px] font-bold text-white tracking-wider">VISA</span>
-                                <span class="h-5 w-4 rounded-sm bg-rose-500"></span>
-                                <span class="h-5 w-4 rounded-sm bg-amber-400 -ml-2.5 opacity-90"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-foreground">
-                                Expiration Date <span class="text-red-500">*</span>
-                            </label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                    <option value="01">01</option>
-                                    <option value="02">02</option>
-                                    <option value="03">03</option>
-                                    <option value="04">04</option>
-                                    <option value="05">05</option>
-                                    <option value="06">06</option>
-                                    <option value="07">07</option>
-                                    <option value="08">08</option>
-                                    <option value="09">09</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12" selected>12</option>
-                                </select>
-                                <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                    <option value="2024">2024</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2026">2026</option>
-                                    <option value="2027">2027</option>
-                                    <option value="2028" selected>2028</option>
-                                    <option value="2029">2029</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            <label for="cvv" class="text-sm font-medium text-foreground">
-                                CVV <span class="text-red-500">*</span>
-                            </label>
-                            <input id="cvv" type="text" value="123" placeholder="CVV" maxlength="4" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        </div>
-                    </div>
-
-                    {# Save Card Switch #}
-                    <div class="flex items-center justify-between pt-2">
+            {# Card Content #}
+            <div class="flex flex-col gap-3 px-6 pb-6 md:px-8 md:pb-8">
+                <div class="min-h-[320px] py-4">
+                    
+                    {# STEP 1: Choose Account Type #}
+                    <div id="step-pane-1" class="space-y-5">
                         <div>
-                            <div class="font-medium text-sm text-foreground">Save Card for further billing?</div>
-                            <div class="text-xs text-muted-foreground">If you need more info, please check budget planning</div>
+                            <h2 class="text-lg font-semibold text-foreground">Choose Account Type</h2>
+                            <p class="text-muted-foreground mt-1 text-sm">Select the type that best fits your use case.</p>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <button type="button" 
-                                    id="switch-save-card" 
-                                    onclick="toggleSaveCard()"
-                                    class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-purple-600 transition-colors duration-200 ease-in-out focus:outline-hidden">
-                                <span id="switch-knob" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+                                    id="btn-account-personal"
+                                    onclick="selectAccountType('personal')"
+                                    class="flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-primary bg-primary/5 ring-2 ring-primary cursor-pointer">
+                                <div id="icon-account-personal" class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                    <i data-lucide="user" class="size-5"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-foreground">Personal Account</div>
+                                    <div class="text-muted-foreground mt-0.5 text-sm">For individuals and freelancers</div>
+                                </div>
                             </button>
-                            <span class="text-xs text-muted-foreground font-medium">Save Card</span>
+
+                            <button type="button" 
+                                    id="btn-account-corporate"
+                                    onclick="selectAccountType('corporate')"
+                                    class="flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-border hover:border-primary/50 hover:bg-muted/50 cursor-pointer">
+                                <div id="icon-account-corporate" class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                                    <i data-lucide="briefcase" class="size-5"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-foreground">Corporate Account</div>
+                                    <div class="text-muted-foreground mt-0.5 text-sm">For teams and organizations</div>
+                                </div>
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {# STEP 5: Your Are Done! #}
-            <div id="step-pane-5" class="space-y-6 text-center py-6 hidden">
-                <div class="space-y-1 text-center">
-                    <h2 class="text-3xl font-extrabold tracking-tight text-foreground">Your Are Done!</h2>
-                    <p class="text-sm text-muted-foreground">
-                        If you need more info, please 
-                        <a href="#" class="text-purple-600 hover:underline">Sign In</a>.
-                    </p>
-                </div>
+                    {# STEP 2: Account Info #}
+                    <div id="step-pane-2" class="space-y-5 hidden">
+                        <div>
+                            <h2 class="text-lg font-semibold text-foreground">Account Info</h2>
+                            <p class="text-muted-foreground mt-1 text-sm">Set up your account details.</p>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-sm font-medium text-foreground">Team Size</label>
+                            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                <button type="button" id="pill-size-1-1" onclick="selectTeamSize('1-1')" class="rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer">1-1</button>
+                                <button type="button" id="pill-size-2-10" onclick="selectTeamSize('2-10')" class="rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer">2-10</button>
+                                <button type="button" id="pill-size-10-50" onclick="selectTeamSize('10-50')" class="rounded-lg border py-3 text-sm font-medium transition-all border-primary bg-primary/5 text-primary ring-2 ring-primary cursor-pointer">10-50</button>
+                                <button type="button" id="pill-size-50+" onclick="selectTeamSize('50+')" class="rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer">50+</button>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="teamName" class="text-sm font-medium text-foreground">
+                                Team Account Name <span class="text-destructive">*</span>
+                            </label>
+                            <input id="teamName" type="text" value="Acme Corp" oninput="state.teamName = this.value" placeholder="e.g. Acme Corp" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-sm font-medium text-foreground">Account Plan</label>
+                            <div class="space-y-2">
+                                <label id="plan-label-company" onclick="selectPlan('company')" class="flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-border hover:bg-muted/50">
+                                    <i data-lucide="factory" class="text-muted-foreground size-5 shrink-0"></i>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-foreground">Company Account</div>
+                                        <div class="text-muted-foreground text-xs">Full access for teams</div>
+                                    </div>
+                                    <div id="plan-dot-company" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
+                                </label>
 
-                <div class="space-y-5 max-w-xl mx-auto text-left pt-2">
-                    <p class="text-sm text-muted-foreground leading-relaxed">
-                        Writing headlines for blog posts is as much an art as it is a science and probably
-                        warrants its own post, but for all advise is with what works for your great &
-                        amazing audience.
-                    </p>
+                                <label id="plan-label-developer" onclick="selectPlan('developer')" class="flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-primary bg-primary/5">
+                                    <i data-lucide="user" class="text-primary size-5 shrink-0"></i>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-foreground">Developer Account</div>
+                                        <div class="text-muted-foreground text-xs">Ideal for building and testing</div>
+                                    </div>
+                                    <div id="plan-dot-developer" class="h-4 w-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                                    </div>
+                                </label>
 
-                    <div class="rounded-lg border border-amber-300 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800 p-4 flex items-start gap-3">
-                        <i data-lucide="alert-triangle" class="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"></i>
-                        <div class="text-xs text-amber-900 dark:text-amber-200 leading-normal">
-                            <strong class="font-bold">We need your attention!</strong><br />
-                            To start using great tools, please, 
-                            <a href="#" class="font-semibold text-purple-600 hover:underline dark:text-purple-400">Create Team Platform</a>
+                                <label id="plan-label-testing" onclick="selectPlan('testing')" class="flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-border hover:bg-muted/50">
+                                    <i data-lucide="globe" class="text-muted-foreground size-5 shrink-0"></i>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-foreground">Testing Account</div>
+                                        <div class="text-muted-foreground text-xs">Sandbox environment access</div>
+                                    </div>
+                                    <div id="plan-dot-testing" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
+                                </label>
+                            </div>
                         </div>
                     </div>
+
+                    {# STEP 3: Business Details #}
+                    <div id="step-pane-3" class="space-y-5 hidden">
+                        <div>
+                            <h2 class="text-lg font-semibold text-foreground">Business Details</h2>
+                            <p class="text-muted-foreground mt-1 text-sm">Tell us about your business.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="space-y-1.5">
+                                <label for="companyName" class="text-sm font-medium text-foreground">
+                                    Company Name <span class="text-destructive">*</span>
+                                </label>
+                                <input id="companyName" type="text" value="Acme Inc." oninput="state.companyName = this.value" placeholder="Acme Inc." class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="industry" class="text-sm font-medium text-foreground">
+                                    Industry <span class="text-destructive">*</span>
+                                </label>
+                                <select id="industry" onchange="state.industry = this.value" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                    <option value="technology" selected>Technology</option>
+                                    <option value="finance">Finance</option>
+                                    <option value="healthcare">Healthcare</option>
+                                    <option value="retail">Retail & E-commerce</option>
+                                    <option value="education">Education</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="website" class="text-sm font-medium text-foreground">Website</label>
+                                <input id="website" type="url" value="https://acme.org" oninput="state.website = this.value" placeholder="https://yourcompany.com" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                            </div>
+                        </div>
+                    </div>
+
+                    {# STEP 4: Billing Details #}
+                    <div id="step-pane-4" class="space-y-5 hidden">
+                        <div>
+                            <h2 class="text-lg font-semibold text-foreground">Billing Details</h2>
+                            <p class="text-muted-foreground mt-1 text-sm">Your card is stored securely and never shared.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="space-y-1.5">
+                                <label for="nameOnCard" class="text-sm font-medium text-foreground">
+                                    Name on Card <span class="text-destructive">*</span>
+                                </label>
+                                <input id="nameOnCard" type="text" value="John Doe" oninput="state.nameOnCard = this.value" placeholder="John Doe" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="cardNumber" class="text-sm font-medium text-foreground">
+                                    Card Number <span class="text-destructive">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input id="cardNumber" type="text" value="4242 4242 4242 4242" placeholder="0000 0000 0000 0000" class="w-full rounded-md border border-border bg-background px-3 pr-10 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                    <i data-lucide="credit-card" class="text-muted-foreground absolute top-1/2 right-3 size-4 -translate-y-1/2 pointer-events-none"></i>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div class="space-y-1.5">
+                                    <label class="text-sm font-medium text-foreground">
+                                        Expiry Date <span class="text-destructive">*</span>
+                                    </label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                            <option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12" selected>12</option>
+                                        </select>
+                                        <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                            <option value="2025">2025</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2027" selected>2027</option>
+                                            <option value="2028">2028</option>
+                                            <option value="2029">2029</option>
+                                            <option value="2030">2030</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="cvv" class="text-sm font-medium text-foreground">
+                                        CVV <span class="text-destructive">*</span>
+                                    </label>
+                                    <input id="cvv" type="text" value="123" placeholder="123" maxlength="4" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# STEP 5: Complete #}
+                    <div id="step-pane-5" class="flex flex-col items-center gap-6 py-4 text-center hidden">
+                        <div class="flex size-20 items-center justify-center rounded-full bg-emerald-500/10 ring-8 ring-emerald-500/10 text-emerald-500">
+                            <i data-lucide="check-circle-2" class="size-10"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-foreground">You're all set!</h2>
+                            <p class="text-muted-foreground mt-2 text-sm">Your account has been created successfully.</p>
+                        </div>
+                        <div class="w-full rounded-xl border border-border bg-muted/30 p-4 text-left">
+                            <div class="text-muted-foreground mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+                                <i data-lucide="sparkles" class="size-3.5"></i>
+                                <span>Account Summary</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="user" class="text-muted-foreground size-4 shrink-0"></i>
+                                    <span class="text-muted-foreground text-sm">Account Type:</span>
+                                    <span id="summary-account-type" class="ml-auto text-sm font-medium text-foreground">Personal Account</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="factory" class="text-muted-foreground size-4 shrink-0"></i>
+                                    <span class="text-muted-foreground text-sm">Plan:</span>
+                                    <span id="summary-plan" class="ml-auto text-sm font-medium text-foreground">Developer</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="building-2" class="text-muted-foreground size-4 shrink-0"></i>
+                                    <span class="text-muted-foreground text-sm">Company:</span>
+                                    <span id="summary-company" class="ml-auto text-sm font-medium text-foreground">Acme Inc.</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="globe" class="text-muted-foreground size-4 shrink-0"></i>
+                                    <span class="text-muted-foreground text-sm">Team:</span>
+                                    <span id="summary-team" class="ml-auto text-sm font-medium text-foreground">Acme Corp</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            {{ bc.button('Go to Dashboard', href=url_for('basecoat_examples.dashboard'), variant='default', class='px-8 font-semibold') }}
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="pt-6">
-                    {{ bc.button('Go to Dashboard', href=url_for('basecoat_examples.dashboard'), variant='default', class='px-8 font-semibold') }}
-                </div>
-            </div>
+                {# Footer Navigation #}
+                <div class="flex items-center justify-between border-t border-border pt-5">
+                    <button
+                        id="btn-prev"
+                        type="button"
+                        class="rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors opacity-50 pointer-events-none inline-flex items-center gap-1.5"
+                        onclick="prevStep()">
+                        <i data-lucide="chevron-left" class="size-4"></i>
+                        <span>Back</span>
+                    </button>
 
-            {# Stepper Footer Controls #}
-            <div class="flex items-center justify-between border-t border-border pt-6 mt-8">
-                <button
-                    id="btn-prev"
-                    class="rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors opacity-40 cursor-not-allowed inline-flex items-center gap-1.5"
-                    onclick="prevStep()">
-                    <i data-lucide="chevron-left" class="h-4 w-4"></i>
-                    <span>Previous</span>
-                </button>
-                <button
-                    id="btn-next"
-                    class="rounded-md bg-purple-600 px-6 py-2 text-sm font-semibold text-white shadow-xs hover:bg-purple-700 transition-colors inline-flex items-center gap-1.5"
-                    onclick="nextStep()">
-                    <span id="btn-next-text">Continue</span>
-                    <i data-lucide="chevron-right" class="h-4 w-4"></i>
-                </button>
+                    <button
+                        id="btn-next"
+                        type="button"
+                        class="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 text-sm font-medium transition-colors inline-flex items-center gap-1.5 shadow-xs"
+                        onclick="nextStep()">
+                        <span id="btn-next-text">Continue</span>
+                        <i data-lucide="chevron-right" class="size-4"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
