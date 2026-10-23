@@ -1,4 +1,4 @@
-{# Basecoat Button Component #}
+{# Basecoat Button Component - 100% shadcn/ui Canonical #}
 {% macro button(
     text='',
     variant='default',
@@ -16,34 +16,38 @@
     on_click=none,
     aria_label=none
 ) %}
+    {% set base_classes = 'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 cursor-pointer' %}
+
     {% set variant_map = {
-        'default': 'btn btn-primary',
-        'destructive': 'btn btn-destructive',
-        'outline': 'btn btn-outline',
-        'secondary': 'btn btn-secondary',
-        'ghost': 'btn btn-ghost',
-        'link': 'btn btn-link'
+        'default': 'btn btn-primary bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm',
+        'destructive': 'btn btn-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
+        'outline': 'btn btn-outline border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground shadow-sm',
+        'secondary': 'btn btn-secondary bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm',
+        'ghost': 'btn btn-ghost text-foreground hover:bg-accent hover:text-accent-foreground',
+        'link': 'btn btn-link text-primary underline-offset-4 hover:underline'
     } %}
     
     {% set size_map = {
-        'default': '',
-        'sm': 'btn-sm',
-        'lg': 'btn-lg',
-        'icon': 'btn-icon'
+        'default': 'h-9 px-4 py-2',
+        'sm': 'btn-sm h-8 rounded-md px-3 text-xs',
+        'lg': 'btn-lg h-10 rounded-md px-8 text-base',
+        'icon': 'btn-icon h-9 w-9 p-0'
     } %}
     
-    {% set btn_classes = variant_map.get(variant, 'btn btn-primary') ~ (' ' ~ size_map.get(size, '') if size_map.get(size, '') else '') ~ (' ' ~ class if class else '') %}
+    {% set variant_str = variant_map.get(variant, variant_map['default']) %}
+    {% set size_str = size_map.get(size, size_map['default']) %}
+    {% set btn_classes = (base_classes ~ ' ' ~ variant_str ~ ' ' ~ size_str ~ (' ' ~ class if class else '')) | trim %}
     
     {% if href %}
         <a href="{{ href }}" class="{{ btn_classes }}" {% if id %}id="{{ id }}"{% endif %} {% if disabled %}aria-disabled="true" tabindex="-1"{% endif %} {% if on_click %}onclick="{{ on_click }}"{% endif %} {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
             {% if loading %}
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
             {% elif icon and icon_position == 'left' %}
-                <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4"></i>
+                <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4 shrink-0"></i>
             {% endif %}
             {{ text }}{{ caller() if caller }}
             {% if icon and icon_position == 'right' and not loading %}
-                <i data-lucide="{{ icon }}" class="ml-2 h-4 w-4"></i>
+                <i data-lucide="{{ icon }}" class="ml-2 h-4 w-4 shrink-0"></i>
             {% endif %}
         </a>
     {% else %}
@@ -51,11 +55,11 @@
             {% if loading %}
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
             {% elif icon and icon_position == 'left' %}
-                <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4"></i>
+                <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4 shrink-0"></i>
             {% endif %}
             {{ text }}{{ caller() if caller }}
             {% if icon and icon_position == 'right' and not loading %}
-                <i data-lucide="{{ icon }}" class="ml-2 h-4 w-4"></i>
+                <i data-lucide="{{ icon }}" class="ml-2 h-4 w-4 shrink-0"></i>
             {% endif %}
         </button>
     {% endif %}

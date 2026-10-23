@@ -1,6 +1,6 @@
-{# Basecoat Card Component - 100% shadcn/ui #}
+{# Basecoat Card Component - 100% shadcn/ui Canonical #}
 {% macro card(title=none, description=none, footer=none, class='', id=none) %}
-    <div class="card rounded-xl border bg-card text-card-foreground shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
+    <div class="card rounded-xl border border-border bg-card text-card-foreground shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
         {% if title or description %}
             <header class="card-header flex flex-col space-y-1.5 p-6">
                 {% if title %}
@@ -10,11 +10,14 @@
                     <p class="card-description text-sm text-muted-foreground">{{ description }}</p>
                 {% endif %}
             </header>
+            <section class="card-content p-6 pt-0">
+                {{ caller() if caller }}
+            </section>
+        {% else %}
+            <section class="card-content p-6">
+                {{ caller() if caller }}
+            </section>
         {% endif %}
-        
-        <section class="card-content p-6 pt-0">
-            {{ caller() if caller }}
-        </section>
         
         {% if footer %}
             <footer class="card-footer flex items-center p-6 pt-0">
