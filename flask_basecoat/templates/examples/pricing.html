@@ -1,0 +1,165 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Tables - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-12">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-7xl mx-auto space-y-12">
+        {# Navigation bar #}
+        <div class="flex items-center justify-between border-b border-border pb-6">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Platform</span>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Header Section #}
+        <div class="text-center space-y-4 max-w-2xl mx-auto">
+            <span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">Transparent Pricing</span>
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl">Plans for teams of any scale</h1>
+            <p class="text-muted-foreground text-base">
+                Simple, transparent pricing that scales with your business. Get started with our free tier or upgrade for advanced architecture governance.
+            </p>
+        </div>
+
+        {# Pricing Cards Grid #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-4">
+            {# 1. Free Plan #}
+            {% set free_footer %}
+                <div class="w-full pt-4">
+                    {{ bc.button('Get Started Free', variant='outline', class='w-full justify-center') }}
+                </div>
+            {% endset %}
+            {% call bc.card(title='Starter', description='Essential architecture modeling for solo developers.', footer=free_footer, class='flex flex-col justify-between') %}
+                <div class="space-y-6 my-2">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold tracking-tight">$0</span>
+                        <span class="text-sm text-muted-foreground">/month</span>
+                    </div>
+
+                    <ul class="space-y-3 text-sm text-muted-foreground">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>1 active architecture workspace</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Up to 100 model elements</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Community Discord support</span>
+                        </li>
+                    </ul>
+                </div>
+            {% endcall %}
+
+            {# 2. Pro Plan (Highlighted) #}
+            {% set pro_footer %}
+                <div class="w-full pt-4">
+                    {{ bc.button('Start 14-Day Trial', variant='default', class='w-full justify-center') }}
+                </div>
+            {% endset %}
+            {% call bc.card(title='Professional', description='Advanced governance and CI ratchet automation for growing teams.', footer=pro_footer, class='flex flex-col justify-between border-primary ring-1 ring-primary shadow-lg relative') %}
+                <div class="absolute -top-3 right-6">
+                    {{ bc.badge('Most Popular', variant='default') }}
+                </div>
+
+                <div class="space-y-6 my-2">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold tracking-tight">$29</span>
+                        <span class="text-sm text-muted-foreground">/month</span>
+                    </div>
+
+                    <ul class="space-y-3 text-sm text-foreground">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span class="font-medium">Unlimited architecture workspaces</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Automated CI anti-drift ratchets</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Full ArchiMate 3.2 schema validation</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Export SVG, PDF, and Open Exchange XML</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Priority email & Slack support</span>
+                        </li>
+                    </ul>
+                </div>
+            {% endcall %}
+
+            {# 3. Enterprise Plan #}
+            {% set ent_footer %}
+                <div class="w-full pt-4">
+                    {{ bc.button('Contact Sales', variant='outline', class='w-full justify-center') }}
+                </div>
+            {% endset %}
+            {% call bc.card(title='Enterprise', description='Dedicated deployment, custom SSO, and enterprise SLAs.', footer=ent_footer, class='flex flex-col justify-between') %}
+                <div class="space-y-6 my-2">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold tracking-tight">$99</span>
+                        <span class="text-sm text-muted-foreground">/month</span>
+                    </div>
+
+                    <ul class="space-y-3 text-sm text-muted-foreground">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Everything in Professional</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>SAML 2.0 & Okta SSO integration</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>99.99% uptime SLA commitment</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="h-4 w-4 text-primary shrink-0"></i>
+                            <span>Dedicated architecture success lead</span>
+                        </li>
+                    </ul>
+                </div>
+            {% endcall %}
+        </div>
+    </div>
+</body>
+</html>

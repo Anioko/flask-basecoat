@@ -1,0 +1,127 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10 flex flex-col justify-between">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-5xl mx-auto w-full space-y-12">
+        {# Top Navigation #}
+        <div class="flex items-center justify-between border-b border-border pb-6">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Launchpad</span>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Hero Coming Soon Section #}
+        <div class="text-center space-y-6 max-w-2xl mx-auto py-8">
+            {{ bc.badge('Launching Q4 2026', variant='secondary') }}
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+                Something extraordinary is on the way.
+            </h1>
+            <p class="text-lg text-muted-foreground">
+                We are crafting an enterprise-grade developer platform with native Basecoat UI components and shadcn aesthetic precision.
+            </p>
+
+            {# Countdown Timer Cards #}
+            <div class="grid grid-cols-4 gap-3 sm:gap-4 max-w-md mx-auto pt-4">
+                {% set time_blocks = [
+                    ('29', 'Days'),
+                    ('14', 'Hours'),
+                    ('42', 'Minutes'),
+                    ('18', 'Seconds')
+                ] %}
+                {% for num, label in time_blocks %}
+                    {% call bc.card(class='p-4 text-center') %}
+                        <div class="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">{{ num }}</div>
+                        <div class="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-1">{{ label }}</div>
+                    {% endcall %}
+                {% endfor %}
+            </div>
+
+            {# Waitlist Email Form #}
+            <div class="pt-6 max-w-md mx-auto">
+                <form method="POST" action="{{ url_for('basecoat_examples.coming_soon') }}" class="flex flex-col sm:flex-row gap-2">
+                    <input
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="Enter your work email"
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                    {{ bc.button('Join Waitlist', type='submit', variant='default') }}
+                </form>
+                <p class="text-xs text-muted-foreground mt-2">No spam. Only early access releases and feature announcements.</p>
+            </div>
+        </div>
+
+        {# Feature Teasers Grid #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-border">
+            {% call bc.card() %}
+                <div class="space-y-2">
+                    <div class="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+                        <i data-lucide="zap" class="h-5 w-5"></i>
+                    </div>
+                    <h3 class="font-semibold text-base">Instant SSR Performance</h3>
+                    <p class="text-sm text-muted-foreground">Pre-rendered HTML with zero hydration lag and blazing fast TTFB.</p>
+                </div>
+            {% endcall %}
+
+            {% call bc.card() %}
+                <div class="space-y-2">
+                    <div class="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+                        <i data-lucide="shield-check" class="h-5 w-5"></i>
+                    </div>
+                    <h3 class="font-semibold text-base">Type-Safe Macros</h3>
+                    <p class="text-sm text-muted-foreground">Rigid macro contracts matching upstream Basecoat UI specifications.</p>
+                </div>
+            {% endcall %}
+
+            {% call bc.card() %}
+                <div class="space-y-2">
+                    <div class="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+                        <i data-lucide="palette" class="h-5 w-5"></i>
+                    </div>
+                    <h3 class="font-semibold text-base">Pixel-Perfect Theming</h3>
+                    <p class="text-sm text-muted-foreground">100% fidelity with modern shadcn neutral, dark mode, and focus rings.</p>
+                </div>
+            {% endcall %}
+        </div>
+    </div>
+
+    {# Footer #}
+    <footer class="mt-16 text-center text-xs text-muted-foreground border-t border-border pt-6">
+        &copy; 2026 Acme Inc. All rights reserved. Built with Basecoat UI.
+    </footer>
+</body>
+</html>

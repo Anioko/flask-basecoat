@@ -1,0 +1,174 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Wizard - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10 flex flex-col justify-between">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-3xl mx-auto w-full space-y-8">
+        {# Top Navigation #}
+        <div class="flex items-center justify-between border-b border-border pb-6">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Setup</span>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Step Progress Stepper #}
+        <div class="grid grid-cols-4 gap-2 text-center text-xs">
+            <div class="space-y-1">
+                <div class="h-1.5 w-full rounded-full bg-primary"></div>
+                <span class="font-semibold text-primary">1. Account</span>
+            </div>
+            <div class="space-y-1">
+                <div class="h-1.5 w-full rounded-full bg-primary"></div>
+                <span class="font-semibold text-primary">2. Organization</span>
+            </div>
+            <div class="space-y-1">
+                <div class="h-1.5 w-full rounded-full bg-primary"></div>
+                <span class="font-semibold text-foreground">3. Preferences</span>
+            </div>
+            <div class="space-y-1">
+                <div class="h-1.5 w-full rounded-full bg-muted"></div>
+                <span class="font-medium text-muted-foreground">4. Launch</span>
+            </div>
+        </div>
+
+        {# Main Step Wizard Card #}
+        {% set card_footer %}
+            <div class="flex items-center justify-between w-full">
+                {{ bc.button('Previous', variant='outline', size='sm', icon='arrow-left') }}
+                <div class="flex items-center gap-2">
+                    {{ bc.button('Skip for now', variant='ghost', size='sm') }}
+                    {{ bc.button('Continue', variant='default', size='sm', icon='arrow-right') }}
+                </div>
+            </div>
+        {% endset %}
+
+        {% call bc.card(
+            title='Organization & Team Setup',
+            description='Configure your workspace settings and establish architectural governance defaults.',
+            footer=card_footer
+        ) %}
+            <form class="space-y-6 pt-2">
+                {# Organization Type Radio Selection #}
+                <div class="space-y-3">
+                    <label class="text-sm font-semibold">Account Purpose</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="flex items-start gap-3 p-4 rounded-lg border border-primary bg-primary/5 cursor-pointer">
+                            <input type="radio" name="account_type" value="enterprise" checked class="mt-1 text-primary focus:ring-ring">
+                            <div class="space-y-1">
+                                <div class="font-semibold text-sm flex items-center gap-2">
+                                    <span>Enterprise Architecture</span>
+                                    {{ bc.badge('Standard', variant='default', class='text-[10px] px-1.5 py-0') }}
+                                </div>
+                                <p class="text-xs text-muted-foreground">Designed for cross-functional engineering teams enforcing strict design systems.</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-lg border border-border bg-card hover:bg-muted/30 cursor-pointer">
+                            <input type="radio" name="account_type" value="developer" class="mt-1 text-primary focus:ring-ring">
+                            <div class="space-y-1">
+                                <div class="font-semibold text-sm">Individual Developer</div>
+                                <p class="text-xs text-muted-foreground">Rapid prototyping and standalone Flask microservices with Basecoat UI.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                {# Workspace Details #}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-sm font-medium">Organization Name</label>
+                        <input
+                            type="text"
+                            value="Entelim Global Technologies"
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        />
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-sm font-medium">Primary Domain</label>
+                        <input
+                            type="text"
+                            value="entelim.internal"
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        />
+                    </div>
+                </div>
+
+                {# Team Size & Industry #}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-sm font-medium">Estimated Engineers</label>
+                        <select class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                            <option>10 - 50 developers</option>
+                            <option>50 - 250 developers</option>
+                            <option>250+ developers</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-sm font-medium">Industry Vertical</label>
+                        <select class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                            <option>Financial Services & Banking</option>
+                            <option>SaaS & Cloud Infrastructure</option>
+                            <option>Healthcare & Life Sciences</option>
+                            <option>E-Commerce & Retail</option>
+                        </select>
+                    </div>
+                </div>
+
+                {# Governance Toggles #}
+                <div class="space-y-3 pt-2 border-t border-border">
+                    <div class="flex items-center justify-between">
+                        <div class="space-y-0.5">
+                            <div class="text-sm font-medium">Enforce Anti-drift CI Ratchet</div>
+                            <div class="text-xs text-muted-foreground">Block pull requests that introduce raw component tags without macros.</div>
+                        </div>
+                        <input type="checkbox" checked class="h-4 w-4 rounded border-border text-primary focus:ring-ring">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="space-y-0.5">
+                            <div class="text-sm font-medium">Automated Playwright Visual Regression</div>
+                            <div class="text-xs text-muted-foreground">Capture full-page 1440px desktop screenshots on every commit.</div>
+                        </div>
+                        <input type="checkbox" checked class="h-4 w-4 rounded border-border text-primary focus:ring-ring">
+                    </div>
+                </div>
+            </form>
+        {% endcall %}
+    </div>
+
+    {# Footer #}
+    <footer class="mt-16 text-center text-xs text-muted-foreground">
+        Need assistance with your configuration? <a href="#" class="underline hover:text-foreground">Contact enterprise support</a>.
+    </footer>
+</body>
+</html>

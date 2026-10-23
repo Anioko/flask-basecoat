@@ -1,0 +1,163 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Playground - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-6 flex flex-col justify-between">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-7xl mx-auto w-full space-y-4">
+        {# Top Navigation Bar #}
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-4">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                    </svg>
+                    <span>Playground</span>
+                </div>
+                {{ bc.badge('Interactive Lab', variant='outline', class='text-xs') }}
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Save Preset', variant='outline', size='sm', icon='save') }}
+                {{ bc.button('View Code', variant='outline', size='sm', icon='code') }}
+                {{ bc.button('Share', variant='outline', size='sm', icon='share-2') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Main Grid: Prompt Canvas + Model Tuning Sidebar #}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {# Left: Prompt Canvas #}
+            <div class="lg:col-span-8 space-y-4">
+                {% call bc.card() %}
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-semibold">System Instructions</label>
+                                <span class="text-xs text-muted-foreground">Sets model persona and operational guardrails</span>
+                            </div>
+                            <textarea
+                                rows="3"
+                                class="w-full rounded-md border border-input bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >You are an expert full-stack Python software engineer specializing in Flask, Basecoat UI, and shadcn component architecture. Provide clean, production-ready code with comprehensive typing and zero component drift.</textarea>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-semibold">User Prompt &amp; Completion</label>
+                                <span class="text-xs text-muted-foreground">Input prompts and streamed tokens</span>
+                            </div>
+                            <textarea
+                                rows="12"
+                                class="w-full rounded-md border border-input bg-background p-3 font-mono text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >Write a Jinja2 macro demonstrating caller slot composability for an enterprise Basecoat UI data table.
+
+Macro requirements:
+1. Support headers list [('col_id', 'Column Title')].
+2. Support custom row rendering via Jinja2 caller().
+3. Include striped and hover variant states matching shadcn design tokens.</textarea>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-border">
+                            <div class="flex items-center gap-3 text-xs text-muted-foreground">
+                                <span>Tokens: <strong>384 / 2048</strong></span>
+                                <span>Latency: <strong>210ms</strong></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                {{ bc.button('Clear Canvas', variant='ghost', size='sm') }}
+                                {{ bc.button('Submit Prompt', variant='default', size='sm', icon='play') }}
+                            </div>
+                        </div>
+                    </div>
+                {% endcall %}
+            </div>
+
+            {# Right: Hyperparameter Tuning Sidebar #}
+            <div class="lg:col-span-4 space-y-4">
+                {% call bc.card(title='Model Settings', description='Configure inference parameters and token budgets.') %}
+                    <div class="space-y-5 pt-2">
+                        {# Model Selector #}
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold">Model Architecture</label>
+                            <select class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                <option>gpt-4o (Omni multimodal)</option>
+                                <option>claude-3-5-sonnet (Anthropic)</option>
+                                <option>gemini-1.5-pro (Google DeepMind)</option>
+                                <option>deepseek-coder-v2 (Specialized)</option>
+                            </select>
+                        </div>
+
+                        {# Temperature Slider #}
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold">Temperature</span>
+                                <span class="font-mono text-muted-foreground">0.7</span>
+                            </div>
+                            <input type="range" min="0" max="1" step="0.05" value="0.7" class="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-muted-foreground">Controls randomness: lowering results in less random completions.</p>
+                        </div>
+
+                        {# Maximum Length Slider #}
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold">Maximum Tokens</span>
+                                <span class="font-mono text-muted-foreground">2048</span>
+                            </div>
+                            <input type="range" min="256" max="4096" step="128" value="2048" class="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-muted-foreground">The maximum number of tokens to generate.</p>
+                        </div>
+
+                        {# Top P Slider #}
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold">Top P</span>
+                                <span class="font-mono text-muted-foreground">0.9</span>
+                            </div>
+                            <input type="range" min="0" max="1" step="0.05" value="0.9" class="w-full h-1.5 bg-muted rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-muted-foreground">Controls diversity via nucleus sampling.</p>
+                        </div>
+
+                        {# Stop Sequences #}
+                        <div class="space-y-1.5 pt-2 border-t border-border">
+                            <label class="text-xs font-semibold">Stop Sequences</label>
+                            <div class="flex flex-wrap gap-1.5 mb-1.5">
+                                {{ bc.badge('### END', variant='secondary', class='text-[10px]') }}
+                                {{ bc.badge('<stop>', variant='secondary', class='text-[10px]') }}
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Enter sequence and hit Return"
+                                class="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                            />
+                        </div>
+                    </div>
+                {% endcall %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -130,6 +130,32 @@ def capture_screenshots():
             tasks_path = OUTPUT_DIR / "examples-tasks-1440.png"
             ex_page.screenshot(path=str(tasks_path), full_page=True)
             print(f"Captured: {tasks_path}")
+
+            # Additional 13 Application Categories
+            screens = [
+                ("pricing", "examples-pricing-1440.png", True),
+                ("profile", "examples-profile-1440.png", True),
+                ("projects", "examples-projects-1440.png", True),
+                ("changelog", "examples-changelog-1440.png", True),
+                ("coming-soon", "examples-coming-soon-1440.png", True),
+                ("blog", "examples-blog-1440.png", True),
+                ("onboarding", "examples-onboarding-1440.png", True),
+                ("chat", "examples-chat-1440.png", False),
+                ("ai-chat", "examples-ai-chat-1440.png", False),
+                ("playground", "examples-playground-1440.png", True),
+                ("product-list", "examples-product-list-1440.png", True),
+                ("product-detail", "examples-product-detail-1440.png", True),
+                ("kanban", "examples-kanban-1440.png", True),
+            ]
+
+            for endpoint, filename, full in screens:
+                url = f"http://127.0.0.1:5055/examples/{endpoint}"
+                ex_page.goto(url, wait_until="networkidle")
+                ex_page.wait_for_timeout(800)
+                out_file = OUTPUT_DIR / filename
+                ex_page.screenshot(path=str(out_file), full_page=full)
+                print(f"Captured: {out_file}")
+
             ex_page.close()
 
             browser.close()

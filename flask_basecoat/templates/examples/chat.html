@@ -1,0 +1,217 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-8 flex flex-col justify-between">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-6xl mx-auto w-full space-y-6">
+        {# Top Navigation #}
+        <div class="flex items-center justify-between border-b border-border pb-4">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Acme Messenger</span>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Main Chat Container #}
+        <div class="grid grid-cols-1 md:grid-cols-12 rounded-xl border border-border bg-card shadow-sm overflow-hidden h-[700px]">
+            {# Sidebar: Conversations list #}
+            <div class="md:col-span-4 border-r border-border flex flex-col h-full bg-muted/10">
+                <div class="p-4 border-b border-border space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-bold text-base tracking-tight">Messages</h2>
+                        {{ bc.badge('4 New', variant='secondary') }}
+                    </div>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"></i>
+                        <input
+                            type="text"
+                            placeholder="Search contacts..."
+                            class="flex h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto divide-y divide-border/60">
+                    {% set channels = [
+                        {
+                            'name': 'Shannon Baker',
+                            'role': 'Product Lead',
+                            'msg': 'I think you should go for it. You\'re more than capable!',
+                            'time': '10:42 AM',
+                            'active': true,
+                            'unread': 0,
+                            'initials': 'SB'
+                        },
+                        {
+                            'name': 'Marcus Vance',
+                            'role': 'Core Infra',
+                            'msg': 'PR #42 for Basecoat ratchets has passed all unit tests.',
+                            'time': '09:15 AM',
+                            'active': false,
+                            'unread': 2,
+                            'initials': 'MV'
+                        },
+                        {
+                            'name': 'Design Systems Team',
+                            'role': 'Channel',
+                            'msg': 'New shadcn color tokens are published to main.',
+                            'time': 'Yesterday',
+                            'active': false,
+                            'unread': 0,
+                            'initials': 'DS'
+                        },
+                        {
+                            'name': 'Alex Rivera',
+                            'role': 'QA Architect',
+                            'msg': 'Visual regression passed across 1440px desktop viewports.',
+                            'time': 'Oct 22',
+                            'active': false,
+                            'unread': 0,
+                            'initials': 'AR'
+                        }
+                    ] %}
+                    {% for c in channels %}
+                        <div class="p-3.5 flex items-start gap-3 cursor-pointer transition-colors {{ 'bg-muted' if c.active else 'hover:bg-muted/50' }}">
+                            <div class="relative shrink-0">
+                                <div class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs border border-border">
+                                    {{ c.initials }}
+                                </div>
+                                {% if c.active %}
+                                    <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"></span>
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-sm font-semibold truncate">{{ c.name }}</h3>
+                                    <span class="text-[11px] text-muted-foreground">{{ c.time }}</span>
+                                </div>
+                                <p class="text-xs text-muted-foreground truncate mt-0.5">{{ c.msg }}</p>
+                            </div>
+                            {% if c.unread > 0 %}
+                                {{ bc.badge(c.unread|string, variant='default', class='h-5 w-5 p-0 flex items-center justify-center text-[10px] rounded-full') }}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# Chat Thread & Active Stream #}
+            <div class="md:col-span-8 flex flex-col h-full bg-card">
+                {# Header #}
+                <div class="p-4 border-b border-border flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <div class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs border border-border">
+                                SB
+                            </div>
+                            <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background"></span>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-sm">Shannon Baker</h3>
+                            <p class="text-xs text-emerald-500 font-medium">Online &bull; Product Lead</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        {{ bc.button(variant='ghost', size='sm', icon='phone') }}
+                        {{ bc.button(variant='ghost', size='sm', icon='video') }}
+                        {{ bc.button(variant='ghost', size='sm', icon='more-vertical') }}
+                    </div>
+                </div>
+
+                {# Messages Feed #}
+                <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div class="flex justify-center">
+                        {{ bc.badge('Today', variant='outline', class='text-[11px]') }}
+                    </div>
+
+                    {# Message from Shannon #}
+                    <div class="flex items-start gap-3">
+                        <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">SB</div>
+                        <div class="space-y-1 max-w-[75%]">
+                            <div class="rounded-2xl rounded-tl-none bg-muted p-3 text-sm">
+                                Hey John! I checked out the new Basecoat UI port in Flask. The styling looks 100% faithful to shadcn.
+                            </div>
+                            <span class="text-[10px] text-muted-foreground ml-1">10:35 AM</span>
+                        </div>
+                    </div>
+
+                    {# User Reply #}
+                    <div class="flex items-start justify-end gap-3">
+                        <div class="space-y-1 max-w-[75%] text-right">
+                            <div class="rounded-2xl rounded-tr-none bg-primary text-primary-foreground p-3 text-sm text-left">
+                                Thanks Shannon! We verified all macros match the upstream Basecoat specs and have zero raw components in CI.
+                            </div>
+                            <span class="text-[10px] text-muted-foreground mr-1">10:38 AM &bull; Read</span>
+                        </div>
+                    </div>
+
+                    {# Message from Shannon #}
+                    <div class="flex items-start gap-3">
+                        <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">SB</div>
+                        <div class="space-y-1 max-w-[75%]">
+                            <div class="rounded-2xl rounded-tl-none bg-muted p-3 text-sm">
+                                I think you should go for it. You're more than capable and it sounds like a great opportunity for growth.
+                            </div>
+                            <span class="text-[10px] text-muted-foreground ml-1">10:42 AM</span>
+                        </div>
+                    </div>
+
+                    {# User Reply #}
+                    <div class="flex items-start justify-end gap-3">
+                        <div class="space-y-1 max-w-[75%] text-right">
+                            <div class="rounded-2xl rounded-tr-none bg-primary text-primary-foreground p-3 text-sm text-left">
+                                Will do. Appreciate the support! Shipping the full 16-screen suite today.
+                            </div>
+                            <span class="text-[10px] text-muted-foreground mr-1">10:43 AM &bull; Sent</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# Message Composer #}
+                <div class="p-3 border-t border-border bg-card">
+                    <form class="flex items-center gap-2">
+                        {{ bc.button(variant='ghost', size='sm', icon='paperclip', class='shrink-0') }}
+                        <input
+                            type="text"
+                            placeholder="Type your message..."
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        />
+                        {{ bc.button('Send', variant='default', size='sm', icon='send', class='shrink-0') }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-8 flex flex-col justify-between">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-6xl mx-auto w-full space-y-6">
+        {# Top Navigation #}
+        <div class="flex items-center justify-between border-b border-border pb-4">
+            <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <a href="{{ url_for('basecoat_examples.product_list') }}" class="hover:text-foreground">Store</a>
+                <span>/</span>
+                <a href="{{ url_for('basecoat_examples.product_list') }}" class="hover:text-foreground">Audio</a>
+                <span>/</span>
+                <span class="text-foreground font-medium">Studio Pro Active</span>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('Back to Catalog', href=url_for('basecoat_examples.product_list'), variant='ghost', size='sm', icon='arrow-left') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Product Main Section #}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+            {# Left: Gallery #}
+            <div class="space-y-4">
+                <div class="h-96 rounded-xl border border-border bg-muted/40 flex items-center justify-center relative overflow-hidden">
+                    <i data-lucide="headphones" class="h-32 w-32 text-muted-foreground/30"></i>
+                    <div class="absolute top-4 left-4">
+                        {{ bc.badge('Flagship Edition', variant='default') }}
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                    {% for idx in range(1, 5) %}
+                        <div class="h-20 rounded-lg border {{ 'border-primary ring-2 ring-primary/20' if idx == 1 else 'border-border' }} bg-muted/30 flex items-center justify-center cursor-pointer hover:border-primary/60 transition-colors">
+                            <i data-lucide="image" class="h-6 w-6 text-muted-foreground/40"></i>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# Right: Purchase & Configuration #}
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        {{ bc.badge('In Stock', variant='secondary') }}
+                        <div class="flex items-center gap-1 text-sm text-amber-500 font-semibold">
+                            <i data-lucide="star" class="h-4 w-4 fill-amber-500"></i>
+                            <span>4.9</span>
+                            <span class="text-muted-foreground font-normal">(128 customer reviews)</span>
+                        </div>
+                    </div>
+                    <h1 class="text-3xl font-bold tracking-tight">Studio Pro Active Headphones</h1>
+                    <div class="text-3xl font-extrabold text-foreground pt-1">$349.00</div>
+                    <p class="text-sm text-muted-foreground leading-relaxed pt-2">
+                        Engineered with custom dual-driver acoustic architecture and high-performance active noise cancellation. Features lossless USB-C audio and up to 40 hours of battery life.
+                    </p>
+                </div>
+
+                {# Color Selection #}
+                <div class="space-y-2 pt-2 border-t border-border">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Finish</label>
+                    <div class="flex items-center gap-3">
+                        <div class="h-7 w-7 rounded-full bg-zinc-900 border-2 border-primary ring-2 ring-primary/20 cursor-pointer" title="Space Black"></div>
+                        <div class="h-7 w-7 rounded-full bg-zinc-300 border border-border cursor-pointer hover:scale-105 transition-transform" title="Silver"></div>
+                        <div class="h-7 w-7 rounded-full bg-indigo-950 border border-border cursor-pointer hover:scale-105 transition-transform" title="Midnight"></div>
+                        <div class="h-7 w-7 rounded-full bg-amber-100 border border-border cursor-pointer hover:scale-105 transition-transform" title="Starlight"></div>
+                    </div>
+                </div>
+
+                {# Actions #}
+                <div class="space-y-3 pt-4 border-t border-border">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center border border-border rounded-md bg-background">
+                            <button type="button" class="px-3 py-2 text-muted-foreground hover:text-foreground">&minus;</button>
+                            <span class="px-3 py-2 text-sm font-semibold">1</span>
+                            <button type="button" class="px-3 py-2 text-muted-foreground hover:text-foreground">&plus;</button>
+                        </div>
+                        <div class="flex-1">
+                            {{ bc.button('Add to Cart', variant='default', class='w-full justify-center', icon='shopping-bag') }}
+                        </div>
+                    </div>
+                    {{ bc.button('Instant Checkout with Apple Pay', variant='outline', class='w-full justify-center') }}
+                </div>
+
+                {# Value Badges #}
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <div class="flex items-center gap-2 p-3 rounded-lg border border-border bg-muted/20 text-xs">
+                        <i data-lucide="truck" class="h-4 w-4 text-primary"></i>
+                        <span>Free 2-day delivery</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 rounded-lg border border-border bg-muted/20 text-xs">
+                        <i data-lucide="shield-check" class="h-4 w-4 text-primary"></i>
+                        <span>2-year warranty included</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Specifications Data Table #}
+        <div class="space-y-4 pt-8 border-t border-border">
+            <h2 class="text-xl font-bold tracking-tight">Technical Specifications</h2>
+            {% set spec_headers = [('property', 'Specification'), ('detail', 'Metric / Value')] %}
+            {% set specs = [
+                ('Acoustic Driver', '40mm custom planar transducer with ultra-low distortion'),
+                ('Active Noise Cancellation', 'Continuous adaptive real-time acoustic monitoring'),
+                ('Battery Life', '40 hours ANC on / 50 hours ANC off'),
+                ('Fast Charging', '10-minute charge delivers 4 hours playback via USB-C'),
+                ('Microphones', '6 beamforming microphones for voice clarity in noisy environments'),
+                ('Weight', '260 grams (9.17 ounces)')
+            ] %}
+            {% call bc.table() %}
+                <thead>
+                    <tr class="border-b border-border bg-muted/50">
+                        <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground w-1/3">Specification</th>
+                        <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Metric / Value</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for prop, val in specs %}
+                        <tr class="hover:bg-muted/50 transition-colors">
+                            <td class="p-4 align-middle font-semibold text-foreground">{{ prop }}</td>
+                            <td class="p-4 align-middle text-muted-foreground">{{ val }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% endcall %}
+        </div>
+    </div>
+</body>
+</html>

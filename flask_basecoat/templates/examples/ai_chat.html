@@ -1,0 +1,161 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Assistant - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 md:p-8 flex flex-col justify-between">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-6xl mx-auto w-full space-y-6">
+        {# Top Navigation #}
+        <div class="flex items-center justify-between border-b border-border pb-4">
+            <div class="flex items-center gap-3 font-bold tracking-tight text-lg">
+                <div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center text-white">
+                    <i data-lucide="sparkles" class="h-4 w-4"></i>
+                </div>
+                <span>Acme Copilot AI</span>
+                {{ bc.badge('Claude 3.5 Sonnet', variant='secondary', class='text-xs') }}
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Main AI Chat Workspace #}
+        <div class="grid grid-cols-1 md:grid-cols-12 rounded-xl border border-border bg-card shadow-sm overflow-hidden h-[720px]">
+            {# Left Chat History Sidebar #}
+            <div class="md:col-span-3 border-r border-border flex flex-col h-full bg-muted/10">
+                <div class="p-3 border-b border-border">
+                    {{ bc.button('New Chat', variant='default', size='sm', icon='plus', class='w-full justify-start') }}
+                </div>
+                <div class="flex-1 overflow-y-auto p-2 space-y-1 text-sm">
+                    <div class="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Recent Queries</div>
+                    {% set history = [
+                        ('Can you optimize Basecoat macros?', '30m ago', true),
+                        ('Jinja2 caller slot patterns', '2h ago', false),
+                        ('Anti-drift CI ratchet rules', '5h ago', false),
+                        ('Playwright snapshot setup', '1d ago', false),
+                        ('SQLAlchemy connection pooling', '2d ago', false),
+                        ('Dark mode CSS variables', '3d ago', false)
+                    ] %}
+                    {% for item, time, active in history %}
+                        <div class="px-3 py-2 rounded-lg cursor-pointer flex items-center justify-between text-xs transition-colors {{ 'bg-muted font-medium' if active else 'hover:bg-muted/50 text-muted-foreground hover:text-foreground' }}">
+                            <div class="flex items-center gap-2 truncate">
+                                <i data-lucide="message-square" class="h-3.5 w-3.5 shrink-0"></i>
+                                <span class="truncate">{{ item }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# AI Chat Feed & Composer #}
+            <div class="md:col-span-9 flex flex-col h-full bg-card">
+                {# Scrollable Conversation #}
+                <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                    {# Welcome Hero #}
+                    <div class="text-center py-4 space-y-3">
+                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                            <span class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                                Welcome, John Doe
+                            </span>
+                        </h1>
+                        <p class="text-sm text-muted-foreground">What software engineering task would you like to accelerate?</p>
+                    </div>
+
+                    {# Suggestion Prompt Cards #}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
+                        {% set suggestions = [
+                            ('Audit macro component compliance against anti-drift CI baseline', 'Architecture'),
+                            ('Generate WTForms validation schema for user registration endpoints', 'Forms & Security'),
+                            ('Optimize database queries in SQLAlchemy with Basecoat caching', 'Performance'),
+                            ('Draft Playwright visual snapshot test for mobile viewports', 'Testing & QA')
+                        ] %}
+                        {% for prompt_text, category in suggestions %}
+                            {% call bc.card(class='p-3.5 hover:bg-muted/50 transition-colors cursor-pointer group border border-border/80') %}
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="space-y-1">
+                                        {{ bc.badge(category, variant='outline', class='text-[10px] px-1.5 py-0') }}
+                                        <p class="text-xs text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed">{{ prompt_text }}</p>
+                                    </div>
+                                    <i data-lucide="arrow-up-right" class="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0 transition-colors"></i>
+                                </div>
+                            {% endcall %}
+                        {% endfor %}
+                    </div>
+
+                    {# Turn 1: User #}
+                    <div class="flex items-start justify-end gap-3 pt-4">
+                        <div class="max-w-[80%] rounded-2xl rounded-tr-none bg-primary text-primary-foreground p-3.5 text-sm">
+                            How do I ensure that newly ported templates in Flask 100% adhere to shadcn design guidelines?
+                        </div>
+                    </div>
+
+                    {# Turn 1: AI Assistant #}
+                    <div class="flex items-start gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center text-white shrink-0">
+                            <i data-lucide="sparkles" class="h-4 w-4"></i>
+                        </div>
+                        <div class="space-y-3 max-w-[85%]">
+                            <div class="rounded-2xl rounded-tl-none bg-muted p-4 text-sm space-y-2 leading-relaxed">
+                                <p>To guarantee 100% adherence to shadcn design principles in Flask, follow these core rules:</p>
+                                <ul class="list-disc list-inside space-y-1 text-xs text-muted-foreground">
+                                    <li><strong class="text-foreground">Canonical Basecoat Macros:</strong> Always render UI components through <code class="px-1 py-0.5 rounded bg-background border text-primary">flask_basecoat/templates/basecoat/</code> macros (<code class="text-foreground">bc.button</code>, <code class="text-foreground">bc.card</code>, <code class="text-foreground">bc.badge</code>).</li>
+                                    <li><strong class="text-foreground">Inter Typography:</strong> Configure clean font metrics with Inter at weights 400, 500, 600, 700.</li>
+                                    <li><strong class="text-foreground">Anti-drift CI Enforcement:</strong> Run the AST/regex ratchet script on pull requests to fail immediately if unapproved raw HTML tags appear.</li>
+                                </ul>
+                            </div>
+                            <div class="flex items-center gap-2 text-muted-foreground text-xs">
+                                {{ bc.button('Copy', variant='ghost', size='sm', icon='copy') }}
+                                {{ bc.button('Good response', variant='ghost', size='sm', icon='thumbs-up') }}
+                                {{ bc.button('Retry', variant='ghost', size='sm', icon='rotate-cw') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Prompt Bar #}
+                <div class="p-4 border-t border-border bg-card">
+                    <div class="relative rounded-lg border border-input bg-background p-2 focus-within:ring-2 focus-within:ring-ring">
+                        <textarea
+                            rows="2"
+                            placeholder="Ask Acme Copilot anything or type / for slash commands..."
+                            class="w-full resize-none border-none bg-transparent p-1 text-sm outline-none placeholder:text-muted-foreground"
+                        ></textarea>
+                        <div class="flex items-center justify-between pt-2 border-t border-border/40 text-xs text-muted-foreground">
+                            <div class="flex items-center gap-2">
+                                {{ bc.badge('Model: Claude 3.5 Sonnet', variant='outline', class='text-[10px]') }}
+                                <span>Shift + Enter for new line</span>
+                            </div>
+                            {{ bc.button('Generate', variant='default', size='sm', icon='send') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

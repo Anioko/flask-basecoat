@@ -1,0 +1,104 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog & Updates - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-5xl mx-auto space-y-12">
+        {# Top Navigation #}
+        <div class="flex items-center justify-between border-b border-border pb-6">
+            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
+                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                </svg>
+                <span>Product Release Notes</span>
+            </div>
+            <div class="flex items-center gap-3">
+                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
+                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+            </div>
+        </div>
+
+        {# Header Banner #}
+        <header class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-800 p-8 md:p-14 text-white shadow-xl dark:border border-border">
+            <div class="relative z-10 space-y-3 max-w-2xl">
+                <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-sm">Release Stream</span>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">What&apos;s new in Entelim?</h1>
+                <p class="text-zinc-300 text-sm md:text-base leading-relaxed">
+                    A chronicle of feature releases, architectural ratchets, design system upgrades, and platform enhancements.
+                </p>
+            </div>
+        </header>
+
+        {# Timeline Entries #}
+        <div class="space-y-12 pt-4">
+            {% for entry in changelog %}
+                <div class="grid gap-4 md:grid-cols-[140px_1fr] md:gap-8 border-b border-border pb-12 last:border-b-0">
+                    {# Date Column #}
+                    <div class="text-muted-foreground text-sm font-medium pt-1">
+                        {{ entry.date }}
+                    </div>
+
+                    {# Details Column #}
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <h2 class="text-2xl font-bold tracking-tight text-foreground">{{ entry.version }}</h2>
+                            {% for tag in entry.tags %}
+                                {{ bc.badge(tag.name, variant=tag.variant or 'secondary') }}
+                            {% endfor %}
+                        </div>
+
+                        <p class="text-sm text-muted-foreground leading-relaxed">{{ entry.summary }}</p>
+
+                        {% if entry.improvements %}
+                            <div class="space-y-2 pt-2">
+                                <h3 class="text-sm font-semibold tracking-tight text-foreground">Improvements</h3>
+                                <ul class="space-y-1.5 text-sm text-muted-foreground list-disc pl-5">
+                                    {% for item in entry.improvements %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        {% if entry.fixes %}
+                            <div class="space-y-2 pt-2">
+                                <h3 class="text-sm font-semibold tracking-tight text-foreground">Bug Fixes</h3>
+                                <ul class="space-y-1.5 text-sm text-muted-foreground list-disc pl-5">
+                                    {% for item in entry.fixes %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
