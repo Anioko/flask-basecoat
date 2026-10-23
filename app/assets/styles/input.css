@@ -1,15 +1,14 @@
-/* Tailwind CSS base, components, and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .border-input {
-    @apply border-slate-200 dark:border-slate-800;
+@layer components {
+  .form-group {
+    @apply flex flex-col space-y-1.5;
   }
 }
 
-/* Custom app styles */
+/* Custom app tweaks */
 nav {
   margin-bottom: 40px !important;
 }
@@ -22,143 +21,7 @@ table.selectable tr:hover {
   cursor: pointer !important;
 }
 
-/* Sidebar icon sizing - force SVGs to fixed size */
 .sidebar-icon svg {
   width: 1.25rem !important;
   height: 1.25rem !important;
-}
-
-/* Form improvements - Button styling */
-.btn {
-  @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors;
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-  @apply disabled:pointer-events-none disabled:opacity-50;
-  @apply bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200;
-  @apply h-10 px-4 py-2;
-}
-
-/* Form improvements - Input field styling */
-.input {
-  @apply flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm;
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2;
-  @apply disabled:cursor-not-allowed disabled:opacity-50;
-  @apply dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300;
-  @apply placeholder:text-slate-500 dark:placeholder:text-slate-400;
-}
-
-/* Button variants */
-.btn--ghost {
-  @apply bg-transparent hover:bg-slate-100 text-slate-900;
-  @apply dark:hover:bg-slate-800 dark:text-slate-100;
-}
-
-.btn--outline {
-  @apply bg-transparent border border-slate-300 hover:bg-slate-100 text-slate-900;
-  @apply dark:border-slate-800 dark:hover:bg-slate-800 dark:text-slate-100;
-}
-
-.btn--secondary {
-  @apply bg-slate-100 hover:bg-slate-200 text-slate-900;
-  @apply dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100;
-}
-
-.btn--sm {
-  @apply h-8 px-3 text-xs;
-}
-
-.btn--lg {
-  @apply h-12 px-8 text-base;
-}
-
-/* Card component for forms */
-.card {
-  @apply rounded-lg border border-slate-200 bg-white shadow-sm;
-  @apply dark:border-slate-800 dark:bg-slate-950;
-}
-
-.card-header {
-  @apply flex flex-col space-y-1.5 p-6;
-}
-
-.card-content {
-  @apply p-6 pt-0;
-}
-
-/* Alert/Flash Message Component */
-.alert {
-  @apply relative w-full rounded-lg border border-slate-200 px-4 py-3 text-sm;
-  @apply dark:border-slate-800;
-}
-
-.alert-title {
-  @apply font-medium leading-none tracking-tight mb-1;
-}
-
-.alert-destructive {
-  @apply border-red-500/50 text-red-900 dark:border-red-900/50 dark:text-red-400;
-  @apply bg-red-50 dark:bg-red-950/20;
-}
-
-.alert-destructive .alert-title {
-  @apply text-red-900 dark:text-red-400;
-}
-
-/* Table styling - VISIBLE borders (darker colors) */
-.table {
-  @apply w-full border-collapse;
-}
-
-.table thead {
-  @apply border-b-2 border-slate-300 dark:border-slate-700;
-}
-
-.table thead th {
-  @apply h-12 px-4 text-left align-middle font-medium text-slate-900 dark:text-slate-100;
-}
-
-.table tbody tr {
-  @apply border-b border-slate-300 dark:border-slate-700 transition-colors;
-  @apply hover:bg-slate-100/50 dark:hover:bg-slate-800/50;
-}
-
-.table tbody tr:last-child {
-  @apply border-b border-slate-300 dark:border-slate-700;
-}
-
-.table tbody td {
-  @apply p-4 align-middle text-sm;
-}
-
-/* Badge Component - shadcn/ui style status badges */
-.badge {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors;
-  @apply focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2;
-  @apply border border-transparent;
-  @apply bg-slate-900 text-slate-50 hover:bg-slate-900/80;
-  @apply dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/80;
-}
-
-.badge-secondary {
-  @apply border-transparent bg-slate-100 text-slate-900 hover:bg-slate-100/80;
-  @apply dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80;
-}
-
-.badge-success {
-  @apply border-transparent bg-green-100 text-green-900 hover:bg-green-100/80;
-  @apply dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/30;
-}
-
-.badge-warning {
-  @apply border-transparent bg-yellow-100 text-yellow-900 hover:bg-yellow-100/80;
-  @apply dark:bg-yellow-900/20 dark:text-yellow-400 dark:hover:bg-yellow-900/30;
-}
-
-.badge-destructive {
-  @apply border-transparent bg-red-100 text-red-900 hover:bg-red-100/80;
-  @apply dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30;
-}
-
-.badge-outline {
-  @apply border-slate-200 bg-transparent text-slate-900;
-  @apply dark:border-slate-800 dark:text-slate-50;
 }

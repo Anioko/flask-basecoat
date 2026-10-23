@@ -68,6 +68,11 @@ def create_app(config):
         from flask_sslify import SSLify
         SSLify(app)
 
+    # Initialize Basecoat UI
+    from flask_basecoat import Basecoat
+    basecoat = Basecoat()
+    basecoat.init_app(app)
+
     # Create app blueprints
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

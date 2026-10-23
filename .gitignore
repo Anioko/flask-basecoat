@@ -15,3 +15,8 @@ dist
 dump.rdb
 .vscode/
 .history/
+
+# Packaging & test caches
+*.egg-info/
+.pytest_cache/
+.coverage

@@ -1,0 +1,51 @@
+{# Basecoat Card Component #}
+{% macro card(title=none, description=none, footer=none, class='', id=none) %}
+    <div class="card {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
+        {% if title or description %}
+            <div class="card-header">
+                {% if title %}
+                    <h3 class="card-title">{{ title }}</h3>
+                {% endif %}
+                {% if description %}
+                    <p class="card-description">{{ description }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <div class="card-content">
+            {{ caller() if caller }}
+        </div>
+        
+        {% if footer %}
+            <div class="card-footer">
+                {{ footer }}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro card_header(class='') %}
+    <div class="card-header {{ class }}">
+        {{ caller() if caller }}
+    </div>
+{% endmacro %}
+
+{% macro card_title(text='', class='') %}
+    <h3 class="card-title {{ class }}">{{ text }}{{ caller() if caller }}</h3>
+{% endmacro %}
+
+{% macro card_description(text='', class='') %}
+    <p class="card-description {{ class }}">{{ text }}{{ caller() if caller }}</p>
+{% endmacro %}
+
+{% macro card_content(class='') %}
+    <div class="card-content {{ class }}">
+        {{ caller() if caller }}
+    </div>
+{% endmacro %}
+
+{% macro card_footer(class='') %}
+    <div class="card-footer {{ class }}">
+        {{ caller() if caller }}
+    </div>
+{% endmacro %}

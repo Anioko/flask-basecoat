@@ -1,0 +1,20 @@
+{# Basecoat Badge Component #}
+{% macro badge(
+    text='',
+    variant='default',
+    class='',
+    id=none
+) %}
+    {% set variant_map = {
+        'default': 'badge badge-primary',
+        'secondary': 'badge badge-secondary',
+        'destructive': 'badge badge-destructive',
+        'outline': 'badge badge-outline'
+    } %}
+    
+    {% set badge_classes = variant_map.get(variant, 'badge badge-primary') ~ (' ' ~ class if class else '') %}
+    
+    <span class="{{ badge_classes }}" {% if id %}id="{{ id }}"{% endif %}>
+        {{ text }}{{ caller() if caller }}
+    </span>
+{% endmacro %}

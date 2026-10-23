@@ -1,0 +1,33 @@
+{# Basecoat Empty State Component #}
+{% macro empty_state(
+    icon='inbox',
+    title='No items found',
+    description='',
+    cta_text=none,
+    cta_href=none,
+    cta_onclick=none,
+    class=''
+) %}
+    <div class="flex flex-col items-center justify-center p-8 text-center rounded-lg border border-dashed border-border bg-card/50 my-4 {{ class }}">
+        {% if icon %}
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-4">
+                <i data-lucide="{{ icon }}" class="h-6 w-6"></i>
+            </div>
+        {% endif %}
+        
+        <h4 class="text-base font-semibold text-foreground mb-1">{{ title }}</h4>
+        
+        {% if description %}
+            <p class="text-sm text-muted-foreground max-w-sm mb-4">{{ description }}</p>
+        {% endif %}
+        
+        {{ caller() if caller }}
+        
+        {% if cta_text %}
+            <div class="mt-2">
+                {% from 'basecoat/button.html' import button %}
+                {{ button(text=cta_text, href=cta_href, on_click=cta_onclick, size='sm') }}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}

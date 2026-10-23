@@ -1,0 +1,33 @@
+{# Basecoat Dialog Component #}
+{% macro dialog(id, title='', description='', trigger_text='', trigger_variant='default', trigger_icon=none, size='max-w-lg', class='') %}
+    {% if trigger_text %}
+        {% from 'basecoat/button.html' import button %}
+        {{ button(
+            text=trigger_text,
+            variant=trigger_variant,
+            icon=trigger_icon,
+            on_click="document.getElementById('" ~ id ~ "').showModal()"
+        ) }}
+    {% endif %}
+
+    <dialog id="{{ id }}" class="dialog {{ size }} rounded-lg border border-border bg-card p-6 shadow-xl backdrop:bg-background/80 backdrop:backdrop-blur-sm fixed inset-0 m-auto {{ class }}">
+        {# Header #}
+        <div class="flex flex-col space-y-1.5 mb-4 pr-6">
+            <h3 class="text-lg font-semibold leading-none tracking-tight text-foreground">{{ title }}</h3>
+            {% if description %}
+                <p class="text-sm text-muted-foreground">{{ description }}</p>
+            {% endif %}
+        </div>
+        
+        {# Body #}
+        <div class="dialog-content mb-6 text-sm text-foreground">
+            {{ caller() if caller }}
+        </div>
+        
+        {# Close button #}
+        <button type="button" onclick="document.getElementById('{{ id }}').close()" class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" aria-label="Close">
+            <i data-lucide="x" class="h-4 w-4"></i>
+            <span class="sr-only">Close</span>
+        </button>
+    </dialog>
+{% endmacro %}
