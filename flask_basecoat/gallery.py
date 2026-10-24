@@ -39,3 +39,9 @@ def gallery():
         sample_columns=sample_columns,
         sample_rows=sample_rows
     )
+
+
+@gallery_bp.route('/gallery/select')
+def gallery_select():
+    numbers = [(n, f'Number {n}') for n in range(1, 31)]
+    return render_template('basecoat/gallery_select.html', numbers=numbers)
