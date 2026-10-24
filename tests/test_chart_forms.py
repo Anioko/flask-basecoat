@@ -123,3 +123,32 @@ def test_reference_area_covers_its_data_rectangle_and_labels_itself(draw):
     # reference elements live in the zIndex layers Recharts gives them: areas at 100, lines at 400, labels at 2000
     assert page.locator('g.recharts-zIndex-layer_100 > g.recharts-reference-area').count() == 1
     assert page.locator('g.recharts-zIndex-layer_2000 > text.recharts-label').count() == 1
+
+
+# ---------------------------------------------------------------- axis labels and user ticks
+
+def test_axis_labels_are_drawn_inside_the_axis_box_after_the_tick_labels(draw):
+    spec = bar_spec()
+    spec['axes'][0].update(height=56, label={'value': 'Step of the plan', 'position': 'insideBottom', 'offset': 0, 'fill': 'var(--muted-foreground)'})
+    spec['axes'][1].update(width=64, label={'value': 'Cost in dollars', 'angle': -90, 'position': 'insideLeft', 'offset': 8, 'fill': 'var(--muted-foreground)', 'style': {'textAnchor': 'middle'}})
+    page = draw(spec)
+    plot = page.evaluate(PLOT_JS)
+    (x_label,) = page.evaluate(ATTRS_JS, 'text.recharts-label:has(tspan)')[:1] and [a for a in page.evaluate(ATTRS_JS, 'text.recharts-label') if 'transform' not in a]
+    assert float(x_label['x']) == pytest.approx(plot['x'] + plot['width'] / 2, abs=0.5)
+    assert float(x_label['y']) == pytest.approx(plot['y'] + plot['height'] + 56, abs=0.5)  # the bottom of the axis box
+    assert x_label['text-anchor'] == 'middle' and x_label['fill'] == 'var(--muted-foreground)'
+    (y_label,) = [a for a in page.evaluate(ATTRS_JS, 'text.recharts-label') if 'transform' in a]
+    assert y_label['transform'].startswith('rotate(-90')
+    assert y_label['style'] == 'text-anchor: middle;'
+    assert float(y_label['y']) == pytest.approx(plot['y'] + plot['height'] / 2, abs=0.5)
+    # in layer 2000, each after the tick labels of its axis
+    kinds = page.evaluate("() => [...document.querySelectorAll('g.recharts-zIndex-layer_2000 > *')].map((e) => e.getAttribute('class').split(' ').pop())")
+    assert kinds == ['recharts-xAxis-tick-labels', 'recharts-label', 'recharts-yAxis-tick-labels', 'recharts-label']
+
+
+def test_ticks_set_on_an_axis_are_the_ticks_drawn(draw):
+    spec = bar_spec()
+    spec['axes'][1].update(domain=[0, 100], ticks=[0, 25, 100])
+    page = draw(spec)
+    ticks = page.evaluate("() => [...document.querySelectorAll('.recharts-yAxis-tick-labels tspan')].map((t) => t.textContent)")
+    assert ticks == ['0', '25', '100']

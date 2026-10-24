@@ -119,6 +119,7 @@
     const formatter = fn(props.formatter, ctx);
     if (formatter) label = formatter(label);
     const attrs = svgProps(props);
+    if (props.style && typeof props.style === 'object') attrs.style = props.style; // svgPropertiesAndEvents keeps `style`
     let pos;
     if (isPolarVB(vb)) {
       if (props.position === 'insideStart' || props.position === 'insideEnd' || props.position === 'end') {
@@ -653,6 +654,12 @@
       return h('g', { class: 'recharts-layer recharts-cartesian-axis-tick-label' }, [el]);
     });
     if (labels.length) layers[Z.label].push(h('g', { class: `recharts-cartesian-axis-tick-labels recharts-${typeName}-tick-labels` }, labels));
+    // CartesianAxis `label`: a Label inside the axis' own box (x, y, width, height), after the tick labels
+    if (axis.label) {
+      const lp = typeof axis.label === 'object' ? axis.label : { value: axis.label };
+      const labelEl = Label(Object.assign({}, lp, { viewBox: { x, y, width, height, lowerWidth: width, upperWidth: width } }), chart.ctx);
+      if (labelEl) layers[Z.label].push(labelEl);
+    }
     const axisLine = axis.axisLine ? (() => {
       const lp = Object.assign({}, svgProps(Object.assign({}, axis, { x, y, width, height })), svgProps(typeof axis.axisLine === 'object' ? axis.axisLine : {}), { fill: 'none' });
       delete lp.className;
