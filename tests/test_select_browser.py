@@ -5,7 +5,6 @@ from pathlib import Path
 import pytest
 from PIL import Image, ImageChops
 
-playwright_sync = pytest.importorskip("playwright.sync_api")
 from axe_playwright_python.sync_playwright import Axe  # noqa: E402
 
 from .live_server import TEST_SERVER_BASE_URL  # noqa: E402
@@ -15,21 +14,12 @@ SNAPSHOT_DIR = Path(__file__).parent / "snapshots"
 MAX_DIFF_RATIO = 0.005
 
 
-@pytest.fixture(scope="module")
-def browser():
-    with playwright_sync.sync_playwright() as p:
-        b = p.chromium.launch()
-        yield b
-        b.close()
-
-
 @pytest.fixture
-def page(browser):
-    ctx = browser.new_context(viewport={"width": 1000, "height": 1300}, reduced_motion="reduce")
-    pg = ctx.new_page()
-    pg.set_default_timeout(5000)
-    yield pg
-    ctx.close()
+def page(page):
+    page.set_viewport_size({"width": 1000, "height": 1300})
+    page.emulate_media(reduced_motion="reduce")
+    page.set_default_timeout(5000)
+    return page
 
 
 def open_gallery(page, theme="light"):
