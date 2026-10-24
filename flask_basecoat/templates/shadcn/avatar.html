@@ -1,0 +1,28 @@
+{# shadcn avatar macros - exact class parity with shadcn/ui avatar.tsx #}
+
+{% macro avatar(content='', class='') %}
+<span
+    class="relative flex size-8 shrink-0 overflow-hidden rounded-full {{ class }}"
+    data-slot="avatar"
+>
+    {{- content|safe -}}
+</span>
+{%- endmacro -%}
+
+{% macro avatar_image(src='', alt='', class='') %}
+<img
+    src="{{ src }}"
+    alt="{{ alt }}"
+    class="aspect-square size-full {{ class }}"
+    data-slot="avatar-image"
+>
+{%- endmacro -%}
+
+{% macro avatar_fallback(content='', class='') %}
+<span
+    class="bg-muted flex size-full items-center justify-center rounded-full {{ class }}"
+    data-slot="avatar-fallback"
+>
+    {{- content|safe -}}
+</span>
+{%- endmacro -%}

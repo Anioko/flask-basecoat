@@ -452,6 +452,72 @@ def test_skeleton_parity():
     assert actual_slot == 'skeleton'
 
 
+# ===== Alert Tests =====
+
+def test_alert_parity():
+    """Test alert macro matches shadcn alert.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "alert.tsx"
+    tsx_content = tsx_path.read_text()
+
+    parsed = parse_cva_component(tsx_content, "alert")
+    assert parsed is not None, "Failed to parse alert.tsx"
+
+    # Test each variant
+    for variant_name in parsed['variants'].get('variant', {}).keys():
+        expected_classes = normalize_classes(
+            parsed['base'] + ' ' +
+            parsed['variants']['variant'].get(variant_name, '')
+        )
+
+        env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+        template_str = "{% from 'alert.html' import alert %}{{ alert(variant='" + variant_name + "') }}"
+        template = env.from_string(template_str)
+        html = template.render()
+
+        actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+        actual_slot = extract_data_slot_from_html(html)
+
+        assert actual_classes == expected_classes, \
+            f"Alert variant={variant_name}: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+
+        assert actual_slot == parsed['data_slot'], \
+            f"Alert variant={variant_name}: data-slot mismatch"
+
+
+# ===== Toggle Tests =====
+
+def test_toggle_parity():
+    """Test toggle macro matches shadcn toggle.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "toggle.tsx"
+    tsx_content = tsx_path.read_text()
+
+    parsed = parse_cva_component(tsx_content, "toggle")
+    assert parsed is not None, "Failed to parse toggle.tsx"
+
+    # Test each variant/size combination
+    for variant_name in parsed['variants'].get('variant', {}).keys():
+        for size_name in parsed['variants'].get('size', {}).keys():
+            expected_classes = normalize_classes(
+                parsed['base'] + ' ' +
+                parsed['variants']['variant'].get(variant_name, '') + ' ' +
+                parsed['variants']['size'].get(size_name, '')
+            )
+
+            env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+            template_str = "{% from 'toggle.html' import toggle %}{{ toggle(variant='" + variant_name + "', size='" + size_name + "') }}"
+            template = env.from_string(template_str)
+            html = template.render()
+
+            actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+            actual_slot = extract_data_slot_from_html(html)
+
+            assert actual_classes == expected_classes, \
+                f"Toggle variant={variant_name} size={size_name}: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+
+            assert actual_slot == parsed['data_slot'], \
+                f"Toggle variant={variant_name} size={size_name}: data-slot mismatch"
+
+
 if __name__ == '__main__':
     # Run tests
     pytest.main([__file__, '-v'])
