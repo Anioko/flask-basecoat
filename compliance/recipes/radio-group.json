@@ -1,0 +1,30 @@
+{
+  "name": "radio-group",
+  "source": "upstream/shadcn/radix/ui/radio-group.tsx",
+  "slots": {
+    "radio-group": {
+      "component": "RadioGroup",
+      "element": "RadioGroupPrimitive.Root",
+      "base_classes": "cn-radio-group w-full",
+      "data_attrs": []
+    },
+    "radio-group-item": {
+      "component": "RadioGroupItem",
+      "element": "RadioGroupPrimitive.Item",
+      "base_classes": "cn-radio-group-item group/radio-group-item peer relative aspect-square shrink-0 border outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "data_attrs": []
+    },
+    "radio-group-indicator": {
+      "component": "RadioGroupItem",
+      "element": "RadioGroupPrimitive.Indicator",
+      "base_classes": "cn-radio-group-indicator",
+      "data_attrs": []
+    },
+    "RadioGroupItem:span": {
+      "component": "RadioGroupItem",
+      "element": "span",
+      "base_classes": "cn-radio-group-indicator-icon",
+      "data_attrs": []
+    }
+  }
+}

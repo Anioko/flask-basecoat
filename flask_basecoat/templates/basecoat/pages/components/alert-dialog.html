@@ -1,0 +1,32 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `alert-dialog` (pinned source in compliance/upstream). #}
+{% block title %}alert-dialog · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic', class='items-center') %}
+      {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Default
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Small', class='items-center') %}
+      {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Small
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Media', class='items-center') %}
+      {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Default (Media)
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Small With Media', class='items-center') %}
+      {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Small (Media)
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Destructive', class='items-center') %}
+      {% call ui.alert_dialog_trigger(size='default', variant='destructive') %}Delete Chat
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='In Dialog', class='items-center') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

@@ -1,11 +1,25 @@
 """
-flask_basecoat: Canonical shadcn/ui-aligned Jinja macros wrapping Basecoat UI.
+flask_basecoat: the shadcn/ui design system as Jinja macros for Flask.
+
+Every component in the shadcn/ui registry is available as a macro from ``basecoat/<name>.html`` or
+through the barrel ``basecoat/index.html``. Visuals come from the upstream shadcn stylesheet pipeline
+(Tailwind v4, the shadcn style pack and the neutral theme) compiled into the shipped CSS; behaviour
+comes from ``flask-basecoat.js``.
 """
 from flask import Blueprint, url_for
-from markupsafe import Markup
 from jinja2 import ChoiceLoader, PackageLoader
+from markupsafe import Markup
 
-__version__ = "0.1.0"
+from .icons import svg as _lucide_svg
+from .slots import slot as _slot
+from .twmerge import merge as _merge
+
+
+def tw(*classes):
+    """Jinja global: merge class strings with tailwind-merge semantics (later classes win)."""
+    return _merge(classes)
+
+__version__ = "1.0.0"
 
 basecoat_bp = Blueprint(
     'basecoat',
@@ -16,19 +30,19 @@ basecoat_bp = Blueprint(
 )
 
 
+def lucide(name, class_name='', **attrs):
+    """Jinja global rendering a Lucide icon exactly as lucide-react does (``class="lucide lucide-<name> ..."``)."""
+    return _lucide_svg(name, class_name, **attrs)
+
+
 class Basecoat:
-    """Flask extension for Basecoat UI integration."""
+    """Flask extension registering the templates, static assets and gallery."""
 
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)
 
     def init_app(self, app):
-        """
-        Register Basecoat templates and static assets into Flask so that
-        `{% from 'basecoat/button.html' import button %}`
-        works across all blueprints and templates in the host application.
-        """
         if 'basecoat' not in app.blueprints:
             app.register_blueprint(basecoat_bp)
 
@@ -38,31 +52,34 @@ class Basecoat:
         else:
             app.jinja_loader = package_loader
 
-        # Context processor for {{ basecoat.css() }} and {{ basecoat.js() }}
+        app.jinja_env.globals.setdefault('lucide', lucide)
+        app.jinja_env.globals.setdefault('slot', _slot)
+        app.jinja_env.globals.setdefault('tw', tw)
+
         @app.context_processor
         def inject_basecoat():
-            return {
-                'basecoat': self
-            }
+            return {'basecoat': self}
 
-        # Register component gallery blueprint in debug/test/enabled environments
         if app.config.get('BASECOAT_GALLERY_ENABLED', False) or app.debug or app.testing:
             from .gallery import gallery_bp
             if 'basecoat_gallery' not in app.blueprints:
                 app.register_blueprint(gallery_bp, url_prefix='/basecoat')
 
-        # Register ported shadcn examples blueprint
         if app.config.get('BASECOAT_EXAMPLES_ENABLED', True):
             from .examples import examples_bp
             if 'basecoat_examples' not in app.blueprints:
                 app.register_blueprint(examples_bp, url_prefix='/examples')
 
     def css(self):
-        """Render Basecoat CSS link tags."""
-        basecoat_url = url_for('basecoat.static', filename='css/basecoat.min.css')
-        return Markup(f'<link rel="stylesheet" href="{basecoat_url}">')
+        """``<link>`` for the compiled component stylesheet shipped with the package."""
+        href = url_for('basecoat.static', filename='css/flask-basecoat.min.css')
+        return Markup(f'<link rel="stylesheet" href="{href}">')
 
     def js(self):
-        """Render Basecoat JS script tag."""
-        js_url = url_for('basecoat.static', filename='js/all.min.js')
-        return Markup(f'<script src="{js_url}" defer></script>')
+        """``<script>`` for the behaviour runtime shipped with the package."""
+        src = url_for('basecoat.static', filename='js/flask-basecoat.js')
+        return Markup(f'<script src="{src}" defer></script>')
+
+    def head(self):
+        """Both tags together."""
+        return Markup(f'{self.css()}\n{self.js()}')

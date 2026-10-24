@@ -1,0 +1,201 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `radio-group` (pinned source in compliance/upstream). #}
+{% block title %}radio-group · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.radio_group(attrs={'style': 'outline:none'}) %}
+        {% call ui.field(orientation='horizontal') %}
+          {{ ui.radio_group_item(checked=false, value='default', id='r1') }}
+          <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="default">
+          {% call ui.field_label(as_='label', for_='r1', class='font-normal') %}Default
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field(orientation='horizontal') %}
+          {% call ui.radio_group_item(checked=true, value='comfortable', id='r2') %}
+            {% call ui.radio_group_indicator(checked=true) %}
+              <span class="cn-radio-group-indicator-icon"></span>
+            {% endcall %}
+          {% endcall %}
+          <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="comfortable">
+          {% call ui.field_label(as_='label', for_='r2', class='font-normal') %}Comfortable
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field(orientation='horizontal') %}
+          {{ ui.radio_group_item(checked=false, value='compact', id='r3') }}
+          <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="compact">
+          {% call ui.field_label(as_='label', for_='r3', class='font-normal') %}Compact
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Descriptions') %}
+      {% call ui.radio_group(attrs={'style': 'outline:none'}) %}
+        {% call ui.field_label(as_='label', for_='plus-plan') %}
+          {% call ui.field(orientation='horizontal') %}
+            {% call ui.field_content() %}
+              <div class="font-medium">Plus</div>
+              {% call ui.field_description() %}For individuals and small teams
+              {% endcall %}
+            {% endcall %}
+            {% call ui.radio_group_item(checked=true, value='plus', id='plus-plan') %}
+              {% call ui.radio_group_indicator(checked=true) %}
+                <span class="cn-radio-group-indicator-icon"></span>
+              {% endcall %}
+            {% endcall %}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="plus">
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field_label(as_='label', for_='pro-plan') %}
+          {% call ui.field(orientation='horizontal') %}
+            {% call ui.field_content() %}
+              <div class="font-medium">Pro</div>
+              {% call ui.field_description() %}For growing businesses
+              {% endcall %}
+            {% endcall %}
+            {{ ui.radio_group_item(checked=false, value='pro', id='pro-plan') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="pro">
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field_label(as_='label', for_='enterprise-plan') %}
+          {% call ui.field(orientation='horizontal') %}
+            {% call ui.field_content() %}
+              <div class="font-medium">Enterprise</div>
+              {% call ui.field_description() %}For large teams and enterprises
+              {% endcall %}
+            {% endcall %}
+            {{ ui.radio_group_item(checked=false, value='enterprise', id='enterprise-plan') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="enterprise">
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With FieldSet') %}
+      {% call ui.field_set() %}
+        {% call ui.field_legend(variant='legend') %}Battery Level
+        {% endcall %}
+        {% call ui.field_description() %}Choose your preferred battery level.
+        {% endcall %}
+        {% call ui.radio_group(attrs={'style': 'outline:none'}) %}
+          {% call ui.field(orientation='horizontal') %}
+            {{ ui.radio_group_item(checked=false, value='high', id='battery-high') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="high">
+            {% call ui.field_label(as_='label', for_='battery-high', class='font-normal') %}High
+            {% endcall %}
+          {% endcall %}
+          {% call ui.field(orientation='horizontal') %}
+            {% call ui.radio_group_item(checked=true, value='medium', id='battery-medium') %}
+              {% call ui.radio_group_indicator(checked=true) %}
+                <span class="cn-radio-group-indicator-icon"></span>
+              {% endcall %}
+            {% endcall %}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="medium">
+            {% call ui.field_label(as_='label', for_='battery-medium', class='font-normal') %}Medium
+            {% endcall %}
+          {% endcall %}
+          {% call ui.field(orientation='horizontal') %}
+            {{ ui.radio_group_item(checked=false, value='low', id='battery-low') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="low">
+            {% call ui.field_label(as_='label', for_='battery-low', class='font-normal') %}Low
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Grid Layout') %}
+      {% call ui.radio_group(class='grid grid-cols-2 gap-2', attrs={'style': 'outline:none'}) %}
+        {% call ui.field_label(as_='label', for_='size-small') %}
+          {% call ui.field(orientation='horizontal') %}
+            {{ ui.radio_group_item(checked=false, value='small', id='size-small') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="small">
+            <div class="font-medium">Small</div>
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field_label(as_='label', for_='size-medium') %}
+          {% call ui.field(orientation='horizontal') %}
+            {% call ui.radio_group_item(checked=true, value='medium', id='size-medium') %}
+              {% call ui.radio_group_indicator(checked=true) %}
+                <span class="cn-radio-group-indicator-icon"></span>
+              {% endcall %}
+            {% endcall %}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="medium">
+            <div class="font-medium">Medium</div>
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field_label(as_='label', for_='size-large') %}
+          {% call ui.field(orientation='horizontal') %}
+            {{ ui.radio_group_item(checked=false, value='large', id='size-large') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="large">
+            <div class="font-medium">Large</div>
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field_label(as_='label', for_='size-xlarge') %}
+          {% call ui.field(orientation='horizontal') %}
+            {{ ui.radio_group_item(checked=false, value='xlarge', id='size-xlarge') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="xlarge">
+            <div class="font-medium">X-Large</div>
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Disabled') %}
+      {% call ui.radio_group(disabled=true, attrs={'style': 'outline:none'}) %}
+        {% call ui.field(orientation='horizontal') %}
+          {{ ui.radio_group_item(checked=false, value='option1', disabled=true, id='disabled-1') }}
+          <input type="radio" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="option1">
+          {% call ui.field_label(as_='label', for_='disabled-1', class='font-normal') %}Option 1
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field(orientation='horizontal') %}
+          {% call ui.radio_group_item(checked=true, value='option2', disabled=true, id='disabled-2') %}
+            {% call ui.radio_group_indicator(checked=true, disabled=true) %}
+              <span class="cn-radio-group-indicator-icon"></span>
+            {% endcall %}
+          {% endcall %}
+          <input type="radio" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="option2">
+          {% call ui.field_label(as_='label', for_='disabled-2', class='font-normal') %}Option 2
+          {% endcall %}
+        {% endcall %}
+        {% call ui.field(orientation='horizontal') %}
+          {{ ui.radio_group_item(checked=false, value='option3', disabled=true, id='disabled-3') }}
+          <input type="radio" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="option3">
+          {% call ui.field_label(as_='label', for_='disabled-3', class='font-normal') %}Option 3
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Invalid') %}
+      {% call ui.field_set() %}
+        {% call ui.field_legend(variant='legend') %}Notification Preferences
+        {% endcall %}
+        {% call ui.field_description() %}Choose how you want to receive notifications.
+        {% endcall %}
+        {% call ui.radio_group(attrs={'style': 'outline:none'}) %}
+          {% call ui.field(orientation='horizontal', invalid=true) %}
+            {% call ui.radio_group_item(checked=true, value='email', invalid=true, id='invalid-email') %}
+              {% call ui.radio_group_indicator(checked=true) %}
+                <span class="cn-radio-group-indicator-icon"></span>
+              {% endcall %}
+            {% endcall %}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="email">
+            {% call ui.field_label(as_='label', for_='invalid-email', class='font-normal') %}Email only
+            {% endcall %}
+          {% endcall %}
+          {% call ui.field(orientation='horizontal', invalid=true) %}
+            {{ ui.radio_group_item(checked=false, value='sms', invalid=true, id='invalid-sms') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="sms">
+            {% call ui.field_label(as_='label', for_='invalid-sms', class='font-normal') %}SMS only
+            {% endcall %}
+          {% endcall %}
+          {% call ui.field(orientation='horizontal', invalid=true) %}
+            {{ ui.radio_group_item(checked=false, value='both', invalid=true, id='invalid-both') }}
+            <input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="both">
+            {% call ui.field_label(as_='label', for_='invalid-both', class='font-normal') %}Both Email &amp; SMS
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

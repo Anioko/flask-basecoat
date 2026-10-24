@@ -1,0 +1,48 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui block `login-01` (pinned source in compliance/upstream). #}
+{% block title %}login-01 · flask-basecoat{% endblock %}
+{% block body %}
+  <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div class="w-full max-w-sm">
+      <div class="flex flex-col gap-6">
+        {% call ui.card(size='default') %}
+          {% call ui.card_header() %}
+            {% call ui.card_title() %}Login to your account
+            {% endcall %}
+            {% call ui.card_description() %}Enter your email below to login to your account
+            {% endcall %}
+          {% endcall %}
+          {% call ui.card_content() %}
+            <form>
+              {% call ui.field_group() %}
+                {% call ui.field(orientation='vertical') %}
+                  {% call ui.field_label(as_='label', for_='email') %}Email
+                  {% endcall %}
+                  {{ ui.input(required=true, type='email', id='email', attrs={'placeholder': 'm@example.com'}) }}
+                {% endcall %}
+                {% call ui.field(orientation='vertical') %}
+                  <div class="flex items-center">
+                    {% call ui.field_label(as_='label', for_='password') %}Password
+                    {% endcall %}
+                    <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">Forgot your password?</a>
+                  </div>
+                  {{ ui.input(required=true, type='password', id='password') }}
+                {% endcall %}
+                {% call ui.field(orientation='vertical') %}
+                  {% call ui.button(size='default', variant='default', type='submit') %}Login
+                  {% endcall %}
+                  {% call ui.button(size='default', variant='outline', type='button') %}Login with Google
+                  {% endcall %}
+                  {% call ui.field_description(class='text-center') %}Don't have an account? 
+                    <a href="#">Sign up</a>
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            </form>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

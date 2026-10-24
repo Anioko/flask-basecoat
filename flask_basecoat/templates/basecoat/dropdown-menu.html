@@ -1,0 +1,103 @@
+{# dropdown-menu: port of shadcn/ui dropdown-menu.tsx (pinned in compliance/upstream). Macros: dropdown_menu, dropdown_menu_portal, dropdown_menu_trigger, dropdown_menu_content, dropdown_menu_group, dropdown_menu_item, dropdown_menu_checkbox_item, dropdown_menu_checkbox_item_indicator, dropdown_menu_radio_group, dropdown_menu_radio_item, dropdown_menu_radio_item_indicator, dropdown_menu_label, dropdown_menu_separator, dropdown_menu_shortcut, dropdown_menu_sub, dropdown_menu_sub_trigger, dropdown_menu_sub_content #}
+
+{#- DropdownMenu: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro dropdown_menu(class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- DropdownMenuPortal: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro dropdown_menu_portal(class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-portal', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- DropdownMenuTrigger -#}
+{% macro dropdown_menu_trigger(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-trigger', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuContent -#}
+{% macro dropdown_menu_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuGroup -#}
+{% macro dropdown_menu_group(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-group', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuItem -#}
+{% macro dropdown_menu_item(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-item', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuCheckboxItem -#}
+{% macro dropdown_menu_checkbox_item(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-checkbox-item', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuCheckboxItem -#}
+{% macro dropdown_menu_checkbox_item_indicator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-checkbox-item-indicator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuRadioGroup -#}
+{% macro dropdown_menu_radio_group(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-radio-group', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuRadioItem -#}
+{% macro dropdown_menu_radio_item(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-radio-item', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuRadioItem -#}
+{% macro dropdown_menu_radio_item_indicator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-radio-item-indicator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuLabel -#}
+{% macro dropdown_menu_label(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-label', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuSeparator -#}
+{% macro dropdown_menu_separator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-separator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuShortcut -#}
+{% macro dropdown_menu_shortcut(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-shortcut', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuSub: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro dropdown_menu_sub(class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-sub', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- DropdownMenuSubTrigger -#}
+{% macro dropdown_menu_sub_trigger(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-sub-trigger', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DropdownMenuSubContent -#}
+{% macro dropdown_menu_sub_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dropdown-menu-sub-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

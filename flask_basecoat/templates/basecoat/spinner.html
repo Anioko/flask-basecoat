@@ -1,0 +1,7 @@
+{# spinner: port of shadcn/ui spinner.tsx (pinned in compliance/upstream). Macros: spinner #}
+
+{#- Spinner -#}
+{% macro spinner(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('spinner', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

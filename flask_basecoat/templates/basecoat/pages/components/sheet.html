@@ -1,0 +1,28 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `sheet` (pinned source in compliance/upstream). #}
+{% block title %}sheet · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='With Form') %}
+      {% call ui.sheet_trigger(size='default', variant='outline') %}Open
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='No Close Button') %}
+      {% call ui.sheet_trigger(size='default', variant='outline') %}No Close Button
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Sides') %}
+      <div class="flex flex-wrap gap-2">
+        {% call ui.sheet_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}top
+        {% endcall %}
+        {% call ui.sheet_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}right
+        {% endcall %}
+        {% call ui.sheet_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}bottom
+        {% endcall %}
+        {% call ui.sheet_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}left
+        {% endcall %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

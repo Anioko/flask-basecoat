@@ -1,0 +1,7 @@
+{# input: port of shadcn/ui input.tsx (pinned in compliance/upstream). Macros: input #}
+
+{#- Input -#}
+{% macro input(class='', id=none, attrs={}) -%}
+{%- set s = slot('input', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>
+{%- endmacro %}

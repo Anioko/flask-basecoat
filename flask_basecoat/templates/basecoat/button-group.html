@@ -1,0 +1,19 @@
+{# button-group: port of shadcn/ui button-group.tsx (pinned in compliance/upstream). Macros: button_group, button_group_text, button_group_separator #}
+
+{#- ButtonGroup -#}
+{% macro button_group(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('button-group', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- ButtonGroupText -#}
+{% macro button_group_text(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('button-group-text', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- ButtonGroupSeparator -#}
+{% macro button_group_separator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('button-group-separator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

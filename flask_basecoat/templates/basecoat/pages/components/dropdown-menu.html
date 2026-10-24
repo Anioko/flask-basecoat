@@ -1,0 +1,80 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `dropdown-menu` (pinned source in compliance/upstream). #}
+{% block title %}dropdown-menu · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_11_', class='w-fit') %}Open
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Complex') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_12_', class='w-fit') %}Complex Menu
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Icons') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_13_', class='w-fit') %}Open
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Shortcuts') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_14_', class='w-fit') %}Open
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Submenu') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_15_', class='w-fit') %}Open
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Checkboxes') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_16_', class='w-fit') %}Checkboxes
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Checkboxes with Icons') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_17_', class='w-fit') %}Notifications
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Radio Group') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_18_', class='w-fit') %}Radio Group
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Radio with Icons') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_19_') %}Payment Method
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Destructive Items') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_1a_', class='w-fit') %}Actions
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Avatar') %}
+      <div class="flex items-center justify-between gap-4">
+        {% call ui.dropdown_menu_trigger(as_=none, variant='outline', size='default', id='radix-_R_3b_', class='cn-button group/button inline-flex shrink-0 items-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-outline cn-button-size-default h-12 justify-start px-2 md:max-w-[200px] style-sera:font-normal style-sera:tracking-normal style-sera:normal-case') %}
+          {% call ui.avatar(size='default') %}
+            {% call ui.avatar_fallback(class='rounded-lg') %}CN
+            {% endcall %}
+          {% endcall %}
+          <div class="grid flex-1 text-left text-sm leading-tight">
+            <span class="truncate font-semibold">shadcn</span>
+            <span class="truncate text-xs text-muted-foreground">shadcn@example.com</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down ml-auto text-muted-foreground" aria-hidden="true">
+            <path d="m7 15 5 5 5-5"></path>
+            <path d="m7 9 5-5 5 5"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.dropdown_menu_trigger(size='icon', variant='ghost', id='radix-_R_5b_', class='rounded-full') %}
+          {% call ui.avatar(size='default') %}
+            {% call ui.avatar_fallback() %}LR
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='In Dialog') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Inset') %}
+      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_1d_', class='w-fit') %}Open
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

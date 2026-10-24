@@ -1,0 +1,12 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `toast` (pinned source in compliance/upstream). #}
+{% block title %}toast · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Toaster') %}
+      {% call ui.button(size='default', variant='outline') %}Show toast
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

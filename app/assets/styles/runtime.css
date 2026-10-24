@@ -1,0 +1,41 @@
+/* Runtime structure for server-rendered shadcn components.
+   React unmounts closed popups and portals them to <body>; a static page keeps them in the DOM,
+   so closed state must hide them and open state must position them. Visual recipes stay in the
+   upstream Vega style pack; nothing here sets colour, radius, shadow or typography. */
+@layer components {
+  /* Anything with a data-state="closed" that is a floating layer or collapsible body is hidden. */
+  [data-slot$="-content"][data-state="closed"]:not([data-slot="tabs-content"]):not([data-slot="card-content"]):not([data-slot="empty-content"]):not([data-slot="item-content"]):not([data-slot="field-content"]):not([data-slot="attachment-content"]):not([data-slot="bubble-content"]):not([data-slot="message-content"]):not([data-slot="code-block-content"]):not([data-slot="message-scroller-content"]):not([data-slot="sidebar-content"]):not([data-slot="sidebar-group-content"]):not([data-slot="trace-collapsible-content"]):not([data-slot="accordion-content"]):not([data-slot="collapsible-content"]) {
+    display: none;
+  }
+  [data-slot="tabs-content"][data-state="inactive"],
+  [data-slot="accordion-content"][data-state="closed"],
+  [data-slot="collapsible-content"][data-state="closed"],
+  [data-slot="trace-collapsible-content"][data-state="closed"],
+  [data-slot$="-overlay"][data-state="closed"],
+  [data-slot="navigation-menu-viewport"][data-state="closed"],
+  [data-slot="navigation-menu-indicator"][data-state="hidden"] {
+    display: none;
+  }
+
+  /* Floating layers are positioned by flask-basecoat.js with fixed coordinates. */
+  [data-floating] {
+    position: fixed;
+    inset-inline-start: 0;
+    top: 0;
+    z-index: 50;
+    width: max-content;
+  }
+  [data-floating][data-state="closed"] {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Exit animations: the runtime keeps a closing layer displayed until its animation ends. */
+  [data-state="closed"][data-fb-animating] { display: block !important; }
+  /* Radix only renders indicators while checked; the static markup may carry them unchecked. */
+  [data-slot="checkbox-indicator"][data-state="unchecked"],
+  [data-slot="radio-group-indicator"][data-state="unchecked"] { display: none; }
+  /* Grouping wrappers for parts that render no element upstream. */
+  [data-fb] { display: contents; }
+}

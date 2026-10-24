@@ -1,54 +1,43 @@
-{# Basecoat Card Component - 100% shadcn/ui Canonical #}
-{% macro card(title=none, description=none, footer=none, class='', id=none) %}
-    <div class="card rounded-xl border border-border bg-card text-card-foreground shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if title or description %}
-            <header class="card-header flex flex-col space-y-1.5 p-6">
-                {% if title %}
-                    <h2 class="card-title font-semibold leading-none tracking-tight text-lg">{{ title }}</h2>
-                {% endif %}
-                {% if description %}
-                    <p class="card-description text-sm text-muted-foreground">{{ description }}</p>
-                {% endif %}
-            </header>
-            <section class="card-content p-6 pt-0">
-                {{ caller() if caller }}
-            </section>
-        {% else %}
-            <section class="card-content p-6">
-                {{ caller() if caller }}
-            </section>
-        {% endif %}
-        
-        {% if footer %}
-            <footer class="card-footer flex items-center p-6 pt-0">
-                {{ footer }}
-            </footer>
-        {% endif %}
-    </div>
-{% endmacro %}
+{# card: port of shadcn/ui card.tsx (pinned in compliance/upstream). Macros: card, card_header, card_title, card_description, card_action, card_content, card_footer #}
 
-{% macro card_header(class='') %}
-    <header class="card-header flex flex-col space-y-1.5 p-6 {{ class }}">
-        {{ caller() if caller }}
-    </header>
-{% endmacro %}
+{#- Card -#}
+{% macro card(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
 
-{% macro card_title(text='', class='') %}
-    <h2 class="card-title font-semibold leading-none tracking-tight text-lg {{ class }}">{{ text }}{{ caller() if caller }}</h2>
-{% endmacro %}
+{#- CardHeader -#}
+{% macro card_header(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-header', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
 
-{% macro card_description(text='', class='') %}
-    <p class="card-description text-sm text-muted-foreground {{ class }}">{{ text }}{{ caller() if caller }}</p>
-{% endmacro %}
+{#- CardTitle -#}
+{% macro card_title(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-title', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
 
-{% macro card_content(class='') %}
-    <section class="card-content p-6 pt-0 {{ class }}">
-        {{ caller() if caller }}
-    </section>
-{% endmacro %}
+{#- CardDescription -#}
+{% macro card_description(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-description', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
 
-{% macro card_footer(class='') %}
-    <footer class="card-footer flex items-center p-6 pt-0 {{ class }}">
-        {{ caller() if caller }}
-    </footer>
-{% endmacro %}
+{#- CardAction -#}
+{% macro card_action(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-action', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CardContent -#}
+{% macro card_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CardFooter -#}
+{% macro card_footer(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-footer', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

@@ -1,0 +1,30 @@
+{
+  "name": "hover-card",
+  "source": "upstream/shadcn/radix/ui/hover-card.tsx",
+  "slots": {
+    "hover-card": {
+      "component": "HoverCard",
+      "element": "HoverCardPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "hover-card-trigger": {
+      "component": "HoverCardTrigger",
+      "element": "HoverCardPrimitive.Trigger",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "hover-card-portal": {
+      "component": "HoverCardContent",
+      "element": "HoverCardPrimitive.Portal",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "hover-card-content": {
+      "component": "HoverCardContent",
+      "element": "HoverCardPrimitive.Content",
+      "base_classes": "cn-hover-card-content z-50 origin-(--radix-hover-card-content-transform-origin) outline-hidden",
+      "data_attrs": []
+    }
+  }
+}

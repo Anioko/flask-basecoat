@@ -1,0 +1,125 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `breadcrumb` (pinned source in compliance/upstream). #}
+{% block title %}breadcrumb · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic', class='items-center justify-center') %}
+      {% call ui.breadcrumb(attrs={'aria-label': 'breadcrumb'}) %}
+        {% call ui.breadcrumb_list() %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_link(href='#') %}Home
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_link(href='#') %}Components
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_page() %}Breadcrumb
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Dropdown', class='items-center justify-center') %}
+      {% call ui.breadcrumb(attrs={'aria-label': 'breadcrumb'}) %}
+        {% call ui.breadcrumb_list() %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_link(href='#') %}Home
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.dropdown_menu_trigger(size='icon-sm', variant='ghost', id='radix-_R_1q_') %}
+              {% call ui.breadcrumb_ellipsis() %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis lucide-more-horizontal" aria-hidden="true">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="19" cy="12" r="1"></circle>
+                  <circle cx="5" cy="12" r="1"></circle>
+                </svg>
+                <span class="sr-only">More</span>
+              {% endcall %}
+              <span class="sr-only">Toggle menu</span>
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_link(href='#') %}Components
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_page() %}Breadcrumb
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Link', class='items-center justify-center') %}
+      {% call ui.breadcrumb(attrs={'aria-label': 'breadcrumb'}) %}
+        {% call ui.breadcrumb_list() %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_link(href='#') %}Home
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_ellipsis() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis lucide-more-horizontal" aria-hidden="true">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+              <span class="sr-only">More</span>
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_link(href='#') %}Components
+            {% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.breadcrumb_page() %}Breadcrumb
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

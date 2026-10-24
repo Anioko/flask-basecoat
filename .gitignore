@@ -20,3 +20,9 @@ dump.rdb
 *.egg-info/
 .pytest_cache/
 .coverage
+
+# Node toolchains (root build, golden oracle)
+node_modules/
+compliance/node_modules
+node-v20.18.1-win-x64/
+node-portable.zip

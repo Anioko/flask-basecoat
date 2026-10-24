@@ -1,0 +1,60 @@
+{
+  "name": "breadcrumb",
+  "source": "upstream/shadcn/radix/ui/breadcrumb.tsx",
+  "slots": {
+    "breadcrumb": {
+      "component": "Breadcrumb",
+      "element": "nav",
+      "base_classes": "cn-breadcrumb",
+      "data_attrs": []
+    },
+    "breadcrumb-list": {
+      "component": "BreadcrumbList",
+      "element": "ol",
+      "base_classes": "cn-breadcrumb-list flex flex-wrap items-center wrap-break-word",
+      "data_attrs": []
+    },
+    "breadcrumb-item": {
+      "component": "BreadcrumbItem",
+      "element": "li",
+      "base_classes": "cn-breadcrumb-item inline-flex items-center",
+      "data_attrs": []
+    },
+    "breadcrumb-link": {
+      "component": "BreadcrumbLink",
+      "element": "Comp",
+      "base_classes": "cn-breadcrumb-link",
+      "data_attrs": []
+    },
+    "breadcrumb-page": {
+      "component": "BreadcrumbPage",
+      "element": "span",
+      "base_classes": "cn-breadcrumb-page",
+      "data_attrs": []
+    },
+    "breadcrumb-separator": {
+      "component": "BreadcrumbSeparator",
+      "element": "li",
+      "base_classes": "cn-breadcrumb-separator",
+      "data_attrs": []
+    },
+    "BreadcrumbSeparator:IconPlaceholder": {
+      "component": "BreadcrumbSeparator",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip",
+      "data_attrs": []
+    },
+    "breadcrumb-ellipsis": {
+      "component": "BreadcrumbEllipsis",
+      "element": "span",
+      "base_classes": "cn-breadcrumb-ellipsis flex items-center justify-center",
+      "data_attrs": []
+    },
+    "BreadcrumbEllipsis:span": {
+      "component": "BreadcrumbEllipsis",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    }
+  }
+}

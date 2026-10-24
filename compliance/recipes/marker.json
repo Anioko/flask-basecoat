@@ -1,0 +1,38 @@
+{
+  "name": "marker",
+  "source": "upstream/shadcn/radix/ui/marker.tsx",
+  "slots": {
+    "marker": {
+      "component": "Marker",
+      "element": "Comp",
+      "base_classes": "",
+      "data_attrs": [
+        "data-variant"
+      ],
+      "cva": "markerVariants",
+      "variants": {
+        "base": "cn-marker group/marker relative flex w-full items-center",
+        "variants": {
+          "variant": {
+            "default": "cn-marker-variant-default",
+            "separator": "cn-marker-variant-separator",
+            "border": "cn-marker-variant-border"
+          }
+        },
+        "defaults": {}
+      }
+    },
+    "marker-icon": {
+      "component": "MarkerIcon",
+      "element": "span",
+      "base_classes": "cn-marker-icon shrink-0",
+      "data_attrs": []
+    },
+    "marker-content": {
+      "component": "MarkerContent",
+      "element": "span",
+      "base_classes": "cn-marker-content min-w-0 wrap-break-word",
+      "data_attrs": []
+    }
+  }
+}

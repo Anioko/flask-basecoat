@@ -1,0 +1,78 @@
+{
+  "name": "dialog",
+  "source": "upstream/shadcn/radix/ui/dialog.tsx",
+  "slots": {
+    "dialog": {
+      "component": "Dialog",
+      "element": "DialogPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dialog-trigger": {
+      "component": "DialogTrigger",
+      "element": "DialogPrimitive.Trigger",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dialog-portal": {
+      "component": "DialogPortal",
+      "element": "DialogPrimitive.Portal",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dialog-close": {
+      "component": "DialogClose",
+      "element": "DialogPrimitive.Close",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dialog-overlay": {
+      "component": "DialogOverlay",
+      "element": "DialogPrimitive.Overlay",
+      "base_classes": "cn-dialog-overlay fixed inset-0 isolate z-50",
+      "data_attrs": []
+    },
+    "dialog-content": {
+      "component": "DialogContent",
+      "element": "DialogPrimitive.Content",
+      "base_classes": "cn-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none",
+      "data_attrs": []
+    },
+    "DialogContent:Button": {
+      "component": "DialogContent",
+      "element": "Button",
+      "base_classes": "cn-dialog-close",
+      "data_attrs": []
+    },
+    "DialogContent:span": {
+      "component": "DialogContent",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    },
+    "dialog-header": {
+      "component": "DialogHeader",
+      "element": "div",
+      "base_classes": "cn-dialog-header flex flex-col",
+      "data_attrs": []
+    },
+    "dialog-footer": {
+      "component": "DialogFooter",
+      "element": "div",
+      "base_classes": "cn-dialog-footer flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+      "data_attrs": []
+    },
+    "dialog-title": {
+      "component": "DialogTitle",
+      "element": "DialogPrimitive.Title",
+      "base_classes": "cn-dialog-title cn-font-heading",
+      "data_attrs": []
+    },
+    "dialog-description": {
+      "component": "DialogDescription",
+      "element": "DialogPrimitive.Description",
+      "base_classes": "cn-dialog-description",
+      "data_attrs": []
+    }
+  }
+}

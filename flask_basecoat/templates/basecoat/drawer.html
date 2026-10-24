@@ -1,0 +1,61 @@
+{# drawer: port of shadcn/ui drawer.tsx (pinned in compliance/upstream). Macros: drawer, drawer_trigger, drawer_portal, drawer_close, drawer_overlay, drawer_content, drawer_header, drawer_footer, drawer_title, drawer_description #}
+
+{#- Drawer: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro drawer(class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- DrawerTrigger -#}
+{% macro drawer_trigger(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-trigger', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerPortal: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro drawer_portal(class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-portal', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- DrawerClose -#}
+{% macro drawer_close(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-close', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerOverlay -#}
+{% macro drawer_overlay(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-overlay', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerContent -#}
+{% macro drawer_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerHeader -#}
+{% macro drawer_header(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-header', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerFooter -#}
+{% macro drawer_footer(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-footer', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerTitle -#}
+{% macro drawer_title(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-title', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerDescription -#}
+{% macro drawer_description(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-description', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

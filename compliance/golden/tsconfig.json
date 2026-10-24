@@ -1,0 +1,65 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": false,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/registry/bases/radix/*": [
+        "../upstream/shadcn/radix/*"
+      ],
+      "@/registry/new-york-v4/ui/*": [
+        "../upstream/shadcn/new-york-v4/ui/*",
+        "../upstream/shadcn/radix/ui/*"
+      ],
+      "@/components/ui/*": [
+        "../upstream/shadcn/radix/ui/*"
+      ],
+      "@/lib/utils": [
+        "../upstream/shadcn/radix/lib/utils.ts"
+      ],
+      "@/app/(create)/components/icon-placeholder": [
+        "./stubs/icon-placeholder.tsx"
+      ],
+      "@/app/(app)/(create)/components/icon-placeholder": [
+        "./stubs/icon-placeholder.tsx"
+      ],
+      "next/link": [
+        "./stubs/next-link.tsx"
+      ],
+      "next/image": [
+        "./stubs/next-image.tsx"
+      ],
+      "@/lib/ai": [
+        "../upstream/shadcn/site/ai.ts"
+      ],
+      "@/app/(create)/lib/search-params": [
+        "./stubs/search-params.tsx"
+      ],
+      "@/app/(app)/(create)/lib/search-params": [
+        "./stubs/search-params.tsx"
+      ],
+      "@/registry/bases/base/ui/*": [
+        "../upstream/shadcn/base/ui/*"
+      ],
+      "@/app/(app)/create/components/icon-placeholder": [
+        "./stubs/icon-placeholder.tsx"
+      ],
+      "@/components/markdown": [
+        "./stubs/markdown.tsx"
+      ]
+    }
+  },
+  "include": [
+    "*.tsx",
+    "*.ts",
+    "stubs/**/*",
+    "../upstream/shadcn/**/*",
+    "scenarios/**/*"
+  ]
+}

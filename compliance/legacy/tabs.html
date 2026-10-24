@@ -1,0 +1,47 @@
+{# Basecoat Tabs Component #}
+{% macro tabs(tabs_list=[], default_tab='', class='', id=none) %}
+    {% set unique_id = id or 'tabs-' ~ range(1000, 9999) | random %}
+    
+    <div class="tabs space-y-4 {{ class }}" id="{{ unique_id }}">
+        {# Tab List #}
+        <div role="tablist" class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+            {% for tab in tabs_list %}
+                {% set tab_id = tab.id or tab[0] %}
+                {% set tab_label = tab.label or tab[1] %}
+                {% set is_active = (tab_id == default_tab) if default_tab else loop.first %}
+                <button
+                    type="button"
+                    role="tab"
+                    id="{{ unique_id }}-tab-{{ tab_id }}"
+                    aria-controls="{{ unique_id }}-panel-{{ tab_id }}"
+                    aria-selected="{{ 'true' if is_active else 'false' }}"
+                    tabindex="{{ '0' if is_active else '-1' }}"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-sm"
+                >
+                    {% if tab.icon %}
+                        <i data-lucide="{{ tab.icon }}" class="mr-2 h-4 w-4"></i>
+                    {% endif %}
+                    {{ tab_label }}
+                </button>
+            {% endfor %}
+        </div>
+
+        {# Tab Panels via Caller #}
+        <div class="tabs-content">
+            {{ caller() if caller }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro tab_panel(tab_id, default_tab='', tabs_id=none, class='') %}
+    {% set is_active = (tab_id == default_tab) if default_tab else false %}
+    <div
+        role="tabpanel"
+        id="{{ (tabs_id ~ '-panel-' ~ tab_id) if tabs_id else ('panel-' ~ tab_id) }}"
+        aria-labelledby="{{ (tabs_id ~ '-tab-' ~ tab_id) if tabs_id else ('tab-' ~ tab_id) }}"
+        {% if not is_active %}hidden{% endif %}
+        class="rounded-md border border-border bg-card p-4 text-card-foreground shadow-sm {{ class }}"
+    >
+        {{ caller() if caller }}
+    </div>
+{% endmacro %}

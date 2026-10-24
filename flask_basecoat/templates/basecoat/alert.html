@@ -1,0 +1,25 @@
+{# alert: port of shadcn/ui alert.tsx (pinned in compliance/upstream). Macros: alert, alert_title, alert_description, alert_action #}
+
+{#- Alert -#}
+{% macro alert(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('alert', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- AlertTitle -#}
+{% macro alert_title(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('alert-title', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- AlertDescription -#}
+{% macro alert_description(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('alert-description', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- AlertAction -#}
+{% macro alert_action(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('alert-action', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

@@ -1,0 +1,50 @@
+{
+  "name": "card",
+  "source": "upstream/shadcn/radix/ui/card.tsx",
+  "slots": {
+    "card": {
+      "component": "Card",
+      "element": "div",
+      "base_classes": "cn-card group/card flex flex-col",
+      "data_attrs": [
+        "data-size"
+      ]
+    },
+    "card-header": {
+      "component": "CardHeader",
+      "element": "div",
+      "base_classes": "cn-card-header group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]",
+      "data_attrs": []
+    },
+    "card-title": {
+      "component": "CardTitle",
+      "element": "div",
+      "base_classes": "cn-card-title cn-font-heading",
+      "data_attrs": []
+    },
+    "card-description": {
+      "component": "CardDescription",
+      "element": "div",
+      "base_classes": "cn-card-description",
+      "data_attrs": []
+    },
+    "card-action": {
+      "component": "CardAction",
+      "element": "div",
+      "base_classes": "cn-card-action col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+      "data_attrs": []
+    },
+    "card-content": {
+      "component": "CardContent",
+      "element": "div",
+      "base_classes": "cn-card-content",
+      "data_attrs": []
+    },
+    "card-footer": {
+      "component": "CardFooter",
+      "element": "div",
+      "base_classes": "cn-card-footer flex items-center",
+      "data_attrs": []
+    }
+  }
+}

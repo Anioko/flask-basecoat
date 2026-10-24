@@ -1,0 +1,31 @@
+{
+  "name": "toggle",
+  "source": "upstream/shadcn/radix/ui/toggle.tsx",
+  "slots": {
+    "toggle": {
+      "component": "Toggle",
+      "element": "TogglePrimitive.Root",
+      "base_classes": "",
+      "data_attrs": [],
+      "cva": "toggleVariants",
+      "variants": {
+        "base": "cn-toggle group/toggle inline-flex items-center justify-center whitespace-nowrap outline-none hover:bg-muted focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "variants": {
+          "variant": {
+            "default": "cn-toggle-variant-default",
+            "outline": "cn-toggle-variant-outline"
+          },
+          "size": {
+            "default": "cn-toggle-size-default",
+            "sm": "cn-toggle-size-sm",
+            "lg": "cn-toggle-size-lg"
+          }
+        },
+        "defaults": {
+          "variant": "default",
+          "size": "default"
+        }
+      }
+    }
+  }
+}

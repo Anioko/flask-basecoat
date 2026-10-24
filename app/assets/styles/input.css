@@ -1,187 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* flask-basecoat stylesheet entry (Tailwind v4).
+   The visual layer is the upstream shadcn/ui pipeline, pinned under compliance/upstream:
+   tailwind -> tw-animate -> shadcn/tailwind.css -> theme mapping -> neutral tokens -> Vega style pack.
+   The same files feed the golden oracle, so what the checks compare against is what ships. */
+@import "tailwindcss";
+@source "../../templates";
+@source "../../../flask_basecoat/templates";
+@source "../../../flask_basecoat/static/js";
 
+@import "tw-animate-css";
+@import "../../../compliance/upstream/shadcn/shadcn-tailwind.css";
+@import "../../../compliance/golden/generated/theme.css";
+@import "../../../compliance/golden/generated/tokens.css";
+@import "../../../compliance/upstream/shadcn/styles/style-vega.css" layer(base);
+
+/* Behaviour hooks that React/Radix provide at runtime and a server-rendered page needs in CSS. */
+@import "./runtime.css";
+
+/* Pages must carry class="style-vega" on <html>; the upstream style pack scopes every recipe under it. */
 @layer base {
-  :root {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-  html, body {
-    font-family: var(--font-sans) !important;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    letter-spacing: -0.011em;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.025em;
-  }
-}
-
-@layer components {
-  /* Canonical shadcn/ui Button Engine */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    border-radius: calc(var(--radius) - 2px);
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    font-weight: 500;
-    height: 2.25rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    transition-property: color, background-color, border-color, box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    outline: none;
-    cursor: pointer;
-  }
-  .btn:focus-visible {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
-  }
-  .btn:disabled {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-  .btn-primary {
-    background-color: var(--primary) !important;
-    color: var(--primary-foreground) !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  }
-  .btn-primary:hover {
-    background-color: color-mix(in srgb, var(--primary) 90%, transparent) !important;
-  }
-  .btn-destructive {
-    background-color: var(--destructive) !important;
-    color: var(--destructive-foreground) !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  }
-  .btn-destructive:hover {
-    background-color: color-mix(in srgb, var(--destructive) 90%, transparent) !important;
-  }
-  .btn-outline {
-    border: 1px solid var(--input) !important;
-    background-color: var(--background) !important;
-    color: var(--foreground) !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  }
-  .btn-outline:hover {
-    background-color: var(--accent) !important;
-    color: var(--accent-foreground) !important;
-  }
-  .btn-secondary {
-    background-color: var(--secondary) !important;
-    color: var(--secondary-foreground) !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  }
-  .btn-secondary:hover {
-    background-color: color-mix(in srgb, var(--secondary) 80%, transparent) !important;
-  }
-  .btn-ghost {
-    background-color: transparent !important;
-    color: var(--foreground) !important;
-  }
-  .btn-ghost:hover {
-    background-color: var(--accent) !important;
-    color: var(--accent-foreground) !important;
-  }
-  .btn-link {
-    background-color: transparent !important;
-    color: var(--primary) !important;
-    text-underline-offset: 4px;
-    height: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  .btn-link:hover {
-    text-decoration-line: underline;
-  }
-  
-  /* Button Sizes */
-  .btn-sm {
-    height: 2rem !important;
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
-    font-size: 0.75rem !important;
-  }
-  .btn-lg {
-    height: 2.5rem !important;
-    padding-left: 2rem !important;
-    padding-right: 2rem !important;
-    font-size: 1rem !important;
-  }
-  .btn-icon {
-    height: 2.25rem !important;
-    width: 2.25rem !important;
-    padding: 0 !important;
-  }
-
-  /* Canonical shadcn/ui Badge Engine */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 9999px;
-    border: 1px solid transparent;
-    padding: 0.125rem 0.625rem;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 600;
-    transition-property: color, background-color, border-color;
-    transition-duration: 150ms;
-  }
-  .badge-primary {
-    background-color: var(--primary) !important;
-    color: var(--primary-foreground) !important;
-  }
-  .badge-secondary {
-    background-color: var(--secondary) !important;
-    color: var(--secondary-foreground) !important;
-  }
-  .badge-destructive {
-    background-color: var(--destructive) !important;
-    color: var(--destructive-foreground) !important;
-  }
-  .badge-outline {
-    border-color: var(--border) !important;
-    color: var(--foreground) !important;
-  }
-
-  /* Form layouts */
-  .field,
-  .form-group {
-    @apply flex flex-col space-y-1.5;
-  }
-}
-
-/* Custom app tweaks */
-nav {
-  margin-bottom: 2rem !important;
-}
-
-.flashes > .message:last-of-type {
-  margin-bottom: 2rem;
-}
-
-table.selectable tr:hover {
-  cursor: pointer !important;
-}
-
-/* Basecoat native component visibility */
-[data-popover][aria-hidden="true"],
-.popover [data-popover][aria-hidden="true"],
-.dropdown-menu [data-popover][aria-hidden="true"] {
-  display: none !important;
-}
-
-[data-popover][aria-hidden="false"],
-.popover [data-popover][aria-hidden="false"],
-.dropdown-menu [data-popover][aria-hidden="false"] {
-  display: block !important;
-}
-
-[role="tabpanel"][hidden] {
-  display: none !important;
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
 }

@@ -1,0 +1,30 @@
+{
+  "name": "slider",
+  "source": "upstream/shadcn/radix/ui/slider.tsx",
+  "slots": {
+    "slider": {
+      "component": "Slider",
+      "element": "SliderPrimitive.Root",
+      "base_classes": "cn-slider relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",
+      "data_attrs": []
+    },
+    "slider-track": {
+      "component": "Slider",
+      "element": "SliderPrimitive.Track",
+      "base_classes": "cn-slider-track relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full",
+      "data_attrs": []
+    },
+    "slider-range": {
+      "component": "Slider",
+      "element": "SliderPrimitive.Range",
+      "base_classes": "cn-slider-range absolute select-none data-horizontal:h-full data-vertical:w-full",
+      "data_attrs": []
+    },
+    "slider-thumb": {
+      "component": "Slider",
+      "element": "SliderPrimitive.Thumb",
+      "base_classes": "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50",
+      "data_attrs": []
+    }
+  }
+}

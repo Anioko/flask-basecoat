@@ -1,0 +1,24 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `drawer` (pinned source in compliance/upstream). #}
+{% block title %}drawer · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Scrollable Content') %}
+      {% call ui.drawer_trigger(size='default', variant='outline') %}Scrollable Content
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Sides') %}
+      <div class="flex flex-wrap gap-2">
+        {% call ui.drawer_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}top
+        {% endcall %}
+        {% call ui.drawer_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}right
+        {% endcall %}
+        {% call ui.drawer_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}bottom
+        {% endcall %}
+        {% call ui.drawer_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}left
+        {% endcall %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `slider` (pinned source in compliance/upstream). #}
+{% block title %}slider · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.slider(orientation='horizontal', dir='ltr', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateX(-50%)'}) %}
+        {% call ui.slider_track(orientation='horizontal') %}
+          {{ ui.slider_range(orientation='horizontal', attrs={'style': 'left:0%;right:50%'}) }}
+        {% endcall %}
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(orientation='horizontal', attrs={'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Range') %}
+      {% call ui.slider(orientation='horizontal', dir='ltr', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateX(-50%)'}) %}
+        {% call ui.slider_track(orientation='horizontal') %}
+          {{ ui.slider_range(orientation='horizontal', attrs={'style': 'left:25%;right:50%'}) }}
+        {% endcall %}
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(orientation='horizontal', attrs={'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(orientation='horizontal', attrs={'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Multiple Thumbs') %}
+      {% call ui.slider(orientation='horizontal', dir='ltr', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateX(-50%)'}) %}
+        {% call ui.slider_track(orientation='horizontal') %}
+          {{ ui.slider_range(orientation='horizontal', attrs={'style': 'left:10%;right:30%'}) }}
+        {% endcall %}
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(orientation='horizontal', attrs={'aria-label': 'Value 0 of 3', 'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(orientation='horizontal', attrs={'aria-label': 'Value 0 of 3', 'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(orientation='horizontal', attrs={'aria-label': 'Value 0 of 3', 'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Vertical') %}
+      <div class="flex items-center gap-6">
+        {% call ui.slider(orientation='vertical', class='h-40', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateY(50%)'}) %}
+          {% call ui.slider_track(orientation='vertical') %}
+            {{ ui.slider_range(orientation='vertical', attrs={'style': 'bottom:0%;top:50%'}) }}
+          {% endcall %}
+          <span style="transform:var(--radix-slider-thumb-transform);position:absolute;bottom:calc(0% + 0px)">
+            {{ ui.slider_thumb(orientation='vertical', attrs={'style': 'display:none'}) }}
+          </span>
+          <input style="display:none">
+        {% endcall %}
+        {% call ui.slider(orientation='vertical', class='h-40', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateY(50%)'}) %}
+          {% call ui.slider_track(orientation='vertical') %}
+            {{ ui.slider_range(orientation='vertical', attrs={'style': 'bottom:0%;top:75%'}) }}
+          {% endcall %}
+          <span style="transform:var(--radix-slider-thumb-transform);position:absolute;bottom:calc(0% + 0px)">
+            {{ ui.slider_thumb(orientation='vertical', attrs={'style': 'display:none'}) }}
+          </span>
+          <input style="display:none">
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Controlled') %}
+      <div class="grid w-full gap-3">
+        <div class="flex items-center justify-between gap-2">
+          {% call ui.label(for_='slider-demo-temperature') %}Temperature
+          {% endcall %}
+          <span class="text-sm text-muted-foreground">0.3, 0.7</span>
+        </div>
+        {% call ui.slider(orientation='horizontal', id='slider-demo-temperature', dir='ltr', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateX(-50%)'}) %}
+          {% call ui.slider_track(orientation='horizontal') %}
+            {{ ui.slider_range(orientation='horizontal', attrs={'style': 'left:30%;right:30%'}) }}
+          {% endcall %}
+          <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+            {{ ui.slider_thumb(orientation='horizontal', max='1', attrs={'style': 'display:none'}) }}
+          </span>
+          <input style="display:none">
+          <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+            {{ ui.slider_thumb(orientation='horizontal', max='1', attrs={'style': 'display:none'}) }}
+          </span>
+          <input style="display:none">
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Disabled') %}
+      {% call ui.slider(disabled=true, orientation='horizontal', dir='ltr', attrs={'aria-disabled': 'true', 'style': '--radix-slider-thumb-transform:translateX(-50%)'}) %}
+        {% call ui.slider_track(disabled=true, orientation='horizontal') %}
+          {{ ui.slider_range(disabled=true, orientation='horizontal', attrs={'style': 'left:0%;right:50%'}) }}
+        {% endcall %}
+        <span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">
+          {{ ui.slider_thumb(disabled=true, orientation='horizontal', attrs={'style': 'display:none'}) }}
+        </span>
+        <input style="display:none">
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

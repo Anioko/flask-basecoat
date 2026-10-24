@@ -1,0 +1,16 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `sonner` (pinned source in compliance/upstream). #}
+{% block title %}sonner · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic', class='items-center justify-center') %}
+      {% call ui.button(size='default', variant='outline', class='w-fit') %}Show Toast
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Description', class='items-center justify-center') %}
+      {% call ui.button(size='default', variant='outline', class='w-fit') %}Show Toast
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

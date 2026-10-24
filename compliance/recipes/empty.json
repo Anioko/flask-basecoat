@@ -1,0 +1,57 @@
+{
+  "name": "empty",
+  "source": "upstream/shadcn/radix/ui/empty.tsx",
+  "slots": {
+    "empty": {
+      "component": "Empty",
+      "element": "div",
+      "base_classes": "cn-empty flex w-full min-w-0 flex-1 flex-col items-center justify-center text-center text-balance",
+      "data_attrs": []
+    },
+    "empty-header": {
+      "component": "EmptyHeader",
+      "element": "div",
+      "base_classes": "cn-empty-header flex max-w-sm flex-col items-center",
+      "data_attrs": []
+    },
+    "empty-icon": {
+      "component": "EmptyMedia",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": [
+        "data-variant"
+      ],
+      "cva": "emptyMediaVariants",
+      "variants": {
+        "base": "cn-empty-media flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "variants": {
+          "variant": {
+            "default": "cn-empty-media-default",
+            "icon": "cn-empty-media-icon"
+          }
+        },
+        "defaults": {
+          "variant": "default"
+        }
+      }
+    },
+    "empty-title": {
+      "component": "EmptyTitle",
+      "element": "div",
+      "base_classes": "cn-empty-title cn-font-heading",
+      "data_attrs": []
+    },
+    "empty-description": {
+      "component": "EmptyDescription",
+      "element": "div",
+      "base_classes": "cn-empty-description text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
+      "data_attrs": []
+    },
+    "empty-content": {
+      "component": "EmptyContent",
+      "element": "div",
+      "base_classes": "cn-empty-content flex w-full max-w-sm min-w-0 flex-col items-center text-balance",
+      "data_attrs": []
+    }
+  }
+}

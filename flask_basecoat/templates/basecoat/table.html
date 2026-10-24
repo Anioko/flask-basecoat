@@ -1,32 +1,55 @@
-{# Basecoat Table Component - 100% shadcn/ui Canonical #}
-{% macro table(columns=[], rows=[], empty_title='No records found', empty_description='', class='', id=none) %}
-    <div class="relative w-full overflow-auto rounded-xl border border-border bg-card shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if caller %}
-            <table class="table w-full caption-bottom text-sm">
-                {{ caller() }}
-            </table>
-        {% elif rows and rows|length > 0 %}
-            <table class="table w-full caption-bottom text-sm">
-                <thead>
-                    <tr class="border-b border-border bg-muted/40 transition-colors">
-                        {% for col in columns %}
-                            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground text-xs uppercase tracking-wider">{{ col }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                    {% for row in rows %}
-                        <tr class="hover:bg-muted/50 transition-colors">
-                            {% for cell in row %}
-                                <td class="p-4 align-middle text-sm text-foreground">{{ cell }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            {% from 'basecoat/empty_state.html' import empty_state %}
-            {{ empty_state(title=empty_title, description=empty_description) }}
-        {% endif %}
-    </div>
-{% endmacro %}
+{# table: port of shadcn/ui table.tsx (pinned in compliance/upstream). Macros: table_container, table, table_header, table_body, table_footer, table_row, table_head, table_cell, table_caption #}
+
+{#- Table -#}
+{% macro table_container(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-container', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- Table -#}
+{% macro table(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableHeader -#}
+{% macro table_header(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-header', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableBody -#}
+{% macro table_body(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-body', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableFooter -#}
+{% macro table_footer(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-footer', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableRow -#}
+{% macro table_row(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-row', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableHead -#}
+{% macro table_head(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-head', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableCell -#}
+{% macro table_cell(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-cell', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TableCaption -#}
+{% macro table_caption(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-caption', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

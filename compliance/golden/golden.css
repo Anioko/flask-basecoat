@@ -1,0 +1,15 @@
+/* Golden oracle stylesheet: the upstream shadcn/ui pipeline, nothing else.
+   tailwind -> tw-animate -> shadcn/tailwind.css -> theme mapping -> neutral tokens -> Vega style pack. */
+@import "tailwindcss" source(none);
+@source "./out";
+@source "./out/blocks";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./generated/theme.css";
+@import "./generated/tokens.css";
+@import "../upstream/shadcn/styles/style-vega.css" layer(base);
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+}

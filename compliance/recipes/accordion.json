@@ -1,0 +1,48 @@
+{
+  "name": "accordion",
+  "source": "upstream/shadcn/radix/ui/accordion.tsx",
+  "slots": {
+    "accordion": {
+      "component": "Accordion",
+      "element": "AccordionPrimitive.Root",
+      "base_classes": "cn-accordion flex w-full flex-col",
+      "data_attrs": []
+    },
+    "accordion-item": {
+      "component": "AccordionItem",
+      "element": "AccordionPrimitive.Item",
+      "base_classes": "cn-accordion-item",
+      "data_attrs": []
+    },
+    "AccordionTrigger:AccordionPrimitive.Header": {
+      "component": "AccordionTrigger",
+      "element": "AccordionPrimitive.Header",
+      "base_classes": "flex",
+      "data_attrs": []
+    },
+    "accordion-trigger": {
+      "component": "AccordionTrigger",
+      "element": "AccordionPrimitive.Trigger",
+      "base_classes": "cn-accordion-trigger group/accordion-trigger relative flex flex-1 items-start justify-between border border-transparent transition-all outline-none disabled:pointer-events-none disabled:opacity-50",
+      "data_attrs": []
+    },
+    "accordion-trigger-icon": {
+      "component": "AccordionTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-accordion-trigger-icon pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden",
+      "data_attrs": []
+    },
+    "accordion-content": {
+      "component": "AccordionContent",
+      "element": "AccordionPrimitive.Content",
+      "base_classes": "cn-accordion-content overflow-hidden",
+      "data_attrs": []
+    },
+    "AccordionContent:div": {
+      "component": "AccordionContent",
+      "element": "div",
+      "base_classes": "cn-accordion-content-inner h-(--radix-accordion-content-height) [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+      "data_attrs": []
+    }
+  }
+}

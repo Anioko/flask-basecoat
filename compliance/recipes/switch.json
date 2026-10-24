@@ -1,0 +1,20 @@
+{
+  "name": "switch",
+  "source": "upstream/shadcn/radix/ui/switch.tsx",
+  "slots": {
+    "switch": {
+      "component": "Switch",
+      "element": "SwitchPrimitive.Root",
+      "base_classes": "cn-switch peer group/switch relative inline-flex items-center transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 data-disabled:cursor-not-allowed data-disabled:opacity-50",
+      "data_attrs": [
+        "data-size"
+      ]
+    },
+    "switch-thumb": {
+      "component": "Switch",
+      "element": "SwitchPrimitive.Thumb",
+      "base_classes": "cn-switch-thumb pointer-events-none block ring-0 transition-transform",
+      "data_attrs": []
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "tooltip",
+  "source": "upstream/shadcn/radix/ui/tooltip.tsx",
+  "slots": {
+    "tooltip-provider": {
+      "component": "TooltipProvider",
+      "element": "TooltipPrimitive.Provider",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "tooltip": {
+      "component": "Tooltip",
+      "element": "TooltipPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "tooltip-trigger": {
+      "component": "TooltipTrigger",
+      "element": "TooltipPrimitive.Trigger",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "tooltip-content": {
+      "component": "TooltipContent",
+      "element": "TooltipPrimitive.Content",
+      "base_classes": "cn-tooltip-content z-50 w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) bg-foreground text-background",
+      "data_attrs": []
+    },
+    "TooltipContent:TooltipPrimitive.Arrow": {
+      "component": "TooltipContent",
+      "element": "TooltipPrimitive.Arrow",
+      "base_classes": "cn-tooltip-arrow z-50 translate-y-[calc(-50%_-_2px)] bg-foreground fill-foreground",
+      "data_attrs": []
+    }
+  }
+}

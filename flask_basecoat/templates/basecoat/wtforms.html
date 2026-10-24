@@ -1,0 +1,79 @@
+{# WTForms adapter: renders a WTForms field with the shadcn Field, Label, Input, Textarea, Native Select,
+   Checkbox, Radio Group and Switch parts, including server-side validation state (aria-invalid, data-invalid,
+   field-error with role="alert"). #}
+{% import 'basecoat/field.html' as _field %}
+{% import 'basecoat/input.html' as _input %}
+{% import 'basecoat/textarea.html' as _textarea %}
+{% import 'basecoat/native-select.html' as _ns %}
+{% import 'basecoat/checkbox.html' as _checkbox %}
+{% import 'basecoat/radio-group.html' as _radio %}
+{% import 'basecoat/button.html' as _button %}
+
+{% macro field_errors(field) -%}
+{%- if field.errors -%}
+{% call _field.field_error(id=field.id ~ '-error') %}{% if field.errors | length == 1 %}{{ field.errors[0] }}{% else %}<ul class="ml-4 flex list-disc flex-col gap-1">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}{% endcall %}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro render_field(field, label=none, placeholder=none, help_text=none, class='', orientation='vertical') -%}
+{%- set invalid = field.errors | length > 0 -%}
+{%- set required = field.flags.required if field.flags else false -%}
+{%- set describedby = (field.id ~ '-description' if (help_text or field.description) else '') ~ (' ' ~ field.id ~ '-error' if invalid else '') -%}
+{%- if field.type == 'BooleanField' -%}
+  {% call _field.field(orientation='horizontal', invalid=invalid, class=class) %}
+    <input type="hidden" name="{{ field.name }}" value="n">
+    {{ _checkbox.checkbox(id=field.id, checked=field.data, invalid=invalid, name=field.name, value='y', attrs={'aria-describedby': describedby or none}) }}
+    {% call _field.field_content() %}
+      {{ _field.field_label(text=(label or field.label.text), for_=field.id) }}
+      {% if help_text or field.description %}{{ _field.field_description(text=(help_text or field.description), id=field.id ~ '-description') }}{% endif %}
+      {{ field_errors(field) }}
+    {% endcall %}
+  {% endcall %}
+{%- elif field.type == 'RadioField' -%}
+  {% call _field.field_set(invalid=invalid, class=class) %}
+    {{ _field.field_legend(text=(label or field.label.text)) }}
+    {% if help_text or field.description %}{{ _field.field_description(text=(help_text or field.description), id=field.id ~ '-description') }}{% endif %}
+    {% call _radio.radio_group(id=field.id, invalid=invalid, attrs={'aria-describedby': describedby or none}) %}
+      {% for sub in field %}
+        {% call _field.field(orientation='horizontal') %}
+          {{ _radio.radio_group_item(id=sub.id, name=field.name, value=sub.data, checked=sub.checked, invalid=invalid) }}
+          {{ _field.field_label(text=sub.label.text, for_=sub.id) }}
+        {% endcall %}
+      {% endfor %}
+    {% endcall %}
+    {{ field_errors(field) }}
+  {% endcall %}
+{%- else -%}
+  {% call _field.field(orientation=orientation, invalid=invalid, class=class) %}
+    {{ _field.field_label(text=(label or field.label.text), for_=field.id) }}
+    {% if field.type == 'TextAreaField' %}
+      {{ _textarea.textarea(text=(field.data or ''), id=field.id, name=field.name, invalid=invalid, required=required, placeholder=(placeholder or field.render_kw.placeholder if field.render_kw else placeholder), attrs={'aria-describedby': describedby or none}) }}
+    {% elif field.type in ('SelectField', 'SelectMultipleField') %}
+      {% call _ns.native_select_wrapper() %}
+        {% call _ns.native_select(id=field.id, name=field.name, invalid=invalid, required=required, attrs={'aria-describedby': describedby or none}) %}
+          {% for value, text in field.choices %}{{ _ns.native_select_option(text=text, value=value, attrs={'selected': (value == field.data) or none}) }}{% endfor %}
+        {% endcall %}
+        {{ _ns.native_select_icon() }}
+      {% endcall %}
+    {% else %}
+      {{ _input.input(id=field.id, name=field.name, type=field.widget.input_type, value=(field._value() if field._value is defined else field.data), invalid=invalid, required=required, placeholder=placeholder, attrs={'aria-describedby': describedby or none}) }}
+    {% endif %}
+    {% if help_text or field.description %}{{ _field.field_description(text=(help_text or field.description), id=field.id ~ '-description') }}{% endif %}
+    {{ field_errors(field) }}
+  {% endcall %}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro render_form(form, action='', method='POST', submit_text='Submit', submit_variant='default', class='', id=none) -%}
+<form action="{{ action }}" method="{{ method }}"{% if id %} id="{{ id }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}>
+  {% if form.hidden_tag is defined %}{{ form.hidden_tag() }}{% endif %}
+  {% call _field.field_group() %}
+    {% for field in form if field.widget.input_type != 'hidden' and field.type not in ('CSRFTokenField', 'SubmitField') %}
+      {{ render_field(field) }}
+    {% endfor %}
+    {% call _field.field(orientation='horizontal') %}
+      {{ _button.button(text=submit_text, type='submit', variant=submit_variant) }}
+    {% endcall %}
+  {% endcall %}
+</form>
+{%- endmacro %}

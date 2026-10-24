@@ -1,0 +1,60 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `context-menu` (pinned source in compliance/upstream). #}
+{% block title %}context-menu · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Sides') %}
+      <div class="grid grid-cols-2 gap-6">
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (top)
+        {% endcall %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (right)
+        {% endcall %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (bottom)
+        {% endcall %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (left)
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='With Icons') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Shortcuts') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Submenu') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Groups, Labels & Separators') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Checkboxes') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Radio Group') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Destructive Items') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='In Dialog') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Inset') %}
+      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

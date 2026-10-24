@@ -1,32 +1,28 @@
 {
   "name": "flask-basecoat",
   "version": "1.0.0",
-  "description": "A modern Flask application boilerplate with **BasecoatUI** and **Tailwind CSS** - providing a clean, component-based UI similar to shadcn/ui.",
+  "description": "Flask extension wrapping the shadcn/ui design system as Jinja macros, with a compliance harness that checks every component against the pinned upstream sources.",
   "main": "index.js",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
   "scripts": {
-    "build:css": "postcss app/assets/styles/input.css -o app/static/styles/app.css",
-    "watch:css": "postcss app/assets/styles/input.css -o app/static/styles/app.css --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:css": "tailwindcss -i app/assets/styles/input.css -o app/static/styles/app.css --minify",
+    "watch:css": "tailwindcss -i app/assets/styles/input.css -o app/static/styles/app.css --watch",
+    "build:package-css": "tailwindcss -i flask_basecoat/static/css/src/flask-basecoat.css -o flask_basecoat/static/css/flask-basecoat.min.css --minify",
+    "build": "npm run build:css && npm run build:package-css",
+    "golden": "cd compliance/golden && npx tsx render.tsx && npx @tailwindcss/cli -i golden.css -o out/golden.css --minify",
+    "compliance": "python scripts/shadcn_compliance.py",
+    "test": "python -m pytest -q"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/typography": "^0.5.19",
-    "autoprefixer": "^10.4.21",
-    "basecoat-css": "0.3.11",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "postcss-import": "^16.1.1",
-    "tailwindcss": "^3.4.18",
-    "tailwindcss-cli": "^0.1.2"
-  },
-  "dependencies": {
-    "tinyglobby": "^0.2.17"
+    "@tailwindcss/cli": "^4.3.3",
+    "basecoat-css": "^1.1.0",
+    "tailwindcss": "^4.3.3",
+    "tw-animate-css": "^1.4.0"
   }
 }

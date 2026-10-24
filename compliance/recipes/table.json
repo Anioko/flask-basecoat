@@ -1,0 +1,60 @@
+{
+  "name": "table",
+  "source": "upstream/shadcn/radix/ui/table.tsx",
+  "slots": {
+    "table-container": {
+      "component": "Table",
+      "element": "div",
+      "base_classes": "cn-table-container",
+      "data_attrs": []
+    },
+    "table": {
+      "component": "Table",
+      "element": "table",
+      "base_classes": "cn-table",
+      "data_attrs": []
+    },
+    "table-header": {
+      "component": "TableHeader",
+      "element": "thead",
+      "base_classes": "cn-table-header",
+      "data_attrs": []
+    },
+    "table-body": {
+      "component": "TableBody",
+      "element": "tbody",
+      "base_classes": "cn-table-body",
+      "data_attrs": []
+    },
+    "table-footer": {
+      "component": "TableFooter",
+      "element": "tfoot",
+      "base_classes": "cn-table-footer",
+      "data_attrs": []
+    },
+    "table-row": {
+      "component": "TableRow",
+      "element": "tr",
+      "base_classes": "cn-table-row has-aria-expanded:bg-muted/50",
+      "data_attrs": []
+    },
+    "table-head": {
+      "component": "TableHead",
+      "element": "th",
+      "base_classes": "cn-table-head",
+      "data_attrs": []
+    },
+    "table-cell": {
+      "component": "TableCell",
+      "element": "td",
+      "base_classes": "cn-table-cell",
+      "data_attrs": []
+    },
+    "table-caption": {
+      "component": "TableCaption",
+      "element": "caption",
+      "base_classes": "cn-table-caption",
+      "data_attrs": []
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `dialog` (pinned source in compliance/upstream). #}
+{% block title %}dialog · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='With Form', class='items-center justify-center') %}
+      <form>
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Edit Profile
+        {% endcall %}
+      </form>
+    {% endcall %}
+    {% call ui.example(title='Scrollable Content', class='items-center justify-center') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Scrollable Content
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Sticky Footer', class='items-center justify-center') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Sticky Footer
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='No Close Button', class='items-center justify-center') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}No Close Button
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Chat Settings', class='items-center justify-center') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Chat Settings
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

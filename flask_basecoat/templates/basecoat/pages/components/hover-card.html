@@ -1,0 +1,24 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `hover-card` (pinned source in compliance/upstream). #}
+{% block title %}hover-card · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Sides') %}
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        {% call ui.hover_card_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}top
+        {% endcall %}
+        {% call ui.hover_card_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}right
+        {% endcall %}
+        {% call ui.hover_card_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}bottom
+        {% endcall %}
+        {% call ui.hover_card_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}left
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='In Dialog') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

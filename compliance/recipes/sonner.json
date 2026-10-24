@@ -1,0 +1,18 @@
+{
+  "name": "sonner",
+  "source": "upstream/shadcn/radix/ui/sonner.tsx",
+  "slots": {
+    "Toaster:Sonner": {
+      "component": "Toaster",
+      "element": "Sonner",
+      "base_classes": "toaster group",
+      "data_attrs": []
+    },
+    "Toaster:IconPlaceholder": {
+      "component": "Toaster",
+      "element": "IconPlaceholder",
+      "base_classes": "size-4",
+      "data_attrs": []
+    }
+  }
+}

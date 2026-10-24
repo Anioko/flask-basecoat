@@ -1,0 +1,25 @@
+{# tooltip: port of shadcn/ui tooltip.tsx (pinned in compliance/upstream). Macros: tooltip_provider, tooltip, tooltip_trigger, tooltip_content #}
+
+{#- TooltipProvider: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro tooltip_provider(class='', id=none, attrs={}) -%}
+{%- set s = slot('tooltip-provider', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- Tooltip: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro tooltip(class='', id=none, attrs={}) -%}
+{%- set s = slot('tooltip', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- TooltipTrigger -#}
+{% macro tooltip_trigger(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('tooltip-trigger', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TooltipContent -#}
+{% macro tooltip_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('tooltip-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

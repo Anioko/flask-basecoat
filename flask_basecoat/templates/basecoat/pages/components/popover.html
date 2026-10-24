@@ -1,0 +1,30 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `popover` (pinned source in compliance/upstream). #}
+{% block title %}popover · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.popover_trigger(size='default', variant='outline') %}Open Popover
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Form') %}
+      {% call ui.popover_trigger(size='default', variant='outline') %}Open Popover
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Alignments') %}
+      <div class="flex gap-6">
+        {% call ui.popover_trigger(size='sm', variant='outline') %}Start
+        {% endcall %}
+        {% call ui.popover_trigger(size='sm', variant='outline') %}Center
+        {% endcall %}
+        {% call ui.popover_trigger(size='sm', variant='outline') %}End
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='In Dialog') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

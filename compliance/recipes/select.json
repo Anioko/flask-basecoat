@@ -1,0 +1,96 @@
+{
+  "name": "select",
+  "source": "upstream/shadcn/radix/ui/select.tsx",
+  "slots": {
+    "select": {
+      "component": "Select",
+      "element": "SelectPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "select-group": {
+      "component": "SelectGroup",
+      "element": "SelectPrimitive.Group",
+      "base_classes": "cn-select-group",
+      "data_attrs": []
+    },
+    "select-value": {
+      "component": "SelectValue",
+      "element": "SelectPrimitive.Value",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "select-trigger": {
+      "component": "SelectTrigger",
+      "element": "SelectPrimitive.Trigger",
+      "base_classes": "cn-select-trigger flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-size"
+      ]
+    },
+    "SelectTrigger:IconPlaceholder": {
+      "component": "SelectTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-select-trigger-icon pointer-events-none",
+      "data_attrs": []
+    },
+    "select-content": {
+      "component": "SelectContent",
+      "element": "SelectPrimitive.Content",
+      "base_classes": "cn-select-content cn-menu-target cn-menu-translucent relative z-50 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none",
+      "data_attrs": [
+        "data-align-trigger"
+      ]
+    },
+    "SelectContent:SelectPrimitive.Viewport": {
+      "component": "SelectContent",
+      "element": "SelectPrimitive.Viewport",
+      "base_classes": "cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)",
+      "data_attrs": [
+        "data-position"
+      ]
+    },
+    "select-label": {
+      "component": "SelectLabel",
+      "element": "SelectPrimitive.Label",
+      "base_classes": "cn-select-label",
+      "data_attrs": []
+    },
+    "select-item": {
+      "component": "SelectItem",
+      "element": "SelectPrimitive.Item",
+      "base_classes": "cn-select-item relative flex w-full cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": []
+    },
+    "SelectItem:span": {
+      "component": "SelectItem",
+      "element": "span",
+      "base_classes": "cn-select-item-indicator",
+      "data_attrs": []
+    },
+    "SelectItem:IconPlaceholder": {
+      "component": "SelectItem",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-select-item-indicator-icon pointer-events-none",
+      "data_attrs": []
+    },
+    "select-separator": {
+      "component": "SelectSeparator",
+      "element": "SelectPrimitive.Separator",
+      "base_classes": "cn-select-separator pointer-events-none",
+      "data_attrs": []
+    },
+    "select-scroll-up-button": {
+      "component": "SelectScrollUpButton",
+      "element": "SelectPrimitive.ScrollUpButton",
+      "base_classes": "cn-select-scroll-up-button",
+      "data_attrs": []
+    },
+    "select-scroll-down-button": {
+      "component": "SelectScrollDownButton",
+      "element": "SelectPrimitive.ScrollDownButton",
+      "base_classes": "cn-select-scroll-down-button",
+      "data_attrs": []
+    }
+  }
+}

@@ -1,21 +1,7 @@
-{# Basecoat Skeleton Loading Component #}
-{% macro skeleton(class='h-4 w-full', id=none) %}
-    <div class="animate-pulse rounded-md bg-muted {{ class }}" {% if id %}id="{{ id }}"{% endif %} aria-hidden="true"></div>
-{% endmacro %}
+{# skeleton: port of shadcn/ui skeleton.tsx (pinned in compliance/upstream). Macros: skeleton #}
 
-{% macro skeleton_table(rows=5, cols=4, class='') %}
-    <div class="w-full space-y-3 p-4 rounded-md border border-border bg-card {{ class }}" aria-hidden="true">
-        <div class="flex gap-4 border-b border-border pb-3">
-            {% for _ in range(cols) %}
-                <div class="h-4 bg-muted animate-pulse rounded flex-1"></div>
-            {% endfor %}
-        </div>
-        {% for _ in range(rows) %}
-            <div class="flex gap-4 py-2">
-                {% for _ in range(cols) %}
-                    <div class="h-4 bg-muted/60 animate-pulse rounded flex-1"></div>
-                {% endfor %}
-            </div>
-        {% endfor %}
-    </div>
-{% endmacro %}
+{#- Skeleton -#}
+{% macro skeleton(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('skeleton', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

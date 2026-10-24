@@ -1,0 +1,218 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `badge` (pinned source in compliance/upstream). #}
+{% block title %}badge · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper(class='lg:grid-cols-1') %}
+    {% call ui.example(title='Variants') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='default') %}Default
+        {% endcall %}
+        {% call ui.badge(variant='secondary') %}Secondary
+        {% endcall %}
+        {% call ui.badge(variant='destructive') %}Destructive
+        {% endcall %}
+        {% call ui.badge(variant='outline') %}Outline
+        {% endcall %}
+        {% call ui.badge(variant='ghost') %}Ghost
+        {% endcall %}
+        {% call ui.badge(variant='link') %}Link
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Icon Left', class='max-w-fit') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-check lucide-verified" aria-hidden="true" data-icon="inline-start">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+            <path d="m16 9-5.5 5.5L8 12"></path>
+          </svg>
+          Default
+        {% endcall %}
+        {% call ui.badge(variant='secondary') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-check lucide-verified" aria-hidden="true" data-icon="inline-start">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+            <path d="m16 9-5.5 5.5L8 12"></path>
+          </svg>
+          Secondary
+        {% endcall %}
+        {% call ui.badge(variant='destructive') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-check lucide-verified" aria-hidden="true" data-icon="inline-start">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+            <path d="m16 9-5.5 5.5L8 12"></path>
+          </svg>
+          Destructive
+        {% endcall %}
+        {% call ui.badge(variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-check lucide-verified" aria-hidden="true" data-icon="inline-start">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+            <path d="m16 9-5.5 5.5L8 12"></path>
+          </svg>
+          Outline
+        {% endcall %}
+        {% call ui.badge(variant='ghost') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-check lucide-verified" aria-hidden="true" data-icon="inline-start">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+            <path d="m16 9-5.5 5.5L8 12"></path>
+          </svg>
+          Ghost
+        {% endcall %}
+        {% call ui.badge(variant='link') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-check lucide-verified" aria-hidden="true" data-icon="inline-start">
+            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
+            <path d="m16 9-5.5 5.5L8 12"></path>
+          </svg>
+          Link
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Icon Right', class='max-w-fit') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='default') %}Default
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='secondary') %}Secondary
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='destructive') %}Destructive
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='outline') %}Outline
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='ghost') %}Ghost
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='link') %}Link
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='With Spinner', class='max-w-fit') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='default') %}
+          {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading', 'data-icon': 'inline-start'}) %}
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          {% endcall %}
+          Default
+        {% endcall %}
+        {% call ui.badge(variant='secondary') %}
+          {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading', 'data-icon': 'inline-start'}) %}
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          {% endcall %}
+          Secondary
+        {% endcall %}
+        {% call ui.badge(variant='destructive') %}
+          {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading', 'data-icon': 'inline-start'}) %}
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          {% endcall %}
+          Destructive
+        {% endcall %}
+        {% call ui.badge(variant='outline') %}
+          {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading', 'data-icon': 'inline-start'}) %}
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          {% endcall %}
+          Outline
+        {% endcall %}
+        {% call ui.badge(variant='ghost') %}
+          {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading', 'data-icon': 'inline-start'}) %}
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          {% endcall %}
+          Ghost
+        {% endcall %}
+        {% call ui.badge(variant='link') %}
+          {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading', 'data-icon': 'inline-start'}) %}
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          {% endcall %}
+          Link
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='asChild') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='default', href='#') %}Link 
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='secondary', href='#') %}Link 
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='destructive', href='#') %}Link 
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='outline', href='#') %}Link 
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='ghost', href='#') %}Link 
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.badge(variant='link', href='#') %}Link 
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true" data-icon="inline-end">
+            <path d="M7 7h10v10"></path>
+            <path d="M7 17 17 7"></path>
+          </svg>
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Long Text') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='secondary') %}A badge with a lot of text to see how it wraps
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Custom Colors', class='max-w-fit') %}
+      <div class="flex flex-wrap gap-2 style-sera:gap-6">
+        {% call ui.badge(variant='default', class='bg-blue-600 text-blue-50 dark:bg-blue-600 dark:text-blue-50') %}Blue
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-green-600 text-green-50 dark:bg-green-600 dark:text-green-50') %}Green
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-sky-600 text-sky-50 dark:bg-sky-600 dark:text-sky-50') %}Sky
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-purple-600 text-purple-50 dark:bg-purple-600 dark:text-purple-50') %}Purple
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300') %}Blue
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300') %}Green
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300') %}Sky
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300') %}Purple
+        {% endcall %}
+        {% call ui.badge(variant='default', class='bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300') %}Red
+        {% endcall %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

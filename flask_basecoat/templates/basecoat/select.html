@@ -1,0 +1,61 @@
+{# select: port of shadcn/ui select.tsx (pinned in compliance/upstream). Macros: select, select_group, select_value, select_trigger, select_content, select_label, select_item, select_separator, select_scroll_up_button, select_scroll_down_button #}
+
+{#- Select: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro select(class='', id=none, attrs={}) -%}
+{%- set s = slot('select', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- SelectGroup -#}
+{% macro select_group(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-group', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectValue -#}
+{% macro select_value(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-value', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectTrigger -#}
+{% macro select_trigger(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-trigger', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectContent -#}
+{% macro select_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectLabel -#}
+{% macro select_label(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-label', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectItem -#}
+{% macro select_item(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-item', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectSeparator -#}
+{% macro select_separator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-separator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectScrollUpButton -#}
+{% macro select_scroll_up_button(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-scroll-up-button', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectScrollDownButton -#}
+{% macro select_scroll_down_button(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-scroll-down-button', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

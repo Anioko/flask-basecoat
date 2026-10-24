@@ -1,0 +1,36 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `form` (pinned source in compliance/upstream). #}
+{% block title %}form · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Default') %}
+      <form class="space-y-8 w-full">
+        {% call ui.form_item() %}
+          {% call ui.form_label(for_='_R_p_-form-item', class='cn-label flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed', attrs={'data-error': 'false'}) %}Username
+          {% endcall %}
+          {{ ui.form_control(id='_R_p_-form-item', aria_describedby='_R_p_-form-item-description', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'shadcn', 'name': 'username', 'value': ''}) }}
+          {% call ui.form_description(id='_R_p_-form-item-description') %}This is your public display name.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.button(size='default', variant='default', type='submit') %}Submit
+        {% endcall %}
+      </form>
+    {% endcall %}
+    {% call ui.example(title='With error') %}
+      <form class="space-y-8 w-full">
+        {% call ui.form_item() %}
+          {% call ui.form_label(for_='_R_q_-form-item', class='cn-label flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed', attrs={'data-error': 'true'}) %}Username
+          {% endcall %}
+          {{ ui.form_control(invalid=true, id='_R_q_-form-item', aria_describedby='_R_q_-form-item-description _R_q_-form-item-message', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'shadcn', 'name': 'username', 'value': ''}) }}
+          {% call ui.form_description(id='_R_q_-form-item-description') %}This is your public display name.
+          {% endcall %}
+          {% call ui.form_message(id='_R_q_-form-item-message') %}Username must be at least 2 characters.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.button(size='default', variant='default', type='submit') %}Submit
+        {% endcall %}
+      </form>
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

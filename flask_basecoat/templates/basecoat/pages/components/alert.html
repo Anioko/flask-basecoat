@@ -1,0 +1,222 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `alert` (pinned source in compliance/upstream). #}
+{% block title %}alert · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper(class='lg:grid-cols-1') %}
+    {% call ui.example(title='Basic', class='style-sera:bg-transparent') %}
+      <div class="mx-auto flex w-full max-w-lg flex-col gap-4">
+        {% call ui.alert() %}
+          {% call ui.alert_title() %}Success! Your changes have been saved.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          {% call ui.alert_title() %}Success! Your changes have been saved.
+          {% endcall %}
+          {% call ui.alert_description() %}This is an alert with title and description.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          {% call ui.alert_description() %}This one has a description only. No title. No icon.
+          {% endcall %}
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='With Icons', class='style-sera:bg-transparent') %}
+      <div class="mx-auto flex w-full max-w-lg flex-col gap-4">
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}Let's try one with icon, title and a 
+            <a href="#">link</a>
+            .
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_description() %}This one has an icon and a description only. No title. 
+            <a href="#">But it has a link</a>
+            and a
+            <a href="#">second link</a>
+            .
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}Success! Your changes have been saved
+          {% endcall %}
+          {% call ui.alert_description() %}This is an alert with icon, title and description.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}This is a very long alert title that demonstrates how the component handles extended text content and potentially wraps across multiple lines
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_description() %}This is a very long alert description that demonstrates how the component handles extended text content and potentially wraps across multiple lines
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}This is an extremely long alert title that spans multiple lines to demonstrate how the component handles very lengthy headings while maintaining readability and proper text wrapping behavior
+          {% endcall %}
+          {% call ui.alert_description() %}This is an equally long description that contains detailed information about the alert. It shows how the component can accommodate extensive content while preserving proper spacing, alignment, and readability across different screen sizes and viewport widths. This helps ensure the user experience remains consistent regardless of the content length.
+          {% endcall %}
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Destructive', class='style-sera:bg-transparent') %}
+      <div class="mx-auto flex w-full max-w-lg flex-col gap-4">
+        {% call ui.alert(variant='destructive') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}Something went wrong!
+          {% endcall %}
+          {% call ui.alert_description() %}Your session has expired. Please log in again.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert(variant='destructive') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}Unable to process your payment.
+          {% endcall %}
+          {% call ui.alert_description() %}
+            <p>Please verify your 
+              <a href="#">billing information</a>
+              and try again.
+            </p>
+            <ul class="list-inside list-disc">
+              <li>Check your card details</li>
+              <li>Ensure sufficient funds</li>
+              <li>Verify billing address</li>
+            </ul>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='With Actions', class='style-sera:bg-transparent') %}
+      <div class="mx-auto flex w-full max-w-lg flex-col gap-4">
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}The selected emails have been marked as spam.
+          {% endcall %}
+          {% call ui.alert_action() %}
+            {% call ui.button(size='xs', variant='default') %}Undo
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.alert() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" x2="12" y1="8" y2="12"></line>
+            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+          </svg>
+          {% call ui.alert_title() %}The selected emails have been marked as spam.
+          {% endcall %}
+          {% call ui.alert_description() %}This is a very long alert title that demonstrates how the component handles extended text content.
+          {% endcall %}
+          {% call ui.alert_action() %}
+            {% call ui.badge(variant='secondary') %}Badge
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      </div>
+    {% endcall %}
+    {% call ui.example(title='Inside Card', class='style-sera:bg-transparent') %}
+      {% call ui.card(size='default', class='mx-auto w-full max-w-lg') %}
+        {% call ui.card_header() %}
+          {% call ui.card_title() %}Create project
+          {% endcall %}
+          {% call ui.card_description() %}Fill in the form below to create a new project.
+          {% endcall %}
+        {% endcall %}
+        {% call ui.card_content(class='flex flex-col gap-4 style-sera:gap-8') %}
+          {% call ui.alert() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert lucide-alert-circle" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" x2="12" y1="8" y2="12"></line>
+              <line x1="12" x2="12.01" y1="16" y2="16"></line>
+            </svg>
+            {% call ui.alert_title() %}You have reached the limit of 3 free projects.
+            {% endcall %}
+            {% call ui.alert_description() %}Upgrade to Pro to create unlimited projects.
+            {% endcall %}
+          {% endcall %}
+          {% call ui.field_group() %}
+            {% call ui.field(orientation='vertical') %}
+              {% call ui.field_label(as_='label', for_='project-name') %}Name
+              {% endcall %}
+              {{ ui.input(id='project-name', attrs={'placeholder': 'My project'}) }}
+            {% endcall %}
+            {% call ui.field(orientation='vertical') %}
+              {% call ui.field_label(as_='label', for_='project-framework') %}Framework
+              {% endcall %}
+              {% call ui.select_trigger(as_='select-trigger', size='default', id='project-framework') %}
+                {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a framework
+                {% endcall %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              {% endcall %}
+              <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
+                <option value="" selected=""></option>
+              </select>
+            {% endcall %}
+          {% endcall %}
+          {% call ui.item(as_='item', size='default', variant='outline') %}
+            {% call ui.item_media(variant='image', class='border') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder" aria-hidden="true">
+                <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path>
+              </svg>
+            {% endcall %}
+            {% call ui.item_content() %}
+              {% call ui.item_title() %}Project Alpha
+              {% endcall %}
+              {% call ui.item_description() %}Created 2 days ago
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.card_footer() %}
+          {% call ui.button(size='default', variant='default', class='w-full') %}Create project
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{# Basecoat Badge Component - 100% shadcn/ui Canonical #}
+{% macro badge(
+    text='',
+    variant='default',
+    class='',
+    id=none
+) %}
+    {% set base_classes = 'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2' %}
+
+    {% set variant_map = {
+        'default': 'badge badge-primary border-transparent bg-primary text-primary-foreground shadow-sm hover:bg-primary/80',
+        'secondary': 'badge badge-secondary border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        'destructive': 'badge badge-destructive border-transparent bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80',
+        'outline': 'badge badge-outline text-foreground border-border'
+    } %}
+    
+    {% set variant_str = variant_map.get(variant, variant_map['default']) %}
+    {% set badge_classes = (base_classes ~ ' ' ~ variant_str ~ (' ' ~ class if class else '')) | trim %}
+    
+    <span class="{{ badge_classes }}" {% if id %}id="{{ id }}"{% endif %}>
+        {{ text }}{{ caller() if caller }}
+    </span>
+{% endmacro %}

@@ -1,0 +1,90 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `menubar` (pinned source in compliance/upstream). #}
+{% block title %}menubar · flask-basecoat{% endblock %}
+{% block body %}
+  {% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_31H1_') %}File
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_51H1_') %}Edit
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Submenu') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_32H1_') %}File
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_52H1_') %}Edit
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Checkboxes') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_33H1_') %}View
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_53H1_') %}Format
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Radio') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_34H1_') %}Profiles
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_54H1_') %}Theme
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Icons') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_35H1_') %}File
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_55H1_') %}More
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Shortcuts') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_36H1_') %}File
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_56H1_') %}Edit
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Format') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_37H1_') %}Format
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_57H1_') %}View
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Insert') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_38H1_') %}Insert
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_58H1_') %}Tools
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='Destructive') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_39H1_') %}File
+        {% endcall %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_59H1_') %}Account
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='In Dialog') %}
+      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% endcall %}
+    {% endcall %}
+    {% call ui.example(title='With Inset') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_1bH1_') %}View
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endblock %}

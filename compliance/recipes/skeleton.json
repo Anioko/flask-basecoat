@@ -1,0 +1,12 @@
+{
+  "name": "skeleton",
+  "source": "upstream/shadcn/radix/ui/skeleton.tsx",
+  "slots": {
+    "skeleton": {
+      "component": "Skeleton",
+      "element": "div",
+      "base_classes": "cn-skeleton animate-pulse",
+      "data_attrs": []
+    }
+  }
+}

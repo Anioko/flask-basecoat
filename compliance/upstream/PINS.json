@@ -1,0 +1,36 @@
+{
+  "generated_on": "2026-10-24",
+  "shadcn_ui": {
+    "repo": "https://github.com/shadcn-ui/ui",
+    "commit": "e55b60b1014cccfb9ac62f97e0d20b5b649f4a54",
+    "commit_date": "2026-10-23T20:25:11Z",
+    "paths": {
+      "components": "apps/v4/registry/bases/radix/ui",
+      "examples": "apps/v4/registry/bases/radix/examples",
+      "blocks": "apps/v4/registry/bases/radix/blocks",
+      "styles": "apps/v4/registry/styles",
+      "globals": "apps/v4/app/globals.css",
+      "icon_placeholder": "apps/v4/app/(app)/(create)/components/icon-placeholder.tsx",
+      "form": "apps/v4/registry/new-york-v4/ui/form.tsx"
+    },
+    "registry_index": "https://ui.shadcn.com/r/index.json",
+    "theme": "https://ui.shadcn.com/r/colors/neutral.json",
+    "style": "vega"
+  },
+  "shadcn_npm": {
+    "package": "shadcn",
+    "version": "4.22.1",
+    "stylesheet": "dist/tailwind.css"
+  },
+  "radix_ui_npm": {
+    "package": "radix-ui",
+    "version": "1.8.1"
+  },
+  "basecoat": {
+    "repo": "https://github.com/hunvreus/basecoat",
+    "commit": "6769c83c9644ec4195ed30af028a9e66fe670215",
+    "commit_date": "2026-10-23T10:15:35Z",
+    "npm_version": "1.1.0",
+    "docs_path": "site/src/docs/components"
+  }
+}

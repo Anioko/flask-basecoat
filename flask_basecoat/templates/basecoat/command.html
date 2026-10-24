@@ -1,0 +1,61 @@
+{# command: port of shadcn/ui command.tsx (pinned in compliance/upstream). Macros: command, command_dialog, command_input_wrapper, command_input, command_list, command_empty, command_group, command_separator, command_item, command_shortcut #}
+
+{#- Command -#}
+{% macro command(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandDialog -#}
+{% macro command_dialog(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-dialog', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandInput -#}
+{% macro command_input_wrapper(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-input-wrapper', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandInput -#}
+{% macro command_input(class='', id=none, attrs={}) -%}
+{%- set s = slot('command-input', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>
+{%- endmacro %}
+
+{#- CommandList -#}
+{% macro command_list(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-list', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandEmpty -#}
+{% macro command_empty(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-empty', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandGroup -#}
+{% macro command_group(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-group', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandSeparator -#}
+{% macro command_separator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-separator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandItem -#}
+{% macro command_item(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-item', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- CommandShortcut -#}
+{% macro command_shortcut(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('command-shortcut', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

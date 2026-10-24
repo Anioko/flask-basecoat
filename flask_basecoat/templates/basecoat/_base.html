@@ -1,0 +1,22 @@
+{# Shared helpers for every flask-basecoat macro. #}
+
+{#- Render a dict of extra attributes. Values of True render as boolean attributes, None/False are skipped. -#}
+{% macro attrs(d) -%}
+{%- if d -%}
+{%- for k, v in d.items() -%}
+{%- if v is sameas true %} {{ k }}{% elif v is not none and v is not sameas false %} {{ k }}="{{ v }}"{% endif -%}
+{%- endfor -%}
+{%- endif -%}
+{%- endmacro %}
+
+{#- Join class fragments, dropping empties, keeping first-seen order. -#}
+{% macro cx() -%}
+{%- set parts = [] -%}
+{%- for a in varargs if a -%}{%- for c in (a | string).split() if c not in parts -%}{%- set _ = parts.append(c) -%}{%- endfor -%}{%- endfor -%}
+{{ parts | join(' ') }}
+{%- endmacro %}
+
+{#- Stable id helper: explicit id, else a prefix with a per-render counter. -#}
+{% macro uid(prefix, explicit=none) -%}
+{{ explicit if explicit else (prefix ~ '-' ~ (range(100000, 999999) | random)) }}
+{%- endmacro %}

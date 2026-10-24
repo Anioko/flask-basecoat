@@ -1,0 +1,74 @@
+{
+  "name": "navigation-menu",
+  "source": "upstream/shadcn/radix/ui/navigation-menu.tsx",
+  "slots": {
+    "navigation-menu": {
+      "component": "NavigationMenu",
+      "element": "NavigationMenuPrimitive.Root",
+      "base_classes": "cn-navigation-menu group/navigation-menu relative flex max-w-max flex-1 items-center justify-center",
+      "data_attrs": [
+        "data-viewport"
+      ]
+    },
+    "navigation-menu-list": {
+      "component": "NavigationMenuList",
+      "element": "NavigationMenuPrimitive.List",
+      "base_classes": "cn-navigation-menu-list group flex flex-1 list-none items-center justify-center",
+      "data_attrs": []
+    },
+    "navigation-menu-item": {
+      "component": "NavigationMenuItem",
+      "element": "NavigationMenuPrimitive.Item",
+      "base_classes": "cn-navigation-menu-item relative",
+      "data_attrs": []
+    },
+    "navigation-menu-trigger": {
+      "component": "NavigationMenuTrigger",
+      "element": "NavigationMenuPrimitive.Trigger",
+      "base_classes": "group",
+      "data_attrs": []
+    },
+    "NavigationMenuTrigger:IconPlaceholder": {
+      "component": "NavigationMenuTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-navigation-menu-trigger-icon",
+      "data_attrs": []
+    },
+    "navigation-menu-content": {
+      "component": "NavigationMenuContent",
+      "element": "NavigationMenuPrimitive.Content",
+      "base_classes": "cn-navigation-menu-content top-0 left-0 w-full group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none md:absolute md:w-auto",
+      "data_attrs": []
+    },
+    "NavigationMenuViewport:div": {
+      "component": "NavigationMenuViewport",
+      "element": "div",
+      "base_classes": "cn-navigation-menu-viewport-wrapper absolute top-full left-0 isolate z-50 flex justify-center",
+      "data_attrs": []
+    },
+    "navigation-menu-viewport": {
+      "component": "NavigationMenuViewport",
+      "element": "NavigationMenuPrimitive.Viewport",
+      "base_classes": "cn-navigation-menu-viewport origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden md:w-(--radix-navigation-menu-viewport-width)",
+      "data_attrs": []
+    },
+    "navigation-menu-link": {
+      "component": "NavigationMenuLink",
+      "element": "NavigationMenuPrimitive.Link",
+      "base_classes": "cn-navigation-menu-link",
+      "data_attrs": []
+    },
+    "navigation-menu-indicator": {
+      "component": "NavigationMenuIndicator",
+      "element": "NavigationMenuPrimitive.Indicator",
+      "base_classes": "cn-navigation-menu-indicator top-full z-1 flex h-1.5 items-end justify-center overflow-hidden",
+      "data_attrs": []
+    },
+    "NavigationMenuIndicator:div": {
+      "component": "NavigationMenuIndicator",
+      "element": "div",
+      "base_classes": "cn-navigation-menu-indicator-arrow relative top-[60%] h-2 w-2 rotate-45",
+      "data_attrs": []
+    }
+  }
+}
