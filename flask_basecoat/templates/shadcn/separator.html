@@ -1,0 +1,10 @@
+{# shadcn separator macro - exact class parity with shadcn/ui separator.tsx #}
+{% macro separator(orientation='horizontal', class='') %}
+<div
+    data-slot="separator"
+    data-orientation="{{ orientation }}"
+    class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px {{ class }}"
+    role="separator"
+    aria-orientation="{{ orientation }}"
+></div>
+{%- endmacro -%}

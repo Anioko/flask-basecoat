@@ -311,6 +311,147 @@ def test_card_parity():
                 f"{comp_name} macro: data-slot mismatch. Expected: {expected_slot}, Actual: {actual_slot}"
 
 
+# ===== Simple Component Tests =====
+
+def test_input_parity():
+    """Test input macro matches shadcn input.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "input.tsx"
+    tsx_content = tsx_path.read_text()
+
+    # Extract all strings from cn() call
+    cn_start = tsx_content.find('className={cn(')
+    if cn_start == -1:
+        assert False, "Failed to find className={cn("
+
+    # Find the matching closing paren
+    depth = 0
+    cn_end = cn_start + len('className={cn')
+    for i in range(cn_start + len('className={cn'), len(tsx_content)):
+        if tsx_content[i] == '(':
+            depth += 1
+        elif tsx_content[i] == ')':
+            depth -= 1
+            if depth == 0:
+                cn_end = i
+                break
+
+    cn_content = tsx_content[cn_start:cn_end + 1]
+
+    # Extract all quoted strings from the cn() call
+    all_classes = []
+    for match in re.finditer(r'"([^"]*)"', cn_content):
+        classes = match.group(1).replace('\n', ' ').strip()
+        if classes and not classes.startswith('$'):  # Skip variables
+            all_classes.append(classes)
+
+    expected_classes = normalize_classes(' '.join(all_classes))
+
+    # Render macro
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+    template_str = "{% from 'input.html' import input %}{{ input() }}"
+    template = env.from_string(template_str)
+    html = template.render()
+
+    actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+    actual_slot = extract_data_slot_from_html(html)
+
+    assert actual_classes == expected_classes, \
+        f"Input: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+    assert actual_slot == 'input', f"Input: data-slot mismatch"
+
+
+def test_label_parity():
+    """Test label macro matches shadcn label.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "label.tsx"
+    tsx_content = tsx_path.read_text()
+
+    cn_match = re.search(r'className=\{cn\(\s*"([^"]+)"', tsx_content, re.DOTALL)
+    assert cn_match, "Failed to parse label.tsx"
+
+    expected_classes = normalize_classes(cn_match.group(1).replace('\n', ' '))
+
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+    template_str = "{% from 'label.html' import label %}{{ label(content='Test') }}"
+    template = env.from_string(template_str)
+    html = template.render()
+
+    actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+    actual_slot = extract_data_slot_from_html(html)
+
+    assert actual_classes == expected_classes, \
+        f"Label: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+    assert actual_slot == 'label'
+
+
+def test_textarea_parity():
+    """Test textarea macro matches shadcn textarea.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "textarea.tsx"
+    tsx_content = tsx_path.read_text()
+
+    cn_match = re.search(r'className=\{cn\(\s*"([^"]+)"', tsx_content, re.DOTALL)
+    assert cn_match, "Failed to parse textarea.tsx"
+
+    expected_classes = normalize_classes(cn_match.group(1).replace('\n', ' '))
+
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+    template_str = "{% from 'textarea.html' import textarea %}{{ textarea() }}"
+    template = env.from_string(template_str)
+    html = template.render()
+
+    actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+    actual_slot = extract_data_slot_from_html(html)
+
+    assert actual_classes == expected_classes, \
+        f"Textarea: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+    assert actual_slot == 'textarea'
+
+
+def test_separator_parity():
+    """Test separator macro matches shadcn separator.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "separator.tsx"
+    tsx_content = tsx_path.read_text()
+
+    cn_match = re.search(r'className=\{cn\(\s*"([^"]+)"', tsx_content, re.DOTALL)
+    assert cn_match, "Failed to parse separator.tsx"
+
+    expected_classes = normalize_classes(cn_match.group(1).replace('\n', ' '))
+
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+    template_str = "{% from 'separator.html' import separator %}{{ separator() }}"
+    template = env.from_string(template_str)
+    html = template.render()
+
+    actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+    actual_slot = extract_data_slot_from_html(html)
+
+    assert actual_classes == expected_classes, \
+        f"Separator: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+    assert actual_slot == 'separator'
+
+
+def test_skeleton_parity():
+    """Test skeleton macro matches shadcn skeleton.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "skeleton.tsx"
+    tsx_content = tsx_path.read_text()
+
+    cn_match = re.search(r'className=\{cn\(["\']([^"\']+)["\']', tsx_content)
+    assert cn_match, "Failed to parse skeleton.tsx"
+
+    expected_classes = normalize_classes(cn_match.group(1))
+
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+    template_str = "{% from 'skeleton.html' import skeleton %}{{ skeleton() }}"
+    template = env.from_string(template_str)
+    html = template.render()
+
+    actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+    actual_slot = extract_data_slot_from_html(html)
+
+    assert actual_classes == expected_classes, \
+        f"Skeleton: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+    assert actual_slot == 'skeleton'
+
+
 if __name__ == '__main__':
     # Run tests
     pytest.main([__file__, '-v'])

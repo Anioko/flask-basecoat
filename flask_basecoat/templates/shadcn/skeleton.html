@@ -1,0 +1,7 @@
+{# shadcn skeleton macro - exact class parity with shadcn/ui skeleton.tsx #}
+{% macro skeleton(class='') %}
+<div
+    data-slot="skeleton"
+    class="bg-accent animate-pulse rounded-md {{ class }}"
+></div>
+{%- endmacro -%}
