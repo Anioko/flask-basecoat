@@ -27,138 +27,92 @@ class ProfileForm(Form):
 def index():
     """Directory of all ported shadcn application examples."""
     examples_list = [
-        {
-            'id': 'authentication',
-            'title': 'Authentication',
-            'description': 'Split-screen authentication screen with hero branding, email input, social OAuth, and terms.',
-            'href': url_for('basecoat_examples.authentication'),
-            'tags': ['Forms', 'Buttons', 'Layout']
-        },
+        # --- 10 Core Application Blocks (Entelim Canonical) ---
         {
             'id': 'dashboard',
             'title': 'Admin Dashboard',
             'description': 'Executive dashboard with KPI metric cards, tabbed overview charts, and recent sales transaction feeds.',
             'href': url_for('basecoat_examples.dashboard'),
-            'tags': ['Cards', 'Tabs', 'Badges', 'Buttons']
+            'tags': ['Core Block', 'Cards', 'Tabs', 'Badges']
         },
         {
             'id': 'tasks',
-            'title': 'Tasks & Data Management',
+            'title': 'Tasks & Data Table',
             'description': 'Interactive task management data table with search, status facet badges, priority icons, and row actions.',
             'href': url_for('basecoat_examples.tasks'),
-            'tags': ['Table', 'Dropdown', 'Badge', 'Input']
+            'tags': ['Core Block', 'Table', 'Popover', 'Input']
         },
         {
-            'id': 'pricing',
-            'title': 'Pricing Tables',
-            'description': 'Transparent tier comparison cards, feature checklists, and billing frequency toggles.',
-            'href': url_for('basecoat_examples.pricing'),
-            'tags': ['Cards', 'Badges', 'Buttons']
+            'id': 'task-detail',
+            'title': 'Record Detail View',
+            'description': 'Deep record inspection view with priority badges, checklist progress tracker, and activity comments log.',
+            'href': url_for('basecoat_examples.task_detail'),
+            'tags': ['Core Block', 'Checklist', 'Comments', 'Badges']
+        },
+        {
+            'id': 'add-product',
+            'title': 'Record Form',
+            'description': 'Comprehensive multi-field record creation form with media drag-and-drop, variations, and pricing.',
+            'href': url_for('basecoat_examples.add_product'),
+            'tags': ['Core Block', 'Forms', 'Media', 'Pricing']
         },
         {
             'id': 'profile',
-            'title': 'Profile & Account Settings',
-            'description': 'User profile settings with tabbed sections (General, Account, Appearance, Notifications) and form fields.',
+            'title': 'Settings & Profile',
+            'description': 'User profile and account settings with native Basecoat tabs (Personal, Account, Security, Notifications).',
             'href': url_for('basecoat_examples.profile'),
-            'tags': ['Tabs', 'Forms', 'Cards', 'Avatar']
-        },
-        {
-            'id': 'projects',
-            'title': 'Projects List',
-            'description': 'Card grid of active deliverables with progress bars, team avatar stacks, and status badges.',
-            'href': url_for('basecoat_examples.projects'),
-            'tags': ['Cards', 'Dropdown', 'Progress', 'Badges']
-        },
-        {
-            'id': 'changelog',
-            'title': 'Product Changelog',
-            'description': 'Chronological product release notes with semantic version tags, feature badges, and enhancement lists.',
-            'href': url_for('basecoat_examples.changelog'),
-            'tags': ['Timeline', 'Badges', 'Cards']
-        },
-        {
-            'id': 'coming-soon',
-            'title': 'Coming Soon & Waitlist',
-            'description': 'Hero countdown timer with email waitlist collection form and feature teaser cards.',
-            'href': url_for('basecoat_examples.coming_soon'),
-            'tags': ['Hero', 'Countdown', 'Forms']
-        },
-        {
-            'id': 'blog',
-            'title': 'Blog & Article Feed',
-            'description': 'Publication layout with featured article hero, category pills, trending sidebar, and recent post cards.',
-            'href': url_for('basecoat_examples.blog'),
-            'tags': ['Cards', 'Badges', 'Grid']
-        },
-        {
-            'id': 'onboarding',
-            'title': 'Onboarding Wizard',
-            'description': 'Multi-step guided onboarding card with progress indicators, account tier selector, and governance toggles.',
-            'href': url_for('basecoat_examples.onboarding'),
-            'tags': ['Cards', 'Forms', 'Wizard']
+            'tags': ['Core Block', 'Tabs', 'Forms', 'Avatar']
         },
         {
             'id': 'chat',
             'title': 'Chat Application',
             'description': 'Full-featured messaging interface with channel search, active status badges, interleaved chat bubbles, and composer.',
             'href': url_for('basecoat_examples.chat'),
-            'tags': ['Chat', 'Badges', 'Buttons']
-        },
-        {
-            'id': 'ai-chat',
-            'title': 'AI Prompt Interface',
-            'description': 'Copilot conversational interface with prompt suggestion cards, assistant stream bubbles, and token badges.',
-            'href': url_for('basecoat_examples.ai_chat'),
-            'tags': ['AI', 'Cards', 'Badges']
-        },
-        {
-            'id': 'playground',
-            'title': 'LLM Playground',
-            'description': 'Interactive model inference workbench with hyperparameter tuning sliders, prompt canvas, and stop sequences.',
-            'href': url_for('basecoat_examples.playground'),
-            'tags': ['Playground', 'Tabs', 'Sliders']
-        },
-        {
-            'id': 'product-list',
-            'title': 'Product Catalog',
-            'description': 'E-commerce hardware directory with multi-facet filters, sorting controls, price badges, and card grid.',
-            'href': url_for('basecoat_examples.product_list'),
-            'tags': ['E-Commerce', 'Cards', 'Badges']
-        },
-        {
-            'id': 'product-detail',
-            'title': 'Product Detail Page',
-            'description': 'Comprehensive product showcase with thumbnail gallery, spec data table, finish selector, and cart CTA.',
-            'href': url_for('basecoat_examples.product_detail'),
-            'tags': ['Table', 'Badges', 'Gallery']
+            'tags': ['Core Block', 'Chat', 'Badges', 'Buttons']
         },
         {
             'id': 'kanban',
             'title': 'Kanban Project Board',
             'description': 'Agile sprint task board with Backlog, Todo, In Progress, Done columns and priority tag badges.',
             'href': url_for('basecoat_examples.kanban'),
-            'tags': ['Kanban', 'Cards', 'Badges']
+            'tags': ['Core Block', 'Kanban', 'Cards', 'Badges']
         },
         {
-            'id': 'shopping-cart',
-            'title': 'Shopping Cart',
-            'description': 'Multi-item e-commerce shopping bag with quantity stepper, coupon applicator, gift wrap toggle, and price breakdown.',
-            'href': url_for('basecoat_examples.shopping_cart'),
-            'tags': ['E-Commerce', 'Cart', 'Forms', 'Cards']
+            'id': 'onboarding',
+            'title': 'Onboarding Wizard',
+            'description': 'Multi-step guided onboarding card with progress indicators, account tier selector, and governance toggles.',
+            'href': url_for('basecoat_examples.onboarding'),
+            'tags': ['Core Block', 'Wizard', 'Cards', 'Forms']
         },
         {
-            'id': 'checkout',
-            'title': 'Checkout Page',
-            'description': 'Multi-step checkout with delivery/pickup selector, shipping address form, and live order summary.',
-            'href': url_for('basecoat_examples.checkout'),
-            'tags': ['E-Commerce', 'Checkout', 'Forms', 'Wizard']
+            'id': 'pricing',
+            'title': 'Pricing Tables',
+            'description': 'Transparent tier comparison cards, feature checklists, and billing frequency toggles.',
+            'href': url_for('basecoat_examples.pricing'),
+            'tags': ['Core Block', 'Cards', 'Badges', 'Buttons']
         },
         {
-            'id': 'add-product',
-            'title': 'Add Product Form',
-            'description': 'Merchant catalog creation form with drag-and-drop media uploader, product variations, status, and pricing.',
-            'href': url_for('basecoat_examples.add_product'),
-            'tags': ['Forms', 'Media', 'Pricing', 'Cards']
+            'id': 'authentication',
+            'title': 'Authentication',
+            'description': 'Split-screen authentication screen with hero branding, email input, social OAuth, and terms.',
+            'href': url_for('basecoat_examples.authentication'),
+            'tags': ['Core Block', 'Forms', 'Buttons', 'Layout']
+        },
+
+        # --- Workspace & Security Companions ---
+        {
+            'id': 'two-factor',
+            'title': 'Two-Step Verification',
+            'description': 'Two-factor authentication (2FA) verification screen with 6-digit OTP code input, countdown, and resend trigger.',
+            'href': url_for('basecoat_examples.two_factor'),
+            'tags': ['Security', 'Auth', 'Forms']
+        },
+        {
+            'id': 'notifications',
+            'title': 'Notifications Center',
+            'description': 'Centralized user notification feed with All/Unread/Mentions filter tabs, unread indicators, and mark-all-as-read.',
+            'href': url_for('basecoat_examples.notifications'),
+            'tags': ['Notifications', 'Tabs', 'Badges']
         },
         {
             'id': 'mail',
@@ -182,18 +136,18 @@ def index():
             'tags': ['Files', 'Table', 'Progress', 'Cards']
         },
         {
-            'id': 'two-factor',
-            'title': 'Two-Step Verification',
-            'description': 'Two-factor authentication (2FA) verification screen with 6-digit OTP code input, countdown, and resend trigger.',
-            'href': url_for('basecoat_examples.two_factor'),
-            'tags': ['Auth', 'Security', 'Forms']
+            'id': 'changelog',
+            'title': 'Product Changelog',
+            'description': 'Chronological product release notes with semantic version tags, feature badges, and enhancement lists.',
+            'href': url_for('basecoat_examples.changelog'),
+            'tags': ['Timeline', 'Badges', 'Cards']
         },
         {
-            'id': 'task-detail',
-            'title': 'Task Detail View',
-            'description': 'Deep task inspection drawer with priority tags, milestone status, interactive subtasks checklist, and comments log.',
-            'href': url_for('basecoat_examples.task_detail'),
-            'tags': ['Tasks', 'Checklist', 'Comments', 'Badges']
+            'id': 'blog',
+            'title': 'Blog & Article Feed',
+            'description': 'Publication layout with featured article hero, category pills, trending sidebar, and recent post cards.',
+            'href': url_for('basecoat_examples.blog'),
+            'tags': ['Cards', 'Badges', 'Grid']
         },
         {
             'id': 'blog-detail',
@@ -203,11 +157,60 @@ def index():
             'tags': ['Blog', 'Typography', 'Comments']
         },
         {
-            'id': 'notifications',
-            'title': 'Notifications Center',
-            'description': 'Centralized user notification feed with All/Unread/Mentions filter tabs, unread indicators, and mark-all-as-read.',
-            'href': url_for('basecoat_examples.notifications'),
-            'tags': ['Notifications', 'Tabs', 'Badges']
+            'id': 'shopping-cart',
+            'title': 'Shopping Cart',
+            'description': 'Multi-item e-commerce shopping bag with quantity stepper, coupon applicator, gift wrap toggle, and price breakdown.',
+            'href': url_for('basecoat_examples.shopping_cart'),
+            'tags': ['E-Commerce', 'Cart', 'Forms', 'Cards']
+        },
+        {
+            'id': 'checkout',
+            'title': 'Checkout Page',
+            'description': 'Multi-step checkout with delivery/pickup selector, shipping address form, and live order summary.',
+            'href': url_for('basecoat_examples.checkout'),
+            'tags': ['E-Commerce', 'Checkout', 'Forms', 'Wizard']
+        },
+        {
+            'id': 'product-list',
+            'title': 'Product Catalog',
+            'description': 'E-commerce hardware directory with multi-facet filters, sorting controls, price badges, and card grid.',
+            'href': url_for('basecoat_examples.product_list'),
+            'tags': ['E-Commerce', 'Cards', 'Badges']
+        },
+        {
+            'id': 'product-detail',
+            'title': 'Product Detail Page',
+            'description': 'Comprehensive product showcase with thumbnail gallery, spec data table, finish selector, and cart CTA.',
+            'href': url_for('basecoat_examples.product_detail'),
+            'tags': ['Table', 'Badges', 'Gallery']
+        },
+        {
+            'id': 'projects',
+            'title': 'Projects List',
+            'description': 'Card grid of active deliverables with progress bars, team avatar stacks, and status badges.',
+            'href': url_for('basecoat_examples.projects'),
+            'tags': ['Cards', 'Dropdown', 'Progress', 'Badges']
+        },
+        {
+            'id': 'coming-soon',
+            'title': 'Coming Soon & Waitlist',
+            'description': 'Hero countdown timer with email waitlist collection form and feature teaser cards.',
+            'href': url_for('basecoat_examples.coming_soon'),
+            'tags': ['Hero', 'Countdown', 'Forms']
+        },
+        {
+            'id': 'ai-chat',
+            'title': 'AI Prompt Interface',
+            'description': 'Copilot conversational interface with prompt suggestion cards, assistant stream bubbles, and token badges.',
+            'href': url_for('basecoat_examples.ai_chat'),
+            'tags': ['AI', 'Cards', 'Badges']
+        },
+        {
+            'id': 'playground',
+            'title': 'LLM Playground',
+            'description': 'Interactive model inference workbench with hyperparameter tuning sliders, prompt canvas, and stop sequences.',
+            'href': url_for('basecoat_examples.playground'),
+            'tags': ['Playground', 'Tabs', 'Sliders']
         }
     ]
     return render_template('examples/index.html', examples=examples_list)

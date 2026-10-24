@@ -114,20 +114,22 @@
                     </div>
                 </div>
 
-                <!-- Tabs -->
-                <div class="inline-flex h-9 items-center justify-start rounded-lg bg-muted p-1 text-muted-foreground">
-                    <button data-tab="all" onclick="setTab('all')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors bg-background text-foreground shadow-xs">
-                        All
-                    </button>
-                    <button data-tab="unread" onclick="setTab('unread')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground">
-                        Unread
-                    </button>
-                    <button data-tab="mentions" onclick="setTab('mentions')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground">
-                        Mentions
-                    </button>
-                    <button data-tab="system" onclick="setTab('system')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground">
-                        System
-                    </button>
+                <!-- Tabs via Basecoat native Tabs -->
+                <div class="tabs" data-slot="tabs">
+                    <div role="tablist" class="inline-flex h-9 items-center justify-start rounded-lg bg-muted p-1 text-muted-foreground">
+                        <button role="tab" aria-selected="true" data-tab="all" onclick="setTab('all')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                            All
+                        </button>
+                        <button role="tab" aria-selected="false" data-tab="unread" onclick="setTab('unread')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                            Unread
+                        </button>
+                        <button role="tab" aria-selected="false" data-tab="mentions" onclick="setTab('mentions')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                            Mentions
+                        </button>
+                        <button role="tab" aria-selected="false" data-tab="system" onclick="setTab('system')" class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition-colors aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                            System
+                        </button>
+                    </div>
                 </div>
             </div>
 

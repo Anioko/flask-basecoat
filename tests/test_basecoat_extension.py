@@ -249,5 +249,24 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         self.assertIn('Mark all as read', resp_notif.get_data(as_text=True))
 
 
+    def test_templates_zero_hardcoded_colors(self):
+        """Merge Gate: Assert ZERO hardcoded hex colors exist in template examples."""
+        import re
+        from pathlib import Path
+
+        hex_pattern = re.compile(r'#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b')
+        examples_dir = Path(__file__).resolve().parent.parent / 'flask_basecoat' / 'templates' / 'examples'
+        self.assertTrue(examples_dir.is_dir(), f"Examples directory not found: {examples_dir}")
+
+        violations = []
+        for p in examples_dir.glob('*.html'):
+            text = p.read_text(encoding='utf-8', errors='ignore')
+            matches = hex_pattern.findall(text)
+            real = [m for m in matches if m.lower() not in ['#fff', '#000']]
+            if real:
+                violations.append(f"{p.name}: {set(real)}")
+
+        self.assertEqual(violations, [], f"Hardcoded hex colors found in templates (merge gate rejects): {violations}")
+
 if __name__ == '__main__':
     unittest.main()

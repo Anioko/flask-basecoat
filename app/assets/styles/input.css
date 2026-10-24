@@ -169,7 +169,19 @@ table.selectable tr:hover {
   cursor: pointer !important;
 }
 
-.sidebar-icon svg {
-  width: 1.25rem !important;
-  height: 1.25rem !important;
+/* Basecoat native component visibility */
+[data-popover][aria-hidden="true"],
+.popover [data-popover][aria-hidden="true"],
+.dropdown-menu [data-popover][aria-hidden="true"] {
+  display: none !important;
+}
+
+[data-popover][aria-hidden="false"],
+.popover [data-popover][aria-hidden="false"],
+.dropdown-menu [data-popover][aria-hidden="false"] {
+  display: block !important;
+}
+
+[role="tabpanel"][hidden] {
+  display: none !important;
 }

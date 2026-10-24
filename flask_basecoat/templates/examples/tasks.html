@@ -80,12 +80,55 @@
                             class="h-8 w-[150px] lg:w-[250px] rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                             oninput="filterTasks()"
                         >
-                        <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button">
-                            <i data-lucide="circle-plus" class="size-3.5"></i>Status
-                        </button>
-                        <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button">
-                            <i data-lucide="circle-plus" class="size-3.5"></i>Priority
-                        </button>
+                        <div class="popover relative">
+                            <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button" aria-expanded="false">
+                                <i data-lucide="circle-plus" class="size-3.5"></i>Status
+                            </button>
+                            <div data-popover aria-hidden="true" class="absolute left-0 top-full mt-1.5 z-50 w-44 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all aria-hidden:hidden">
+                                <div class="space-y-0.5 text-xs">
+                                    <button onclick="document.getElementById('task-filter-input').value='Todo'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Todo</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='In Progress'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>In Progress</span>
+                                        <span class="text-muted-foreground font-mono">2</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='Done'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Done</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value=''; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors text-muted-foreground border-t border-border mt-1">
+                                        Reset Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="popover relative">
+                            <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button" aria-expanded="false">
+                                <i data-lucide="circle-plus" class="size-3.5"></i>Priority
+                            </button>
+                            <div data-popover aria-hidden="true" class="absolute left-0 top-full mt-1.5 z-50 w-44 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all aria-hidden:hidden">
+                                <div class="space-y-0.5 text-xs">
+                                    <button onclick="document.getElementById('task-filter-input').value='High'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>High</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='Medium'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Medium</span>
+                                        <span class="text-muted-foreground font-mono">2</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='Low'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Low</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value=''; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors text-muted-foreground border-t border-border mt-1">
+                                        Reset Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="ml-auto hidden h-8 lg:flex items-center gap-1 border rounded-md px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button">
