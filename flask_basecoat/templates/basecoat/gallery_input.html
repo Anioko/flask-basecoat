@@ -1,0 +1,72 @@
+{% from 'basecoat/input.html' import input %}
+{% from 'basecoat/label.html' import label %}
+{% from 'basecoat/button.html' import button %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input - Basecoat UI Component Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/basecoat.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <script src="{{ url_for('basecoat.static', filename='js/all.min.js') }}" defer></script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 md:p-10 font-sans">
+    <main id="gallery-input" class="max-w-xl mx-auto space-y-8">
+        <header class="space-y-1">
+            <a href="{{ url_for('basecoat_gallery.gallery') }}" class="text-sm text-muted-foreground underline underline-offset-4">&larr; Gallery</a>
+            <h1 class="text-3xl font-bold tracking-tight">Input</h1>
+        </header>
+
+        <section class="space-y-2" aria-labelledby="s-default">
+            <h2 id="s-default" class="text-sm font-medium">Default</h2>
+            {{ input(id='in-default', type='email', placeholder='Email', label='Email') }}
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-file">
+            <h2 id="s-file" class="text-sm font-medium">File</h2>
+            {{ label(for='in-file', content='Picture') }}
+            {{ input(id='in-file', type='file') }}
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-disabled">
+            <h2 id="s-disabled" class="text-sm font-medium">Disabled</h2>
+            {{ input(id='in-disabled', type='email', placeholder='Email', label='Email (disabled)', disabled=true) }}
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-readonly">
+            <h2 id="s-readonly" class="text-sm font-medium">Read only</h2>
+            {{ input(id='in-readonly', value='Read only value', label='Read only', readonly=true) }}
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-label">
+            <h2 id="s-label" class="text-sm font-medium">With label and description</h2>
+            {{ label(for='in-email', content='Email') }}
+            {{ input(id='in-email', type='email', placeholder='Email', required=true, describedby='in-email-desc') }}
+            <p id="in-email-desc" class="text-sm text-muted-foreground">Enter your email address.</p>
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-invalid">
+            <h2 id="s-invalid" class="text-sm font-medium">Invalid</h2>
+            {{ label(for='in-invalid', content='Username') }}
+            {{ input(id='in-invalid', value='ab', invalid=true, describedby='in-invalid-err') }}
+            <p id="in-invalid-err" class="text-sm text-destructive">Username must be at least 4 characters.</p>
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-button">
+            <h2 id="s-button" class="text-sm font-medium">With button</h2>
+            <div class="flex w-full items-center gap-2">
+                {{ input(id='in-sub', type='email', placeholder='Email', label='Email for newsletter') }}
+                {{ button(content='Subscribe', variant='outline') }}
+            </div>
+        </section>
+
+        <section class="space-y-2" aria-labelledby="s-types">
+            <h2 id="s-types" class="text-sm font-medium">Types</h2>
+            {{ input(id='in-password', type='password', placeholder='Password', label='Password') }}
+            {{ input(id='in-number', type='number', placeholder='Number', label='Number') }}
+            {{ input(id='in-search', type='search', placeholder='Search', label='Search') }}
+        </section>
+    </main>
+</body>
+</html>

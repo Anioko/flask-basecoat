@@ -57,6 +57,21 @@
     </div>
   </div>
   
+  {% elif component.name == 'textarea' %}
+  <h3>Jinja macro</h3>
+  <p>One shadcn part (<code>data-slot="textarea"</code>) that grows with its text. Pass a <code>class</code> such as <code>min-h-32</code> for a taller box, and <code>disabled</code>, <code>readonly</code>, <code>required</code> or <code>invalid</code> for states, and pass initial text with <code>content</code> or a <code>call</code> block. Give it a visible label (<code>for</code> the <code>id</code>) or <code>aria_label</code>, and link help or error text with <code>aria_describedby</code>. See all states in the <a href="{{ url_for('basecoat_gallery.gallery_textarea') }}">textarea gallery</a>.</p>
+  <pre><code>{% raw %}{% from 'basecoat/textarea.html' import textarea %}
+{{ textarea(id='message', name='message', placeholder='Type your message here.') }}
+{{ textarea(id='bio', class='min-h-32', invalid=true, aria_describedby='bio-error') }}
+{% call textarea(id='notes') %}Initial text{% endcall %}{% endraw %}</code></pre>
+
+  {% elif component.name == 'label' %}
+  <h3>Jinja macro</h3>
+  <p>One shadcn part (<code>data-slot="label"</code>). Pass <code>for</code> with the control's <code>id</code> so the label names it and clicking it focuses or toggles the control, give the label text with <code>content</code> or a <code>call</code> block, and add <code>id</code> or <code>class</code> when needed. Disabled styling follows the markup as in shadcn: put <code>peer</code> on a disabled control that precedes the label, or <code>group</code> with <code>data-disabled="true"</code> on an ancestor. See all states in the <a href="{{ url_for('basecoat_gallery.gallery_label') }}">label gallery</a>.</p>
+  <pre><code>{% raw %}{% from 'basecoat/label.html' import label %}
+{{ label(for='email', content='Email') }}
+{% call label(for='terms') %}Accept terms and conditions{% endcall %}{% endraw %}</code></pre>
+
   {% elif component.name == 'card' %}
   <div class="docs-preview" data-preview>
     <div class="component-usage">
@@ -126,6 +141,25 @@
 {% endcall %}{% endraw %}</code></pre>
       <p>Arguments: <code>value</code>, <code>placeholder</code>, <code>size</code> (<code>default</code> or <code>sm</code>), <code>disabled</code>, <code>invalid</code>, <code>required</code>, <code>class</code>. Include <code>select-placeholder.js</code> after Basecoat's script to show a placeholder instead of the first option, and <code>select-scroll.js</code> for the scroll up and down buttons on long lists.</p>
       <p><a class="docs-link" href="/basecoat/gallery/select">See every state in the development gallery &rarr;</a></p>
+    </div>
+  </div>
+  {% elif component.name == 'input' %}
+  {% from 'basecoat/input.html' import input as shadcn_input %}
+  <div class="docs-preview" data-preview>
+    <div class="component-usage" data-docs-input>
+      <h4>Shadcn input macro</h4>
+      <p>
+        <code>{% raw %}{% from 'basecoat/input.html' import input %}{% endraw %}</code>.
+        Arguments: <code>type</code>, <code>placeholder</code>, <code>value</code>, <code>disabled</code>,
+        <code>readonly</code>, <code>required</code>, <code>invalid</code> (sets <code>aria-invalid</code>),
+        <code>describedby</code>, <code>label</code> (<code>aria-label</code>), <code>class</code>; any other
+        keyword becomes an HTML attribute. Input has no children, so there is no <code>caller()</code> slot.
+        See the <a class="docs-link" href="/basecoat/gallery/input">gallery entry</a> for every state.
+      </p>
+      <div class="component-example">
+        {{ shadcn_input(id='docs-input-email', type='email', placeholder='Email', label='Email') }}
+        {{ shadcn_input(id='docs-input-invalid', value='ab', invalid=true, label='Username') }}
+      </div>
     </div>
   </div>
   {% endif %}

@@ -47,7 +47,24 @@ def gallery_select():
     return render_template('basecoat/gallery_select.html', numbers=numbers)
 
 
+@gallery_bp.route('/gallery/input')
+def gallery_input():
+    return render_template('basecoat/gallery_input.html')
+
+
 @gallery_bp.route('/gallery/button')
 def gallery_button():
     theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
     return render_template('basecoat/gallery_button.html', theme=theme)
+
+
+@gallery_bp.route('/gallery/textarea')
+def gallery_textarea():
+    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
+    return render_template('basecoat/gallery_textarea.html', theme=theme)
+
+
+@gallery_bp.route('/gallery/label')
+def gallery_label():
+    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
+    return render_template('basecoat/gallery_label.html', theme=theme)

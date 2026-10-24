@@ -280,6 +280,15 @@ TEXTAREA_VARIANTS = {
     }
 }
 
+# Label component variants
+LABEL_VARIANTS = {
+    "default": {
+        "label": "Default Label",
+        "text": "Email",
+        "description": "A label bound to a control with for"
+    }
+}
+
 # Toggle/Switch component variants
 TOGGLE_VARIANTS = {
     "default": {
@@ -400,6 +409,12 @@ COMPONENT_REGISTRY = {
         "description": "Displays a form textarea or a component that looks like a textarea.",
         "variants": TEXTAREA_VARIANTS,
         "docs_url": "https://ui.shadcn.com/docs/components/textarea"
+    },
+    "label": {
+        "title": "Label",
+        "description": "Renders an accessible label associated with controls.",
+        "variants": LABEL_VARIANTS,
+        "docs_url": "https://ui.shadcn.com/docs/components/label"
     },
     "toggle": {
         "title": "Toggle",
