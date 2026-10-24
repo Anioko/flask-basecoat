@@ -3,6 +3,10 @@
 @import "tailwindcss" source(none);
 @source "./out";
 @source "./out/blocks";
+/* Upstream scans its TSX sources; the rendered HTML escapes quotes and ampersands inside class names, so the TSX is scanned too. */
+@source "../upstream/shadcn/radix";
+@source "../upstream/shadcn/new-york-v4";
+@source "../upstream/shadcn/base";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "./generated/theme.css";

@@ -93,7 +93,7 @@
           {% call ui.input_group(class='h-auto') %}
             {{ ui.input_group_control(id='input-addon-20', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50') }}
             {% call ui.input_group_addon(align='block-start') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">First Name</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">First Name</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info ml-auto text-muted-foreground" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -108,7 +108,7 @@
           {% call ui.input_group(class='h-auto') %}
             {{ ui.input_group_control(id='input-addon-21', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50') }}
             {% call ui.input_group_addon(align='block-end') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">20/240 characters</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">20/240 characters</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info ml-auto text-muted-foreground" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -173,7 +173,7 @@
           {% call ui.input_group() %}
             {{ ui.input_group_control(id='input-optional-12', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'aria-label': 'Optional'}) }}
             {% call ui.input_group_addon(align='inline-end') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">(optional)</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">(optional)</span>
             {% endcall %}
           {% endcall %}
         {% endcall %}
@@ -465,7 +465,7 @@
               {% endcall %}
               {% call ui.input_group() %}
                 {% call ui.input_group_addon(align='inline-start') %}
-                  <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">https://</span>
+                  <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">https://</span>
                 {% endcall %}
                 {{ ui.input_group_control(id='website-input', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'example.com'}) }}
                 {% call ui.input_group_addon(align='inline-end') %}
@@ -483,7 +483,7 @@
               {% call ui.input_group() %}
                 {{ ui.input_group_control(tag='textarea', id='feedback-textarea', class='cn-textarea flex field-sizing-content w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px]', attrs={'placeholder': 'Share your thoughts...'}) }}
                 {% call ui.input_group_addon(align='block-end') %}
-                  <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">0/500 characters</span>
+                  <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">0/500 characters</span>
                 {% endcall %}
               {% endcall %}
             {% endcall %}
@@ -537,7 +537,7 @@
           {% call ui.input_group() %}
             {{ ui.input_group_control(tag='textarea', id='prompt-31', class='cn-textarea flex field-sizing-content min-h-16 w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50') }}
             {% call ui.input_group_addon(align='block-start') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">Ask, Search or Chat...</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">Ask, Search or Chat...</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info ml-auto text-muted-foreground" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -554,7 +554,7 @@
           {% call ui.input_group() %}
             {{ ui.input_group_control(tag='textarea', id='textarea-header-footer-30', class='cn-textarea flex field-sizing-content min-h-16 w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Enter your text here...'}) }}
             {% call ui.input_group_addon(align='block-end') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">0/280 characters</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">0/280 characters</span>
               {% call ui.input_group_button(as_='input-group-button', size='icon-xs', variant='default', type='button', class='ml-auto rounded-full') %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up" aria-hidden="true">
                   <path d="m5 12 7-7 7 7"></path>
@@ -584,7 +584,7 @@
           {% call ui.input_group() %}
             {{ ui.input_group_control(tag='textarea', id='textarea-code-32', class='cn-textarea flex field-sizing-content w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 min-h-[300px] py-3', attrs={'placeholder': 'console.log(\'Hello, world!\');'}) }}
             {% call ui.input_group_addon(align='block-start', class='border-b') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none font-mono font-medium">
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none font-mono font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code" aria-hidden="true">
                   <path d="m16 18 6-6-6-6"></path>
                   <path d="m8 6-6 6 6 6"></path>
@@ -607,8 +607,8 @@
               {% endcall %}
             {% endcall %}
             {% call ui.input_group_addon(align='block-end', class='border-t') %}
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none">Line 1, Column 1</span>
-              <span class="cn-input-group-text flex items-center [&amp;_svg]:pointer-events-none ml-auto">JavaScript</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none">Line 1, Column 1</span>
+              <span class="cn-input-group-text flex items-center [&_svg]:pointer-events-none ml-auto">JavaScript</span>
             {% endcall %}
           {% endcall %}
         {% endcall %}

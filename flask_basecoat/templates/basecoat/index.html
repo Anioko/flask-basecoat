@@ -117,6 +117,7 @@
 {% set combobox_chip = _combobox.combobox_chip %}
 {% set combobox_chip_remove = _combobox.combobox_chip_remove %}
 {% set combobox_chip_input = _combobox.combobox_chip_input %}
+{% set combobox = _combobox.combobox %}
 {% import 'basecoat/command.html' as _command %}
 {% set command = _command.command %}
 {% set command_dialog = _command.command_dialog %}
@@ -144,6 +145,8 @@
 {% set context_menu_label = _context_menu.context_menu_label %}
 {% set context_menu_separator = _context_menu.context_menu_separator %}
 {% set context_menu_shortcut = _context_menu.context_menu_shortcut %}
+{% set context_menu_checkbox_item_indicator = _context_menu.context_menu_checkbox_item_indicator %}
+{% set context_menu_radio_item_indicator = _context_menu.context_menu_radio_item_indicator %}
 {% import 'basecoat/dialog.html' as _dialog %}
 {% set dialog = _dialog.dialog %}
 {% set dialog_trigger = _dialog.dialog_trigger %}
@@ -168,6 +171,7 @@
 {% set drawer_footer = _drawer.drawer_footer %}
 {% set drawer_title = _drawer.drawer_title %}
 {% set drawer_description = _drawer.drawer_description %}
+{% set drawer_handle = _drawer.drawer_handle %}
 {% import 'basecoat/dropdown-menu.html' as _dropdown_menu %}
 {% set dropdown_menu = _dropdown_menu.dropdown_menu %}
 {% set dropdown_menu_portal = _dropdown_menu.dropdown_menu_portal %}
@@ -204,12 +208,15 @@
 {% set field_separator = _field.field_separator %}
 {% set field_separator_content = _field.field_separator_content %}
 {% set field_error = _field.field_error %}
+{% set checkbox_group = _field.checkbox_group %}
 {% import 'basecoat/form.html' as _form %}
 {% set form_item = _form.form_item %}
 {% set form_label = _form.form_label %}
 {% set form_control = _form.form_control %}
 {% set form_description = _form.form_description %}
 {% set form_message = _form.form_message %}
+{% set form = _form.form %}
+{% set form_field = _form.form_field %}
 {% import 'basecoat/hover-card.html' as _hover_card %}
 {% set hover_card = _hover_card.hover_card %}
 {% set hover_card_trigger = _hover_card.hover_card_trigger %}
@@ -264,6 +271,8 @@
 {% set menubar_sub = _menubar.menubar_sub %}
 {% set menubar_sub_trigger = _menubar.menubar_sub_trigger %}
 {% set menubar_sub_content = _menubar.menubar_sub_content %}
+{% set menubar_checkbox_item_indicator = _menubar.menubar_checkbox_item_indicator %}
+{% set menubar_radio_item_indicator = _menubar.menubar_radio_item_indicator %}
 {% import 'basecoat/message.html' as _message %}
 {% set message_group = _message.message_group %}
 {% set message = _message.message %}
@@ -358,6 +367,9 @@
 {% set select_separator = _select.select_separator %}
 {% set select_scroll_up_button = _select.select_scroll_up_button %}
 {% set select_scroll_down_button = _select.select_scroll_down_button %}
+{% set select_item_indicator = _select.select_item_indicator %}
+{% set select_item_text = _select.select_item_text %}
+{% set select_viewport = _select.select_viewport %}
 {% import 'basecoat/separator.html' as _separator %}
 {% set separator = _separator.separator %}
 {% import 'basecoat/sheet.html' as _sheet %}
@@ -447,6 +459,7 @@
 {% set tooltip = _tooltip.tooltip %}
 {% set tooltip_trigger = _tooltip.tooltip_trigger %}
 {% set tooltip_content = _tooltip.tooltip_content %}
+{% set tooltip_arrow = _tooltip.tooltip_arrow %}
 {% import 'basecoat/trace.html' as _trace %}
 {% set trace = _trace.trace %}
 {% set trace_line = _trace.trace_line %}

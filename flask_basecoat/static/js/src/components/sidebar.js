@@ -22,7 +22,6 @@
         if (collapsible === 'none') return;
         sidebar.setAttribute('data-state', open ? 'expanded' : 'collapsed');
         sidebar.setAttribute('data-collapsible', open ? '' : collapsible);
-        FB.qsa(wrapper, '[data-slot="sidebar-trigger"]').forEach((t) => t.setAttribute('aria-expanded', String(open)));
         FB.emit(wrapper, 'sidebar', { open });
       }
       function toggle() {

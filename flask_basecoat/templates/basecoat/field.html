@@ -1,4 +1,4 @@
-{# field: port of shadcn/ui field.tsx (pinned in compliance/upstream). Macros: field_set, field_legend, field_group, field, field_content, field_label, field_description, field_separator, field_separator_content, field_error #}
+{# field: port of shadcn/ui field.tsx (pinned in compliance/upstream). Macros: field_set, field_legend, field_group, field, field_content, field_label, field_description, field_separator, field_separator_content, field_error, checkbox_group #}
 
 {#- FieldSet -#}
 {% macro field_set(text='', class='', id=none, attrs={}) -%}
@@ -57,5 +57,11 @@
 {#- FieldError -#}
 {% macro field_error(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('field-error', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- FieldGroup -#}
+{% macro checkbox_group(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('checkbox-group', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
 {%- endmacro %}

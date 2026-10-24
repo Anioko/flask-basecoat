@@ -1,4 +1,4 @@
-{# select: port of shadcn/ui select.tsx (pinned in compliance/upstream). Macros: select, select_group, select_value, select_trigger, select_content, select_label, select_item, select_separator, select_scroll_up_button, select_scroll_down_button #}
+{# select: port of shadcn/ui select.tsx (pinned in compliance/upstream). Macros: select, select_group, select_value, select_trigger, select_content, select_label, select_item, select_separator, select_scroll_up_button, select_scroll_down_button, select_item_indicator, select_item_text, select_viewport #}
 
 {#- Select: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
 {% macro select(class='', id=none, attrs={}) -%}
@@ -57,5 +57,23 @@
 {#- SelectScrollDownButton -#}
 {% macro select_scroll_down_button(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('select-scroll-down-button', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectItem -#}
+{% macro select_item_indicator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-item-indicator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectItem -#}
+{% macro select_item_text(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-item-text', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- SelectContent -#}
+{% macro select_viewport(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('select-viewport', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
 {%- endmacro %}

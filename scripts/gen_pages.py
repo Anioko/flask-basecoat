@@ -380,7 +380,10 @@ def raw_element(el, depth, ctx, children, text_before):
     for k, v in el.attrib.items():
         if k in DROP_ATTRS:
             continue
-        attrs.append(f' {k}="{html.escape(v, quote=True)}"' if v != '' else f' {k}=""')
+        if k == 'class':
+            attrs.append(f' class="{html.escape(v, quote=True).replace("&amp;", "&")}"')  # Tailwind scans the raw class names
+        else:
+            attrs.append(f' {k}="{html.escape(v, quote=True)}"' if v != '' else f' {k}=""')
     open_tag = f"<{tag}{''.join(attrs)}>"
     if tag in S.VOID:
         return f"{pad}{open_tag}\n"

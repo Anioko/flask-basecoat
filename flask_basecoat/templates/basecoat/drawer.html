@@ -1,4 +1,4 @@
-{# drawer: port of shadcn/ui drawer.tsx (pinned in compliance/upstream). Macros: drawer, drawer_trigger, drawer_portal, drawer_close, drawer_overlay, drawer_content, drawer_header, drawer_footer, drawer_title, drawer_description #}
+{# drawer: port of shadcn/ui drawer.tsx (pinned in compliance/upstream). Macros: drawer, drawer_trigger, drawer_portal, drawer_close, drawer_overlay, drawer_content, drawer_header, drawer_footer, drawer_title, drawer_description, drawer_handle #}
 
 {#- Drawer: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
 {% macro drawer(class='', id=none, attrs={}) -%}
@@ -57,5 +57,11 @@
 {#- DrawerDescription -#}
 {% macro drawer_description(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('drawer-description', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- DrawerContent -#}
+{% macro drawer_handle(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('drawer-handle', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
 {%- endmacro %}

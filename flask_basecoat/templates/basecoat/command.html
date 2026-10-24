@@ -6,10 +6,10 @@
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
 {%- endmacro %}
 
-{#- CommandDialog -#}
-{% macro command_dialog(text='', class='', id=none, attrs={}) -%}
+{#- CommandDialog: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro command_dialog(class='', id=none, attrs={}) -%}
 {%- set s = slot('command-dialog', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
 {%- endmacro %}
 
 {#- CommandInput -#}

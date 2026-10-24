@@ -67,6 +67,13 @@
       "element": "DrawerPrimitive.Description",
       "base_classes": "cn-drawer-description",
       "data_attrs": []
+    },
+    "drawer-handle": {
+      "component": "DrawerContent",
+      "element": "div",
+      "base_classes": "cn-drawer-handle",
+      "data_attrs": [],
+      "no_slot": true
     }
   }
 }

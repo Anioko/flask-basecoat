@@ -61,6 +61,14 @@
   FB.toast = toast;
   ['success', 'info', 'warning', 'error', 'loading'].forEach((v) => { toast[v] = (title, opts) => toast(Object.assign({ title, variant: v }, opts || {})); });
 
+  // Any element with data-fb-toast shows a toast on click (title from the attribute, optional description/variant).
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-fb-toast]');
+    if (!t) return;
+    toast({ title: t.getAttribute('data-fb-toast'), description: t.getAttribute('data-fb-toast-description') || undefined, variant: t.getAttribute('data-fb-toast-variant') || 'default',
+      action: t.getAttribute('data-fb-toast-action') ? { label: t.getAttribute('data-fb-toast-action') } : undefined });
+  });
+
   // Server-rendered flash messages: <template data-fb-flash data-variant="success">text</template>
   document.addEventListener('DOMContentLoaded', () => {
     FB.qsa(document, '[data-fb-flash]').forEach((t) => {

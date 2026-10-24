@@ -1,4 +1,4 @@
-{# form: port of shadcn/ui form.tsx (pinned in compliance/upstream). Macros: form_item, form_label, form_control, form_description, form_message #}
+{# form: port of shadcn/ui form.tsx (pinned in compliance/upstream). Macros: form_item, form_label, form_control, form_description, form_message, form, form_field #}
 
 {#- FormItem -#}
 {% macro form_item(text='', class='', id=none, attrs={}) -%}
@@ -28,4 +28,16 @@
 {% macro form_message(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('form-message', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- Form: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro form(class='', id=none, attrs={}) -%}
+{%- set s = slot('form', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
+{%- endmacro %}
+
+{#- FormField: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro form_field(class='', id=none, attrs={}) -%}
+{%- set s = slot('form-field', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
 {%- endmacro %}

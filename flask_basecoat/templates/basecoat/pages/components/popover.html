@@ -5,25 +5,80 @@
 {% block body %}
   {% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
-      {% call ui.popover_trigger(size='default', variant='outline') %}Open Popover
+      {% call ui.popover() %}
+        {% call ui.popover_trigger(size='default', variant='outline') %}Open Popover
+        {% endcall %}
+        {% call ui.popover_content(align='start') %}
+          {% call ui.popover_header() %}
+            {{ ui.popover_title(text='Dimensions') }}
+            {{ ui.popover_description(text='Set the dimensions for the layer.') }}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Form') %}
-      {% call ui.popover_trigger(size='default', variant='outline') %}Open Popover
+      {% call ui.popover() %}
+        {% call ui.popover_trigger(size='default', variant='outline') %}Open Popover
+        {% endcall %}
+        {% call ui.popover_content(align='start', class='w-64') %}
+          {% call ui.popover_header() %}
+            {{ ui.popover_title(text='Dimensions') }}
+            {{ ui.popover_description(text='Set the dimensions for the layer.') }}
+          {% endcall %}
+          {% call ui.field_group(class='gap-4') %}
+            {% call ui.field(orientation='horizontal') %}
+              {{ ui.field_label(as_='label', for_='width', class='w-1/2', text='Width') }}
+              {{ ui.input(id='width', value='100%') }}
+            {% endcall %}
+            {% call ui.field(orientation='horizontal') %}
+              {{ ui.field_label(as_='label', for_='height', class='w-1/2', text='Height') }}
+              {{ ui.input(id='height', value='25px') }}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Alignments') %}
       <div class="flex gap-6">
-        {% call ui.popover_trigger(size='sm', variant='outline') %}Start
+        {% call ui.popover() %}
+          {% call ui.popover_trigger(size='sm', variant='outline') %}Start
+          {% endcall %}
+          {{ ui.popover_content(align='start', class='w-40', text='Aligned to start') }}
         {% endcall %}
-        {% call ui.popover_trigger(size='sm', variant='outline') %}Center
+        {% call ui.popover() %}
+          {% call ui.popover_trigger(size='sm', variant='outline') %}Center
+          {% endcall %}
+          {{ ui.popover_content(align='center', class='w-40', text='Aligned to center') }}
         {% endcall %}
-        {% call ui.popover_trigger(size='sm', variant='outline') %}End
+        {% call ui.popover() %}
+          {% call ui.popover_trigger(size='sm', variant='outline') %}End
+          {% endcall %}
+          {{ ui.popover_content(align='end', class='w-40', text='Aligned to end') }}
         {% endcall %}
       </div>
     {% endcall %}
     {% call ui.example(title='In Dialog') %}
-      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% call ui.dialog() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+        {% endcall %}
+        {{ ui.dialog_overlay() }}
+        {% call ui.dialog_content() %}
+          {% call ui.dialog_header() %}
+            {{ ui.dialog_title(text='Popover Example') }}
+            {{ ui.dialog_description(text='Click the button below to see the popover.') }}
+          {% endcall %}
+          {% call ui.popover() %}
+            {% call ui.popover_trigger(size='default', variant='outline', class='w-fit') %}Open Popover
+            {% endcall %}
+            {% call ui.popover_content(align='start') %}
+              {% call ui.popover_header() %}
+                {{ ui.popover_title(text='Popover in Dialog') }}
+                {{ ui.popover_description(text='This popover appears inside a dialog. Click the button to open it.') }}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
   {% endcall %}

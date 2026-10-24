@@ -5,55 +5,294 @@
 {% block body %}
   {% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_item(text='Back') }}
+            {{ ui.context_menu_item(text='Forward', disabled=true) }}
+            {{ ui.context_menu_item(text='Reload') }}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Sides') %}
       <div class="grid grid-cols-2 gap-6">
-        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (top)
+        {% call ui.context_menu() %}
+          {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (top)
+          {% endcall %}
+          {% call ui.context_menu_content(side='top') %}
+            {% call ui.context_menu_group() %}
+              {{ ui.context_menu_item(text='Back') }}
+              {{ ui.context_menu_item(text='Forward') }}
+              {{ ui.context_menu_item(text='Reload') }}
+            {% endcall %}
+          {% endcall %}
         {% endcall %}
-        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (right)
+        {% call ui.context_menu() %}
+          {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (right)
+          {% endcall %}
+          {% call ui.context_menu_content(side='right') %}
+            {% call ui.context_menu_group() %}
+              {{ ui.context_menu_item(text='Back') }}
+              {{ ui.context_menu_item(text='Forward') }}
+              {{ ui.context_menu_item(text='Reload') }}
+            {% endcall %}
+          {% endcall %}
         {% endcall %}
-        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (bottom)
+        {% call ui.context_menu() %}
+          {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (bottom)
+          {% endcall %}
+          {% call ui.context_menu_content(side='bottom') %}
+            {% call ui.context_menu_group() %}
+              {{ ui.context_menu_item(text='Back') }}
+              {{ ui.context_menu_item(text='Forward') }}
+              {{ ui.context_menu_item(text='Reload') }}
+            {% endcall %}
+          {% endcall %}
         {% endcall %}
-        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (left)
+        {% call ui.context_menu() %}
+          {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click (left)
+          {% endcall %}
+          {% call ui.context_menu_content(side='left') %}
+            {% call ui.context_menu_group() %}
+              {{ ui.context_menu_item(text='Back') }}
+              {{ ui.context_menu_item(text='Forward') }}
+              {{ ui.context_menu_item(text='Reload') }}
+            {% endcall %}
+          {% endcall %}
         {% endcall %}
       </div>
     {% endcall %}
     {% call ui.example(title='With Icons') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item() %}{{ lucide('copy') }}Copy{% endcall %}
+            {% call ui.context_menu_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+            {% call ui.context_menu_item() %}{{ lucide('clipboard-paste') }}Paste{% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Shortcuts') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item() %}Back{{ ui.context_menu_shortcut(text='⌘[') }}{% endcall %}
+            {% call ui.context_menu_item(disabled=true) %}Forward{{ ui.context_menu_shortcut(text='⌘]') }}{% endcall %}
+            {% call ui.context_menu_item() %}Reload{{ ui.context_menu_shortcut(text='⌘R') }}{% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item() %}Save{{ ui.context_menu_shortcut(text='⌘S') }}{% endcall %}
+            {% call ui.context_menu_item() %}Save As...{{ ui.context_menu_shortcut(text='⇧⌘S') }}{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Submenu') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item() %}Copy{{ ui.context_menu_shortcut(text='⌘C') }}{% endcall %}
+            {% call ui.context_menu_item() %}Cut{{ ui.context_menu_shortcut(text='⌘X') }}{% endcall %}
+          {% endcall %}
+          {% call ui.context_menu_sub() %}
+            {% call ui.context_menu_sub_trigger() %}More Tools{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+            {% call ui.context_menu_sub_content() %}
+              {% call ui.context_menu_group() %}
+                {{ ui.context_menu_item(text='Save Page...') }}
+                {{ ui.context_menu_item(text='Create Shortcut...') }}
+                {{ ui.context_menu_item(text='Name Window...') }}
+              {% endcall %}
+              {{ ui.context_menu_separator() }}
+              {% call ui.context_menu_group() %}
+                {{ ui.context_menu_item(text='Developer Tools') }}
+              {% endcall %}
+              {{ ui.context_menu_separator() }}
+              {% call ui.context_menu_group() %}
+                {{ ui.context_menu_item(text='Delete', variant='destructive') }}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Groups, Labels & Separators') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='File') }}
+            {% call ui.context_menu_item() %}New File{{ ui.context_menu_shortcut(text='⌘N') }}{% endcall %}
+            {% call ui.context_menu_item() %}Open File{{ ui.context_menu_shortcut(text='⌘O') }}{% endcall %}
+            {% call ui.context_menu_item() %}Save{{ ui.context_menu_shortcut(text='⌘S') }}{% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='Edit') }}
+            {% call ui.context_menu_item() %}Undo{{ ui.context_menu_shortcut(text='⌘Z') }}{% endcall %}
+            {% call ui.context_menu_item() %}Redo{{ ui.context_menu_shortcut(text='⇧⌘Z') }}{% endcall %}
+            {{ ui.context_menu_separator() }}
+            {% call ui.context_menu_item() %}Cut{{ ui.context_menu_shortcut(text='⌘X') }}{% endcall %}
+            {% call ui.context_menu_item() %}Copy{{ ui.context_menu_shortcut(text='⌘C') }}{% endcall %}
+            {% call ui.context_menu_item() %}Paste{{ ui.context_menu_shortcut(text='⌘V') }}{% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item(variant='destructive') %}Delete{{ ui.context_menu_shortcut(text='⌫') }}{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Checkboxes') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_checkbox_item(checked=true) %}{% call ui.context_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}Show Bookmarks Bar{% endcall %}
+            {% call ui.context_menu_checkbox_item() %}{{ ui.context_menu_checkbox_item_indicator() }}Show Full URLs{% endcall %}
+            {% call ui.context_menu_checkbox_item() %}{{ ui.context_menu_checkbox_item_indicator() }}Show Developer Tools{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Radio Group') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='People') }}
+            {% call ui.context_menu_radio_group() %}
+              {% call ui.context_menu_radio_item(value='pedro', checked=true) %}{% call ui.context_menu_radio_item_indicator() %}{{ lucide('check') }}{% endcall %}Pedro Duarte{% endcall %}
+              {% call ui.context_menu_radio_item(value='colm') %}{{ ui.context_menu_radio_item_indicator() }}Colm Tuite{% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='Theme') }}
+            {% call ui.context_menu_radio_group() %}
+              {% call ui.context_menu_radio_item(value='light', checked=true) %}{% call ui.context_menu_radio_item_indicator() %}{{ lucide('check') }}{% endcall %}Light{% endcall %}
+              {% call ui.context_menu_radio_item(value='dark') %}{{ ui.context_menu_radio_item_indicator() }}Dark{% endcall %}
+              {% call ui.context_menu_radio_item(value='system') %}{{ ui.context_menu_radio_item_indicator() }}System{% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Destructive Items') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content() %}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item() %}{{ lucide('pencil') }}Edit{% endcall %}
+            {% call ui.context_menu_item() %}{{ lucide('share') }}Share{% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {% call ui.context_menu_item() %}{{ lucide('archive') }}Archive{% endcall %}
+            {% call ui.context_menu_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='In Dialog') %}
-      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% call ui.dialog() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+        {% endcall %}
+        {{ ui.dialog_overlay() }}
+        {% call ui.dialog_content() %}
+          {% call ui.dialog_header() %}
+            {{ ui.dialog_title(text='Context Menu Example') }}
+            {{ ui.dialog_description(text='Right click on the area below to see the context menu.') }}
+          {% endcall %}
+          {% call ui.context_menu() %}
+            {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+            {% endcall %}
+            {% call ui.context_menu_content() %}
+              {% call ui.context_menu_group() %}
+                {% call ui.context_menu_item() %}{{ lucide('copy') }}Copy{% endcall %}
+                {% call ui.context_menu_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+                {% call ui.context_menu_item() %}{{ lucide('clipboard-paste') }}Paste{% endcall %}
+              {% endcall %}
+              {{ ui.context_menu_separator() }}
+              {% call ui.context_menu_sub() %}
+                {% call ui.context_menu_sub_trigger() %}More Options{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+                {% call ui.context_menu_sub_content() %}
+                  {% call ui.context_menu_group() %}
+                    {{ ui.context_menu_item(text='Save Page...') }}
+                    {{ ui.context_menu_item(text='Create Shortcut...') }}
+                    {{ ui.context_menu_item(text='Name Window...') }}
+                  {% endcall %}
+                  {{ ui.context_menu_separator() }}
+                  {% call ui.context_menu_group() %}
+                    {{ ui.context_menu_item(text='Developer Tools') }}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+              {{ ui.context_menu_separator() }}
+              {% call ui.context_menu_group() %}
+                {% call ui.context_menu_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Inset') %}
-      {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+      {% call ui.context_menu() %}
+        {% call ui.context_menu_trigger(class='flex aspect-[2/0.5] w-full items-center justify-center rounded-lg border text-sm', attrs={'style': '-webkit-touch-callout:none'}) %}Right click here
+        {% endcall %}
+        {% call ui.context_menu_content(class='w-44') %}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='Actions') }}
+            {% call ui.context_menu_item() %}{{ lucide('copy') }}Copy{% endcall %}
+            {% call ui.context_menu_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+            {{ ui.context_menu_item(text='Paste', inset=true) }}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='Appearance', inset=true) }}
+            {% call ui.context_menu_checkbox_item(inset=true, checked=true) %}{% call ui.context_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}Bookmarks{% endcall %}
+            {% call ui.context_menu_checkbox_item(inset=true) %}{{ ui.context_menu_checkbox_item_indicator() }}Full URLs{% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_group() %}
+            {{ ui.context_menu_label(text='Theme', inset=true) }}
+            {% call ui.context_menu_radio_group() %}
+              {% call ui.context_menu_radio_item(inset=true, value='light') %}{{ ui.context_menu_radio_item_indicator() }}Light{% endcall %}
+              {% call ui.context_menu_radio_item(inset=true, value='dark') %}{{ ui.context_menu_radio_item_indicator() }}Dark{% endcall %}
+              {% call ui.context_menu_radio_item(inset=true, value='system', checked=true) %}{% call ui.context_menu_radio_item_indicator() %}{{ lucide('check') }}{% endcall %}System{% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {{ ui.context_menu_separator() }}
+          {% call ui.context_menu_sub() %}
+            {% call ui.context_menu_sub_trigger(inset=true) %}More Options{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+            {% call ui.context_menu_sub_content() %}
+              {% call ui.context_menu_group() %}
+                {{ ui.context_menu_item(text='Save Page...') }}
+                {{ ui.context_menu_item(text='Create Shortcut...') }}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
   {% endcall %}

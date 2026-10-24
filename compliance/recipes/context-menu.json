@@ -120,6 +120,20 @@
       "element": "span",
       "base_classes": "cn-context-menu-shortcut",
       "data_attrs": []
+    },
+    "context-menu-checkbox-item-indicator": {
+      "component": "ContextMenuCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+      "data_attrs": [],
+      "no_slot": true
+    },
+    "context-menu-radio-item-indicator": {
+      "component": "ContextMenuRadioItem",
+      "element": "span",
+      "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+      "data_attrs": [],
+      "no_slot": true
     }
   }
 }

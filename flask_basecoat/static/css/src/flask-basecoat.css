@@ -4,6 +4,7 @@
 @import "tailwindcss" source(none);
 @source "../../../templates";
 @source "../../js/src";
+@source "../../../data";  /* class recipes extracted from upstream; the macros emit them at render time */
 
 @import "tw-animate-css";
 @import "../../../../compliance/upstream/shadcn/shadcn-tailwind.css";

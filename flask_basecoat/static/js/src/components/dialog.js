@@ -33,7 +33,6 @@
       if (trigger) { FB.setState(trigger, 'open'); trigger.setAttribute('aria-expanded', 'true'); }
       FB.lockScroll();
       untrap = FB.trapFocus(content);
-      FB.focusFirst(content, '[data-autofocus], [autofocus]');
       layer = {
         content, trigger, modal: true,
         onDismiss(reason, e) {
@@ -46,6 +45,7 @@
         },
       };
       FB.pushLayer(layer);
+      FB.focusFirst(content, '[data-autofocus], [autofocus]');
       FB.emit(content, 'open', { kind });
     }
     function close() {

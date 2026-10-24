@@ -5,56 +5,81 @@
 {% block body %}
   {% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
-      {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit') %}Show Tooltip
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit') %}Show Tooltip
+        {% endcall %}
+        {% call ui.tooltip_content() %}<p>Add to library</p>{% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Sides') %}
       <div class="flex flex-wrap gap-2">
-        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit capitalize style-sera:uppercase') %}top
+        {% for side in ['top', 'right', 'bottom', 'left'] %}
+        {% call ui.tooltip() %}
+          {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit capitalize style-sera:uppercase') %}{{ side }}
+          {% endcall %}
+          {% call ui.tooltip_content(side=side) %}<p>Add to library</p>{% endcall %}
         {% endcall %}
-        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit capitalize style-sera:uppercase') %}right
-        {% endcall %}
-        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit capitalize style-sera:uppercase') %}bottom
-        {% endcall %}
-        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit capitalize style-sera:uppercase') %}left
-        {% endcall %}
+        {% endfor %}
       </div>
     {% endcall %}
     {% call ui.example(title='With Icon') %}
-      {% call ui.tooltip_trigger(size='icon', variant='ghost') %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 16v-4"></path>
-          <path d="M12 8h.01"></path>
-        </svg>
-        <span class="sr-only">Info</span>
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(size='icon', variant='ghost') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+          <span class="sr-only">Info</span>
+        {% endcall %}
+        {% call ui.tooltip_content() %}<p>Additional information</p>{% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Long Content') %}
-      {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit') %}Show Tooltip
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit') %}Show Tooltip
+        {% endcall %}
+        {{ ui.tooltip_content(text='To learn more about how this works, check out the docs. If you have any questions, please reach out to us.') }}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Disabled') %}
-      {% call ui.tooltip_trigger(as_=none, tag='span', class='inline-block w-fit') %}
-        {% call ui.button(size='default', variant='outline', disabled=true) %}Disabled
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(as_=none, tag='span', class='inline-block w-fit') %}
+          {% call ui.button(size='default', variant='outline', disabled=true) %}Disabled
+          {% endcall %}
         {% endcall %}
+        {% call ui.tooltip_content() %}<p>This feature is currently unavailable</p>{% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Keyboard Shortcut') %}
-      {% call ui.tooltip_trigger(size='icon-sm', variant='outline') %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save" aria-hidden="true">
-          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
-          <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
-        </svg>
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(size='icon-sm', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-save" aria-hidden="true">
+            <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+            <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path>
+            <path d="M7 3v4a1 1 0 0 0 1 1h7"></path>
+          </svg>
+        {% endcall %}
+        {% call ui.tooltip_content() %}Save Changes {{ ui.kbd(text='S') }}{% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='On Link') %}
-      {% call ui.tooltip_trigger(as_=none, href='#', class='w-fit text-sm text-primary underline-offset-4 hover:underline') %}Learn more
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(as_=none, href='#', class='w-fit text-sm text-primary underline-offset-4 hover:underline') %}Learn more
+        {% endcall %}
+        {% call ui.tooltip_content() %}<p>Click to read the documentation</p>{% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Formatted Content') %}
-      {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit') %}Status
+      {% call ui.tooltip() %}
+        {% call ui.tooltip_trigger(size='default', variant='outline', class='w-fit') %}Status
+        {% endcall %}
+        {% call ui.tooltip_content() %}
+          <div class="flex flex-col gap-1">
+            <p class="font-semibold">Active</p>
+            <p class="text-xs opacity-80">Last updated 2 hours ago</p>
+          </div>
+        {% endcall %}
       {% endcall %}
     {% endcall %}
   {% endcall %}

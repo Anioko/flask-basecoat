@@ -126,6 +126,20 @@
       "element": "MenubarPrimitive.SubContent",
       "base_classes": "cn-menubar-sub-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-menubar-content-transform-origin) overflow-hidden",
       "data_attrs": []
+    },
+    "menubar-checkbox-item-indicator": {
+      "component": "MenubarCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-menubar-checkbox-item-indicator pointer-events-none absolute flex items-center justify-center",
+      "data_attrs": [],
+      "no_slot": true
+    },
+    "menubar-radio-item-indicator": {
+      "component": "MenubarRadioItem",
+      "element": "span",
+      "base_classes": "cn-menubar-radio-item-indicator pointer-events-none absolute flex items-center justify-center",
+      "data_attrs": [],
+      "no_slot": true
     }
   }
 }

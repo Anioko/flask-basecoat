@@ -6,7 +6,7 @@
   {% call ui.example_wrapper() %}
     {% call ui.example(title='Chat', container_class='md:col-span-2') %}
       <div class="flex min-h-96 w-full max-w-xl flex-col gap-6 text-sm">
-        {% call ui.button(size='sm', variant='outline', class='mt-auto self-start') %}Send message
+        {% call ui.button(variant='outline', size='sm', class='mt-auto self-start') %}Send message
         {% endcall %}
       </div>
     {% endcall %}
@@ -177,7 +177,7 @@
           {% call ui.trace_collapsible_content(open=true, id='radix-_R_93_') %}
             {% call ui.trace_collapsible_content_inner() %}
               {% call ui.code_block(variant='default', size='sm') %}
-                {% call ui.code_block_content(attrs={'style': 'counter-reset:line 0'}) %}
+                {% call ui.code_block_content(attrs={'data-wrap': 'true', 'style': 'counter-reset:line 0'}) %}
                   {% call ui.code_block_code() %}$ node --version
 v24.18.0
                   {% endcall %}
@@ -225,7 +225,7 @@ v24.18.0
           {{ ui.trace_collapsible_content(id='radix-_R_34_') }}
         {% endcall %}
         <div class="flex min-h-80 flex-col gap-4 border-t pt-8">
-          {% call ui.button(size='sm', variant='outline', class='mt-auto self-start') %}Send message
+          {% call ui.button(variant='outline', size='sm', class='mt-auto self-start') %}Send message
           {% endcall %}
         </div>
       </div>

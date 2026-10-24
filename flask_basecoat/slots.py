@@ -45,7 +45,7 @@ VIRTUAL = {
     'dialog', 'dialog-portal', 'alert-dialog', 'alert-dialog-portal', 'sheet', 'sheet-portal', 'drawer', 'drawer-portal',
     'popover', 'hover-card', 'hover-card-portal', 'tooltip', 'tooltip-provider', 'dropdown-menu', 'dropdown-menu-portal',
     'dropdown-menu-sub', 'context-menu', 'context-menu-portal', 'context-menu-sub', 'menubar-menu', 'menubar-portal',
-    'menubar-sub', 'select', 'combobox', 'toast-portal', 'form', 'form-field',
+    'menubar-sub', 'select', 'combobox', 'toast-portal', 'form', 'form-field', 'command-dialog',
 }
 
 TAGS = {
@@ -138,7 +138,7 @@ DEFAULT_ATTRS = {
     'attachment': {'data-state': 'idle', 'data-size': 'default', 'data-orientation': 'horizontal'},
     'calendar': {'lang': 'en-US', 'data-mode': 'single'},
     'command-item': {'aria-disabled': 'false', 'aria-selected': 'false', 'data-disabled': 'false', 'data-selected': 'false'},
-    'questionnaire-item': {'data-status': 'unanswered'}, 'code-block-content': {'data-wrap': 'true', 'data-numbered': 'true'},
+    'questionnaire-item': {'data-status': 'unanswered'},
     'form-control': {'aria-invalid': 'false'},
 }
 
@@ -397,7 +397,8 @@ def slot(name, kw=None, class_='', id=None, attrs=None):
     href = kw.get('href')
     tag = tag_for(name, href, kw.get('tag'))
     rec = recipe(name, kw.get('tag'))
-    a['data-slot'] = COMPOSITES[name]['outer'] if name in COMPOSITES else name
+    if not rec.get('no_slot'):
+        a['data-slot'] = COMPOSITES[name]['outer'] if name in COMPOSITES else name
     cva_kw = {k: v for k, v in kw.items() if isinstance(v, str) or v is None}
     if 'tag' in kw:
         cva_kw['tag'] = kw['tag']
@@ -466,6 +467,13 @@ def slot(name, kw=None, class_='', id=None, attrs=None):
         if name in ('checkbox', 'switch', 'radio-group-item'):
             a['value'] = kw.get('value', 'on')
             consumed.add('value')
+    if name in ('combobox-item', 'select-item') and 'checked' in kw:
+        on = _bool(kw['checked'])
+        a['aria-selected'] = 'true' if on else 'false'
+        if name == 'combobox-item':
+            a['data-checked'] = 'true' if on else 'false'
+        else:
+            a['data-state'] = 'checked' if on else 'unchecked'
     consumed |= {'checked', 'indeterminate'}
 
     # ---- pressed / toggle groups

@@ -43,7 +43,7 @@
       function select(item) {
         if (item.getAttribute('aria-disabled') === 'true' || item.hasAttribute('data-disabled')) return;
         items().forEach((i) => { const on = i === item; i.setAttribute('aria-selected', String(on)); FB.setState(i, on ? 'checked' : 'unchecked'); });
-        const value = item.getAttribute('data-value') || item.textContent.trim();
+        const value = item.getAttribute('data-value') || item.getAttribute('value') || item.textContent.trim();
         const label = (FB.qs(item, '[data-slot="select-item-text"]') || item).textContent.trim();
         if (valueEl) { valueEl.textContent = label; }
         trigger.removeAttribute('data-placeholder');
@@ -53,7 +53,7 @@
         close();
       }
       const preselected = items().find((i) => i.getAttribute('data-state') === 'checked' || i.getAttribute('aria-selected') === 'true');
-      if (preselected) { const label = preselected.textContent.trim(); if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = label; if (input) input.value = preselected.getAttribute('data-value') || label; trigger.removeAttribute('data-placeholder'); }
+      if (preselected) { const label = preselected.textContent.trim(); if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = label; if (input) input.value = preselected.getAttribute('data-value') || preselected.getAttribute('value') || label; trigger.removeAttribute('data-placeholder'); }
       else if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = placeholder;
       items().forEach((i) => { i.setAttribute('tabindex', '-1'); if (!i.hasAttribute('data-state')) FB.setState(i, 'unchecked'); });
       trigger.addEventListener('click', (e) => { e.preventDefault(); if (trigger.disabled) return; FB.isOpen(content) ? close() : open(); });

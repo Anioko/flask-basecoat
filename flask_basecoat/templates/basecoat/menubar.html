@@ -1,4 +1,4 @@
-{# menubar: port of shadcn/ui menubar.tsx (pinned in compliance/upstream). Macros: menubar, menubar_menu, menubar_group, menubar_portal, menubar_radio_group, menubar_trigger, menubar_content, menubar_item, menubar_checkbox_item, menubar_radio_item, menubar_label, menubar_separator, menubar_shortcut, menubar_sub, menubar_sub_trigger, menubar_sub_content #}
+{# menubar: port of shadcn/ui menubar.tsx (pinned in compliance/upstream). Macros: menubar, menubar_menu, menubar_group, menubar_portal, menubar_radio_group, menubar_trigger, menubar_content, menubar_item, menubar_checkbox_item, menubar_radio_item, menubar_label, menubar_separator, menubar_shortcut, menubar_sub, menubar_sub_trigger, menubar_sub_content, menubar_checkbox_item_indicator, menubar_radio_item_indicator #}
 
 {#- Menubar -#}
 {% macro menubar(text='', class='', id=none, attrs={}) -%}
@@ -93,5 +93,17 @@
 {#- MenubarSubContent -#}
 {% macro menubar_sub_content(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('menubar-sub-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- MenubarCheckboxItem -#}
+{% macro menubar_checkbox_item_indicator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('menubar-checkbox-item-indicator', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- MenubarRadioItem -#}
+{% macro menubar_radio_item_indicator(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('menubar-radio-item-indicator', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
 {%- endmacro %}

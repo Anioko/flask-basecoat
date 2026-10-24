@@ -1,0 +1,44 @@
+name: shadcn compliance
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt -r requirements-dev.txt
+          pip install playwright axe-playwright-python lxml cssselect pytest
+          python -m playwright install --with-deps chromium
+      - name: Install Node toolchains
+        run: |
+          npm ci
+          cd compliance/golden && npm ci
+      - name: Render the upstream golden pages and build stylesheets
+        run: |
+          python compliance/scripts/gen_theme.py
+          npm run golden
+          npm run build
+          python scripts/build_js.py
+      - name: Generated artefacts are committed
+        run: |
+          python compliance/scripts/extract_recipes.py > /dev/null
+          python scripts/gen_macros.py --force > /dev/null
+          git diff --exit-code -- compliance/recipes flask_basecoat/data flask_basecoat/templates/basecoat/*.html compliance/golden/out
+      - name: Compliance checks
+        run: python scripts/shadcn_compliance.py --browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compliance-report
+          path: compliance/REPORT.json

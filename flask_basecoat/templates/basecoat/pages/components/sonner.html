@@ -5,11 +5,11 @@
 {% block body %}
   {% call ui.example_wrapper() %}
     {% call ui.example(title='Basic', class='items-center justify-center') %}
-      {% call ui.button(size='default', variant='outline', class='w-fit') %}Show Toast
+      {% call ui.button(size='default', variant='outline', class='w-fit', attrs={'data-fb-toast': 'Event has been created'}) %}Show Toast
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Description', class='items-center justify-center') %}
-      {% call ui.button(size='default', variant='outline', class='w-fit') %}Show Toast
+      {% call ui.button(size='default', variant='outline', class='w-fit', attrs={'data-fb-toast': 'Event has been created', 'data-fb-toast-description': 'Monday, January 3rd at 6:00pm'}) %}Show Toast
       {% endcall %}
     {% endcall %}
   {% endcall %}

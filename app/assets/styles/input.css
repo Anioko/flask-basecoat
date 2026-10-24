@@ -6,6 +6,7 @@
 @source "../../templates";
 @source "../../../flask_basecoat/templates";
 @source "../../../flask_basecoat/static/js";
+@source "../../../flask_basecoat/data";  /* class recipes extracted from upstream; the macros emit them at render time */
 
 @import "tw-animate-css";
 @import "../../../compliance/upstream/shadcn/shadcn-tailwind.css";

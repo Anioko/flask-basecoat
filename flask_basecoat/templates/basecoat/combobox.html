@@ -1,4 +1,4 @@
-{# combobox: port of shadcn/ui combobox.tsx (pinned in compliance/upstream). Macros: combobox_value, combobox_trigger, combobox_clear, input_group_button, combobox_content, combobox_list, combobox_item, combobox_group, combobox_label, combobox_collection, combobox_empty, combobox_separator, combobox_chips, combobox_chip, combobox_chip_remove, combobox_chip_input #}
+{# combobox: port of shadcn/ui combobox.tsx (pinned in compliance/upstream). Macros: combobox_value, combobox_trigger, combobox_clear, input_group_button, combobox_content, combobox_list, combobox_item, combobox_group, combobox_label, combobox_collection, combobox_empty, combobox_separator, combobox_chips, combobox_chip, combobox_chip_remove, combobox_chip_input, combobox #}
 
 {#- ComboboxValue -#}
 {% macro combobox_value(text='', class='', id=none, attrs={}) -%}
@@ -94,4 +94,10 @@
 {% macro combobox_chip_input(class='', id=none, attrs={}) -%}
 {%- set s = slot('combobox-chip-input', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>
+{%- endmacro %}
+
+{#- Combobox: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
+{% macro combobox(class='', id=none, attrs={}) -%}
+{%- set s = slot('combobox', kwargs, class, id, attrs) -%}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>
 {%- endmacro %}

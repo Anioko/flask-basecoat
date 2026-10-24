@@ -101,6 +101,12 @@
       "element": "div",
       "base_classes": "cn-field-error font-normal",
       "data_attrs": []
+    },
+    "checkbox-group": {
+      "component": "FieldGroup",
+      "element": "div",
+      "base_classes": "cn-field-group group/field-group @container/field-group flex w-full flex-col data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4",
+      "data_attrs": []
     }
   }
 }

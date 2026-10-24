@@ -651,6 +651,13 @@
   "data_attrs": [],
   "element": "CheckboxPrimitive.Root"
  },
+ "checkbox-group": {
+  "base_classes": "cn-field-group group/field-group @container/field-group flex w-full flex-col data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4",
+  "component": "FieldGroup",
+  "component_name": "field",
+  "data_attrs": [],
+  "element": "div"
+ },
  "checkbox-indicator": {
   "base_classes": "cn-checkbox-indicator grid place-content-center text-current transition-none",
   "component": "Checkbox",
@@ -786,6 +793,13 @@
   "component_name": "collapsible",
   "data_attrs": [],
   "element": "CollapsiblePrimitive.CollapsibleTrigger"
+ },
+ "combobox": {
+  "base_classes": "",
+  "component": "Combobox",
+  "component_name": "combobox",
+  "data_attrs": [],
+  "element": "ComboboxPrimitive.Root"
  },
  "combobox-chip": {
   "base_classes": "cn-combobox-chip has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50",
@@ -988,6 +1002,14 @@
   ],
   "element": "ContextMenuPrimitive.CheckboxItem"
  },
+ "context-menu-checkbox-item-indicator": {
+  "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+  "component": "ContextMenuCheckboxItem",
+  "component_name": "context-menu",
+  "data_attrs": [],
+  "element": "span",
+  "no_slot": true
+ },
  "context-menu-content": {
   "base_classes": "cn-context-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-context-menu-content-available-height) origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto",
   "component": "ContextMenuContent",
@@ -1043,6 +1065,14 @@
    "data-inset"
   ],
   "element": "ContextMenuPrimitive.RadioItem"
+ },
+ "context-menu-radio-item-indicator": {
+  "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+  "component": "ContextMenuRadioItem",
+  "component_name": "context-menu",
+  "data_attrs": [],
+  "element": "span",
+  "no_slot": true
  },
  "context-menu-separator": {
   "base_classes": "cn-context-menu-separator",
@@ -1199,6 +1229,14 @@
   "component_name": "drawer",
   "data_attrs": [],
   "element": "div"
+ },
+ "drawer-handle": {
+  "base_classes": "cn-drawer-handle",
+  "component": "DrawerContent",
+  "component_name": "drawer",
+  "data_attrs": [],
+  "element": "div",
+  "no_slot": true
  },
  "drawer-header": {
   "base_classes": "cn-drawer-header flex flex-col group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center",
@@ -1520,6 +1558,13 @@
   "data_attrs": [],
   "element": "fieldset"
  },
+ "form": {
+  "base_classes": "",
+  "component": "Form",
+  "component_name": "form",
+  "data_attrs": [],
+  "element": "FormProvider"
+ },
  "form-control": {
   "base_classes": "",
   "component": "FormControl",
@@ -1533,6 +1578,13 @@
   "component_name": "form",
   "data_attrs": [],
   "element": "p"
+ },
+ "form-field": {
+  "base_classes": "",
+  "component": "FormField",
+  "component_name": "form",
+  "data_attrs": [],
+  "element": "Controller"
  },
  "form-item": {
   "base_classes": "grid gap-2",
@@ -1873,6 +1925,14 @@
   ],
   "element": "MenubarPrimitive.CheckboxItem"
  },
+ "menubar-checkbox-item-indicator": {
+  "base_classes": "cn-menubar-checkbox-item-indicator pointer-events-none absolute flex items-center justify-center",
+  "component": "MenubarCheckboxItem",
+  "component_name": "menubar",
+  "data_attrs": [],
+  "element": "span",
+  "no_slot": true
+ },
  "menubar-content": {
   "base_classes": "cn-menubar-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-menubar-content-transform-origin) overflow-hidden",
   "component": "MenubarContent",
@@ -1935,6 +1995,14 @@
    "data-inset"
   ],
   "element": "MenubarPrimitive.RadioItem"
+ },
+ "menubar-radio-item-indicator": {
+  "base_classes": "cn-menubar-radio-item-indicator pointer-events-none absolute flex items-center justify-center",
+  "component": "MenubarRadioItem",
+  "component_name": "menubar",
+  "data_attrs": [],
+  "element": "span",
+  "no_slot": true
  },
  "menubar-separator": {
   "base_classes": "cn-menubar-separator -mx-1 my-1 h-px",
@@ -2542,7 +2610,22 @@
   "data_attrs": [
    "data-align-trigger"
   ],
-  "element": "SelectPrimitive.Content"
+  "element": "SelectPrimitive.Content",
+  "silent_groups": [
+   "position"
+  ],
+  "variants": {
+   "base": "",
+   "defaults": {
+    "position": "item-aligned"
+   },
+   "variants": {
+    "position": {
+     "item-aligned": "",
+     "popper": "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1"
+    }
+   }
+  }
  },
  "select-group": {
   "base_classes": "cn-select-group",
@@ -2557,6 +2640,22 @@
   "component_name": "select",
   "data_attrs": [],
   "element": "SelectPrimitive.Item"
+ },
+ "select-item-indicator": {
+  "base_classes": "cn-select-item-indicator",
+  "component": "SelectItem",
+  "component_name": "select",
+  "data_attrs": [],
+  "element": "span",
+  "no_slot": true
+ },
+ "select-item-text": {
+  "base_classes": "",
+  "component": "SelectItem",
+  "component_name": "select",
+  "data_attrs": [],
+  "element": "span",
+  "no_slot": true
  },
  "select-label": {
   "base_classes": "cn-select-label",
@@ -2601,6 +2700,16 @@
   "component_name": "select",
   "data_attrs": [],
   "element": "SelectPrimitive.Value"
+ },
+ "select-viewport": {
+  "base_classes": "cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)",
+  "component": "SelectContent",
+  "component_name": "select",
+  "data_attrs": [
+   "data-position"
+  ],
+  "element": "SelectPrimitive.Viewport",
+  "no_slot": true
  },
  "separator": {
   "base_classes": "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
@@ -3237,6 +3346,14 @@
   "component_name": "tooltip",
   "data_attrs": [],
   "element": "TooltipPrimitive.Root"
+ },
+ "tooltip-arrow": {
+  "base_classes": "cn-tooltip-arrow z-50 translate-y-[calc(-50%_-_2px)] bg-foreground fill-foreground",
+  "component": "TooltipContent",
+  "component_name": "tooltip",
+  "data_attrs": [],
+  "element": "svg",
+  "no_slot": true
  },
  "tooltip-content": {
   "base_classes": "cn-tooltip-content z-50 w-fit max-w-xs origin-(--radix-tooltip-content-transform-origin) bg-foreground text-background",

@@ -15,11 +15,12 @@
     const side = content.getAttribute('data-side') || wrapper.getAttribute('data-side') || (kind === 'tooltip' ? 'top' : 'bottom');
     const align = content.getAttribute('data-align') || wrapper.getAttribute('data-align') || 'center';
     const sideOffset = Number(content.getAttribute('data-side-offset') || (kind === 'tooltip' ? 0 : 4));
+    const alignOffset = Number(content.getAttribute('data-align-offset') || 0);
     if (kind === 'popover') trigger.setAttribute('aria-controls', id);
     if (kind === 'tooltip') trigger.setAttribute('aria-describedby', id);
     let layer = null, openTimer = 0, closeTimer = 0;
 
-    function reposition() { FB.float(trigger, content, { side, align, sideOffset }); }
+    function reposition() { FB.float(trigger, content, { side, align, sideOffset, alignOffset }); }
     function open() {
       clearTimeout(closeTimer);
       if (FB.isOpen(content)) return;

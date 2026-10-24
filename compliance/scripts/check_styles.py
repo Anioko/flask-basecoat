@@ -73,6 +73,13 @@ class Server:
         self.srv.shutdown()
 
 
+import re
+
+NUM = re.compile(r'-?\d+(?:\.\d+)?')
+# Slots whose rendering is user-agent dependent (native option lists).
+SKIP_SLOTS = {'native-select-option', 'native-select-optgroup'}
+
+
 def px(v):
     try:
         return float(v.replace('px', ''))
@@ -80,14 +87,26 @@ def px(v):
         return None
 
 
+def numbers_close(a, b, tol):
+    """Compare two strings token-wise, allowing |delta| <= tol on every number (colour-mix rounding noise)."""
+    na, nb = NUM.findall(a), NUM.findall(b)
+    if len(na) != len(nb) or NUM.sub('#', a) != NUM.sub('#', b):
+        return False
+    return all(abs(float(x) - float(y)) <= tol for x, y in zip(na, nb))
+
+
 def compare(g, o):
     diffs = []
+    if g.get('slot') in SKIP_SLOTS:
+        return diffs
     for p in PROPS:
         a, b = g.get(p, ''), o.get(p, '')
         if a == b:
             continue
         na, nb = px(a), px(b)
         if na is not None and nb is not None and abs(na - nb) <= NUMERIC_TOLERANCE_PX:
+            continue
+        if numbers_close(a, b, 0.002 if 'color' in p or 'shadow' in p else NUMERIC_TOLERANCE_PX):
             continue
         if p == 'font-family':
             # same stack resolves identically; compare the first family only
@@ -113,8 +132,10 @@ def run(targets, width, out_json):
             for mode in ('light', 'dark'):
                 def grab(url):
                     page.goto(base + url, wait_until='load')
+                    # Freeze transitions and animations so colours are sampled at their final values.
+                    page.add_style_tag(content='*, *::before, *::after { transition: none !important; animation: none !important; }')
                     page.evaluate(f"document.documentElement.classList.toggle('dark', {str(mode == 'dark').lower()})")
-                    page.wait_for_timeout(50)
+                    page.wait_for_timeout(150)
                     return page.evaluate(SCRIPT, PROPS)
                 gold = grab(gpath)
                 ours = grab(opath)

@@ -6,6 +6,14 @@
 
   const ITEM_SEL = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 
+  /* Radix renders the indicator icon only while checked. */
+  function setIndicator(item, on, icon) {
+    const ind = item.querySelector('[class*="item-indicator"]');
+    if (!ind) return;
+    const icons = window.FlaskBasecoatIcons || {};
+    ind.innerHTML = on ? (icons[icon] || '') : '';
+  }
+
   function setupMenu(kind, wrapper, opts) {
     const trigger = FB.qs(wrapper, `:scope > [data-slot="${kind}-trigger"], [data-slot="${kind}-trigger"]`);
     const content = FB.qs(wrapper, `:scope > [data-slot="${kind}-content"], [data-slot="${kind}-content"]`);
@@ -24,9 +32,15 @@
 
     function reposition() {
       if (anchorPoint) {
-        content.style.transform = `translate(${anchorPoint.x}px, ${anchorPoint.y}px)`;
-        content.setAttribute('data-side', 'right'); content.setAttribute('data-align', 'start');
-      } else FB.float(trigger, content, { side, align, sideOffset: 4 });
+        // Keep the menu inside the viewport, flipping like Radix does near the edges.
+        const r = content.getBoundingClientRect();
+        const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+        let x = anchorPoint.x, y = anchorPoint.y;
+        if (x + r.width > vw - 8) x = Math.max(8, anchorPoint.x - r.width);
+        if (y + r.height > vh - 8) y = Math.max(8, anchorPoint.y - r.height);
+        content.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+        content.setAttribute('data-side', y < anchorPoint.y ? 'top' : 'bottom'); content.setAttribute('data-align', 'start');
+      } else FB.float(trigger, content, { side, align, sideOffset: Number(content.getAttribute('data-side-offset') || 4), alignOffset: Number(content.getAttribute('data-align-offset') || 0) });
     }
     function open(point) {
       anchorPoint = point || null;
@@ -56,13 +70,14 @@
         const checked = item.getAttribute('aria-checked') === 'true';
         item.setAttribute('aria-checked', String(!checked));
         FB.setState(item, checked ? 'unchecked' : 'checked');
+        setIndicator(item, !checked, 'check');
         FB.emit(item, 'change', { checked: !checked, value: item.getAttribute('data-value') });
         return;
       }
       if (item.getAttribute('role') === 'menuitemradio') {
         const group = item.closest('[role="group"]') || content;
-        FB.qsa(group, '[role="menuitemradio"]').forEach((r) => { r.setAttribute('aria-checked', 'false'); FB.setState(r, 'unchecked'); });
-        item.setAttribute('aria-checked', 'true'); FB.setState(item, 'checked');
+        FB.qsa(group, '[role="menuitemradio"]').forEach((r) => { r.setAttribute('aria-checked', 'false'); FB.setState(r, 'unchecked'); setIndicator(r, false, 'circle'); });
+        item.setAttribute('aria-checked', 'true'); FB.setState(item, 'checked'); setIndicator(item, true, 'circle');
         FB.emit(item, 'change', { value: item.getAttribute('data-value') });
         close();
         return;

@@ -27,6 +27,31 @@ STR = r'"((?:[^"\\]|\\.)*)"'
 # Conditional class strings the regex extractor cannot attribute (ternaries on props). Values are copied
 # verbatim from the pinned TSX; `silent_groups` lists pseudo variant groups that emit no data-* attribute.
 PATCHES = {
+    # Root parts that render no element upstream still need a wrapper macro to group trigger and content.
+    'combobox': {'combobox': {'component': 'Combobox', 'element': 'ComboboxPrimitive.Root', 'base_classes': '', 'data_attrs': []}},
+    'form': {'form': {'component': 'Form', 'element': 'FormProvider', 'base_classes': '', 'data_attrs': []},
+             'form-field': {'component': 'FormField', 'element': 'Controller', 'base_classes': '', 'data_attrs': []}},
+    # Indicator spans rendered without a data-slot upstream (menubar and context menu checkbox/radio items).
+    'menubar': {
+        'menubar-checkbox-item-indicator': {'component': 'MenubarCheckboxItem', 'element': 'span', 'base_classes': 'cn-menubar-checkbox-item-indicator pointer-events-none absolute flex items-center justify-center', 'data_attrs': [], 'no_slot': True},
+        'menubar-radio-item-indicator': {'component': 'MenubarRadioItem', 'element': 'span', 'base_classes': 'cn-menubar-radio-item-indicator pointer-events-none absolute flex items-center justify-center', 'data_attrs': [], 'no_slot': True},
+    },
+    'context-menu': {
+        'context-menu-checkbox-item-indicator': {'component': 'ContextMenuCheckboxItem', 'element': 'span', 'base_classes': 'cn-context-menu-item-indicator pointer-events-none', 'data_attrs': [], 'no_slot': True},
+        'context-menu-radio-item-indicator': {'component': 'ContextMenuRadioItem', 'element': 'span', 'base_classes': 'cn-context-menu-item-indicator pointer-events-none', 'data_attrs': [], 'no_slot': True},
+    },
+    'select': {
+        'select-item-indicator': {'component': 'SelectItem', 'element': 'span', 'base_classes': 'cn-select-item-indicator', 'data_attrs': [], 'no_slot': True},
+        'select-item-text': {'component': 'SelectItem', 'element': 'span', 'base_classes': '', 'data_attrs': [], 'no_slot': True},
+        'select-viewport': {'component': 'SelectContent', 'element': 'SelectPrimitive.Viewport', 'base_classes': 'cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)', 'data_attrs': ['data-position'], 'no_slot': True},
+        'select-content': {'variants': {'base': '', 'variants': {'position': {
+            'item-aligned': '',
+            'popper': 'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+        }}, 'defaults': {'position': 'item-aligned'}}, 'silent_groups': ['position']},
+    },
+    'tooltip': {'tooltip-arrow': {'component': 'TooltipContent', 'element': 'svg', 'base_classes': 'cn-tooltip-arrow z-50 translate-y-[calc(-50%_-_2px)] bg-foreground fill-foreground', 'data_attrs': [], 'no_slot': True}},
+    'drawer': {'drawer-handle': {'component': 'DrawerContent', 'element': 'div', 'base_classes': 'cn-drawer-handle', 'data_attrs': [], 'no_slot': True}},
+    'field': {'checkbox-group': {'component': 'FieldGroup', 'element': 'div', 'base_classes': 'cn-field-group group/field-group @container/field-group flex w-full flex-col data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4', 'data_attrs': []}},
     'sidebar': {
         'sidebar': {
             'base_classes': '',

@@ -218,6 +218,171 @@
   else document.addEventListener('DOMContentLoaded', () => mo.observe(document.body, { childList: true, subtree: true }));
 })(window);
 
+/* ---- icons (generated from flask_basecoat/icons.py) ---- */
+window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check size-4\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\" /></svg>", "circle": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" /></svg>", "x": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-x size-4\" aria-hidden=\"true\"><path d=\"M18 6 6 18\" /><path d=\"m6 6 12 12\" /></svg>", "chevron-down": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down size-4\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\" /></svg>", "chevron-up": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-up size-4\" aria-hidden=\"true\"><path d=\"m18 15-6-6-6 6\" /></svg>", "chevron-right": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-right size-4\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\" /></svg>", "chevron-left": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-left size-4\" aria-hidden=\"true\"><path d=\"m15 18-6-6 6-6\" /></svg>", "minus": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-minus size-4\" aria-hidden=\"true\"><path d=\"M5 12h14\" /></svg>", "loader-circle": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-loader-circle size-4\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-6.219-8.56\" /></svg>", "search": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-search size-4\" aria-hidden=\"true\"><path d=\"m21 21-4.34-4.34\" /><circle cx=\"11\" cy=\"11\" r=\"8\" /></svg>", "circle-check": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-circle-check size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"m16 9-5.5 5.5L8 12\" /></svg>", "info": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"M12 16v-4\" /><path d=\"M12 8h.01\" /></svg>", "triangle-alert": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-triangle-alert size-4\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /><path d=\"M12 9v4\" /><path d=\"M12 17h.01\" /></svg>", "octagon-x": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-octagon-x size-4\" aria-hidden=\"true\"><path d=\"m15 9-6 6\" /><path d=\"M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z\" /><path d=\"m9 9 6 6\" /></svg>", "ellipsis": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\" /><circle cx=\"19\" cy=\"12\" r=\"1\" /><circle cx=\"5\" cy=\"12\" r=\"1\" /></svg>", "chevrons-up-down": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevrons-up-down size-4\" aria-hidden=\"true\"><path d=\"m7 15 5 5 5-5\" /><path d=\"m7 9 5-5 5 5\" /></svg>"};
+
+
+/* ---- calendar ---- */
+/* Calendar: renders the month grid the way react-day-picker renders it for shadcn (same classes and
+   attributes as the upstream markup), with single, multiple and range selection, month navigation,
+   month/year dropdowns when data-caption-layout="dropdown", week numbers and outside days.
+   Configure through data attributes on [data-slot="calendar"]:
+     data-mode="single|multiple|range" data-selected="2026-10-12" (comma separated / "start,end" for range)
+     data-month="2026-10" data-number-of-months="2" data-week-starts-on="0" data-min / data-max (ISO dates)
+     data-name="field" (hidden input name) data-caption-layout="label|dropdown" data-show-week-numbers
+   A calendar rendered by the server already containing a grid is left alone until the user navigates. */
+(function (FB) {
+  'use strict';
+
+  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const pad = (n) => String(n).padStart(2, '0');
+  const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const ddmmyyyy = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+  const parse = (s) => { if (!s) return null; const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const same = (a, b) => a && b && a.getTime() === b.getTime();
+  const ordinal = (n) => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
+  const CHEV = { left: '<path d="m15 18-6-6 6-6"/>', right: '<path d="m9 18 6-6-6-6"/>', down: '<path d="m6 9 6 6 6-6"/>' };
+  const svg = (dir, cls, size) => `<svg xmlns="http://www.w3.org/2000/svg" width="${size || 24}" height="${size || 24}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-${dir} ${cls}" aria-hidden="true">${CHEV[dir]}</svg>`;
+  const BTN = 'cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0';
+  const DAY_BTN = `${BTN} cn-button-variant-ghost cn-button-size-icon cn-calendar-day-button relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70`;
+  const DAY_CELL = "group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius) [&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius) rdp-day";
+
+  FB.register('calendar', {
+    init(root) {
+      const mode = root.getAttribute('data-mode') || 'single';
+      const months = Number(root.getAttribute('data-number-of-months') || 1);
+      const weekStart = Number(root.getAttribute('data-week-starts-on') || 0);
+      const showWeeks = root.hasAttribute('data-show-week-numbers') || root.getAttribute('data-week-numbers') === 'true';
+      const dropdown = root.getAttribute('data-caption-layout') === 'dropdown';
+      const min = parse(root.getAttribute('data-min')), max = parse(root.getAttribute('data-max'));
+      const name = root.getAttribute('data-name');
+      let selected = (root.getAttribute('data-selected') || '').split(',').filter(Boolean).map(parse);
+      let range = mode === 'range' ? { from: selected[0] || null, to: selected[1] || null } : null;
+      let view = parse((root.getAttribute('data-month') || '') + '-01') || selected[0] || new Date();
+      view = new Date(view.getFullYear(), view.getMonth(), 1);
+      let hidden = null;
+      if (name) { hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = name; root.appendChild(hidden); }
+      const prerendered = !!FB.qs(root, '.rdp-months');
+      if (prerendered && !root.hasAttribute('data-live')) {
+        // Static server markup: only wire navigation and selection on top of it.
+        root.setAttribute('data-live', '');
+      }
+
+      function isSelected(d) {
+        if (mode === 'range') return range.from && (same(d, range.from) || same(d, range.to) || (range.to && d > range.from && d < range.to));
+        return selected.some((s) => same(s, d));
+      }
+      function monthGrid(first) {
+        const y = first.getFullYear(), m = first.getMonth();
+        const start = new Date(y, m, 1);
+        const offset = (start.getDay() - weekStart + 7) % 7;
+        const gridStart = new Date(y, m, 1 - offset);
+        const weeks = [];
+        for (let w = 0; w < 6; w++) {
+          const days = [];
+          for (let i = 0; i < 7; i++) days.push(new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + w * 7 + i));
+          if (w >= 4 && days[0].getMonth() !== m) break;
+          weeks.push(days);
+        }
+        return weeks;
+      }
+      function weekNumber(d) {
+        const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+        const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+        return Math.ceil(((t - y0) / 86400000 + 1) / 7);
+      }
+      function render() {
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const monthsHtml = [];
+        for (let k = 0; k < months; k++) {
+          const first = new Date(view.getFullYear(), view.getMonth() + k, 1);
+          const label = `${MONTHS[first.getMonth()]} ${first.getFullYear()}`;
+          const caption = dropdown
+            ? `<div class="flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium rdp-dropdowns">
+                 <span data-disabled="false" class="cn-calendar-dropdown-root relative rounded-(--cell-radius) rdp-dropdown_root"><select aria-label="Choose the Month" data-fb-month class="absolute inset-0 bg-popover opacity-0 rdp-dropdown rdp-months_dropdown">${MONTHS.map((mn, i) => `<option value="${i}"${i === first.getMonth() ? ' selected' : ''}>${mn}</option>`).join('')}</select><span aria-hidden="true" class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label">${MONTHS[first.getMonth()]}${svg('down', 'size-4 rdp-chevron', 18)}</span></span>
+                 <span data-disabled="false" class="cn-calendar-dropdown-root relative rounded-(--cell-radius) rdp-dropdown_root"><select aria-label="Choose the Year" data-fb-year class="absolute inset-0 bg-popover opacity-0 rdp-dropdown rdp-years_dropdown">${Array.from({ length: 101 }, (_, i) => first.getFullYear() - 100 + i + 50).filter((yy) => yy >= 1926 && yy <= 2100).map((yy) => `<option value="${yy}"${yy === first.getFullYear() ? ' selected' : ''}>${yy}</option>`).join('')}</select><span aria-hidden="true" class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label">${first.getFullYear()}${svg('down', 'size-4 rdp-chevron', 18)}</span></span>
+               </div>`
+            : `<span class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label" role="status" aria-live="polite">${label}</span>`;
+          const weekdays = Array.from({ length: 7 }, (_, i) => DAYS[(i + weekStart) % 7]);
+          const rows = monthGrid(first).map((week) => {
+            const cells = week.map((d) => {
+              const outside = d.getMonth() !== first.getMonth();
+              const disabled = (min && d < min) || (max && d > max);
+              const sel = !!isSelected(d);
+              const rs = mode === 'range' && range.from && same(d, range.from), re = mode === 'range' && range.to && same(d, range.to);
+              const rm = mode === 'range' && range.from && range.to && d > range.from && d < range.to;
+              const single = sel && mode !== 'range';
+              const attrs = [`role="gridcell"`, `data-day="${iso(d)}"`, `data-month="${iso(first).slice(0, 7)}"`,
+                outside ? 'data-outside="true"' : '', sel ? 'aria-selected="true" data-selected="true"' : '', same(d, today) ? 'data-today="true"' : '', disabled ? 'data-disabled="true" aria-disabled="true"' : ''];
+              const btnAttrs = [`data-slot="button"`, `data-variant="ghost"`, `data-size="icon"`, `data-day="${ddmmyyyy(d)}"`, single ? 'data-selected-single="true"' : '',
+                mode === 'range' ? `data-range-start="${!!rs}" data-range-end="${!!re}" data-range-middle="${!!rm}"` : '', 'type="button"', `tabindex="${sel ? 0 : -1}"`,
+                `aria-label="${DAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${ordinal(d.getDate())}, ${d.getFullYear()}${sel ? ', selected' : ''}"`, disabled ? 'disabled' : ''];
+              return `<td ${attrs.join(' ')} class="${DAY_CELL}"><button ${btnAttrs.join(' ')} class="${DAY_BTN}">${d.getDate()}</button></td>`;
+            }).join('');
+            const wk = showWeeks ? `<td class="text-[0.8rem] text-muted-foreground select-none rdp-week_number"><div class="flex size-(--cell-size) items-center justify-center text-center">${weekNumber(week[0])}</div></td>` : '';
+            return `<tr class="mt-2 flex w-full rdp-week">${wk}${cells}</tr>`;
+          }).join('');
+          monthsHtml.push(`<div class="flex w-full flex-col gap-4 rdp-month">
+            <div class="flex h-(--cell-size) w-full items-center justify-center px-(--cell-size) rdp-month_caption">${caption}</div>
+            <table role="grid" aria-multiselectable="${mode !== 'single'}" aria-label="${label}" class="w-full border-collapse rdp-month_grid">
+              <thead aria-hidden="true"><tr class="flex rdp-weekdays">${showWeeks ? '<th class="w-(--cell-size) select-none rdp-week_number_header"></th>' : ''}${weekdays.map((wd) => `<th aria-label="${wd}" scope="col" class="flex-1 rounded-(--cell-radius) text-[0.8rem] font-normal text-muted-foreground select-none rdp-weekday">${wd.slice(0, 2)}</th>`).join('')}</tr></thead>
+              <tbody class="rdp-weeks">${rows}</tbody>
+            </table></div>`);
+        }
+        root.innerHTML = `<div class="relative flex flex-col gap-4 md:flex-row rdp-months">
+          <nav aria-label="Navigation bar" class="absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1 rdp-nav">
+            <button type="button" data-fb-prev aria-label="Go to the Previous Month" class="${BTN} cn-button-variant-ghost cn-button-size-icon-sm cn-calendar-nav-button aria-disabled:opacity-50 rdp-button_previous">${svg('left', 'cn-rtl-flip size-4 rdp-chevron')}</button>
+            <button type="button" data-fb-next aria-label="Go to the Next Month" class="${BTN} cn-button-variant-ghost cn-button-size-icon-sm cn-calendar-nav-button aria-disabled:opacity-50 rdp-button_next">${svg('right', 'cn-rtl-flip size-4 rdp-chevron')}</button>
+          </nav>${monthsHtml.join('')}</div>`;
+        if (hidden) {
+          root.appendChild(hidden);
+          hidden.value = mode === 'range' ? [range.from, range.to].filter(Boolean).map(iso).join(',') : selected.map(iso).join(',');
+        }
+        root.setAttribute('data-month', iso(view).slice(0, 7));
+      }
+      function select(d) {
+        if (mode === 'single') selected = same(selected[0], d) && root.hasAttribute('data-deselectable') ? [] : [d];
+        else if (mode === 'multiple') { const i = selected.findIndex((s) => same(s, d)); if (i >= 0) selected.splice(i, 1); else selected.push(d); }
+        else {
+          if (!range.from || (range.from && range.to)) range = { from: d, to: null };
+          else if (d < range.from) range = { from: d, to: range.from };
+          else range.to = d;
+        }
+        render();
+        FB.emit(root, 'change', { value: mode === 'range' ? { from: range.from && iso(range.from), to: range.to && iso(range.to) } : selected.map(iso) });
+      }
+      root.addEventListener('click', (e) => {
+        const prev = e.target.closest('[data-fb-prev], .rdp-button_previous'), next = e.target.closest('[data-fb-next], .rdp-button_next');
+        if (prev) { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); return; }
+        if (next) { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); return; }
+        const cell = e.target.closest('td[data-day]');
+        if (cell && !cell.hasAttribute('data-disabled')) select(parse(cell.getAttribute('data-day')));
+      });
+      root.addEventListener('change', (e) => {
+        if (e.target.matches('[data-fb-month]')) { view = new Date(view.getFullYear(), Number(e.target.value), 1); render(); }
+        if (e.target.matches('[data-fb-year]')) { view = new Date(Number(e.target.value), view.getMonth(), 1); render(); }
+      });
+      root.addEventListener('keydown', (e) => {
+        const btn = e.target.closest('td[data-day] button');
+        if (!btn) return;
+        const d = parse(btn.closest('td').getAttribute('data-day'));
+        const delta = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+        if (delta) {
+          e.preventDefault();
+          const n = new Date(d.getFullYear(), d.getMonth(), d.getDate() + delta);
+          if (n.getMonth() !== view.getMonth() && months === 1) { view = new Date(n.getFullYear(), n.getMonth(), 1); render(); }
+          const target = FB.qs(root, `td[data-day="${iso(n)}"] button`);
+          if (target) { target.focus(); target.closest('td').setAttribute('data-focused', 'true'); }
+        } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(d); }
+      });
+      if (!prerendered || root.hasAttribute('data-render')) render();
+      root.fbRender = render; root.fbSelect = select;
+    },
+  });
+})(window.FlaskBasecoat);
+
 
 /* ---- carousel ---- */
 /* Carousel: scroll-snap based slides with previous/next buttons, keyboard arrows and disabled state at the ends. */
@@ -271,6 +436,204 @@
 })(window.FlaskBasecoat);
 
 
+/* ---- combobox ---- */
+/* Combobox and Command: filterable lists.
+   Combobox: a trigger button or an input opens a listbox; typing filters items; arrows move the highlight
+   (data-highlighted / aria-selected), Enter selects, Escape closes. Multi-select variants keep chips.
+   Command: the same filtering over an always-visible list (or inside a dialog), with groups hidden when empty. */
+(function (FB) {
+  'use strict';
+
+  function norm(s) { return (s || '').toLowerCase().trim(); }
+
+  function listController(list, opts) {
+    const itemSel = opts.itemSel;
+    const items = () => FB.qsa(list, itemSel);
+    const visible = () => items().filter((i) => !i.hidden && i.getAttribute('data-disabled') !== 'true' && i.getAttribute('aria-disabled') !== 'true');
+    let highlighted = null;
+    function highlight(item) {
+      items().forEach((i) => { i.removeAttribute('data-highlighted'); i.setAttribute('aria-selected', 'false'); i.setAttribute('data-selected', 'false'); });
+      highlighted = item || null;
+      if (item) {
+        item.setAttribute('data-highlighted', ''); item.setAttribute('aria-selected', 'true'); item.setAttribute('data-selected', 'true');
+        item.scrollIntoView({ block: 'nearest' });
+        if (opts.input) opts.input.setAttribute('aria-activedescendant', FB.ensureId(item, 'option'));
+      }
+    }
+    function filter(query) {
+      const q = norm(query);
+      let count = 0;
+      items().forEach((i) => {
+        const text = norm(i.getAttribute('data-value') || '') + ' ' + norm(i.textContent) + ' ' + norm(i.getAttribute('data-keywords') || '');
+        const show = !q || text.includes(q);
+        i.hidden = !show;
+        if (show) count++;
+      });
+      FB.qsa(list, opts.groupSel || '[role="presentation"][cmdk-group], [data-slot$="-group"]').forEach((g) => {
+        const any = FB.qsa(g, itemSel).some((i) => !i.hidden);
+        g.hidden = !any;
+      });
+      FB.qsa(list, opts.separatorSel || '[role="separator"]').forEach((s) => { s.hidden = !!q; });
+      const empty = FB.qs(list, opts.emptySel || '[data-slot$="-empty"]');
+      if (empty) empty.hidden = count > 0;
+      if (!highlighted || highlighted.hidden) highlight(visible()[0] || null);
+      return count;
+    }
+    function move(delta) {
+      const v = visible();
+      if (!v.length) return;
+      const idx = v.indexOf(highlighted);
+      const next = idx < 0 ? (delta > 0 ? 0 : v.length - 1) : Math.max(0, Math.min(v.length - 1, idx + delta));
+      highlight(v[next]);
+    }
+    list.addEventListener('pointermove', (e) => { const it = e.target.closest(itemSel); if (it && !it.hidden && it !== highlighted) highlight(it); });
+    return { items, visible, highlight, filter, move, get highlighted() { return highlighted; } };
+  }
+
+  /* ---- Command ---- */
+  FB.register('command', {
+    init(root) {
+      const input = FB.qs(root, '[data-slot="command-input"]');
+      const list = FB.qs(root, '[data-slot="command-list"]');
+      if (!list) return;
+      const ctl = listController(list, { itemSel: '[data-slot="command-item"]', input, groupSel: '[data-slot="command-group"]', separatorSel: '[data-slot="command-separator"]', emptySel: '[data-slot="command-empty"]' });
+      if (input) {
+        input.setAttribute('aria-controls', FB.ensureId(list, 'command-list'));
+        input.addEventListener('input', () => ctl.filter(input.value));
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown') { e.preventDefault(); ctl.move(1); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); ctl.move(-1); }
+          else if (e.key === 'Home') { e.preventDefault(); ctl.highlight(ctl.visible()[0]); }
+          else if (e.key === 'End') { e.preventDefault(); const v = ctl.visible(); ctl.highlight(v[v.length - 1]); }
+          else if (e.key === 'Enter') { e.preventDefault(); const h = ctl.highlighted; if (h) h.click(); }
+        });
+      }
+      list.addEventListener('click', (e) => {
+        const it = e.target.closest('[data-slot="command-item"]');
+        if (!it || it.getAttribute('data-disabled') === 'true') return;
+        FB.emit(root, 'select', { value: it.getAttribute('data-value') || it.textContent.trim(), item: it });
+        const dialog = root.closest('[data-slot="dialog-content"]');
+        if (dialog) { const w = dialog.closest('[data-fb="dialog"]'); if (w && w.fbClose) w.fbClose(); }
+      });
+      ctl.filter('');
+      root.fbCommand = ctl;
+    },
+  });
+
+  /* Command dialog keyboard shortcut: data-fb-shortcut="k" on the dialog wrapper opens it with Ctrl/Cmd+K. */
+  document.addEventListener('keydown', (e) => {
+    if (!(e.metaKey || e.ctrlKey)) return;
+    FB.qsa(document, '[data-fb-shortcut]').forEach((w) => {
+      if (e.key.toLowerCase() === w.getAttribute('data-fb-shortcut').toLowerCase()) { e.preventDefault(); w.fbOpen && w.fbOpen(); }
+    });
+  });
+
+  /* ---- Combobox ---- */
+  FB.register('combobox', {
+    selector: '[data-fb="combobox"]',
+    init(wrapper) {
+      const content = FB.qs(wrapper, '[data-slot="combobox-content"]');
+      const trigger = FB.qs(wrapper, '[data-slot="combobox-trigger"], [data-slot="input-group-button"][role="combobox"]');
+      const input = FB.qs(wrapper, '[data-slot="combobox-input"], [data-slot="combobox-chip-input"], [data-slot="input-group-control"][role="combobox"]');
+      const valueEl = FB.qs(wrapper, '[data-slot="combobox-value"]');
+      const clear = FB.qs(wrapper, '[data-slot="combobox-clear"]');
+      const chips = FB.qs(wrapper, '[data-slot="combobox-chips"]');
+      const list = content && (FB.qs(content, '[data-slot="combobox-list"]') || content);
+      if (!content || !list) return;
+      const anchor = trigger || (input && (input.closest('[data-slot="input-group"]') || input)) || wrapper;
+      const multiple = !!chips || wrapper.hasAttribute('data-multiple');
+      const name = wrapper.getAttribute('data-name') || wrapper.getAttribute('name');
+      content.setAttribute('data-floating', ''); content.setAttribute('data-popper-var', 'combobox');
+      const id = FB.ensureId(content, 'combobox');
+      [trigger, input].forEach((t) => t && t.setAttribute('aria-controls', id));
+      const ctl = listController(list, { itemSel: '[data-slot="combobox-item"]', input, groupSel: '[data-slot="combobox-group"]', separatorSel: '[data-slot="combobox-separator"]', emptySel: '[data-slot="combobox-empty"]' });
+      const placeholder = valueEl ? valueEl.textContent : '';
+      let selected = multiple ? [] : null;
+      let layer = null;
+      const hidden = () => { let h = FB.qs(wrapper, 'input[type=hidden][data-fb-combobox]'); if (!h && name) { h = document.createElement('input'); h.type = 'hidden'; h.name = name; h.setAttribute('data-fb-combobox', ''); wrapper.appendChild(h); } return h; };
+
+      function reposition() { FB.float(anchor, content, { side: content.getAttribute('data-side') || 'bottom', align: content.getAttribute('data-align') || 'start', sideOffset: Number(content.getAttribute('data-side-offset') || 4), alignOffset: Number(content.getAttribute('data-align-offset') || 0) }); }
+      function open() {
+        if (FB.isOpen(content)) return;
+        if (content.parentNode !== document.body) document.body.appendChild(content);
+        FB.setState(content, 'open');
+        [trigger, input].forEach((t) => { if (t) { t.setAttribute('aria-expanded', 'true'); if (t === trigger) FB.setState(t, 'open'); } });
+        reposition();
+        content.style.setProperty('--anchor-width', `${anchor.getBoundingClientRect().width}px`);
+        layer = { content, trigger: anchor, modal: false, reposition, onDismiss: () => close() };
+        FB.pushLayer(layer);
+        ctl.filter(input && document.activeElement === input ? input.value : '');
+        if (!input) content.focus({ preventScroll: true });
+      }
+      function close() {
+        if (!FB.isOpen(content)) return;
+        FB.setState(content, 'closed');
+        [trigger, input].forEach((t) => { if (t) { t.setAttribute('aria-expanded', 'false'); if (t === trigger) FB.setState(t, 'closed'); } });
+        if (layer) { FB.removeLayer(layer); layer = null; }
+      }
+      function labelOf(item) { return (FB.qs(item, '[data-slot="combobox-item-text"]') || item).textContent.trim(); }
+      function valueOf(item) { return item.getAttribute('data-value') || item.getAttribute('value') || labelOf(item); }
+      function renderChips() {
+        if (!chips) return;
+        FB.qsa(chips, '[data-slot="combobox-chip"]').forEach((c) => c.remove());
+        const inputEl = FB.qs(chips, '[data-slot="combobox-chip-input"]');
+        selected.forEach((item) => {
+          const chip = document.createElement('div');
+          chip.setAttribute('data-slot', 'combobox-chip'); chip.setAttribute('tabindex', '-1');
+          chip.className = 'cn-combobox-chip has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-disabled:text-muted-foreground';
+          chip.innerHTML = `<span>${labelOf(item).replace(/</g, '&lt;')}</span><button type="button" data-slot="combobox-chip-remove" data-variant="ghost" data-size="icon-xs" tabindex="-1" aria-label="Remove" class="cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none cn-button-variant-ghost cn-button-size-icon-xs cn-combobox-chip-remove">${(window.FlaskBasecoatIcons && window.FlaskBasecoatIcons.x) || '×'}</button>`;
+          chip.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); toggleItem(item); });
+          chips.insertBefore(chip, inputEl);
+        });
+      }
+      function sync() {
+        const values = multiple ? selected.map(valueOf) : (selected ? [valueOf(selected)] : []);
+        const h = hidden(); if (h) h.value = values.join(',');
+        wrapper.setAttribute('data-value', values.join(','));
+        if (valueEl) { valueEl.textContent = multiple ? (values.length ? selected.map(labelOf).join(', ') : placeholder) : (selected ? labelOf(selected) : placeholder); }
+        if (input && !multiple && selected) input.value = labelOf(selected);
+        if (clear) clear.toggleAttribute('data-visible', values.length > 0);
+        ctl.items().forEach((i) => { const on = multiple ? selected.includes(i) : i === selected; i.setAttribute('data-checked', String(on)); i.setAttribute('aria-selected', String(on || i === ctl.highlighted)); const ind = FB.qs(i, '[data-slot="combobox-item-indicator"]'); if (ind) ind.style.visibility = on ? '' : 'hidden'; });
+        renderChips();
+        FB.emit(wrapper, 'change', { value: multiple ? values : values[0] || null });
+      }
+      function toggleItem(item) {
+        if (multiple) { const i = selected.indexOf(item); if (i >= 0) selected.splice(i, 1); else selected.push(item); sync(); if (input) { input.value = ''; ctl.filter(''); input.focus(); } }
+        else { selected = item; sync(); close(); (trigger || input).focus(); }
+      }
+      // preselected
+      const pre = ctl.items().filter((i) => i.getAttribute('data-checked') === 'true' || i.getAttribute('data-selected') === 'true' || i.hasAttribute('data-preselected'));
+      if (multiple) selected = pre; else selected = pre[0] || null;
+      if (pre.length) sync(); else if (clear) clear.toggleAttribute('data-visible', false);
+      if (trigger) {
+        trigger.addEventListener('click', (e) => { e.preventDefault(); FB.isOpen(content) ? close() : open(); if (input && FB.isOpen(content)) input.focus(); });
+        trigger.addEventListener('keydown', (e) => { if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); open(); if (!input) ctl.move(1); } });
+      }
+      if (input) {
+        input.addEventListener('focus', () => { if (!wrapper.hasAttribute('data-open-on-click-only')) open(); });
+        input.addEventListener('click', open);
+        input.addEventListener('input', () => { open(); ctl.filter(input.value); if (!multiple && selected && labelOf(selected) !== input.value) { selected = null; const h = hidden(); if (h) h.value = ''; } });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown') { e.preventDefault(); open(); ctl.move(1); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); open(); ctl.move(-1); }
+          else if (e.key === 'Enter') { const h = ctl.highlighted; if (FB.isOpen(content) && h) { e.preventDefault(); toggleItem(h); } }
+          else if (e.key === 'Escape') { close(); }
+          else if (e.key === 'Backspace' && multiple && !input.value && selected.length) { selected.pop(); sync(); }
+        });
+      }
+      content.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); ctl.move(1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); ctl.move(-1); }
+        else if (e.key === 'Enter' || e.key === ' ') { const h = ctl.highlighted; if (h) { e.preventDefault(); toggleItem(h); } }
+      });
+      list.addEventListener('click', (e) => { const it = e.target.closest('[data-slot="combobox-item"]'); if (it && it.getAttribute('aria-disabled') !== 'true') toggleItem(it); });
+      if (clear) clear.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); selected = multiple ? [] : null; if (input) input.value = ''; sync(); ctl.filter(''); });
+      wrapper.fbOpen = open; wrapper.fbClose = close;
+    },
+  });
+})(window.FlaskBasecoat);
+
+
 /* ---- dialog ---- */
 /* Dialog, Alert Dialog, Sheet and Drawer: modal layers.
    Markup (server-rendered): a display:contents wrapper [data-fb="dialog"] holding the trigger, overlay and content.
@@ -307,7 +670,6 @@
       if (trigger) { FB.setState(trigger, 'open'); trigger.setAttribute('aria-expanded', 'true'); }
       FB.lockScroll();
       untrap = FB.trapFocus(content);
-      FB.focusFirst(content, '[data-autofocus], [autofocus]');
       layer = {
         content, trigger, modal: true,
         onDismiss(reason, e) {
@@ -320,6 +682,7 @@
         },
       };
       FB.pushLayer(layer);
+      FB.focusFirst(content, '[data-autofocus], [autofocus]');
       FB.emit(content, 'open', { kind });
     }
     function close() {
@@ -489,6 +852,14 @@
 
   const ITEM_SEL = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 
+  /* Radix renders the indicator icon only while checked. */
+  function setIndicator(item, on, icon) {
+    const ind = item.querySelector('[class*="item-indicator"]');
+    if (!ind) return;
+    const icons = window.FlaskBasecoatIcons || {};
+    ind.innerHTML = on ? (icons[icon] || '') : '';
+  }
+
   function setupMenu(kind, wrapper, opts) {
     const trigger = FB.qs(wrapper, `:scope > [data-slot="${kind}-trigger"], [data-slot="${kind}-trigger"]`);
     const content = FB.qs(wrapper, `:scope > [data-slot="${kind}-content"], [data-slot="${kind}-content"]`);
@@ -507,9 +878,15 @@
 
     function reposition() {
       if (anchorPoint) {
-        content.style.transform = `translate(${anchorPoint.x}px, ${anchorPoint.y}px)`;
-        content.setAttribute('data-side', 'right'); content.setAttribute('data-align', 'start');
-      } else FB.float(trigger, content, { side, align, sideOffset: 4 });
+        // Keep the menu inside the viewport, flipping like Radix does near the edges.
+        const r = content.getBoundingClientRect();
+        const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+        let x = anchorPoint.x, y = anchorPoint.y;
+        if (x + r.width > vw - 8) x = Math.max(8, anchorPoint.x - r.width);
+        if (y + r.height > vh - 8) y = Math.max(8, anchorPoint.y - r.height);
+        content.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+        content.setAttribute('data-side', y < anchorPoint.y ? 'top' : 'bottom'); content.setAttribute('data-align', 'start');
+      } else FB.float(trigger, content, { side, align, sideOffset: Number(content.getAttribute('data-side-offset') || 4), alignOffset: Number(content.getAttribute('data-align-offset') || 0) });
     }
     function open(point) {
       anchorPoint = point || null;
@@ -539,13 +916,14 @@
         const checked = item.getAttribute('aria-checked') === 'true';
         item.setAttribute('aria-checked', String(!checked));
         FB.setState(item, checked ? 'unchecked' : 'checked');
+        setIndicator(item, !checked, 'check');
         FB.emit(item, 'change', { checked: !checked, value: item.getAttribute('data-value') });
         return;
       }
       if (item.getAttribute('role') === 'menuitemradio') {
         const group = item.closest('[role="group"]') || content;
-        FB.qsa(group, '[role="menuitemradio"]').forEach((r) => { r.setAttribute('aria-checked', 'false'); FB.setState(r, 'unchecked'); });
-        item.setAttribute('aria-checked', 'true'); FB.setState(item, 'checked');
+        FB.qsa(group, '[role="menuitemradio"]').forEach((r) => { r.setAttribute('aria-checked', 'false'); FB.setState(r, 'unchecked'); setIndicator(r, false, 'circle'); });
+        item.setAttribute('aria-checked', 'true'); FB.setState(item, 'checked'); setIndicator(item, true, 'circle');
         FB.emit(item, 'change', { value: item.getAttribute('data-value') });
         close();
         return;
@@ -820,11 +1198,12 @@
     const side = content.getAttribute('data-side') || wrapper.getAttribute('data-side') || (kind === 'tooltip' ? 'top' : 'bottom');
     const align = content.getAttribute('data-align') || wrapper.getAttribute('data-align') || 'center';
     const sideOffset = Number(content.getAttribute('data-side-offset') || (kind === 'tooltip' ? 0 : 4));
+    const alignOffset = Number(content.getAttribute('data-align-offset') || 0);
     if (kind === 'popover') trigger.setAttribute('aria-controls', id);
     if (kind === 'tooltip') trigger.setAttribute('aria-describedby', id);
     let layer = null, openTimer = 0, closeTimer = 0;
 
-    function reposition() { FB.float(trigger, content, { side, align, sideOffset }); }
+    function reposition() { FB.float(trigger, content, { side, align, sideOffset, alignOffset }); }
     function open() {
       clearTimeout(closeTimer);
       if (FB.isOpen(content)) return;
@@ -919,7 +1298,7 @@
       function select(item) {
         if (item.getAttribute('aria-disabled') === 'true' || item.hasAttribute('data-disabled')) return;
         items().forEach((i) => { const on = i === item; i.setAttribute('aria-selected', String(on)); FB.setState(i, on ? 'checked' : 'unchecked'); });
-        const value = item.getAttribute('data-value') || item.textContent.trim();
+        const value = item.getAttribute('data-value') || item.getAttribute('value') || item.textContent.trim();
         const label = (FB.qs(item, '[data-slot="select-item-text"]') || item).textContent.trim();
         if (valueEl) { valueEl.textContent = label; }
         trigger.removeAttribute('data-placeholder');
@@ -929,7 +1308,7 @@
         close();
       }
       const preselected = items().find((i) => i.getAttribute('data-state') === 'checked' || i.getAttribute('aria-selected') === 'true');
-      if (preselected) { const label = preselected.textContent.trim(); if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = label; if (input) input.value = preselected.getAttribute('data-value') || label; trigger.removeAttribute('data-placeholder'); }
+      if (preselected) { const label = preselected.textContent.trim(); if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = label; if (input) input.value = preselected.getAttribute('data-value') || preselected.getAttribute('value') || label; trigger.removeAttribute('data-placeholder'); }
       else if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = placeholder;
       items().forEach((i) => { i.setAttribute('tabindex', '-1'); if (!i.hasAttribute('data-state')) FB.setState(i, 'unchecked'); });
       trigger.addEventListener('click', (e) => { e.preventDefault(); if (trigger.disabled) return; FB.isOpen(content) ? close() : open(); });
@@ -972,7 +1351,6 @@
         if (collapsible === 'none') return;
         sidebar.setAttribute('data-state', open ? 'expanded' : 'collapsed');
         sidebar.setAttribute('data-collapsible', open ? '' : collapsible);
-        FB.qsa(wrapper, '[data-slot="sidebar-trigger"]').forEach((t) => t.setAttribute('aria-expanded', String(open)));
         FB.emit(wrapper, 'sidebar', { open });
       }
       function toggle() {
@@ -1240,6 +1618,14 @@
   }
   FB.toast = toast;
   ['success', 'info', 'warning', 'error', 'loading'].forEach((v) => { toast[v] = (title, opts) => toast(Object.assign({ title, variant: v }, opts || {})); });
+
+  // Any element with data-fb-toast shows a toast on click (title from the attribute, optional description/variant).
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-fb-toast]');
+    if (!t) return;
+    toast({ title: t.getAttribute('data-fb-toast'), description: t.getAttribute('data-fb-toast-description') || undefined, variant: t.getAttribute('data-fb-toast-variant') || 'default',
+      action: t.getAttribute('data-fb-toast-action') ? { label: t.getAttribute('data-fb-toast-action') } : undefined });
+  });
 
   // Server-rendered flash messages: <template data-fb-flash data-variant="success">text</template>
   document.addEventListener('DOMContentLoaded', () => {

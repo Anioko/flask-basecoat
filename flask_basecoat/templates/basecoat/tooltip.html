@@ -1,4 +1,4 @@
-{# tooltip: port of shadcn/ui tooltip.tsx (pinned in compliance/upstream). Macros: tooltip_provider, tooltip, tooltip_trigger, tooltip_content #}
+{# tooltip: port of shadcn/ui tooltip.tsx (pinned in compliance/upstream). Macros: tooltip_provider, tooltip, tooltip_trigger, tooltip_content, tooltip_arrow #}
 
 {#- TooltipProvider: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}
 {% macro tooltip_provider(class='', id=none, attrs={}) -%}
@@ -21,5 +21,11 @@
 {#- TooltipContent -#}
 {% macro tooltip_content(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('tooltip-content', kwargs, class, id, attrs) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}
+
+{#- TooltipContent -#}
+{% macro tooltip_arrow(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('tooltip-arrow', kwargs, class, id, attrs) -%}
 <{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
 {%- endmacro %}

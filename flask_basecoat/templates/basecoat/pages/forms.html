@@ -1,0 +1,31 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}WTForms adapter · flask-basecoat{% endblock %}
+{% block body %}
+{% for category, message in get_flashed_messages(with_categories=true) %}<template data-fb-flash data-variant="{{ 'error' if category in ('error', 'danger') else category }}">{{ message }}</template>{% endfor %}
+{% call ui.example_wrapper(class='lg:grid-cols-1 2xl:grid-cols-1') %}
+  {% call ui.example(title='WTForms adapter: server-side validation') %}
+    {% call ui.card(class='w-full max-w-md') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text='Create your account') }}
+        {{ ui.card_description(text='Every field renders through ui.render_field; errors come back from the server with aria-invalid and a field error.') }}
+      {% endcall %}
+      {% call ui.card_content() %}
+        {{ ui.render_form(form, action=url_for('basecoat_gallery.gallery'), submit_text='Create account', id='demo-form') }}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+  {% call ui.example(title='Rendered parts') %}
+    {% call ui.field() %}
+      {{ ui.field_label(text='Email', for_='sample-email') }}
+      {{ ui.input(id='sample-email', type='email', placeholder='m@example.com') }}
+      {{ ui.field_description(text='We never share your email.') }}
+    {% endcall %}
+    {% call ui.field(invalid=true) %}
+      {{ ui.field_label(text='Username', for_='sample-username') }}
+      {{ ui.input(id='sample-username', value='a', invalid=true) }}
+      {{ ui.field_error(text='Username must be at least 4 characters.') }}
+    {% endcall %}
+  {% endcall %}
+{% endcall %}
+{% endblock %}

@@ -5,75 +5,335 @@
 {% block body %}
   {% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_11_', class='w-fit') %}Open
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_11_', class='w-fit') %}Open
+        {% endcall %}
+        {% call ui.dropdown_menu_content() %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='My Account') }}
+            {{ ui.dropdown_menu_item(text='Profile') }}
+            {{ ui.dropdown_menu_item(text='Billing') }}
+            {{ ui.dropdown_menu_item(text='Settings') }}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_item(text='GitHub') }}
+            {{ ui.dropdown_menu_item(text='API', disabled=true) }}
+            {{ ui.dropdown_menu_item(text='Support') }}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Complex') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_12_', class='w-fit') %}Complex Menu
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_12_', class='w-fit') %}Complex Menu
+        {% endcall %}
+        {% call ui.dropdown_menu_content(class='w-56') %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='My Account') }}
+            {% call ui.dropdown_menu_item() %}{{ lucide('user') }}Profile{{ ui.dropdown_menu_shortcut(text='⇧⌘P') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('credit-card') }}Billing{{ ui.dropdown_menu_shortcut(text='⌘B') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('settings') }}Settings{{ ui.dropdown_menu_shortcut(text='⌘S') }}{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='View') }}
+            {% call ui.dropdown_menu_checkbox_item(checked=true) %}{% call ui.dropdown_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}{{ lucide('panel-left') }}Sidebar{% endcall %}
+            {% call ui.dropdown_menu_checkbox_item() %}{{ ui.dropdown_menu_checkbox_item_indicator() }}{{ lucide('layout') }}Status Bar{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_sub() %}
+              {% call ui.dropdown_menu_sub_trigger() %}{{ lucide('users') }}Invite Users{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+              {% call ui.dropdown_menu_sub_content() %}
+                {% call ui.dropdown_menu_group() %}
+                  {% call ui.dropdown_menu_item() %}{{ lucide('mail') }}Email{% endcall %}
+                  {% call ui.dropdown_menu_item() %}{{ lucide('message-square') }}Message{% endcall %}
+                {% endcall %}
+                {{ ui.dropdown_menu_separator() }}
+                {% call ui.dropdown_menu_group() %}
+                  {% call ui.dropdown_menu_item() %}{{ lucide('circle-plus') }}More...{% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('circle-help') }}Support{% endcall %}
+            {% call ui.dropdown_menu_item(variant='destructive') %}{{ lucide('log-out') }}Sign Out{{ ui.dropdown_menu_shortcut(text='⇧⌘Q') }}{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Icons') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_13_', class='w-fit') %}Open
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_13_', class='w-fit') %}Open
+        {% endcall %}
+        {% call ui.dropdown_menu_content() %}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('user') }}Profile{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('credit-card') }}Billing{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('settings') }}Settings{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item(variant='destructive') %}{{ lucide('log-out') }}Log out{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Shortcuts') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_14_', class='w-fit') %}Open
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_14_', class='w-fit') %}Open
+        {% endcall %}
+        {% call ui.dropdown_menu_content() %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='My Account') }}
+            {% call ui.dropdown_menu_item() %}Profile{{ ui.dropdown_menu_shortcut(text='⇧⌘P') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}Billing{{ ui.dropdown_menu_shortcut(text='⌘B') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}Settings{{ ui.dropdown_menu_shortcut(text='⌘S') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}Shortcuts{{ ui.dropdown_menu_shortcut(text='⌘K') }}{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}Log out{{ ui.dropdown_menu_shortcut(text='⇧⌘Q') }}{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Submenu') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_15_', class='w-fit') %}Open
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_15_', class='w-fit') %}Open
+        {% endcall %}
+        {% call ui.dropdown_menu_content() %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_item(text='Team') }}
+            {% call ui.dropdown_menu_sub() %}
+              {% call ui.dropdown_menu_sub_trigger() %}Invite users{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+              {% call ui.dropdown_menu_sub_content() %}
+                {% call ui.dropdown_menu_group() %}
+                  {{ ui.dropdown_menu_item(text='Email') }}
+                  {{ ui.dropdown_menu_item(text='Message') }}
+                {% endcall %}
+                {{ ui.dropdown_menu_separator() }}
+                {% call ui.dropdown_menu_group() %}
+                  {{ ui.dropdown_menu_item(text='More...') }}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+            {% call ui.dropdown_menu_item() %}New Team{{ ui.dropdown_menu_shortcut(text='⌘+T') }}{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Checkboxes') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_16_', class='w-fit') %}Checkboxes
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_16_', class='w-fit') %}Checkboxes
+        {% endcall %}
+        {% call ui.dropdown_menu_content(class='min-w-40') %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Appearance') }}
+            {% call ui.dropdown_menu_checkbox_item(checked=true) %}{% call ui.dropdown_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}{{ lucide('layout') }}Status Bar{% endcall %}
+            {% call ui.dropdown_menu_checkbox_item(disabled=true) %}{{ ui.dropdown_menu_checkbox_item_indicator() }}{{ lucide('activity') }}Activity Bar{% endcall %}
+            {% call ui.dropdown_menu_checkbox_item() %}{{ ui.dropdown_menu_checkbox_item_indicator() }}{{ lucide('panel-left') }}Panel{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Checkboxes with Icons') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_17_', class='w-fit') %}Notifications
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_17_', class='w-fit') %}Notifications
+        {% endcall %}
+        {% call ui.dropdown_menu_content(class='min-w-56') %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Notification Preferences') }}
+            {% call ui.dropdown_menu_checkbox_item(checked=true) %}{% call ui.dropdown_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}{{ lucide('mail') }}Email notifications{% endcall %}
+            {% call ui.dropdown_menu_checkbox_item() %}{{ ui.dropdown_menu_checkbox_item_indicator() }}{{ lucide('message-square') }}SMS notifications{% endcall %}
+            {% call ui.dropdown_menu_checkbox_item(checked=true) %}{% call ui.dropdown_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}{{ lucide('bell') }}Push notifications{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Radio Group') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_18_', class='w-fit') %}Radio Group
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_18_', class='w-fit') %}Radio Group
+        {% endcall %}
+        {% call ui.dropdown_menu_content() %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Panel Position') }}
+            {% call ui.dropdown_menu_radio_group() %}
+              {% call ui.dropdown_menu_radio_item(value='top') %}{{ ui.dropdown_menu_radio_item_indicator() }}{{ lucide('arrow-up') }}Top{% endcall %}
+              {% call ui.dropdown_menu_radio_item(value='bottom', checked=true) %}{% call ui.dropdown_menu_radio_item_indicator() %}{{ lucide('check') }}{% endcall %}{{ lucide('arrow-down') }}Bottom{% endcall %}
+              {% call ui.dropdown_menu_radio_item(value='right', disabled=true) %}{{ ui.dropdown_menu_radio_item_indicator() }}{{ lucide('arrow-right') }}Right{% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='Radio with Icons') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_19_') %}Payment Method
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_19_') %}Payment Method
+        {% endcall %}
+        {% call ui.dropdown_menu_content(class='min-w-56') %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Select Payment Method') }}
+            {% call ui.dropdown_menu_radio_group() %}
+              {% call ui.dropdown_menu_radio_item(value='card', checked=true) %}{% call ui.dropdown_menu_radio_item_indicator() %}{{ lucide('check') }}{% endcall %}{{ lucide('credit-card') }}Credit Card{% endcall %}
+              {% call ui.dropdown_menu_radio_item(value='paypal') %}{{ ui.dropdown_menu_radio_item_indicator() }}{{ lucide('wallet') }}PayPal{% endcall %}
+              {% call ui.dropdown_menu_radio_item(value='bank') %}{{ ui.dropdown_menu_radio_item_indicator() }}{{ lucide('building-2') }}Bank Transfer{% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Destructive Items') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_1a_', class='w-fit') %}Actions
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_1a_', class='w-fit') %}Actions
+        {% endcall %}
+        {% call ui.dropdown_menu_content() %}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('pencil') }}Edit{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('share') }}Share{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('archive') }}Archive{% endcall %}
+            {% call ui.dropdown_menu_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Avatar') %}
       <div class="flex items-center justify-between gap-4">
-        {% call ui.dropdown_menu_trigger(as_=none, variant='outline', size='default', id='radix-_R_3b_', class='cn-button group/button inline-flex shrink-0 items-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-outline cn-button-size-default h-12 justify-start px-2 md:max-w-[200px] style-sera:font-normal style-sera:tracking-normal style-sera:normal-case') %}
-          {% call ui.avatar(size='default') %}
-            {% call ui.avatar_fallback(class='rounded-lg') %}CN
+        {% call ui.dropdown_menu() %}
+          {% call ui.dropdown_menu_trigger(as_=none, variant='outline', size='default', id='radix-_R_3b_', class='cn-button group/button inline-flex shrink-0 items-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-outline cn-button-size-default h-12 justify-start px-2 md:max-w-[200px] style-sera:font-normal style-sera:tracking-normal style-sera:normal-case') %}
+            {% call ui.avatar(size='default') %}
+              {% call ui.avatar_fallback(class='rounded-lg') %}CN
+              {% endcall %}
+            {% endcall %}
+            <div class="grid flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-semibold">shadcn</span>
+              <span class="truncate text-xs text-muted-foreground">shadcn@example.com</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down ml-auto text-muted-foreground" aria-hidden="true">
+              <path d="m7 15 5 5 5-5"></path>
+              <path d="m7 9 5-5 5 5"></path>
+            </svg>
+          {% endcall %}
+          {% call ui.dropdown_menu_content(class='w-(--radix-dropdown-menu-trigger-width) min-w-56') %}
+            {% call ui.dropdown_menu_group() %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('badge-check') }}Account{% endcall %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('credit-card') }}Billing{% endcall %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('bell') }}Notifications{% endcall %}
+            {% endcall %}
+            {{ ui.dropdown_menu_separator() }}
+            {% call ui.dropdown_menu_group() %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('log-out') }}Sign Out{% endcall %}
             {% endcall %}
           {% endcall %}
-          <div class="grid flex-1 text-left text-sm leading-tight">
-            <span class="truncate font-semibold">shadcn</span>
-            <span class="truncate text-xs text-muted-foreground">shadcn@example.com</span>
-          </div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down ml-auto text-muted-foreground" aria-hidden="true">
-            <path d="m7 15 5 5 5-5"></path>
-            <path d="m7 9 5-5 5 5"></path>
-          </svg>
         {% endcall %}
-        {% call ui.dropdown_menu_trigger(size='icon', variant='ghost', id='radix-_R_5b_', class='rounded-full') %}
-          {% call ui.avatar(size='default') %}
-            {% call ui.avatar_fallback() %}LR
+        {% call ui.dropdown_menu() %}
+          {% call ui.dropdown_menu_trigger(size='icon', variant='ghost', id='radix-_R_5b_', class='rounded-full') %}
+            {% call ui.avatar(size='default') %}
+              {% call ui.avatar_fallback() %}LR
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.dropdown_menu_content(align='end', side='top') %}
+            {% call ui.dropdown_menu_group() %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('badge-check') }}Account{% endcall %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('credit-card') }}Billing{% endcall %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('bell') }}Notifications{% endcall %}
+            {% endcall %}
+            {{ ui.dropdown_menu_separator() }}
+            {% call ui.dropdown_menu_group() %}
+              {% call ui.dropdown_menu_item() %}{{ lucide('log-out') }}Sign Out{% endcall %}
             {% endcall %}
           {% endcall %}
         {% endcall %}
       </div>
     {% endcall %}
     {% call ui.example(title='In Dialog') %}
-      {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+      {% call ui.dialog() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
+        {% endcall %}
+        {{ ui.dialog_overlay() }}
+        {% call ui.dialog_content() %}
+          {% call ui.dialog_header() %}
+            {{ ui.dialog_title(text='Dropdown Menu Example') }}
+            {{ ui.dialog_description(text='Click the button below to see the dropdown menu.') }}
+          {% endcall %}
+          {% call ui.dropdown_menu() %}
+            {% call ui.dropdown_menu_trigger(size='default', variant='outline', class='w-fit') %}Open Menu
+            {% endcall %}
+            {% call ui.dropdown_menu_content() %}
+              {% call ui.dropdown_menu_group() %}
+                {% call ui.dropdown_menu_item() %}{{ lucide('copy') }}Copy{% endcall %}
+                {% call ui.dropdown_menu_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+                {% call ui.dropdown_menu_item() %}{{ lucide('clipboard-paste') }}Paste{% endcall %}
+              {% endcall %}
+              {{ ui.dropdown_menu_separator() }}
+              {% call ui.dropdown_menu_sub() %}
+                {% call ui.dropdown_menu_sub_trigger() %}More Options{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+                {% call ui.dropdown_menu_sub_content() %}
+                  {% call ui.dropdown_menu_group() %}
+                    {{ ui.dropdown_menu_item(text='Save Page...') }}
+                    {{ ui.dropdown_menu_item(text='Create Shortcut...') }}
+                    {{ ui.dropdown_menu_item(text='Name Window...') }}
+                  {% endcall %}
+                  {{ ui.dropdown_menu_separator() }}
+                  {% call ui.dropdown_menu_group() %}
+                    {{ ui.dropdown_menu_item(text='Developer Tools') }}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+              {{ ui.dropdown_menu_separator() }}
+              {% call ui.dropdown_menu_group() %}
+                {% call ui.dropdown_menu_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
     {% call ui.example(title='With Inset') %}
-      {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_1d_', class='w-fit') %}Open
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(size='default', variant='outline', id='radix-_R_1d_', class='w-fit') %}Open
+        {% endcall %}
+        {% call ui.dropdown_menu_content(class='w-44') %}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Actions') }}
+            {% call ui.dropdown_menu_item() %}{{ lucide('copy') }}Copy{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+            {{ ui.dropdown_menu_item(text='Paste', inset=true) }}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Appearance', inset=true) }}
+            {% call ui.dropdown_menu_checkbox_item(inset=true, checked=true) %}{% call ui.dropdown_menu_checkbox_item_indicator() %}{{ lucide('check') }}{% endcall %}Bookmarks{% endcall %}
+            {% call ui.dropdown_menu_checkbox_item(inset=true) %}{{ ui.dropdown_menu_checkbox_item_indicator() }}Full URLs{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {{ ui.dropdown_menu_label(text='Theme', inset=true) }}
+            {% call ui.dropdown_menu_radio_group() %}
+              {% call ui.dropdown_menu_radio_item(inset=true, value='light') %}{{ ui.dropdown_menu_radio_item_indicator() }}Light{% endcall %}
+              {% call ui.dropdown_menu_radio_item(inset=true, value='dark') %}{{ ui.dropdown_menu_radio_item_indicator() }}Dark{% endcall %}
+              {% call ui.dropdown_menu_radio_item(inset=true, value='system', checked=true) %}{% call ui.dropdown_menu_radio_item_indicator() %}{{ lucide('check') }}{% endcall %}System{% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_sub() %}
+            {% call ui.dropdown_menu_sub_trigger(inset=true) %}More Options{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+            {% call ui.dropdown_menu_sub_content() %}
+              {% call ui.dropdown_menu_group() %}
+                {{ ui.dropdown_menu_item(text='Save Page...') }}
+                {{ ui.dropdown_menu_item(text='Create Shortcut...') }}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       {% endcall %}
     {% endcall %}
   {% endcall %}

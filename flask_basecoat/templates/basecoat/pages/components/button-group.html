@@ -31,7 +31,7 @@
     {% call ui.example(title='With Text') %}
       <div class="flex flex-col gap-4">
         {% call ui.button_group() %}
-          <div class="cn-button-group-text flex items-center [&amp;_svg]:pointer-events-none">Text</div>
+          <div class="cn-button-group-text flex items-center [&_svg]:pointer-events-none">Text</div>
           {% call ui.button(size='default', variant='outline') %}Another Button
           {% endcall %}
         {% endcall %}

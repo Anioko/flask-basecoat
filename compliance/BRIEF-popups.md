@@ -31,10 +31,17 @@ content parts inside the wrapper:
       {{ ui.dialog_close(text='Cancel', variant='outline', size='default') }}
       {{ ui.button(text='Save changes', type='submit') }}
     {% endcall %}
-    {% call ui.dialog_close(variant='ghost', size='icon-sm', attrs={'aria-label': 'Close'}) %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+    {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
   {% endcall %}
 {% endcall %}
 ```
+
+Upstream `DialogContent` and `SheetContent` render that X close button themselves (`showCloseButton`
+defaults to true): a ghost icon-sm Button with class `cn-dialog-close` / `cn-sheet-close` containing the
+`x` icon and a visually hidden "Close". Add it as the last child of every dialog/sheet content unless the
+example passes `showCloseButton={false}`. Read the component TSX for every part: when a part is rendered
+through `<Button asChild>` or `buttonVariants`, pass `variant`/`size`; when it carries a fixed class string
+(`className="cn-..."` or `cn("cn-...", className)`), the macro already emits it.
 
 The generated page already contains the trigger line for each example section (for instance
 `{{ ui.dialog_trigger(text='Edit Profile', variant='outline') }}`). Wrap it in the family wrapper and add

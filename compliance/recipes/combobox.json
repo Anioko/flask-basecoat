@@ -147,6 +147,12 @@
       "element": "ComboboxPrimitive.Input",
       "base_classes": "cn-combobox-chip-input min-w-16 flex-1 outline-none",
       "data_attrs": []
+    },
+    "combobox": {
+      "component": "Combobox",
+      "element": "ComboboxPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
     }
   }
 }

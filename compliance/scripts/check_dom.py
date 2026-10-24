@@ -27,7 +27,9 @@ STATE_ATTRS = [
     'data-state', 'data-variant', 'data-size', 'data-side', 'data-align', 'data-orientation', 'data-inset',
     'data-active', 'data-collapsible', 'data-sidebar', 'data-disabled', 'data-placeholder', 'data-selected',
     'data-highlighted', 'data-checked', 'data-open', 'data-closed', 'data-vertical', 'data-horizontal',
-    'data-mobile', 'data-collapsed', 'data-swipe-direction', 'data-type', 'data-position', 'data-indicator',
+    'data-mobile', 'data-collapsed', 'data-swipe-direction', 'data-type', 'data-position', 'data-indicator', 'data-spacing',
+    'data-mode', 'data-status', 'data-visible', 'data-hidden', 'data-outside', 'data-today', 'data-selected-single',
+    'data-range-start', 'data-range-end', 'data-range-middle', 'data-wrap', 'data-numbered', 'data-shortcut', 'data-shortcuts',
 ]
 PRESENCE_ATTRS = ['id', 'href', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-controls', 'placeholder', 'value', 'name', 'for', 'src', 'alt', 'style']
 IGNORED_CLASS_PREFIXES = ()  # class sets are compared in full

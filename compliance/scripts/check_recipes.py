@@ -109,16 +109,37 @@ def check_page(kind, name):
     return check_html(r.get_data(as_text=True), f'{kind}/{name}')
 
 
+def check_url(url):
+    """Check any URL of the demo application (host pages, examples) with the full app factory."""
+    from app import create_app
+    app = create_app('testing')
+    with app.app_context():
+        from app import db
+        db.create_all()
+        with app.test_client() as c:
+            r = c.get(url, follow_redirects=True)
+        db.session.remove()
+        db.drop_all()
+    if r.status_code != 200:
+        return {'name': url, 'status': 'page-error', 'error': f'HTTP {r.status_code}'}
+    return check_html(r.get_data(as_text=True), url)
+
+
 def main(argv):
     out_json = None
     if '--json' in argv:
         i = argv.index('--json'); out_json = argv[i + 1]; argv = argv[:i] + argv[i + 2:]
+    urls = []
+    while '--url' in argv:
+        i = argv.index('--url'); urls.append(argv[i + 1]); argv = argv[:i] + argv[i + 2:]
     comps = sorted(p.stem for p in GOLDEN.glob('*.html'))
     blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html'))
     targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks]
     if argv:
         targets = [t for t in targets if t[1] in argv]
-    results = [check_page(k, n) for k, n in targets]
+    if urls:
+        targets = []
+    results = [check_page(k, n) for k, n in targets] + [check_url(u) for u in urls]
     failed = 0
     for r in results:
         mark = {'pass': 'PASS', 'fail': 'FAIL', 'page-error': 'ERR '}[r['status']]

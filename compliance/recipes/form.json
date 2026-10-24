@@ -33,6 +33,18 @@
       "element": "p",
       "base_classes": "text-sm text-destructive",
       "data_attrs": []
+    },
+    "form": {
+      "component": "Form",
+      "element": "FormProvider",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "form-field": {
+      "component": "FormField",
+      "element": "Controller",
+      "base_classes": "",
+      "data_attrs": []
     }
   }
 }
