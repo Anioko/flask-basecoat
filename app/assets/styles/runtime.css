@@ -31,7 +31,7 @@
   [data-slot="accordion-content"][data-state="closed"],
   [data-slot="collapsible-content"][data-state="closed"],
   [data-slot="trace-collapsible-content"][data-state="closed"] {
-    display: none;
+    display: none !important; /* recipe classes such as `grid` live in the utilities layer and would win otherwise */
   }
 
   /* Floating layers are positioned by flask-basecoat.js with fixed coordinates. */
@@ -43,7 +43,7 @@
     width: max-content;
   }
   [data-floating][data-state="closed"] {
-    display: none;
+    display: none !important;
   }
 
   /* Exit animations: the runtime keeps a closing layer displayed until its animation ends. */

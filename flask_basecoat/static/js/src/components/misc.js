@@ -47,6 +47,14 @@
       const vertical = group.getAttribute('data-orientation') === 'vertical' || group.getAttribute('aria-orientation') === 'vertical';
       const children = Array.from(group.children);
       children.forEach((c) => { if (c.getAttribute('data-slot') === 'resizable-panel' && !c.style.flex) c.style.flex = `${Number(c.getAttribute('data-default-size') || 50)} 1 0px`; });
+      // Panels that end up scrollable must be reachable from the keyboard.
+      const keyboardReach = () => FB.qsa(group, '[data-slot="resizable-panel"], [data-slot="resizable-panel"] > div').forEach((p) => {
+        const cs = getComputedStyle(p);
+        const scrolls = cs.overflowY === 'auto' || cs.overflowY === 'scroll' || cs.overflowX === 'auto' || cs.overflowX === 'scroll';
+        if (scrolls && !p.hasAttribute('tabindex')) p.setAttribute('tabindex', '0');
+      });
+      keyboardReach();
+      new ResizeObserver(keyboardReach).observe(group);
       FB.qsa(group, ':scope > [data-slot="resizable-handle"]').forEach((handle) => {
         const prev = handle.previousElementSibling, next = handle.nextElementSibling;
         if (!prev || !next) return;

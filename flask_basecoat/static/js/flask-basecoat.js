@@ -1253,6 +1253,14 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const vertical = group.getAttribute('data-orientation') === 'vertical' || group.getAttribute('aria-orientation') === 'vertical';
       const children = Array.from(group.children);
       children.forEach((c) => { if (c.getAttribute('data-slot') === 'resizable-panel' && !c.style.flex) c.style.flex = `${Number(c.getAttribute('data-default-size') || 50)} 1 0px`; });
+      // Panels that end up scrollable must be reachable from the keyboard.
+      const keyboardReach = () => FB.qsa(group, '[data-slot="resizable-panel"], [data-slot="resizable-panel"] > div').forEach((p) => {
+        const cs = getComputedStyle(p);
+        const scrolls = cs.overflowY === 'auto' || cs.overflowY === 'scroll' || cs.overflowX === 'auto' || cs.overflowX === 'scroll';
+        if (scrolls && !p.hasAttribute('tabindex')) p.setAttribute('tabindex', '0');
+      });
+      keyboardReach();
+      new ResizeObserver(keyboardReach).observe(group);
       FB.qsa(group, ':scope > [data-slot="resizable-handle"]').forEach((handle) => {
         const prev = handle.previousElementSibling, next = handle.nextElementSibling;
         if (!prev || !next) return;
@@ -1614,6 +1622,16 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       });
       const inputs = name ? thumbs.map(() => { const i = document.createElement('input'); i.type = 'hidden'; i.name = name; root.appendChild(i); return i; }) : [];
 
+      // Accessible names: Radix leaves thumbs unnamed unless the author labels them; derive one from the
+      // slider's own label (aria-label, aria-labelledby or a <label for>) so screen readers announce the control.
+      const ownLabel = root.getAttribute('aria-label') || (root.getAttribute('aria-labelledby') && (document.getElementById(root.getAttribute('aria-labelledby')) || {}).textContent)
+        || (root.id && (document.querySelector(`label[for="${root.id}"]`) || {}).textContent) || (root.closest('[data-slot="field"]') && (FB.qs(root.closest('[data-slot="field"]'), '[data-slot="field-label"]') || {}).textContent) || 'Value';
+      thumbs.forEach((t, i) => {
+        if (!t.hasAttribute('aria-label') && !t.hasAttribute('aria-labelledby')) {
+          const base = String(ownLabel).trim();
+          t.setAttribute('aria-label', thumbs.length > 1 ? `${base} ${i === 0 ? 'minimum' : i === thumbs.length - 1 ? 'maximum' : i + 1}` : base);
+        }
+      });
       function pct(v) { return ((v - min) / (max - min)) * 100; }
       function render() {
         thumbs.forEach((t, i) => {

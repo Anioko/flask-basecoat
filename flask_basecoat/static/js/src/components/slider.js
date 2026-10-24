@@ -21,6 +21,16 @@
       });
       const inputs = name ? thumbs.map(() => { const i = document.createElement('input'); i.type = 'hidden'; i.name = name; root.appendChild(i); return i; }) : [];
 
+      // Accessible names: Radix leaves thumbs unnamed unless the author labels them; derive one from the
+      // slider's own label (aria-label, aria-labelledby or a <label for>) so screen readers announce the control.
+      const ownLabel = root.getAttribute('aria-label') || (root.getAttribute('aria-labelledby') && (document.getElementById(root.getAttribute('aria-labelledby')) || {}).textContent)
+        || (root.id && (document.querySelector(`label[for="${root.id}"]`) || {}).textContent) || (root.closest('[data-slot="field"]') && (FB.qs(root.closest('[data-slot="field"]'), '[data-slot="field-label"]') || {}).textContent) || 'Value';
+      thumbs.forEach((t, i) => {
+        if (!t.hasAttribute('aria-label') && !t.hasAttribute('aria-labelledby')) {
+          const base = String(ownLabel).trim();
+          t.setAttribute('aria-label', thumbs.length > 1 ? `${base} ${i === 0 ? 'minimum' : i === thumbs.length - 1 ? 'maximum' : i + 1}` : base);
+        }
+      });
       function pct(v) { return ((v - min) / (max - min)) * 100; }
       function render() {
         thumbs.forEach((t, i) => {

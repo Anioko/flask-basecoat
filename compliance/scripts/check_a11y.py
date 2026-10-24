@@ -25,7 +25,7 @@ DISABLED = ['region', 'landmark-one-main', 'page-has-heading-one', 'bypass']
 AXE_RUN = """async (disabled) => {
     const rules = {}; disabled.forEach((r) => { rules[r] = { enabled: false }; });
     const r = await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] }, rules });
-    return r.violations.map((v) => ({ id: v.id, impact: v.impact, help: v.help, count: v.nodes.length, nodes: v.nodes.slice(0, 3).map((n) => n.target.join(' ')) }));
+    return r.violations.map((v) => ({ id: v.id, impact: v.impact, help: v.help, count: v.nodes.length, nodes: v.nodes.slice(0, 60).map((n) => n.target.join(' ')) }));
 }"""
 
 
