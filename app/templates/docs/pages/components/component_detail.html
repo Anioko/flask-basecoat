@@ -26,82 +26,11 @@
 <section class="docs-section">
   <h2>Usage Examples</h2>
   <p>Here are some practical examples of using the {{ component.title.lower() }} component:</p>
-  
-  {% if component.name == 'button' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Form Actions</h4>
-      <div class="component-example">
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-        <button class="btn btn-secondary" type="button">Cancel</button>
-      </div>
-      
-      <h4>Navigation</h4>
-      <div class="component-example">
-        <button class="btn btn-outline" type="button">← Previous</button>
-        <button class="btn btn-primary" type="button">Next →</button>
-      </div>
-      
-      <h4>Destructive Actions</h4>
-      <div class="component-example">
-        <button class="btn btn-destructive" type="button">Delete Item</button>
-        <button class="btn btn-ghost" type="button">Cancel</button>
-      </div>
-    </div>
-  </div>
-  
-  {% elif component.name == 'card' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Product Card</h4>
-      <div class="component-example">
-        <div class="card card-interactive">
-          <div class="card-header">
-            <h3 class="card-title">Premium Plan</h3>
-            <p class="card-description">Perfect for growing teams</p>
-          </div>
-          <div class="card-content">
-            <p class="card-price">$29<span>/month</span></p>
-            <ul class="card-features">
-              <li>Unlimited projects</li>
-              <li>Advanced analytics</li>
-              <li>Priority support</li>
-            </ul>
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  {% elif component.name == 'alert' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Form Validation</h4>
-      <div class="component-example">
-        <div class="alert alert-destructive" role="alert">
-          <div class="alert-icon">⚠️</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Validation Error</h4>
-            <p class="alert-description">Please check the required fields and try again.</p>
-          </div>
-        </div>
-      </div>
-      
-      <h4>Success Message</h4>
-      <div class="component-example">
-        <div class="alert alert-success" role="alert">
-          <div class="alert-icon">✅</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Success!</h4>
-            <p class="alert-description">Your changes have been saved successfully.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% set entry = basecoat_entry(component.name) %}
+  {% if entry and entry.docs %}
+{{ basecoat_render_docs(entry.docs) }}
+  {% else %}
+
   {% endif %}
 </section>
 
@@ -120,16 +49,9 @@
   <p>Other components that work well with {{ component.title.lower() }}:</p>
   
   <div class="docs-grid">
-    {% set related_components = {
-      'button': ['badge', 'card', 'alert'],
-      'badge': ['button', 'card', 'avatar'],
-      'card': ['button', 'badge', 'avatar'],
-      'alert': ['button', 'badge'],
-      'avatar': ['badge', 'card'],
-      'input': ['button', 'alert', 'card']
-    } %}
+    {# Related names come from the component's registry entry #}
     
-    {% for related_name in related_components.get(component.name, []) %}
+    {% for related_name in (entry.related if entry else []) %}
     <article class="docs-card">
       <h3><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">{{ related_name|title }}</a></h3>
       <p><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">View component &rarr;</a></p>

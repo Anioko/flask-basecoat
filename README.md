@@ -34,6 +34,78 @@ Zero hand-written markup. The WTForms adapter automatically connects labels, hel
 
 ---
 
+## 🚀 Ported shadcn/ui Application Suite (16 Live Production Screens)
+
+Production application screens ported directly from official [shadcn-examples](https://github.com/shadcn-examples/shadcn-examples). Every screen is built 100% with canonical macros from `flask_basecoat/templates/basecoat/` and tokenized HSL CSS variables with dark mode support. Accessible at `/examples/`.
+
+### 🧭 Application Directory (`/examples/`)
+Interactive directory displaying all 16 ported applications categorized with badges and direct preview links:
+
+![shadcn Application Directory](readme_media/examples-index-1440.png)
+
+---
+
+### Phase 1: Foundation Application Suite
+
+| 1. Split-Screen Authentication (`/examples/authentication`) | 2. Executive Admin Dashboard (`/examples/dashboard`) |
+| :---: | :---: |
+| ![shadcn Authentication Screen](readme_media/examples-auth-1440.png) | ![shadcn Admin Dashboard](readme_media/examples-dashboard-1440.png) |
+| *Split hero branding, customer testimonial, WTForms email input, and OAuth buttons.* | *KPI metric cards, monthly overview chart, tabbed analytics, and transaction feed.* |
+
+| 3. Tasks & Data Management (`/examples/tasks`) |
+| :---: |
+| ![shadcn Tasks Data Table](readme_media/examples-tasks-1440.png) |
+| *Data table toolbar, status facet badges, priority icons, and row actions dropdown.* |
+
+---
+
+### Phase 2: Core SaaS & Account Suite
+
+| 4. Pricing Tables (`/examples/pricing`) | 5. Profile & Settings (`/examples/profile`) |
+| :---: | :---: |
+| ![shadcn Pricing Tables](readme_media/examples-pricing-1440.png) | ![shadcn Profile & Settings](readme_media/examples-profile-1440.png) |
+| *Transparent tier comparison cards, feature checklists, and billing frequency toggles.* | *Account center with avatar header, WTForms inputs, tabbed preferences, and theme toggle.* |
+
+| 6. Deliverable Projects List (`/examples/projects`) | 7. Product Changelog (`/examples/changelog`) |
+| :---: | :---: |
+| ![shadcn Projects List](readme_media/examples-projects-1440.png) | ![shadcn Product Changelog](readme_media/examples-changelog-1440.png) |
+| *Deliverable card grid with progress bars, team avatar stacks, and status badges.* | *Release notes timeline with semantic version tags, feature badges, and bug fixes.* |
+
+---
+
+### Phase 3: Marketing & Conversion Flows
+
+| 8. Coming Soon & Waitlist (`/examples/coming-soon`) | 9. Blog & Article Feed (`/examples/blog`) |
+| :---: | :---: |
+| ![shadcn Coming Soon](readme_media/examples-coming-soon-1440.png) | ![shadcn Blog & Article Feed](readme_media/examples-blog-1440.png) |
+| *Countdown timer cards, waitlist email capture form, and feature teaser highlights.* | *Featured article hero, trending sidebar pills, and recent post card grid.* |
+
+| 10. Multi-Step Onboarding Wizard (`/examples/onboarding`) |
+| :---: |
+| ![shadcn Onboarding Flow](readme_media/examples-onboarding-1440.png) |
+| *Step progress stepper, account purpose cards, workspace inputs, and CI governance toggles.* |
+
+---
+
+### Phase 4: Interactive Applications
+
+| 11. Team Chat Messenger (`/examples/chat`) | 12. AI Prompt Assistant (`/examples/ai-chat`) |
+| :---: | :---: |
+| ![shadcn Chat Application](readme_media/examples-chat-1440.png) | ![shadcn AI Prompt Assistant](readme_media/examples-ai-chat-1440.png) |
+| *Channel sidebar, active status indicators, interleaved chat bubbles, and message composer.* | *Copilot greeting, 2x2 suggestion prompt cards, assistant stream bubbles, and prompt bar.* |
+
+| 13. LLM Playground (`/examples/playground`) | 14. Hardware Product Catalog (`/examples/product-list`) |
+| :---: | :---: |
+| ![shadcn LLM Playground](readme_media/examples-playground-1440.png) | ![shadcn Product Catalog](readme_media/examples-product-list-1440.png) |
+| *Dual-prompt canvas, model selector, temperature/max-token tuning sliders, and presets.* | *Hardware card grid, multi-facet brand filters, price slider, and sorting toolbar.* |
+
+| 15. Product Detail Showcase (`/examples/product-detail`) | 16. Agile Kanban Sprint Board (`/examples/kanban`) |
+| :---: | :---: |
+| ![shadcn Product Detail](readme_media/examples-product-detail-1440.png) | ![shadcn Kanban Board](readme_media/examples-kanban-1440.png) |
+| *Thumbnail gallery, specification data table, color finish swatches, and cart CTA.* | *Backlog, Todo, In Progress, Done columns with task cards, priority badges, and assignees.* |
+
+---
+
 ## 💡 Why Flask-Basecoat?
 
 Traditional Flask applications either hand-code raw HTML tags across dozens of templates (causing visual drift and accessibility regressions) or rely on heavy client-side JavaScript frameworks.
@@ -320,6 +392,22 @@ Accessible placeholder shapes for async content:
 
 ---
 
+## ➕ Adding a Component to the Gallery and Docs
+
+To register a component, add one file, `flask_basecoat/gallery_entries/<name>.py`, and nothing else. It defines an `ENTRY` dict (`name`, plus optional `gallery_template`, `index_label`, `docs` and `related`; the full key list is in `flask_basecoat/gallery_registry.py`). The gallery route and index link, and the usage examples and related components on `/docs/components/<name>`, are all built from that file, so do not edit `gallery.py`, `gallery.html` or `component_detail.html`. The macro and its gallery template are your component's own files, as before.
+
+```python
+# flask_basecoat/gallery_entries/switch.py
+ENTRY = {
+    'name': 'switch',
+    'gallery_template': 'basecoat/gallery_switch.html',
+    'index_label': 'Switch',
+    'related': ['label', 'button'],
+}
+```
+
+---
+
 ## 🏛️ Anti-Drift CI Ratchet
 
 To prevent codebases from regressing to raw HTML tags (`<button>`, `<input>`), `flask-basecoat` includes a strict CI ratchet check:
@@ -348,6 +436,9 @@ All 21 unit and integration tests verify:
 - Macro output HTML and ARIA attribute presence.
 - WTForms rendering and server validation feedback.
 - Extension blueprint registration and ChoiceLoader setup.
+
+Browser tests start a live server on the port in the `TEST_SERVER_PORT` environment variable (default `5100`).
+To run two suites on one host, give each its own port, e.g. `TEST_SERVER_PORT=5107 pytest tests`.
 
 ---
 

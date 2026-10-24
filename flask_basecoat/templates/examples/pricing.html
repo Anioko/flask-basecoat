@@ -1,0 +1,350 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Tables - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        let isYearly = true;
+        function setBilling(yearly) {
+            isYearly = yearly;
+            const btnMonthly = document.getElementById('btn-monthly');
+            const btnYearly = document.getElementById('btn-yearly');
+            if (yearly) {
+                btnYearly.className = "rounded-full px-6 py-2 text-sm font-medium transition-colors bg-primary text-primary-foreground shadow-xs";
+                btnMonthly.className = "rounded-full px-6 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground";
+            } else {
+                btnMonthly.className = "rounded-full px-6 py-2 text-sm font-medium transition-colors bg-primary text-primary-foreground shadow-xs";
+                btnYearly.className = "rounded-full px-6 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground";
+            }
+
+            document.querySelectorAll('[data-plan]').forEach(el => {
+                const plan = el.getAttribute('data-plan');
+                const priceEl = el.querySelector('.plan-price');
+                const periodEl = el.querySelector('.plan-period');
+                const subtextEl = el.querySelector('.plan-subtext');
+                
+                if (plan === 'Free') {
+                    priceEl.textContent = '$0';
+                    periodEl.textContent = '/mo';
+                    subtextEl.textContent = 'Upgrade any time';
+                } else if (plan === 'Tiny') {
+                    priceEl.textContent = yearly ? '$60' : '$5';
+                    periodEl.textContent = yearly ? '/yr' : '/mo';
+                    subtextEl.textContent = yearly ? 'Billed at $60 /yr' : 'Billed monthly';
+                } else if (plan === 'Solo') {
+                    priceEl.textContent = yearly ? '$156' : '$13';
+                    periodEl.textContent = yearly ? '/yr' : '/mo';
+                    subtextEl.textContent = yearly ? 'Billed at $156 /yr' : 'Billed monthly';
+                } else if (plan === 'Pro') {
+                    priceEl.textContent = yearly ? '$372' : '$31';
+                    periodEl.textContent = yearly ? '/yr' : '/mo';
+                    subtextEl.textContent = yearly ? 'Billed at $372 /yr' : 'Billed monthly';
+                }
+            });
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
+    {{ bc.toast_container() }}
+
+    <div class="bg-background">
+        <div class="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl">
+                {# Header Section #}
+                <header class="mb-12 space-y-4 text-center">
+                    <h1 class="text-4xl font-bold tracking-tight md:text-5xl">Pricing</h1>
+                    <p class="text-muted-foreground text-lg text-balance max-w-2xl mx-auto">
+                        Upgrade to link your custom domain, track your visits, edit your content &amp; much more.
+                    </p>
+                </header>
+
+        {# Billing Toggle Switcher #}
+        <div class="mb-12 text-center">
+            <div class="bg-muted inline-flex items-center rounded-full p-1 border border-border/40">
+                <button
+                    id="btn-monthly"
+                    class="rounded-full px-6 py-2 text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+                    onclick="setBilling(false)">
+                    Monthly
+                </button>
+                <button
+                    id="btn-yearly"
+                    class="rounded-full px-6 py-2 text-sm font-medium transition-colors bg-primary text-primary-foreground shadow-xs"
+                    onclick="setBilling(true)">
+                    Yearly
+                </button>
+            </div>
+        </div>
+
+        {# 4 Plans Grid #}
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+            
+            {# 1. Free Plan #}
+            <div data-plan="Free" class="bg-muted/40 relative flex flex-col rounded-xl border border-border p-6 shadow-xs">
+                <h2 class="mb-2 text-2xl font-semibold tracking-tight">Free</h2>
+                <p class="text-muted-foreground mb-4 text-sm min-h-[40px]">Try us out for a quick project or two</p>
+
+                <div class="mb-6 flex items-baseline">
+                    <span class="plan-price text-5xl font-bold tracking-tight">$0</span>
+                    <span class="plan-period text-muted-foreground text-xl font-medium">/mo</span>
+                </div>
+                <p class="plan-subtext text-muted-foreground mb-6 text-sm">Upgrade any time</p>
+
+                {{ bc.button(content='Get started<i data-lucide="arrow-right"></i>', variant='default', class='font-medium w-full justify-center bg-black hover:bg-gray-800 text-white dark:bg-white dark:text-black dark:hover:bg-gray-200') }}
+
+                <div class="text-muted-foreground mt-4 mb-6 flex items-center justify-center text-xs gap-1.5">
+                    <i data-lucide="info" class="size-3.5 shrink-0"></i>
+                    <span>7-day money-back guarantee</span>
+                </div>
+
+                <div class="flex-grow space-y-6">
+                    <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>1 active project</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>3 MB upload limit</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>5,000 visitors /mo</span>
+                        </li>
+                    </ul>
+
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold">Additional Features:</h3>
+                        <ul class="text-muted-foreground space-y-3 text-left text-sm opacity-60">
+                            <li class="flex items-center">
+                                <i data-lucide="x-circle" class="mr-2 h-4 w-4 shrink-0 text-red-500"></i>
+                                <span>Remove Tiny Host banner</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="x-circle" class="mr-2 h-4 w-4 shrink-0 text-red-500"></i>
+                                <span>QR codes</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="x-circle" class="mr-2 h-4 w-4 shrink-0 text-red-500"></i>
+                                <span>Built-in Analytics</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{ bc.button(content='Compare plans<i data-lucide="download"></i>', variant='ghost', class='text-muted-foreground mt-8 w-full justify-center text-xs') }}
+            </div>
+
+            {# 2. Tiny Plan #}
+            <div data-plan="Tiny" class="bg-muted/40 relative flex flex-col rounded-xl border border-border p-6 shadow-xs">
+                <div class="absolute top-6 right-6 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 border border-primary/20 text-primary">
+                    44% off
+                </div>
+
+                <h2 class="mb-2 text-2xl font-semibold tracking-tight">Tiny</h2>
+                <p class="text-muted-foreground mb-4 text-sm min-h-[40px]">Perfect for a single, professional link</p>
+
+                <div class="mb-6 flex items-baseline">
+                    <span class="plan-price text-5xl font-bold tracking-tight">$60</span>
+                    <span class="plan-period text-muted-foreground text-xl font-medium">/yr</span>
+                </div>
+                <p class="plan-subtext text-muted-foreground mb-6 text-sm">Billed at $60 /yr</p>
+
+                {{ bc.button(content='Get started<i data-lucide="arrow-right"></i>', class='font-medium w-full justify-center bg-primary hover:bg-primary/90 text-primary-foreground') }}
+
+                <div class="text-muted-foreground mt-4 mb-6 flex items-center justify-center text-xs gap-1.5">
+                    <i data-lucide="info" class="size-3.5 shrink-0"></i>
+                    <span>7-day money-back guarantee</span>
+                </div>
+
+                <div class="flex-grow space-y-6">
+                    <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>1 active project</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>25 MB upload limit</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>10,000 visitors /mo</span>
+                        </li>
+                    </ul>
+
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold">Additional Features:</h3>
+                        <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Remove Tiny Host banner</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>QR codes</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Built-in Analytics</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{ bc.button(content='Compare plans<i data-lucide="download"></i>', variant='ghost', class='text-muted-foreground mt-8 w-full justify-center text-xs') }}
+            </div>
+
+            {# 3. Solo Plan (Most Popular) #}
+            <div data-plan="Solo" class="bg-card relative flex flex-col rounded-xl border-2 border-primary ring-2 ring-primary/20 shadow-xl p-6">
+                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3.5 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
+                    Most Popular
+                </div>
+                <div class="absolute top-6 right-6 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 border border-primary/30 text-primary">
+                    27% off
+                </div>
+
+                <h2 class="mb-2 text-2xl font-semibold tracking-tight">Solo</h2>
+                <p class="text-muted-foreground mb-4 text-sm min-h-[40px]">Great for small projects</p>
+
+                <div class="mb-6 flex items-baseline">
+                    <span class="plan-price text-5xl font-bold tracking-tight">$156</span>
+                    <span class="plan-period text-muted-foreground text-xl font-medium">/yr</span>
+                </div>
+                <p class="plan-subtext text-muted-foreground mb-6 text-sm">Billed at $156 /yr</p>
+
+                {{ bc.button(content='Get started<i data-lucide="arrow-right"></i>', class='font-medium w-full justify-center bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm') }}
+
+                <div class="text-muted-foreground mt-4 mb-6 flex items-center justify-center text-xs gap-1.5">
+                    <i data-lucide="info" class="size-3.5 shrink-0"></i>
+                    <span>7-day money-back guarantee</span>
+                </div>
+
+                <div class="flex-grow space-y-6">
+                    <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>5 active projects</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>75 MB upload limit</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>100,000 visitors /mo</span>
+                        </li>
+                    </ul>
+
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold">Additional Features:</h3>
+                        <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Everything in Tiny Plan</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Custom domains</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Edit mode</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Password protection</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{ bc.button(content='Compare plans<i data-lucide="download"></i>', variant='ghost', class='text-muted-foreground mt-8 w-full justify-center text-xs') }}
+            </div>
+
+            {# 4. Pro Plan #}
+            <div data-plan="Pro" class="bg-muted/40 relative flex flex-col rounded-xl border border-border p-6 shadow-xs">
+                <div class="absolute top-6 right-6 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-secondary border border-border text-secondary-foreground">
+                    18% off
+                </div>
+
+                <h2 class="mb-2 text-2xl font-semibold tracking-tight">Pro</h2>
+                <p class="text-muted-foreground mb-4 text-sm min-h-[40px]">For freelancers, agencies & companies</p>
+
+                <div class="mb-6 flex items-baseline">
+                    <span class="plan-price text-5xl font-bold tracking-tight">$372</span>
+                    <span class="plan-period text-muted-foreground text-xl font-medium">/yr</span>
+                </div>
+                <p class="plan-subtext text-muted-foreground mb-6 text-sm">Billed at $372 /yr</p>
+
+                {{ bc.button(content='Get started<i data-lucide="arrow-right"></i>', variant='outline', class='font-medium w-full justify-center hover:bg-muted text-foreground shadow-sm font-semibold') }}
+
+                <div class="text-muted-foreground mt-4 mb-6 flex items-center justify-center text-xs gap-1.5">
+                    <i data-lucide="info" class="size-3.5 shrink-0"></i>
+                    <span>7-day money-back guarantee</span>
+                </div>
+
+                <div class="flex-grow space-y-6">
+                    <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>Unlimited active projects</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>10 GB upload limit</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                            <span>500,000 visitors /mo</span>
+                        </li>
+                    </ul>
+
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold">Additional Features:</h3>
+                        <ul class="text-muted-foreground space-y-3 text-left text-sm">
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Everything in Solo Plan</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Capture emails</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-lucide="check-circle-2" class="mr-2 h-4 w-4 shrink-0 text-green-500"></i>
+                                <span>Add more team members</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{ bc.button(content='Compare plans<i data-lucide="download"></i>', variant='ghost', class='text-muted-foreground mt-8 w-full justify-center text-xs') }}
+            </div>
+
+        </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

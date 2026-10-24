@@ -1,0 +1,873 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+
+<html class="h-full" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mail - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    {{ basecoat.css() }}
+    <link href="{{ url_for('static', filename='styles/app.css') }}" rel="stylesheet"/>
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+            // Select first email by default
+            selectMail('mail-1');
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        const mailDatabase = {
+            'mail-1': {
+                id: 'mail-1',
+                name: 'William Smith',
+                email: 'williamsmith@example.com',
+                date: 'Oct 22, 2026, 9:00:00 AM',
+                subject: 'Meeting Tomorrow',
+                teaser: 'Hi, let\'s have a meeting tomorrow to discuss the project.',
+                tags: ['meeting', 'work', 'important'],
+                body: `<p>Hi team,</p>
+<p>Let's have a meeting tomorrow at 10:00 AM to discuss the upcoming project deliverables and sync on open tasks.</p>
+<p>Please review the design drafts and requirements before the call so we can jump straight into architectural decisions.</p>
+<p>Best regards,<br>William</p>`
+            },
+            'mail-2': {
+                id: 'mail-2',
+                name: 'Alice Smith',
+                email: 'alicesmith@example.com',
+                date: 'Oct 21, 2026, 4:15:00 PM',
+                subject: 'Re: Project Update',
+                teaser: 'Thank you for the project update. It looks great! I\'ve gone through the report.',
+                tags: ['work', 'updates'],
+                body: `<p>Hi Alicia,</p>
+<p>Thank you for sending the updated project status report. The progress on Basecoat integration and theme tokens looks fantastic!</p>
+<p>I left a couple of minor comments on the pull request regarding CSS variable fallbacks. Let me know if you need any clarification.</p>
+<p>Thanks,<br>Alice</p>`
+            },
+            'mail-3': {
+                id: 'mail-3',
+                name: 'Bob Johnson',
+                email: 'bobjohnson@example.com',
+                date: 'Oct 20, 2026, 11:30:00 AM',
+                subject: 'Weekend Plans & Social',
+                teaser: 'Any plans for the weekend? Thinking of hiking the local trails.',
+                tags: ['personal'],
+                body: `<p>Hey Alicia,</p>
+<p>Are you free this weekend? A few of us are planning to hike up Mount Rainier on Saturday morning if the weather holds.</p>
+<p>Let me know if you want to join us and I'll send over the meeting spot!</p>
+<p>Cheers,<br>Bob</p>`
+            },
+            'mail-4': {
+                id: 'mail-4',
+                name: 'Emily Davis',
+                email: 'emilydavis@example.com',
+                date: 'Oct 19, 2026, 2:45:00 PM',
+                subject: 'Re: Question about Budget',
+                teaser: 'I have a question about the budget spreadsheet from yesterday.',
+                tags: ['work', 'budget'],
+                body: `<p>Hello Alicia,</p>
+<p>Looking over the Q4 infrastructure budget spreadsheet, I noticed the cloud compute line item increased by 12% compared to last month.</p>
+<p>Could you clarify whether this includes the anticipated container autoscaling cluster?</p>
+<p>Regards,<br>Emily</p>`
+            }
+        };
+
+        let selectedMailId = 'mail-1';
+
+        function selectMail(id) {
+            const data = mailDatabase[id];
+            if (!data) return;
+            selectedMailId = id;
+
+            // Highlight in list
+            document.querySelectorAll('.mail-item').forEach(el => {
+                if (el.getAttribute('data-id') === id) {
+                    el.classList.add('bg-muted');
+                } else {
+                    el.classList.remove('bg-muted');
+                }
+            });
+
+            // Update reading pane
+            const emptyPane = document.getElementById('mail-empty-pane');
+            const contentPane = document.getElementById('mail-content-pane');
+            if (emptyPane) emptyPane.classList.add('hidden');
+            if (contentPane) contentPane.classList.remove('hidden');
+
+            document.getElementById('mail-sender-name').textContent = data.name;
+            document.getElementById('mail-sender-email').textContent = data.email;
+            document.getElementById('mail-sender-avatar').textContent = data.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('mail-date').textContent = data.date;
+            document.getElementById('mail-subject').textContent = data.subject;
+            document.getElementById('mail-body').innerHTML = data.body;
+
+            const tagsContainer = document.getElementById('mail-tags');
+            if (tagsContainer) {
+                tagsContainer.innerHTML = '';
+                data.tags.forEach(t => {
+                    const badge = document.createElement('span');
+                    badge.className = 'group/badge inline-flex h-5 items-center rounded-md border px-2 py-0.5 text-xs font-semibold capitalize border-border text-foreground';
+                    badge.textContent = t;
+                    tagsContainer.appendChild(badge);
+                });
+            }
+        }
+
+        function filterMail() {
+            const query = document.getElementById('mail-search-input').value.toLowerCase();
+            document.querySelectorAll('.mail-item').forEach(el => {
+                const text = el.textContent.toLowerCase();
+                el.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        function sendReply() {
+            const replyInput = document.getElementById('mail-reply-input');
+            if (!replyInput || !replyInput.value.trim()) return;
+            alert('Reply sent successfully!');
+            replyInput.value = '';
+        }
+    </script>
+</head>
+<body class="bg-background text-foreground antialiased min-h-screen">
+<div class="h-screen rounded-md border">
+<div class="flex h-full w-full data-[panel-group-direction=vertical]:flex-col items-stretch" data-panel-group="" data-panel-group-direction="horizontal" data-panel-group-id="_R_19bsnpfjb_" data-slot="resizable-panel-group" style="display:flex;flex-direction:row;height:100%;overflow:hidden;width:100%">
+<div class="" data-panel="" data-panel-collapsible="true" data-panel-group-id="_R_19bsnpfjb_" data-panel-id="_R_79bsnpfjb_" data-panel-size="20.0" data-slot="resizable-panel" id="_R_79bsnpfjb_" style="flex-basis:0;flex-grow:20.0;flex-shrink:1;overflow:hidden">
+<div class="flex h-[52px] items-center justify-center px-2">
+<button aria-autocomplete="none" aria-expanded="false" aria-label="Select account" class="justify-between rounded-md border bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-accent/70! bg-background! flex w-full items-center gap-2 border-transparent [&amp;_svg]:h-4 [&amp;_svg]:w-4 [&amp;_svg]:shrink-0 [&amp;&gt;span]:line-clamp-1 [&amp;&gt;span]:flex [&amp;&gt;span]:w-full [&amp;&gt;span]:items-center [&amp;&gt;span]:gap-1 [&amp;&gt;span]:truncate" data-size="default" data-slot="select-trigger" data-state="closed" dir="ltr" role="combobox" type="button">
+<span data-slot="select-value" style="pointer-events:none">
+<svg role="img" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<title>
+        Vercel
+       </title>
+<path d="M24 22.525H0l12-21.05 12 21.05z" fill="currentColor">
+</path>
+</svg>
+<span class="ml-1">
+       Alicia Koch
+      </span>
+</span>
+<svg aria-hidden="true" class="lucide lucide-chevron-down pointer-events-none size-4 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</button>
+</div>
+<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
+</div>
+<div class="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2" data-collapsed="false">
+<nav class="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 dark:bg-muted dark:hover:bg-muted dark:text-white dark:hover:text-white justify-start" href="#">
+<svg aria-hidden="true" class="lucide lucide-inbox mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="22 12 16 12 14 15 10 15 8 12 2 12">
+</polyline>
+<path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z">
+</path>
+</svg>
+      Inbox
+      <span class="ml-auto text-background dark:text-white">
+       128
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<svg aria-hidden="true" class="lucide lucide-file mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
+</path>
+<path d="M14 2v5a1 1 0 0 0 1 1h5">
+</path>
+</svg>
+      Drafts
+      <span class="ml-auto">
+       9
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<svg aria-hidden="true" class="lucide lucide-send mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
+</path>
+<path d="m21.854 2.147-10.94 10.939">
+</path>
+</svg>
+      Sent
+     </a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<svg aria-hidden="true" class="lucide lucide-archive-x mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="5" rx="1" width="20" x="2" y="3">
+</rect>
+<path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8">
+</path>
+<path d="m9.5 17 5-5">
+</path>
+<path d="m9.5 12 5 5">
+</path>
+</svg>
+      Junk
+      <span class="ml-auto">
+       23
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<svg aria-hidden="true" class="lucide lucide-trash2 lucide-trash-2 mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 11v6">
+</path>
+<path d="M14 11v6">
+</path>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6">
+</path>
+<path d="M3 6h18">
+</path>
+<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+</path>
+</svg>
+      Trash
+     </a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<svg aria-hidden="true" class="lucide lucide-archive mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="5" rx="1" width="20" x="2" y="3">
+</rect>
+<path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8">
+</path>
+<path d="M10 12h4">
+</path>
+</svg>
+      Archive
+     </a>
+</nav>
+</div>
+<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
+</div>
+<div class="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2" data-collapsed="false">
+<nav class="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<span class="me-2 size-3.5 rounded-full bg-indigo-400 dark:bg-indigo-700">
+</span>
+      Social
+      <span class="ml-auto">
+       972
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<span class="me-2 size-3.5 rounded-full bg-teal-400 dark:bg-teal-700">
+</span>
+      Updates
+      <span class="ml-auto">
+       342
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<span class="me-2 size-3.5 rounded-full bg-orange-400 dark:bg-orange-700">
+</span>
+      Forums
+      <span class="ml-auto">
+       128
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<span class="me-2 size-3.5 rounded-full bg-lime-400 dark:bg-lime-700">
+</span>
+      Shopping
+      <span class="ml-auto">
+       8
+      </span>
+</a>
+<a class="group/button inline-flex shrink-0 items-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 justify-start" href="#">
+<span class="me-2 size-3.5 rounded-full bg-pink-400 dark:bg-pink-700">
+</span>
+      Promotions
+      <span class="ml-auto">
+       21
+      </span>
+</a>
+</nav>
+</div>
+</div>
+<div aria-controls="_R_79bsnpfjb_" aria-valuemax="20" aria-valuemin="15" aria-valuenow="20" class="relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 data-[panel-group-direction=vertical]:after:-translate-y-1/2 [&amp;[data-panel-group-direction=vertical]&gt;div]:rotate-90" data-panel-group-direction="horizontal" data-panel-group-id="_R_19bsnpfjb_" data-panel-resize-handle-enabled="true" data-panel-resize-handle-id="_R_b9bsnpfjb_" data-resize-handle="" data-resize-handle-state="inactive" data-slot="resizable-handle" role="separator" style="touch-action:none;user-select:none" tabindex="0">
+<div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border">
+</div>
+</div>
+<div class="" data-panel="" data-panel-group-id="_R_19bsnpfjb_" data-panel-id="_R_f9bsnpfjb_" data-panel-size="32.0" data-slot="resizable-panel" id="_R_f9bsnpfjb_" style="flex-basis:0;flex-grow:32.0;flex-shrink:1;overflow:hidden">
+<div class="flex h-full flex-col gap-0" data-orientation="horizontal" data-slot="tabs" dir="ltr">
+<div class="flex items-center px-4 py-2">
+<div class="flex items-center gap-2">
+<h1 class="text-xl font-bold">
+       Inbox
+      </h1>
+</div>
+<div aria-orientation="horizontal" class="bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px] ml-auto" data-orientation="horizontal" data-slot="tabs-list" role="tablist" style="outline:none" tabindex="0">
+<button aria-controls="radix-_R_1f9bsnpfjb_-content-all" aria-selected="true" class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-orientation="horizontal" data-radix-collection-item="" data-slot="tabs-trigger" data-state="active" id="radix-_R_1f9bsnpfjb_-trigger-all" role="tab" tabindex="-1" type="button">
+       All
+      </button>
+<button aria-controls="radix-_R_1f9bsnpfjb_-content-unread" aria-selected="false" class="data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-orientation="horizontal" data-radix-collection-item="" data-slot="tabs-trigger" data-state="inactive" id="radix-_R_1f9bsnpfjb_-trigger-unread" role="tab" tabindex="-1" type="button">
+       Unread
+      </button>
+</div>
+</div>
+<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
+</div>
+<div class="bg-background/95 supports-[backdrop-filter]:bg-background/60 p-4 backdrop-blur">
+<form>
+<div class="relative">
+<svg aria-hidden="true" class="lucide lucide-search text-muted-foreground absolute top-2.5 left-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m21 21-4.34-4.34">
+</path>
+<circle cx="11" cy="11" r="8">
+</circle>
+</svg>
+<input class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 pl-8" data-slot="input" id="mail-search-input" onkeyup="filterMail()" placeholder="Search"/>
+</div>
+</form>
+</div>
+<div class="min-h-0">
+<div class="relative h-full" data-slot="scroll-area" dir="ltr" style="position:relative;--radix-scroll-area-corner-width:0px;--radix-scroll-area-corner-height:0px">
+<style>
+       [data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}
+      </style>
+<div class="size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1" data-radix-scroll-area-viewport="" data-slot="scroll-area-viewport" style="overflow: hidden scroll;">
+<div style="min-width:100%;display:table">
+<div class="flex flex-col gap-2 p-4 pt-0">
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-1" onclick="selectMail('mail-1')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              William Smith
+             </div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             about 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Meeting Tomorrow
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           Hi, let's have a meeting tomorrow to discuss the project. I've been reviewing the project details and have some ideas I'd like to share. It's crucial that we align on our next steps to ensure the project's success.
+
+Please come prepared with any questions or insights you may have. Looking forward to
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            meeting
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            important
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-2" onclick="selectMail('mail-2')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Alice Smith
+             </div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             about 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Re: Project Update
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           Thank you for the project update. It looks great! I've gone through the report, and the progress is impressive. The team has done a fantastic job, and I appreciate the hard work everyone has put in.
+
+I have a few minor suggestions that I'll include in the attached document.
+
+Let's discuss these duri
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            important
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-3" onclick="selectMail('mail-3')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Bob Johnson
+             </div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             over 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Weekend Plans
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           Any plans for the weekend? I was thinking of going hiking in the nearby mountains. It's been a while since we had some outdoor fun.
+
+If you're interested, let me know, and we can plan the details. It'll be a great way to unwind and enjoy nature.
+
+Looking forward to your response!
+
+Best, Bob
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground" data-slot="badge" data-variant="outline">
+            personal
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-4" onclick="selectMail('mail-4')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Emily Davis
+             </div>
+<span class="flex h-2 w-2 rounded-full bg-blue-600">
+</span>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             over 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Re: Question about Budget
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           I have a question about the budget for the upcoming project. It seems like there's a discrepancy in the allocation of resources.
+
+I've reviewed the budget report and identified a few areas where we might be able to optimize our spending without compromising the project's quality.
+
+I've attached a de
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            budget
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-5" onclick="selectMail('mail-5')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Michael Wilson
+             </div>
+<span class="flex h-2 w-2 rounded-full bg-blue-600">
+</span>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             over 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Important Announcement
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           I have an important announcement to make during our team meeting. It pertains to a strategic shift in our approach to the upcoming product launch. We've received valuable feedback from our beta testers, and I believe it's time to make some adjustments to better meet our customers' needs.
+
+This chang
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            meeting
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            important
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-6" onclick="selectMail('mail-6')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Sarah Brown
+             </div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             over 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Re: Feedback on Proposal
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           Thank you for your feedback on the proposal. It looks great! I'm pleased to hear that you found it promising. The team worked diligently to address all the key points you raised, and I believe we now have a strong foundation for the project.
+
+I've attached the revised proposal for your review.
+
+Plea
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-7" onclick="selectMail('mail-7')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              David Lee
+             </div>
+<span class="flex h-2 w-2 rounded-full bg-blue-600">
+</span>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             over 3 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            New Project Idea
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           I have an exciting new project idea to discuss with you. It involves expanding our services to target a niche market that has shown considerable growth in recent months.
+
+I've prepared a detailed proposal outlining the potential benefits and the strategy for execution.
+
+This project has the potentia
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            meeting
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            important
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-8" onclick="selectMail('mail-8')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Olivia Wilson
+             </div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             almost 4 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Vacation Plans
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           Let's plan our vacation for next month. What do you think? I've been thinking of visiting a tropical paradise, and I've put together some destination options.
+
+I believe it's time for us to unwind and recharge. Please take a look at the options and let me know your preferences.
+
+We can start making
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground" data-slot="badge" data-variant="outline">
+            personal
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-9" onclick="selectMail('mail-9')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              James Martin
+             </div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             almost 4 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Re: Conference Registration
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           I've completed the registration for the conference next month. The event promises to be a great networking opportunity, and I'm looking forward to attending the various sessions and connecting with industry experts.
+
+I've also attached the conference schedule for your reference.
+
+If there are any sp
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            conference
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-10" onclick="selectMail('mail-10')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Sophia White
+             </div>
+<span class="flex h-2 w-2 rounded-full bg-blue-600">
+</span>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             almost 4 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Team Dinner
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           Let's have a team dinner next week to celebrate our success. We've achieved some significant milestones, and it's time to acknowledge our hard work and dedication.
+
+I've made reservations at a lovely restaurant, and I'm sure it'll be an enjoyable evening.
+
+Please confirm your availability and any di
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80" data-slot="badge" data-variant="secondary">
+            meeting
+           </span>
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+</div>
+</button>
+<button class="hover:bg-accent/70 flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all mail-item cursor-pointer transition-colors" data-id="mail-11" onclick="selectMail('mail-11')">
+<div class="flex w-full flex-col gap-1">
+<div class="flex items-center">
+<div class="flex items-center gap-2">
+<div class="font-semibold">
+              Daniel Johnson
+             </div>
+<span class="flex h-2 w-2 rounded-full bg-blue-600">
+</span>
+</div>
+<div class="ml-auto text-xs text-muted-foreground">
+             about 4 years ago
+            </div>
+</div>
+<div class="text-xs font-medium">
+            Feedback Request
+           </div>
+</div>
+<div class="text-muted-foreground line-clamp-2 text-xs">
+           I'd like your feedback on the latest project deliverables. We've made significant progress, and I value your input to ensure we're on the right track.
+
+I've attached the deliverables for your review, and I'm particularly interested in any areas where you think we can further enhance the quality or e
+          </div>
+<div class="flex items-center gap-2">
+<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-primary text-primary-foreground [a]:hover:bg-primary/80" data-slot="badge" data-variant="default">
+            work
+           </span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-controls="_R_f9bsnpfjb_" aria-valuemax="55" aria-valuemin="30" aria-valuenow="32" class="relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 data-[panel-group-direction=vertical]:after:-translate-y-1/2 [&amp;[data-panel-group-direction=vertical]&gt;div]:rotate-90" data-panel-group-direction="horizontal" data-panel-group-id="_R_19bsnpfjb_" data-panel-resize-handle-enabled="true" data-panel-resize-handle-id="_R_j9bsnpfjb_" data-resize-handle="" data-resize-handle-state="inactive" data-slot="resizable-handle" role="separator" style="touch-action:none;user-select:none" tabindex="0">
+<div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border">
+</div>
+</div>
+<div class="" data-panel="" data-panel-group-id="_R_19bsnpfjb_" data-panel-id="_R_n9bsnpfjb_" data-panel-size="48.0" data-slot="resizable-panel" id="_R_n9bsnpfjb_" style="flex-basis:0;flex-grow:48.0;flex-shrink:1;overflow:hidden">
+<div class="flex h-full flex-col">
+<div class="flex items-center gap-2 p-2">
+<div class="flex items-center gap-2">
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="tooltip-trigger" data-state="closed" data-variant="ghost" disabled="">
+<svg aria-hidden="true" class="lucide lucide-archive" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="5" rx="1" width="20" x="2" y="3">
+</rect>
+<path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8">
+</path>
+<path d="M10 12h4">
+</path>
+</svg>
+<span class="sr-only">
+        Archive
+       </span>
+</button>
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="tooltip-trigger" data-state="closed" data-variant="ghost" disabled="">
+<svg aria-hidden="true" class="lucide lucide-archive-x" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="5" rx="1" width="20" x="2" y="3">
+</rect>
+<path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8">
+</path>
+<path d="m9.5 17 5-5">
+</path>
+<path d="m9.5 12 5 5">
+</path>
+</svg>
+<span class="sr-only">
+        Move to junk
+       </span>
+</button>
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="tooltip-trigger" data-state="closed" data-variant="ghost" disabled="">
+<svg aria-hidden="true" class="lucide lucide-trash2 lucide-trash-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 11v6">
+</path>
+<path d="M14 11v6">
+</path>
+<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6">
+</path>
+<path d="M3 6h18">
+</path>
+<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+</path>
+</svg>
+<span class="sr-only">
+        Move to trash
+       </span>
+</button>
+</div>
+<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="vertical" data-slot="separator" role="none">
+</div>
+<button aria-expanded="false" aria-haspopup="dialog" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="popover-trigger" data-state="closed" data-variant="ghost" disabled="" type="button">
+<svg aria-hidden="true" class="lucide lucide-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="10">
+</circle>
+<path d="M12 6v6l4 2">
+</path>
+</svg>
+<span class="sr-only">
+       Snooze
+      </span>
+</button>
+<div class="ml-auto flex items-center gap-2">
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="tooltip-trigger" data-state="closed" data-variant="ghost" disabled="">
+<svg aria-hidden="true" class="lucide lucide-reply" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 18v-2a4 4 0 0 0-4-4H4">
+</path>
+<path d="m9 17-5-5 5-5">
+</path>
+</svg>
+<span class="sr-only">
+        Reply
+       </span>
+</button>
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="tooltip-trigger" data-state="closed" data-variant="ghost" disabled="">
+<svg aria-hidden="true" class="lucide lucide-reply-all" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m12 17-5-5 5-5">
+</path>
+<path d="M22 18v-2a4 4 0 0 0-4-4H7">
+</path>
+<path d="m7 17-5-5 5-5">
+</path>
+</svg>
+<span class="sr-only">
+        Reply all
+       </span>
+</button>
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="tooltip-trigger" data-state="closed" data-variant="ghost" disabled="">
+<svg aria-hidden="true" class="lucide lucide-forward" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m15 17 5-5-5-5">
+</path>
+<path d="M4 18v-2a4 4 0 0 1 4-4h12">
+</path>
+</svg>
+<span class="sr-only">
+        Forward
+       </span>
+</button>
+</div>
+<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="vertical" data-slot="separator" role="none">
+</div>
+<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" disabled="" id="radix-_R_1jn9bsnpfjb_" type="button">
+<svg aria-hidden="true" class="lucide lucide-ellipsis-vertical" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="1">
+</circle>
+<circle cx="12" cy="5" r="1">
+</circle>
+<circle cx="12" cy="19" r="1">
+</circle>
+</svg>
+<span class="sr-only">
+       More
+      </span>
+</button>
+</div>
+<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
+</div>
+
+<div class="flex flex-1 flex-col overflow-y-auto" id="mail-content-pane">
+<div class="flex items-start p-4">
+<div class="flex items-start gap-4 text-sm">
+<span class="relative flex size-10 shrink-0 overflow-hidden rounded-full bg-primary/10 text-primary font-semibold items-center justify-center" id="mail-sender-avatar">WS</span>
+<div class="grid gap-1">
+<div class="font-semibold text-foreground" id="mail-sender-name">William Smith</div>
+<div class="text-xs font-medium text-foreground" id="mail-subject">Meeting Tomorrow</div>
+<div class="text-xs text-muted-foreground flex items-center gap-1">
+<span>Reply-To:</span> <span id="mail-sender-email">williamsmith@example.com</span>
+</div>
+</div>
+</div>
+<div class="ml-auto text-xs text-muted-foreground" id="mail-date">Oct 22, 2026, 9:00:00 AM</div>
+</div>
+<div class="shrink-0 bg-border h-px w-full"></div>
+<div class="flex-1 whitespace-pre-wrap p-4 text-sm leading-relaxed text-foreground" id="mail-body">
+            Hi team,
+
+Let's have a meeting tomorrow at 10:00 AM to discuss the upcoming project deliverables and sync on open tasks.
+
+Please review the design drafts and requirements before the call so we can jump straight into architectural decisions.
+
+Best regards,
+William
+        </div>
+<div class="p-4 pt-0">
+<div class="flex items-center gap-2 mb-4" id="mail-tags">
+<span class="group/badge inline-flex h-5 items-center rounded-md border px-2 py-0.5 text-xs font-semibold capitalize border-border text-foreground">meeting</span>
+<span class="group/badge inline-flex h-5 items-center rounded-md border px-2 py-0.5 text-xs font-semibold capitalize border-border text-foreground">work</span>
+</div>
+<div class="space-y-2">
+<textarea class="w-full min-h-[100px] rounded-md border border-input bg-transparent p-3 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none" id="mail-reply-input" placeholder="Reply William Smith..."></textarea>
+<div class="flex items-center justify-between">
+<label class="text-xs text-muted-foreground flex items-center gap-2 cursor-pointer">
+<input class="rounded border-input text-primary focus:ring-ring" type="checkbox"/>
+                        Mute this thread
+                    </label>
+<button class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium h-8 px-4 transition-colors" onclick="sendReply()" type="button">
+                        Send
+                    </button>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

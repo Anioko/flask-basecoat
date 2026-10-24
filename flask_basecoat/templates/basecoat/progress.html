@@ -1,0 +1,17 @@
+{# shadcn progress macro - exact class parity with shadcn/ui progress.tsx #}
+{% macro progress(value=0, class='') %}
+<div
+    class="bg-primary/20 relative h-2 w-full overflow-hidden rounded-full {{ class }}"
+    data-slot="progress"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="{{ value }}"
+>
+    <div
+        class="bg-primary h-full w-full flex-1 transition-all"
+        data-slot="progress-indicator"
+        style="transform: translateX(-{{ 100 - value }}%)"
+    ></div>
+</div>
+{%- endmacro -%}

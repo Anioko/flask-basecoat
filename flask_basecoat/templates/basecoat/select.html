@@ -1,0 +1,114 @@
+{# shadcn select macros - exact class parity with shadcn/ui select.tsx.
+   Behaviour (open/close, arrow keys, Home/End, Enter, Escape, hidden input) comes from Basecoat's select.js:
+   the wrapper carries the Basecoat `select` class and the structure button > [data-popover] > [role=listbox] + input[type=hidden]. #}
+
+{% macro select_trigger(content='', size='default', class='', id='', controls='', disabled=False, invalid=False, required=False, label='', placeholder=False) %}
+<button
+    type="button"
+    role="combobox"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    {%- if id %} id="{{ id }}"{% endif %}
+    {%- if controls %} aria-controls="{{ controls }}"{% endif %}
+    {%- if label %} aria-label="{{ label }}"{% endif %}
+    {%- if invalid %} aria-invalid="true"{% endif %}
+    {%- if required %} aria-required="true"{% endif %}
+    {%- if disabled %} disabled{% endif %}
+    {%- if placeholder %} data-placeholder{% endif %}
+    data-slot="select-trigger"
+    data-size="{{ size }}"
+    class="border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-fit items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 {{ class }}"
+>
+    {{- content|safe -}}
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-4 opacity-50"><path d="m6 9 6 6 6-6"/></svg>
+</button>
+{%- endmacro -%}
+
+{% macro select_value(content='', class='') %}
+<span data-slot="select-value" class="{{ class }}">{{ content|safe }}</span>
+{%- endmacro -%}
+
+{% macro select_group(label='', id='', class='') %}
+<div role="group" data-slot="select-group"{% if label and id %} aria-labelledby="{{ id }}"{% endif %}{% if class %} class="{{ class }}"{% endif %}>
+    {%- if label %}
+    {{ select_label(content=label, id=id) }}
+    {%- endif %}
+    {{- caller() if caller else '' -}}
+</div>
+{%- endmacro -%}
+
+{% macro select_label(content='', id='', class='') %}
+<div role="heading" aria-level="3" data-slot="select-label"{% if id %} id="{{ id }}"{% endif %} class="text-muted-foreground px-2 py-1.5 text-xs {{ class }}">{{ content|safe }}</div>
+{%- endmacro -%}
+
+{% macro select_item(value, content='', selected=False, disabled=False, id='', class='') %}
+<div
+    role="option"
+    data-value="{{ value }}"
+    data-slot="select-item"
+    {%- if id %} id="{{ id }}"{% endif %}
+    {%- if selected %} aria-selected="true"{% endif %}
+    {%- if disabled %} aria-disabled="true"{% endif %}
+    class="focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 {{ class }}"
+>
+    <span class="absolute right-2 flex size-3.5 items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="hidden in-aria-selected:block size-4"><path d="M20 6 9 17l-5-5"/></svg></span>
+    <span>{{ content|safe if content else (caller() if caller else value) }}</span>
+</div>
+{%- endmacro -%}
+
+{% macro select_scroll_button(direction='up', class='') %}
+<div hidden aria-hidden="true" data-slot="select-scroll-{{ direction }}-button" class="flex cursor-default items-center justify-center py-1 {{ class }}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-4"><path d="{{ 'm18 15-6-6-6 6' if direction == 'up' else 'm6 9 6 6 6-6' }}"/></svg></div>
+{%- endmacro -%}
+
+{% macro select_separator(class='') %}
+<div role="separator" data-slot="select-separator" class="bg-border pointer-events-none -mx-1 my-1 h-px {{ class }}"></div>
+{%- endmacro -%}
+
+{#
+  select(): the whole component.
+    options        list of (value, label) tuples or {'value','label','disabled'} dicts (flat list),
+                   or caller() supplying select_group / select_item / select_separator markup.
+    value          preselected value; with no value and a placeholder the trigger shows the placeholder.
+    size           'default' (h-9) or 'sm' (h-8).
+    disabled / invalid / required   shadcn states (disabled attr, aria-invalid, aria-required).
+#}
+{% macro select(name, id, options=None, value=None, placeholder='', size='default', disabled=False, invalid=False, required=False, label='', class='', content_class='') %}
+{%- set trigger_id = id ~ '-trigger' -%}
+{%- set listbox_id = id ~ '-listbox' -%}
+<div class="select" data-slot="select" id="{{ id }}"{% if placeholder and value is none %} data-placeholder-text="{{ placeholder }}"{% endif %}>
+    {%- set shown -%}
+        {%- set ns = namespace(text='') -%}
+        {%- for o in (options or []) -%}
+            {%- set ov = o.value if o is mapping else o[0] -%}
+            {%- set ol = o.label if o is mapping else o[1] -%}
+            {%- if value is not none and ov|string == value|string %}{% set ns.text = ol %}{% endif -%}
+        {%- endfor -%}
+        {{- ns.text or placeholder -}}
+    {%- endset -%}
+    {{ select_trigger(
+        content=select_value(content=shown),
+        size=size, class=class, id=trigger_id, controls=listbox_id,
+        disabled=disabled, invalid=invalid, required=required, label=label,
+        placeholder=(value is none and placeholder)
+    ) }}
+    {#- data-popover is Basecoat's positioned popper wrapper (Radix's data-radix-popper-content-wrapper); its own surface is neutralised so the shadcn content panel inside carries the look. -#}
+    <div data-popover aria-hidden="true" class="[--radix-select-content-available-height:18rem] [--check-icon:none] [&_[data-slot=select-scroll-up-button]]:sticky [&_[data-slot=select-scroll-up-button]]:top-0 [&_[data-slot=select-scroll-up-button]]:z-10 [&_[data-slot=select-scroll-up-button]]:bg-popover [&_[data-slot=select-scroll-down-button]]:sticky [&_[data-slot=select-scroll-down-button]]:bottom-0 [&_[data-slot=select-scroll-down-button]]:z-10 [&_[data-slot=select-scroll-down-button]]:bg-popover border-0! bg-transparent! p-0! [box-shadow:none]! overflow-visible!">
+        <div data-slot="select-content" class="bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md {{ content_class }}">
+            {{ select_scroll_button('up') }}
+            <div role="listbox" id="{{ listbox_id }}" aria-labelledby="{{ trigger_id }}" data-slot="select-viewport" class="p-1 w-full scroll-my-1">
+                {%- if caller %}
+                {{ caller() }}
+                {%- else %}
+                {%- for o in (options or []) %}
+                {%- set ov = o.value if o is mapping else o[0] %}
+                {%- set ol = o.label if o is mapping else o[1] %}
+                {{ select_item(value=ov, content=ol, selected=(value is not none and ov|string == value|string), disabled=(o.disabled if o is mapping else False), id=id ~ '-opt-' ~ loop.index) }}
+                {%- endfor %}
+                {%- endif %}
+            </div>
+            {{ select_scroll_button('down') }}
+        </div>
+    </div>
+    <input type="hidden" name="{{ name }}" value="{{ value if value is not none else '' }}"{% if disabled %} disabled{% endif %}>
+</div>
+{%- endmacro -%}

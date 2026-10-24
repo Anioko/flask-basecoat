@@ -1,0 +1,245 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks & Issues - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+            updateSelectedCount();
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function filterTasks() {
+            const query = document.getElementById('task-filter-input').value.toLowerCase();
+            const rows = document.querySelectorAll('.task-row');
+            rows.forEach(r => {
+                const text = r.getAttribute('data-search').toLowerCase();
+                if (text.includes(query)) {
+                    r.classList.remove('hidden');
+                } else {
+                    r.classList.add('hidden');
+                }
+            });
+        }
+
+        function toggleSelectAll(master) {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            checkboxes.forEach(cb => cb.checked = master.checked);
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const checked = document.querySelectorAll('.task-checkbox:checked').length;
+            const total = document.querySelectorAll('.task-checkbox').length;
+            document.getElementById('selected-count').textContent = `${checked} of ${total} row(s) selected.`;
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
+    {{ bc.toast_container() }}
+
+    <div class="bg-background">
+        <div class="h-full flex-1 flex-col gap-8 p-8 md:flex">
+            {# Header Section #}
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-2xl font-semibold tracking-tight">Welcome back!</h2>
+                    <p class="text-muted-foreground text-sm">Here's a list of your tasks for this month.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="relative h-8 w-8 rounded-full border border-border bg-muted flex items-center justify-center text-xs font-semibold hover:bg-muted/80 transition-colors" type="button" aria-label="User profile">
+                        <span>SC</span>
+                    </button>
+                </div>
+            </div>
+
+            {# Toolbar Filters #}
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex flex-1 items-center gap-2">
+                        <input
+                            id="task-filter-input"
+                            type="text"
+                            placeholder="Filter tasks..."
+                            class="h-8 w-[150px] lg:w-[250px] rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                            oninput="filterTasks()"
+                        >
+                        <div class="popover relative">
+                            <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button" aria-expanded="false">
+                                <i data-lucide="circle-plus" class="size-3.5"></i>Status
+                            </button>
+                            <div data-popover aria-hidden="true" class="absolute left-0 top-full mt-1.5 z-50 w-44 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all aria-hidden:hidden">
+                                <div class="space-y-0.5 text-xs">
+                                    <button onclick="document.getElementById('task-filter-input').value='Todo'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Todo</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='In Progress'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>In Progress</span>
+                                        <span class="text-muted-foreground font-mono">2</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='Done'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Done</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value=''; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors text-muted-foreground border-t border-border mt-1">
+                                        Reset Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="popover relative">
+                            <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button" aria-expanded="false">
+                                <i data-lucide="circle-plus" class="size-3.5"></i>Priority
+                            </button>
+                            <div data-popover aria-hidden="true" class="absolute left-0 top-full mt-1.5 z-50 w-44 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all aria-hidden:hidden">
+                                <div class="space-y-0.5 text-xs">
+                                    <button onclick="document.getElementById('task-filter-input').value='High'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>High</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='Medium'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Medium</span>
+                                        <span class="text-muted-foreground font-mono">2</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value='Low'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
+                                        <span>Low</span>
+                                        <span class="text-muted-foreground font-mono">1</span>
+                                    </button>
+                                    <button onclick="document.getElementById('task-filter-input').value=''; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors text-muted-foreground border-t border-border mt-1">
+                                        Reset Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="ml-auto hidden h-8 lg:flex items-center gap-1 border rounded-md px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button">
+                            <i data-lucide="sliders-horizontal" class="size-3.5"></i>View
+                        </button>
+                        {{ bc.button('Add Task', variant='default', size='sm', class='h-8 text-xs font-medium') }}
+                    </div>
+                </div>
+
+        {# Tasks Data Table #}
+        <div class="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
+            <div data-slot="table-container" class="relative w-full overflow-x-auto">
+                <table data-slot="table" class="w-full caption-bottom text-sm">
+                <thead>
+                    <tr class="border-b border-border bg-muted/40">
+                        <th class="h-10 w-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                            <input type="checkbox" class="h-4 w-4 rounded border-border text-primary focus:ring-ring cursor-pointer" onchange="toggleSelectAll(this)">
+                        </th>
+                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Task</th>
+                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Title</th>
+                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Status</th>
+                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Priority</th>
+                        <th class="h-10 w-12 px-4 text-right align-middle font-medium text-xs text-muted-foreground">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    {% for task in tasks %}
+                        <tr class="task-row hover:bg-muted/30 transition-colors" data-search="{{ task.code }} {{ task.title }} {{ task.status_label }} {{ task.priority }}">
+                            <td class="p-4 align-middle">
+                                <input type="checkbox" class="task-checkbox h-4 w-4 rounded border-border text-primary focus:ring-ring cursor-pointer" onchange="updateSelectedCount()">
+                            </td>
+                            <td class="p-4 align-middle font-mono text-xs font-semibold text-muted-foreground">
+                                {{ task.code }}
+                            </td>
+                            <td class="p-4 align-middle text-sm text-foreground">
+                                <div class="flex items-center gap-2 max-w-lg">
+                                    <span class="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
+                                        {{ task.label }}
+                                    </span>
+                                    <span class="truncate font-medium">{{ task.title }}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 align-middle text-xs">
+                                {% if task.status == 'done' %}
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-medium text-emerald-600 dark:text-emerald-400">
+                                        <i data-lucide="check-circle-2" class="h-3 w-3"></i>
+                                        Done
+                                    </span>
+                                {% elif task.status == 'in-progress' %}
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-500/10 px-2.5 py-0.5 font-medium text-blue-600 dark:text-blue-400">
+                                        <i data-lucide="timer" class="h-3 w-3"></i>
+                                        In Progress
+                                    </span>
+                                {% elif task.status == 'canceled' %}
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-500/10 px-2.5 py-0.5 font-medium text-rose-600 dark:text-rose-400">
+                                        <i data-lucide="x-circle" class="h-3 w-3"></i>
+                                        Canceled
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-0.5 font-medium text-muted-foreground">
+                                        <i data-lucide="circle" class="h-3 w-3"></i>
+                                        {{ task.status_label }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 align-middle text-xs text-muted-foreground">
+                                <div class="flex items-center gap-1.5 capitalize">
+                                    {% if task.priority == 'high' %}
+                                        <i data-lucide="arrow-up" class="h-4 w-4 text-rose-500"></i>
+                                    {% elif task.priority == 'medium' %}
+                                        <i data-lucide="arrow-right" class="h-4 w-4 text-amber-500"></i>
+                                    {% else %}
+                                        <i data-lucide="arrow-down" class="h-4 w-4 text-blue-500"></i>
+                                    {% endif %}
+                                    <span>{{ task.priority }}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 align-middle text-right">
+                                {{ bc.button(content='<i data-lucide="more-horizontal"></i>', variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground hover:text-foreground') }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+
+            {# Bottom Pagination & Selection Summary Bar #}
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4 border-t border-border text-xs text-muted-foreground">
+                <div id="selected-count" class="font-medium">
+                    0 of {{ tasks|length }} row(s) selected.
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <span>Rows per page</span>
+                        <select class="rounded-md border border-border bg-background px-2 py-1 text-xs font-medium text-foreground">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                    <span>Page 1 of 10</span>
+                    <div class="flex items-center gap-1">
+                        {{ bc.button(content='<i data-lucide="chevrons-left"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                        {{ bc.button(content='<i data-lucide="chevron-left"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                        {{ bc.button(content='<i data-lucide="chevron-right"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                        {{ bc.button(content='<i data-lucide="chevrons-right"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

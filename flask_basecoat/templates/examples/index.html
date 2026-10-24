@@ -1,0 +1,84 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shadcn/ui Examples - Flask Basecoat</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-12">
+    {{ bc.toast_container() }}
+
+    <div class="max-w-6xl mx-auto space-y-10">
+        {# Header #}
+        <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">Official shadcn/ui Ports</span>
+                    <span class="text-xs text-muted-foreground">• Jinja2 & Basecoat UI</span>
+                </div>
+                <h1 class="text-3xl font-bold tracking-tight">Application Screen Examples</h1>
+                <p class="text-muted-foreground text-sm mt-1 max-w-xl">
+                    Real-world application screens ported directly from official shadcn/ui repositories. Built entirely with canonical macros, zero raw tags, and 100% theme variable fidelity.
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/basecoat/gallery" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    Component Gallery
+                </a>
+                <button type="button" onclick="toggleDarkMode()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </header>
+
+        {# Examples Grid #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for ex in examples %}
+                <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors" data-slot="card">
+                    <div class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6" data-slot="card-header">
+                        <div class="leading-none font-semibold" data-slot="card-title">{{ ex.title }}</div>
+                        <div class="text-muted-foreground text-sm" data-slot="card-description">{{ ex.description }}</div>
+                    </div>
+                    <div class="px-6" data-slot="card-content">
+                        <div class="space-y-4 my-2">
+                            <div class="flex flex-wrap gap-1.5">
+                                {% for tag in ex.tags %}
+                                    {{ bc.badge(content=tag, variant='secondary') }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center px-6" data-slot="card-footer">
+                        <div class="w-full pt-4">
+                            <a href="{{ ex.href }}">
+                                {{ bc.button(content='View Screen Demo', variant='default', class='w-full justify-center') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

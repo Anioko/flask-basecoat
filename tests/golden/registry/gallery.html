@@ -1,0 +1,584 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basecoat UI Component Gallery (Canonical shadcn/ui)</title>
+    
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="/static/basecoat/css/basecoat.min.css">
+    <link rel="stylesheet" href="/static/styles/app.css">
+    
+    
+    <script src="/static/basecoat/js/all.min.js" defer></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 md:p-10 font-sans">
+    
+    <section id="toaster" class="toaster fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none ">
+        
+    </section>
+
+
+    <div class="max-w-5xl mx-auto space-y-12">
+        
+        <header class="flex items-center justify-between border-b border-border pb-6">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">Basecoat UI Component Gallery</h1>
+                <p class="text-sm text-muted-foreground mt-1">100% shadcn/ui-aligned canonical components for Flask & Jinja2.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <nav aria-label="Component pages" data-slot="gallery-index">
+                    <ul class="flex items-center gap-3 text-sm">
+                        <li><a href="/basecoat/gallery/select" class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">Select</a></li>
+                    </ul>
+                </nav>
+                <a href="/basecoat/gallery/button" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 hover:bg-accent hover:text-accent-foreground">Button states</a>
+                <a href="/basecoat/gallery/textarea" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 hover:bg-accent hover:text-accent-foreground">Textarea states</a>
+                <a href="/basecoat/gallery/label" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 hover:bg-accent hover:text-accent-foreground">Label states</a>
+                <button type="button" onclick="toggleDarkMode()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </header>
+
+        <nav aria-label="Component pages" class="space-y-2">
+            <h2 class="text-xl font-semibold tracking-tight">Components</h2>
+            <ul class="flex flex-wrap gap-3 text-sm">
+                <li><a href="/basecoat/gallery/input" class="underline underline-offset-4">Input</a></li>
+            </ul>
+        </nav>
+
+        
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold tracking-tight">1. Buttons</h2>
+            <div class="flex flex-wrap items-center gap-3">
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="button"
+>Primary Default</button>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="button"
+>Secondary</button>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="button"
+>Outline</button>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="button"
+>Ghost</button>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="button"
+><i data-lucide="trash-2"></i> Destructive</button>
+                <a href="#" class="text-primary underline-offset-4 hover:underline inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2">Link Action</a>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="button" disabled
+><i data-lucide="loader-2" class="animate-spin"></i> Loading State</button>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5" type="button"
+>Small</button>
+                <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-10 rounded-md px-6 has-[&gt;svg]:px-4" type="button"
+>Large</button>
+            </div>
+        </section>
+
+        
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold tracking-tight">2. Badges</h2>
+            <div class="flex flex-wrap items-center gap-2">
+                <span
+    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-primary text-primary-foreground [a&amp;]:hover:bg-primary/90"
+    data-slot="badge"
+>Default</span>
+                <span
+    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-secondary text-secondary-foreground [a&amp;]:hover:bg-secondary/90"
+    data-slot="badge"
+>Secondary</span>
+                <span
+    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-destructive text-white [a&amp;]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60"
+    data-slot="badge"
+>Destructive</span>
+                <span
+    class="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&amp;&gt;svg]:size-3 gap-1 [&amp;&gt;svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden text-foreground [a&amp;]:hover:bg-accent [a&amp;]:hover:text-accent-foreground"
+    data-slot="badge"
+>Outline</span>
+            </div>
+        </section>
+
+        
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold tracking-tight">3. Cards</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+<div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm "
+    data-slot="card"
+>
+                    
+<div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 "
+    data-slot="card-header"
+>
+                        
+<div
+    class="leading-none font-semibold "
+    data-slot="card-title"
+>Architecture Overview</div>
+                        
+<div
+    class="text-muted-foreground text-sm "
+    data-slot="card-description"
+>Real-time estate health and metric summary.</div>
+                    </div>
+                    
+<div
+    class="px-6 "
+    data-slot="card-content"
+>
+                        <p class="text-sm text-muted-foreground">The architecture register tracks all operational nodes, APIs, and micro-services across the cluster.</p>
+                    </div>
+                </div>
+
+                
+<div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm "
+    data-slot="card"
+>
+                    
+<div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 "
+    data-slot="card-header"
+>
+                        
+<div
+    class="leading-none font-semibold "
+    data-slot="card-title"
+>Security Boundary</div>
+                        
+<div
+    class="text-muted-foreground text-sm "
+    data-slot="card-description"
+>IAM policies and role enforcement.</div>
+                    </div>
+                    
+<div
+    class="px-6 "
+    data-slot="card-content"
+>
+                        <p class="text-sm text-muted-foreground">Zero-trust permissions enforced through JWT claim verification and session token inspection.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold tracking-tight">4. Form Fields & WTForms Adapter</h2>
+            
+<div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm "
+    data-slot="card"
+>
+                
+<div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 "
+    data-slot="card-header"
+>
+                    
+<div
+    class="leading-none font-semibold "
+    data-slot="card-title"
+>WTForms Validation Demo</div>
+                    
+<div
+    class="text-muted-foreground text-sm "
+    data-slot="card-description"
+>Submit invalid data to view shadcn validation error states and ring highlights.</div>
+                </div>
+                
+<div
+    class="px-6 "
+    data-slot="card-content"
+>
+                    <form action="/basecoat/gallery" method="POST" class="space-y-4">
+                        
+    
+    
+
+    
+        
+        <div class="field form-group space-y-1.5 mb-4 ">
+            
+                <label for="name" class="label text-sm font-medium leading-none ">
+                    Full Name
+                    <span class="text-destructive">*</span>
+                </label>
+            
+
+            
+            <input class="input flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50  " id="name" maxlength="25" minlength="4" name="name" placeholder="Enter your full legal name." required type="text" value="">
+
+            
+
+            
+        </div>
+    
+
+                        
+    
+    
+
+    
+        
+        <div class="field form-group space-y-1.5 mb-4 ">
+            
+                <label for="email" class="label text-sm font-medium leading-none ">
+                    Email Address
+                    <span class="text-destructive">*</span>
+                </label>
+            
+
+            
+            <input class="input flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50  " id="email" name="email" placeholder="We&#39;ll never share your email." required type="text" value="">
+
+            
+
+            
+        </div>
+    
+
+                        
+    
+    
+
+    
+        
+        <div class="field form-group space-y-1.5 mb-4 ">
+            
+                <label for="role" class="label text-sm font-medium leading-none ">
+                    Team Role
+                    
+                </label>
+            
+
+            
+            <select class="select flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50  " id="role" name="role"><option value="dev">Developer</option><option value="lead">Tech Lead</option><option value="pm">Product Manager</option></select>
+
+            
+
+            
+        </div>
+
+    
+
+                        
+    
+    
+
+    
+        
+        <div class="field form-group space-y-1.5 mb-4 ">
+            
+                <label for="bio" class="label text-sm font-medium leading-none ">
+                    Short Biography
+                    
+                </label>
+            
+            
+            
+            <textarea class="textarea flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50  " id="bio" maxlength="200" name="bio" placeholder="A brief summary.">
+</textarea>
+
+            
+
+            
+        </div>
+
+    
+
+                        
+    
+    
+
+    
+        
+        <div class="field form-group flex items-center space-x-2 mb-4 ">
+            <input class="h-4 w-4 rounded border-border text-primary focus:ring-ring  " id="terms" name="terms" required type="checkbox" value="y">
+            <label for="terms" class="label text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ">
+                I agree to the terms and privacy policy
+                <span class="text-destructive">*</span>
+            </label>
+        </div>
+        
+
+    
+
+                        <div class="pt-2">
+                            <button
+    data-slot="button"
+    class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#39;size-&#39;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3" type="submit"
+>Submit Form</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="space-y-4">
+            <h2 class="text-xl font-semibold tracking-tight">5. Table & Empty State</h2>
+            <div class="space-y-4">
+                <h3 class="text-sm font-medium text-muted-foreground">Table with Live Records:</h3>
+                
+
+
+<div
+    data-slot="table-container"
+    class="relative w-full overflow-x-auto"
+>
+    <table
+        data-slot="table"
+        class="w-full caption-bottom text-sm "
+    >
+    
+<thead
+    data-slot="table-header"
+    class="[&_tr]:border-b "
+>
+        
+<tr
+    data-slot="table-row"
+    class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors "
+>
+            
+                
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Element</th>
+            
+                
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Type</th>
+            
+                
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Status</th>
+            
+                
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Owner</th>
+            
+                
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Health</th>
+            
+        </tr>
+    </thead>
+    
+<tbody
+    data-slot="table-body"
+    class="[&_tr:last-child]:border-0 "
+>
+        
+            
+<tr
+    data-slot="table-row"
+    class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors "
+>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>User Authentication</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Service</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Operational</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>SecOps</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>99.9%</td>
+                
+            </tr>
+        
+            
+<tr
+    data-slot="table-row"
+    class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors "
+>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Order Processing</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Pipeline</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Degraded</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Commerce</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>94.2%</td>
+                
+            </tr>
+        
+            
+<tr
+    data-slot="table-row"
+    class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors "
+>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Billing Gateway</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Service</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Operational</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>Finance</td>
+                
+                    
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] "
+>99.8%</td>
+                
+            </tr>
+        
+    </tbody>
+</table>
+</div>
+
+
+                <h3 class="text-sm font-medium text-muted-foreground mt-6">Table with Empty State:</h3>
+                
+
+    
+    
+        
+        
+    <div class="flex flex-col items-center justify-center p-8 text-center rounded-lg border border-dashed border-border bg-card/50 my-4 ">
+        
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-4">
+                <i data-lucide="inbox" class="h-6 w-6"></i>
+            </div>
+        
+        
+        <h4 class="text-base font-semibold text-foreground mb-1">No Services Registered</h4>
+        
+        
+            <p class="text-sm text-muted-foreground max-w-sm mb-4">Register a new service to view its operational health.</p>
+        
+        
+        
+        
+        
+    </div>
+
+    
+
+            </div>
+        </section>
+
+        
+        
+
+        
+        
+
+        
+        
+        </section>
+
+        
+        
+    </div>
+</body>
+</html>

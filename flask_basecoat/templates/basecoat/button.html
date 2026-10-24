@@ -1,62 +1,88 @@
-{# Basecoat Button Component #}
+{# shadcn button macro - exact class parity with shadcn/ui button.tsx.
+   Children: pass content='...' or use {% call button() %}...{% endcall %}.
+   variant: default | destructive | outline | secondary | ghost | link
+   size: default | sm | lg | icon (icon-only buttons need aria_label)
+   href: render an <a> with the button classes (shadcn asChild on a link)
+   loading: spinner before the children, disabled and aria-busy
+   invalid: aria-invalid, which drives the destructive ring classes #}
 {% macro button(
-    text='',
+    content='',
     variant='default',
     size='default',
     type='button',
-    class='',
     disabled=false,
     loading=false,
-    icon=none,
-    icon_position='left',
+    invalid=false,
     href=none,
+    aria_label=none,
+    aria_pressed=none,
+    aria_expanded=none,
+    aria_controls=none,
+    aria_describedby=none,
     id=none,
     name=none,
     value=none,
-    on_click=none,
-    aria_label=none
+    target=none,
+    rel=none,
+    class=''
 ) %}
-    {% set variant_map = {
-        'default': 'btn btn-primary',
-        'destructive': 'btn btn-destructive',
-        'outline': 'btn btn-outline',
-        'secondary': 'btn btn-secondary',
-        'ghost': 'btn btn-ghost',
-        'link': 'btn btn-link'
-    } %}
-    
-    {% set size_map = {
-        'default': '',
-        'sm': 'btn-sm',
-        'lg': 'btn-lg',
-        'icon': 'btn-icon'
-    } %}
-    
-    {% set btn_classes = variant_map.get(variant, 'btn btn-primary') ~ (' ' ~ size_map.get(size, '') if size_map.get(size, '') else '') ~ (' ' ~ class if class else '') %}
-    
-    {% if href %}
-        <a href="{{ href }}" class="{{ btn_classes }}" {% if id %}id="{{ id }}"{% endif %} {% if disabled %}aria-disabled="true" tabindex="-1"{% endif %} {% if on_click %}onclick="{{ on_click }}"{% endif %} {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
-            {% if loading %}
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-            {% elif icon and icon_position == 'left' %}
-                <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4"></i>
-            {% endif %}
-            {{ text }}{{ caller() if caller }}
-            {% if icon and icon_position == 'right' and not loading %}
-                <i data-lucide="{{ icon }}" class="ml-2 h-4 w-4"></i>
-            {% endif %}
-        </a>
-    {% else %}
-        <button type="{{ type }}" class="{{ btn_classes }}" {% if id %}id="{{ id }}"{% endif %} {% if name %}name="{{ name }}"{% endif %} {% if value %}value="{{ value }}"{% endif %} {% if disabled or loading %}disabled{% endif %} {% if on_click %}onclick="{{ on_click }}"{% endif %} {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
-            {% if loading %}
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-            {% elif icon and icon_position == 'left' %}
-                <i data-lucide="{{ icon }}" class="mr-2 h-4 w-4"></i>
-            {% endif %}
-            {{ text }}{{ caller() if caller }}
-            {% if icon and icon_position == 'right' and not loading %}
-                <i data-lucide="{{ icon }}" class="ml-2 h-4 w-4"></i>
-            {% endif %}
-        </button>
-    {% endif %}
-{% endmacro %}
+{%- set base_classes = "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive" -%}
+
+{%- if variant == 'default' -%}
+    {%- set variant_classes = "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90" -%}
+{%- elif variant == 'destructive' -%}
+    {%- set variant_classes = "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60" -%}
+{%- elif variant == 'outline' -%}
+    {%- set variant_classes = "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50" -%}
+{%- elif variant == 'secondary' -%}
+    {%- set variant_classes = "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80" -%}
+{%- elif variant == 'ghost' -%}
+    {%- set variant_classes = "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50" -%}
+{%- elif variant == 'link' -%}
+    {%- set variant_classes = "text-primary underline-offset-4 hover:underline" -%}
+{%- else -%}
+    {%- set variant_classes = "" -%}
+{%- endif -%}
+
+{%- if size == 'default' -%}
+    {%- set size_classes = "h-9 px-4 py-2 has-[>svg]:px-3" -%}
+{%- elif size == 'sm' -%}
+    {%- set size_classes = "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5" -%}
+{%- elif size == 'lg' -%}
+    {%- set size_classes = "h-10 rounded-md px-6 has-[>svg]:px-4" -%}
+{%- elif size == 'icon' -%}
+    {%- set size_classes = "size-9" -%}
+{%- else -%}
+    {%- set size_classes = "" -%}
+{%- endif -%}
+
+{%- set all_classes = [base_classes, variant_classes, size_classes, class]|reject('equalto', '')|join(' ') -%}
+{%- set is_disabled = disabled or loading -%}
+{%- set tag = 'a' if href is not none else 'button' -%}
+
+<{{ tag }}
+    data-slot="button"
+    class="{{ all_classes }}"
+    {%- if tag == 'button' %} type="{{ type }}"{% endif %}
+    {%- if tag == 'a' and not is_disabled %} href="{{ href }}"{% endif %}
+    {%- if tag == 'a' and target %} target="{{ target }}"{% endif %}
+    {%- if tag == 'a' and (rel or target == '_blank') %} rel="{{ rel or 'noopener noreferrer' }}"{% endif %}
+    {%- if id %} id="{{ id }}"{% endif %}
+    {%- if name and tag == 'button' %} name="{{ name }}"{% endif %}
+    {%- if value is not none and tag == 'button' %} value="{{ value }}"{% endif %}
+    {%- if is_disabled and tag == 'button' %} disabled{% endif %}
+    {%- if is_disabled and tag == 'a' %} aria-disabled="true" tabindex="-1" role="link"{% endif %}
+    {%- if loading %} aria-busy="true"{% endif %}
+    {%- if invalid %} aria-invalid="true"{% endif %}
+    {%- if aria_label %} aria-label="{{ aria_label }}"{% endif %}
+    {%- if aria_pressed is not none %} aria-pressed="{{ 'true' if aria_pressed else 'false' }}"{% endif %}
+    {%- if aria_expanded is not none %} aria-expanded="{{ 'true' if aria_expanded else 'false' }}"{% endif %}
+    {%- if aria_controls %} aria-controls="{{ aria_controls }}"{% endif %}
+    {%- if aria_describedby %} aria-describedby="{{ aria_describedby }}"{% endif %}
+>
+    {%- if loading -%}
+    <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+    {%- endif -%}
+    {{- caller() if caller else content|safe -}}
+</{{ tag }}>
+{%- endmacro -%}

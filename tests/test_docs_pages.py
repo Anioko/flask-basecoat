@@ -16,6 +16,13 @@ class DocsPagesTestCase(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
+    def test_input_component_docs_entry(self):
+        response = self.client.get('/docs/components/input')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'data-docs-input', response.data)
+        self.assertIn(b'data-slot="input"', response.data)
+        self.assertIn(b'/basecoat/gallery/input', response.data)
+
     def test_blocks_overview_page(self):
         response = self.client.get('/docs/blocks')
         self.assertEqual(response.status_code, 200)
@@ -154,3 +161,10 @@ class DocsPagesTestCase(unittest.TestCase):
         self.assertIn(b'Ship product journeys in days, not months', response.data)
         self.assertIn(b'Browse blocks', response.data)
         self.assertIn(b'Trusted by product teams', response.data)
+
+    def test_select_component_docs_entry(self):
+        response = self.client.get('/docs/components/select')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'data-docs-entry="select"', response.data)
+        self.assertIn(b'select(name=', response.data)
+        self.assertIn(b'/basecoat/gallery/select', response.data)

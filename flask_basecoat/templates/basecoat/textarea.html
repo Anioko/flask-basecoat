@@ -1,0 +1,38 @@
+{# shadcn textarea macro - exact class parity with shadcn/ui textarea.tsx.
+   Initial text: pass content='...' (or value='...') or use {% call textarea() %}...{% endcall %}.
+   Size: shadcn grows with its text (field-sizing-content, min-h-16); pass class='min-h-32' for a taller box.
+   rows is forwarded as the attribute, but field-sizing-content makes browsers size to the text instead.
+   States: disabled, readonly, required, invalid (aria-invalid drives the destructive ring classes).
+   Pair with a visible label (for=id) or aria_label; link help or error text with aria_describedby. #}
+{% macro textarea(
+    name='',
+    class='',
+    placeholder='',
+    disabled=false,
+    readonly=false,
+    required=false,
+    invalid=false,
+    rows='',
+    maxlength='',
+    id='',
+    content='',
+    value='',
+    aria_label='',
+    aria_describedby=''
+) %}
+<textarea
+    data-slot="textarea"
+    class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm {{ class }}"
+    {%- if name %} name="{{ name }}"{% endif %}
+    {%- if id %} id="{{ id }}"{% endif %}
+    {%- if placeholder %} placeholder="{{ placeholder }}"{% endif %}
+    {%- if rows %} rows="{{ rows }}"{% endif %}
+    {%- if maxlength %} maxlength="{{ maxlength }}"{% endif %}
+    {%- if disabled %} disabled{% endif %}
+    {%- if readonly %} readonly{% endif %}
+    {%- if required %} required aria-required="true"{% endif %}
+    {%- if invalid %} aria-invalid="true"{% endif %}
+    {%- if aria_label %} aria-label="{{ aria_label }}"{% endif %}
+    {%- if aria_describedby %} aria-describedby="{{ aria_describedby }}"{% endif %}
+>{{ caller() if caller else (content or value) }}</textarea>
+{%- endmacro -%}

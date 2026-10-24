@@ -1,0 +1,280 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail Page - Shadcn UI Examples</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        const images = [
+            "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop",
+            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=900&q=80&fit=crop",
+            "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=900&q=80&fit=crop",
+            "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&h=900&q=80&fit=crop"
+        ];
+        let currentIdx = 0;
+
+        function setProductImage(idx) {
+            currentIdx = idx;
+            document.getElementById('main-product-img').src = images[currentIdx];
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`thumb-${i}`);
+                if (btn) {
+                    if (i === currentIdx) {
+                        btn.className = "w-20 overflow-hidden rounded-lg border-2 transition-colors border-primary";
+                    } else {
+                        btn.className = "w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border";
+                    }
+                }
+            }
+        }
+
+        function prevImage() {
+            let next = (currentIdx - 1 + images.length) % images.length;
+            setProductImage(next);
+        }
+
+        function nextImage() {
+            let next = (currentIdx + 1) % images.length;
+            setProductImage(next);
+        }
+
+        let qty = 1;
+        function updateQty(delta) {
+            qty = Math.max(1, qty + delta);
+            document.getElementById('qty-display').textContent = qty;
+        }
+
+        function selectSize(btn, size) {
+            document.querySelectorAll('.size-btn').forEach(b => {
+                b.className = "size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border";
+            });
+            btn.className = "size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-primary text-primary-foreground border-primary";
+            document.getElementById('selected-size').textContent = size;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium transition-colors";
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabId}`).className = "tab-btn bg-background text-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium shadow-xs";
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
+    {{ bc.toast_container() }}
+
+    <div class="bg-background">
+        <div class="mx-auto max-w-6xl space-y-10 px-4 py-8">
+            <div class="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
+                {# Left Gallery #}
+                <div class="flex gap-3">
+                    {# Thumbnail list #}
+                    <div class="hidden flex-col gap-2 sm:flex">
+                        <button id="thumb-0" onclick="setProductImage(0)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-primary">
+                            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop" alt="View 1" class="aspect-square object-cover">
+                        </button>
+                        <button id="thumb-1" onclick="setProductImage(1)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=900&q=80&fit=crop" alt="View 2" class="aspect-square object-cover">
+                        </button>
+                        <button id="thumb-2" onclick="setProductImage(2)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                            <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=900&q=80&fit=crop" alt="View 3" class="aspect-square object-cover">
+                        </button>
+                        <button id="thumb-3" onclick="setProductImage(3)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                            <img src="https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&h=900&q=80&fit=crop" alt="View 4" class="aspect-square object-cover">
+                        </button>
+                    </div>
+
+                    {# Main Image Frame #}
+                    <div class="relative flex-1 overflow-hidden rounded-xl">
+                        <img id="main-product-img" src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop" alt="Stonewind Trekker Jacket" class="aspect-[4/5] w-full object-cover">
+                        <span class="inline-flex h-5 w-fit shrink-0 items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium text-white absolute top-3 left-3 bg-emerald-500">
+                            New Arrival
+                        </span>
+                        <button onclick="prevImage()" class="size-9 absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-muted" aria-label="Previous image">
+                            <i data-lucide="chevron-left" class="size-5"></i>
+                        </button>
+                        <button onclick="nextImage()" class="size-9 absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-muted" aria-label="Next image">
+                            <i data-lucide="chevron-right" class="size-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {# Right Details Column #}
+                <div class="space-y-5">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="space-y-1">
+                            <p class="text-muted-foreground text-sm">Outdoor Jacket</p>
+                            <h1 class="text-2xl font-bold sm:text-3xl">Stonewind Trekker</h1>
+                            <div class="flex items-center gap-2">
+                                <div class="flex text-amber-400">
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 text-muted-foreground/30"></i>
+                                </div>
+                                <span class="text-muted-foreground text-sm">4.9 · 498 reviews</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-1">
+                            <button class="inline-flex shrink-0 items-center justify-center size-9 rounded-full hover:bg-muted text-muted-foreground" aria-label="Add to wishlist">
+                                <i data-lucide="heart" class="size-5"></i>
+                            </button>
+                            <button class="inline-flex shrink-0 items-center justify-center size-9 rounded-full hover:bg-muted text-muted-foreground" aria-label="Share">
+                                <i data-lucide="share-2" class="size-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {# Price Block #}
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-3xl font-bold">$99.29</span>
+                        <span class="text-muted-foreground text-lg line-through">$129.99</span>
+                        <span class="inline-flex h-5 w-fit items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium bg-destructive/10 text-destructive">-24%</span>
+                    </div>
+
+                    <div class="shrink-0 bg-border h-px w-full"></div>
+
+                    {# Color Selector #}
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium">Color: <span class="text-muted-foreground font-normal">Ocean Blue</span></p>
+                        <div class="flex gap-2">
+                            <button class="overflow-hidden rounded-lg border-2 transition-colors border-primary">
+                                <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop" alt="Ocean Blue" class="h-16 w-16 object-cover sm:h-20 sm:w-20">
+                            </button>
+                            <button class="overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=900&q=80&fit=crop" alt="Black" class="h-16 w-16 object-cover sm:h-20 sm:w-20">
+                            </button>
+                            <button class="overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                                <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=900&q=80&fit=crop" alt="Olive" class="h-16 w-16 object-cover sm:h-20 sm:w-20">
+                            </button>
+                        </div>
+                    </div>
+
+                    {# Size Selector #}
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-medium">Size: <span id="selected-size" class="text-muted-foreground font-normal">M</span></p>
+                            <button class="text-muted-foreground hover:text-foreground text-xs underline underline-offset-2">Size Guide</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="selectSize(this, 'XS')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">XS</button>
+                            <button onclick="selectSize(this, 'S')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">S</button>
+                            <button onclick="selectSize(this, 'M')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-primary text-primary-foreground border-primary">M</button>
+                            <button onclick="selectSize(this, 'L')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">L</button>
+                            <button onclick="selectSize(this, 'XL')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">XL</button>
+                            <button onclick="selectSize(this, '2XL')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">2XL</button>
+                        </div>
+                    </div>
+
+                    {# Composition Note #}
+                    <div class="bg-muted/50 rounded-lg px-4 py-3 text-sm">
+                        <span class="font-medium">Composition:</span>
+                        <span class="text-muted-foreground">70% Merino Wool &amp; 30% Acrylic</span>
+                    </div>
+
+                    {# Quantity Picker #}
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium">Quantity</p>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQty(-1)" class="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-background shadow-xs hover:bg-muted size-9" aria-label="Decrease quantity">
+                                <i data-lucide="minus" class="size-4"></i>
+                            </button>
+                            <span id="qty-display" class="w-10 text-center text-sm font-medium">1</span>
+                            <button onclick="updateQty(1)" class="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-background shadow-xs hover:bg-muted size-9" aria-label="Increase quantity">
+                                <i data-lucide="plus" class="size-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {# Action Buttons #}
+                    <div class="flex gap-3">
+                        <button class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/80 gap-1.5 px-4 h-12 flex-1 text-base font-medium shadow-xs transition-colors">
+                            <i data-lucide="shopping-bag" class="size-5"></i>
+                            Add to Cart
+                        </button>
+                        <button class="inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-muted hover:text-foreground gap-1.5 px-4 h-12 flex-1 text-base font-medium shadow-xs transition-colors">
+                            Buy Now
+                        </button>
+                    </div>
+
+                    {# Guarantee Badges #}
+                    <div class="grid grid-cols-3 gap-3 pt-1">
+                        <div class="bg-muted/50 flex flex-col items-center gap-1.5 rounded-lg px-2 py-3 text-center">
+                            <i data-lucide="truck" class="size-4 text-muted-foreground"></i>
+                            <p class="text-muted-foreground text-xs leading-tight">Free shipping over $50</p>
+                        </div>
+                        <div class="bg-muted/50 flex flex-col items-center gap-1.5 rounded-lg px-2 py-3 text-center">
+                            <i data-lucide="rotate-ccw" class="size-4 text-muted-foreground"></i>
+                            <p class="text-muted-foreground text-xs leading-tight">30-day returns</p>
+                        </div>
+                        <div class="bg-muted/50 flex flex-col items-center gap-1.5 rounded-lg px-2 py-3 text-center">
+                            <i data-lucide="shield" class="size-4 text-muted-foreground"></i>
+                            <p class="text-muted-foreground text-xs leading-tight">2-year warranty</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Bottom Tabs #}
+            <div class="flex flex-col gap-2">
+                <div class="bg-muted text-muted-foreground inline-flex h-9 items-center justify-center rounded-lg p-[3px] w-full sm:w-auto">
+                    <button id="tab-btn-desc" onclick="switchTab('desc')" class="tab-btn bg-background text-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium shadow-xs">Description</button>
+                    <button id="tab-btn-specs" onclick="switchTab('specs')" class="tab-btn text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium transition-colors">Specifications</button>
+                    <button id="tab-btn-reviews" onclick="switchTab('reviews')" class="tab-btn text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium transition-colors">Reviews (3)</button>
+                </div>
+
+                <div id="tab-desc" class="tab-content flex-1 mt-5 max-w-2xl space-y-4">
+                    <p class="text-muted-foreground leading-relaxed">The Stonewind Trekker is engineered for adventurers who demand both performance and style. Crafted from a premium merino wool blend, it provides exceptional warmth while remaining breathable during high-output activities.</p>
+                    <p class="text-muted-foreground leading-relaxed">The DWR coating repels light rain and moisture, while the articulated sleeves allow unrestricted movement on the trail or the mountain. Whether you're summit pushing or city exploring, the Trekker adapts to your environment.</p>
+                    <ul class="text-muted-foreground space-y-1.5 text-sm">
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>Merino wool blend for natural temperature regulation</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>DWR water-repellent finish</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>Articulated sleeve pattern for full range of motion</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>6 total pockets including 2 hidden interior pockets</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>Packable into the chest pocket</li>
+                    </ul>
+                </div>
+
+                <div id="tab-specs" class="tab-content hidden flex-1 mt-5 max-w-2xl space-y-2 text-sm text-muted-foreground">
+                    <p>• Material: 70% Merino Wool, 30% Acrylic</p>
+                    <p>• Weight: 420g (Size M)</p>
+                    <p>• Fit: Regular / Articulated</p>
+                    <p>• Country of Origin: Portugal</p>
+                </div>
+
+                <div id="tab-reviews" class="tab-content hidden flex-1 mt-5 max-w-2xl space-y-4">
+                    <div class="border-b border-border pb-3">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-semibold text-sm">Sarah Jenkins</span>
+                            <span class="text-muted-foreground text-xs">2 weeks ago</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">Incredible warmth for its weight. Took it hiking in the Rockies and it held up against chilling winds seamlessly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

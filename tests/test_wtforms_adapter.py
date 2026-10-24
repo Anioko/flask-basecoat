@@ -34,6 +34,7 @@ class WTFormsAdapterTestCase(unittest.TestCase):
         self.assertIn('value="octocat"', rendered)
         self.assertIn('class="input', rendered)
         self.assertNotIn('border-destructive', rendered)
+        self.assertNotIn('aria-invalid="true"', rendered)
 
     def test_render_field_with_validation_errors(self):
         form = SampleForm(formdata=MultiDict([('username', 'ab'), ('email', 'not-an-email')]))
@@ -44,6 +45,7 @@ class WTFormsAdapterTestCase(unittest.TestCase):
         rendered = render_template_string(tmpl, form=form)
         self.assertIn('border-destructive', rendered)
         self.assertIn('text-destructive', rendered)
+        self.assertIn('aria-invalid="true"', rendered)
         self.assertIn('Field must be between 4 and 25 characters long', rendered)
 
     def test_render_boolean_field(self):

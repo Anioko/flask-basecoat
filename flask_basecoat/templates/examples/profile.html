@@ -1,0 +1,254 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page - Shadcn UI Examples</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
+    {{ bc.toast_container() }}
+
+    <div class="bg-background">
+        <div class="mx-auto max-w-4xl space-y-6 px-4 py-10">
+            {# User Summary Header Card #}
+            <div class="group/card flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-6 shadow-xs">
+                <div class="flex flex-col items-start gap-6 md:flex-row md:items-center">
+                    {# Avatar with Edit Badge #}
+                    <div class="relative">
+                        <div class="flex size-24 items-center justify-center rounded-full bg-muted text-muted-foreground font-semibold text-2xl border border-border select-none">
+                            JD
+                        </div>
+                        <button type="button" class="absolute -right-2 -bottom-2 inline-flex size-8 items-center justify-center rounded-full border border-border bg-background shadow-xs hover:bg-muted text-foreground transition-colors" aria-label="Change photo">
+                            <i data-lucide="camera" class="size-4"></i>
+                        </button>
+                    </div>
+
+                    {# User Identity & Details #}
+                    <div class="flex-1 space-y-2">
+                        <div class="flex flex-col gap-2 md:flex-row md:items-center">
+                            <h1 class="text-2xl font-bold tracking-tight">John Doe</h1>
+                            <span class="inline-flex h-5 w-fit items-center justify-center rounded-full bg-secondary text-secondary-foreground px-2.5 py-0.5 text-xs font-semibold">
+                                Pro Member
+                            </span>
+                        </div>
+                        <p class="text-muted-foreground text-sm font-medium">Senior Product Designer</p>
+                        <div class="flex flex-wrap gap-4 text-xs text-muted-foreground pt-1">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="mail" class="size-4"></i>
+                                <span>john.doe@example.com</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="map-pin" class="size-4"></i>
+                                <span>San Francisco, CA</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="size-4"></i>
+                                <span>Joined March 2023</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{ bc.button('Edit Profile', variant='default', size='sm', class='h-9 font-medium text-xs') }}
+                </div>
+            </div>
+
+            {# Tabs Navigation (Personal, Account, Security, Notifications) via Basecoat native Tabs #}
+            <div class="tabs space-y-6" data-slot="tabs">
+                <div role="tablist" class="bg-muted text-muted-foreground h-9 rounded-lg p-[3px] grid w-full grid-cols-4">
+                    <button
+                        role="tab"
+                        aria-selected="true"
+                        aria-controls="tab-content-personal"
+                        tabindex="0"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                        Personal
+                    </button>
+                    <button
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="tab-content-account"
+                        tabindex="-1"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                        Account
+                    </button>
+                    <button
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="tab-content-security"
+                        tabindex="-1"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                        Security
+                    </button>
+                    <button
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="tab-content-notifications"
+                        tabindex="-1"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
+                        Notifications
+                    </button>
+                </div>
+
+                {# Tab 1: Personal Information #}
+                <div id="tab-content-personal" role="tabpanel" class="tab-content space-y-6">
+                    <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
+                        <div class="space-y-1">
+                            <h2 class="text-base font-semibold leading-normal">Personal Information</h2>
+                            <p class="text-sm text-muted-foreground">Update your personal details and profile information.</p>
+                        </div>
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="firstName">First Name</label>
+                                <input id="firstName" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="John">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="lastName">Last Name</label>
+                                <input id="lastName" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="Doe">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="email">Email</label>
+                                <input id="email" type="email" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="john.doe@example.com">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="phone">Phone</label>
+                                <input id="phone" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="+1 (555) 123-4567">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="jobTitle">Job Title</label>
+                                <input id="jobTitle" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="Senior Product Designer">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="company">Company</label>
+                                <input id="company" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="Acme Inc.">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium" for="bio">Bio</label>
+                            <textarea id="bio" rows="4" class="w-full rounded-md border border-input bg-transparent p-2.5 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">Passionate product designer with 8+ years of experience creating user-centered digital experiences. I love solving complex problems and turning ideas into beautiful, functional products.</textarea>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium" for="location">Location</label>
+                            <input id="location" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="San Francisco, CA">
+                        </div>
+                        <div class="flex justify-end pt-2">
+                            {{ bc.button('Save Changes', variant='default', size='sm', class='h-9') }}
+                        </div>
+                    </div>
+                </div>
+
+                {# Tab 2: Account Settings #}
+                <div id="tab-content-account" role="tabpanel" hidden class="tab-content space-y-6">
+                    <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
+                        <div class="space-y-1">
+                            <h2 class="text-base font-semibold leading-normal">Account Preferences</h2>
+                            <p class="text-sm text-muted-foreground">Manage language, timezones, and account region.</p>
+                        </div>
+                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="language">Language</label>
+                                <select id="language" class="h-9 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">
+                                    <option>English (United States)</option>
+                                    <option>Spanish (Español)</option>
+                                    <option>French (Français)</option>
+                                    <option>German (Deutsch)</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium" for="timezone">Timezone</label>
+                                <select id="timezone" class="h-9 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">
+                                    <option>Pacific Standard Time (PST - UTC-8)</option>
+                                    <option>Eastern Standard Time (EST - UTC-5)</option>
+                                    <option>UTC (Coordinated Universal Time)</option>
+                                    <option>Central European Time (CET - UTC+1)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="border-border">
+                        <div class="space-y-3">
+                            <h3 class="text-sm font-semibold text-destructive">Danger Zone</h3>
+                            <p class="text-xs text-muted-foreground">Permanently delete your profile and all associated team workspace files.</p>
+                            {{ bc.button('Delete Account', variant='destructive', size='sm') }}
+                        </div>
+                    </div>
+                </div>
+
+                {# Tab 3: Security #}
+                <div id="tab-content-security" role="tabpanel" hidden class="tab-content space-y-6">
+                    <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
+                        <div class="space-y-1">
+                            <h2 class="text-base font-semibold leading-normal">Security & Authentication</h2>
+                            <p class="text-sm text-muted-foreground">Update password and configure multifactor authentication.</p>
+                        </div>
+                        <div class="space-y-4 max-w-md">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Current Password</label>
+                                <input type="password" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" placeholder="••••••••">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">New Password</label>
+                                <input type="password" class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" placeholder="••••••••">
+                            </div>
+                            {{ bc.button('Update Password', variant='default', size='sm') }}
+                        </div>
+                    </div>
+                </div>
+
+                {# Tab 4: Notifications #}
+                <div id="tab-content-notifications" role="tabpanel" hidden class="tab-content space-y-6">
+                    <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
+                        <div class="space-y-1">
+                            <h2 class="text-base font-semibold leading-normal">Notification Preferences</h2>
+                            <p class="text-sm text-muted-foreground">Control which communications and digest emails you receive.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between border-b border-border/50 pb-3">
+                                <div>
+                                    <p class="text-sm font-medium">Product Announcements</p>
+                                    <p class="text-xs text-muted-foreground">Receive updates on new features and product enhancements.</p>
+                                </div>
+                                <input type="checkbox" checked class="size-4 text-primary rounded border-border focus:ring-ring">
+                            </div>
+                            <div class="flex items-center justify-between border-b border-border/50 pb-3">
+                                <div>
+                                    <p class="text-sm font-medium">Security Alerts</p>
+                                    <p class="text-xs text-muted-foreground">Get notified about new logins and security advisories.</p>
+                                </div>
+                                <input type="checkbox" checked class="size-4 text-primary rounded border-border focus:ring-ring">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium">Weekly Digest</p>
+                                    <p class="text-xs text-muted-foreground">A summary of your projects and task deliverables.</p>
+                                </div>
+                                <input type="checkbox" class="size-4 text-primary rounded border-border focus:ring-ring">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

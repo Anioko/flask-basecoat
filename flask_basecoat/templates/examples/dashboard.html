@@ -1,0 +1,387 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Admin Dashboard - Shadcn UI Examples</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+        function toggleSidebar() {
+            const sb = document.getElementById('marketly-sidebar');
+            sb.classList.toggle('hidden');
+        }
+    </script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
+    {{ bc.toast_container() }}
+
+    <div class="bg-background flex min-h-screen w-full">
+        {# Left Sidebar #}
+        <aside id="marketly-sidebar" class="w-68 border-r border-border bg-sidebar text-sidebar-foreground shrink-0 flex flex-col justify-between hidden md:flex min-h-screen transition-all duration-200">
+            <div class="flex flex-col">
+                {# Brand Logo #}
+                <div class="px-5 pt-6 pb-4">
+                    <a href="#" class="flex items-center gap-2.5">
+                        <svg viewBox="0 0 32 32" class="size-7 shrink-0" fill="none">
+                            <rect x="4" y="10" width="24" height="19" rx="6" class="fill-primary"></rect>
+                            <path d="M11 12V9a5 5 0 0 1 10 0v3" class="stroke-primary" stroke-width="3" stroke-linecap="round"></path>
+                            <circle cx="16" cy="20" r="3" class="fill-primary-foreground"></circle>
+                        </svg>
+                        <span class="text-xl font-bold tracking-tight">Marketly</span>
+                    </a>
+                </div>
+
+                {# Navigation Links #}
+                <div class="px-3 pt-4 space-y-1.5">
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+                        <i data-lucide="layout-grid" class="size-[18px]"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="shopping-bag" class="size-[18px]"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="package" class="size-[18px]"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="users" class="size-[18px]"></i>
+                        <span>Customers</span>
+                    </a>
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="tag" class="size-[18px]"></i>
+                        <span>Discounts</span>
+                    </a>
+                </div>
+
+                {# Secondary Nav #}
+                <div class="px-3 pt-6 space-y-1.5">
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="calendar" class="size-[18px]"></i>
+                        <span>Calendar</span>
+                    </a>
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="life-buoy" class="size-[18px]"></i>
+                        <span>Support</span>
+                    </a>
+                    <a href="#" class="flex h-11 items-center gap-3 rounded-xl px-4 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                        <i data-lucide="settings" class="size-[18px]"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </div>
+
+            {# Footer App Card #}
+            <div class="p-3 pb-4">
+                <div class="bg-primary text-primary-foreground relative overflow-hidden rounded-2xl p-4">
+                    <div class="mb-4 flex size-10 items-center justify-center rounded-full bg-primary-foreground/20">
+                        <i data-lucide="sparkles" class="size-5"></i>
+                    </div>
+                    <p class="text-base leading-snug font-semibold">Try the<br>mobile app</p>
+                    <p class="text-primary-foreground/75 mt-1 text-xs">Manage orders on the go</p>
+                    <a href="#" class="inline-flex h-9 w-full items-center justify-center rounded-full bg-primary-foreground text-foreground hover:bg-primary-foreground/90 mt-4 text-xs font-semibold transition-colors">
+                        Get the app
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        {# Main Content Area #}
+        <main class="relative flex w-full flex-1 flex-col bg-muted/40 min-w-0">
+            {# Top Header #}
+            <header class="flex h-20 shrink-0 items-center gap-3 px-4 lg:px-6">
+                <button type="button" onclick="toggleSidebar()" class="inline-flex size-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted md:hidden" aria-label="Toggle Sidebar">
+                    <i data-lucide="panel-left" class="size-4"></i>
+                </button>
+                <div class="min-w-0">
+                    <h1 class="truncate text-lg font-semibold tracking-tight lg:text-xl">Welcome back, Olivia</h1>
+                    <p class="text-muted-foreground hidden truncate text-[13px] sm:block">Revenue is up 37% from last month. Keep it going!</p>
+                </div>
+                <div class="ml-auto flex items-center gap-2 lg:gap-3">
+                    <button type="button" class="relative flex size-10 items-center justify-center rounded-full border border-border bg-card hover:bg-muted text-foreground transition-colors" aria-label="Search">
+                        <i data-lucide="search" class="size-[18px]"></i>
+                    </button>
+                    <button type="button" class="relative flex size-10 items-center justify-center rounded-full border border-border bg-card hover:bg-muted text-foreground transition-colors" aria-label="Cart">
+                        <i data-lucide="shopping-cart" class="size-[18px]"></i>
+                        <span class="bg-destructive ring-card absolute top-2 right-2.5 size-2 rounded-full ring-2"></span>
+                    </button>
+                    <button type="button" class="relative flex size-10 items-center justify-center rounded-full border border-border bg-card hover:bg-muted text-foreground transition-colors" aria-label="Notifications">
+                        <i data-lucide="bell" class="size-[18px]"></i>
+                        <span class="bg-destructive ring-card absolute top-2 right-2.5 size-2 rounded-full ring-2"></span>
+                    </button>
+                    <span class="bg-border hidden h-8 w-px lg:block" aria-hidden="true"></span>
+                    <button type="button" class="hover:bg-card/70 flex items-center gap-2.5 rounded-full py-1 pr-2 pl-1 text-left transition-colors">
+                        <span class="relative flex size-10 shrink-0 rounded-full overflow-hidden border border-border">
+                            <img class="aspect-square size-full object-cover" alt="Olivia Grant" src="https://randomuser.me/api/portraits/women/90.jpg">
+                        </span>
+                        <span class="hidden leading-tight sm:grid">
+                            <span class="text-sm font-medium">Olivia Grant</span>
+                            <span class="text-muted-foreground text-xs">ID: 204518</span>
+                        </span>
+                        <i data-lucide="chevron-down" class="text-muted-foreground hidden size-4 sm:block"></i>
+                    </button>
+                </div>
+            </header>
+
+            {# Main Grid Dashboard Content #}
+            <div class="flex flex-1 flex-col gap-4 p-4 pt-0 lg:px-6 lg:pb-6">
+                {# KPI Metric Cards #}
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {% for kpi in kpi_cards %}
+                    <div class="rounded-3xl bg-card border-0 ring-1 ring-foreground/10 p-5 shadow-none">
+                        <div class="flex flex-row items-start justify-between gap-4">
+                            <div class="min-w-0">
+                                <p class="text-muted-foreground text-[15px]">{{ kpi.title }}</p>
+                                <p class="mt-5 text-2xl leading-none font-semibold tracking-tight tabular-nums lg:text-[28px]">{{ kpi.value }}</p>
+                                <p class="mt-4 flex items-center gap-1.5 text-xs whitespace-nowrap">
+                                    {% if kpi.change_type == 'positive' %}
+                                    <span class="inline-flex items-center gap-0.5 font-medium text-emerald-600 dark:text-emerald-400">
+                                        <i data-lucide="arrow-up-right" class="size-3.5"></i>{{ kpi.change }}
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center gap-0.5 font-medium text-destructive">
+                                        <i data-lucide="arrow-down-left" class="size-3.5"></i>{{ kpi.change }}
+                                    </span>
+                                    {% endif %}
+                                    <span class="text-muted-foreground">{{ kpi.period }}</span>
+                                </p>
+                            </div>
+                            <span class="flex size-14 shrink-0 items-center justify-center rounded-2xl {% if loop.first %}bg-primary text-primary-foreground{% else %}bg-muted text-foreground{% endif %}">
+                                <i data-lucide="{{ kpi.icon }}" class="size-6"></i>
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {# Charts & Inquiries Row #}
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                    {# Conversion Rate Chart Card #}
+                    <div class="rounded-3xl bg-card border-0 ring-1 ring-foreground/10 p-5 shadow-none flex flex-col justify-between">
+                        <div class="flex items-center justify-between gap-3 pb-2">
+                            <h2 class="text-[17px] font-semibold tracking-tight">Conversion Rate</h2>
+                            <button type="button" class="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-background px-3 text-xs font-normal hover:bg-muted text-foreground">
+                                This year
+                                <i data-lucide="chevron-down" class="size-3.5"></i>
+                            </button>
+                        </div>
+                        {# Interactive / Responsive Legend & Line Vector #}
+                        <div class="flex items-center gap-4 text-xs pt-1 pb-2">
+                            <div class="flex items-center gap-1.5 text-foreground">
+                                <div class="h-2 w-2 shrink-0 rounded-[2px] bg-primary"></div>
+                                Desktop
+                            </div>
+                            <div class="flex items-center gap-1.5 text-muted-foreground">
+                                <div class="h-2 w-2 shrink-0 rounded-[2px] bg-muted-foreground"></div>
+                                Mobile
+                            </div>
+                        </div>
+                        <div class="h-[220px] w-full pt-2">
+                            <svg viewBox="0 0 650 200" class="size-full overflow-visible" preserveAspectRatio="none">
+                                <line x1="0" y1="40" x2="650" y2="40" stroke="currentColor" stroke-dasharray="4 6" class="text-border/40" />
+                                <line x1="0" y1="80" x2="650" y2="80" stroke="currentColor" stroke-dasharray="4 6" class="text-border/40" />
+                                <line x1="0" y1="120" x2="650" y2="120" stroke="currentColor" stroke-dasharray="4 6" class="text-border/40" />
+                                <line x1="0" y1="160" x2="650" y2="160" stroke="currentColor" stroke-dasharray="4 6" class="text-border/40" />
+                                {# Desktop curve #}
+                                <path d="M 0,160 Q 60,150 120,110 T 240,95 T 360,105 T 480,50 T 650,30" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary" />
+                                {# Mobile curve #}
+                                <path d="M 0,175 Q 60,165 120,140 T 240,130 T 360,135 T 480,110 T 650,95" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6" class="text-muted-foreground" />
+                            </svg>
+                        </div>
+                        <div class="flex justify-between text-muted-foreground text-xs pt-2 font-mono">
+                            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                        </div>
+                    </div>
+
+                    {# Customer Inquiries Card #}
+                    <div class="rounded-3xl bg-card border-0 ring-1 ring-foreground/10 p-5 shadow-none flex flex-col justify-between">
+                        <div class="flex items-center justify-between gap-3 pb-3">
+                            <h2 class="text-[17px] font-semibold tracking-tight">Customer Inquiries</h2>
+                            <button type="button" class="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-background px-3 text-xs font-normal hover:bg-muted text-foreground">
+                                Today
+                                <i data-lucide="chevron-down" class="size-3.5"></i>
+                            </button>
+                        </div>
+                        <ul class="flex flex-col divide-y divide-border/40">
+                            {% for inq in customer_inquiries %}
+                            <li>
+                                <a href="#" class="hover:bg-muted/50 -mx-2 flex items-center gap-3 rounded-xl px-2 py-3 transition-colors">
+                                    <span class="relative flex size-11 shrink-0 rounded-full overflow-hidden border border-border">
+                                        <img class="aspect-square size-full object-cover" alt="{{ inq.name }}" src="{{ inq.avatar }}">
+                                    </span>
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block truncate text-[15px] font-medium">{{ inq.name }}</span>
+                                        <span class="text-muted-foreground mt-0.5 block truncate text-[13px]">{{ inq.message }}</span>
+                                    </span>
+                                    <span class="flex shrink-0 flex-col items-end gap-1">
+                                        <span class="text-[13px] text-muted-foreground whitespace-nowrap">{{ inq.time }}</span>
+                                        {% if inq.unread > 0 %}
+                                        <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-md bg-primary px-1.5 text-[11px] font-medium text-primary-foreground tabular-nums">
+                                            {{ inq.unread }}
+                                        </span>
+                                        {% endif %}
+                                    </span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                {# Best Sellers & Sales by Month Row #}
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+                    {# Best Sellers #}
+                    <div class="rounded-3xl bg-card border-0 ring-1 ring-foreground/10 p-5 shadow-none">
+                        <div class="flex items-center justify-between gap-3 pb-4">
+                            <h2 class="text-[17px] font-semibold tracking-tight">Best Sellers</h2>
+                            <button type="button" class="inline-flex size-8 items-center justify-center rounded-full hover:bg-muted text-muted-foreground hover:text-foreground">
+                                <i data-lucide="more-vertical" class="size-4"></i>
+                            </button>
+                        </div>
+                        <div class="flex flex-col gap-2.5">
+                            {% for item in best_sellers %}
+                            <a href="#" class="bg-muted/60 hover:bg-muted flex items-center gap-3 rounded-2xl p-3 transition-colors">
+                                <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-card text-foreground">
+                                    <i data-lucide="{{ item.icon }}" class="size-5"></i>
+                                </span>
+                                <span class="min-w-0 flex-1">
+                                    <span class="block truncate text-[15px] font-medium">{{ item.name }}</span>
+                                    <span class="text-muted-foreground block text-[13px]">{{ item.sold }}</span>
+                                </span>
+                                <span class="text-[15px] font-semibold tabular-nums">{{ item.price }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {# Sales by Month Bar Chart #}
+                    <div class="rounded-3xl bg-card border-0 ring-1 ring-foreground/10 p-5 shadow-none flex flex-col justify-between">
+                        <div class="flex items-center justify-between gap-3 pb-2">
+                            <h2 class="text-[17px] font-semibold tracking-tight">Sales by Month</h2>
+                            <button type="button" class="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-background px-3 text-xs font-normal hover:bg-muted text-foreground">
+                                This year
+                                <i data-lucide="chevron-down" class="size-3.5"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs pt-1 pb-2">
+                            <div class="flex items-center gap-1.5 text-muted-foreground">
+                                <div class="h-2 w-2 shrink-0 rounded-[2px] bg-muted"></div>
+                                Gross Sales
+                            </div>
+                            <div class="flex items-center gap-1.5 text-foreground">
+                                <div class="h-2 w-2 shrink-0 rounded-[2px] bg-primary"></div>
+                                Net Sales
+                            </div>
+                        </div>
+                        {# Bar chart representation #}
+                        <div class="h-[220px] w-full pt-2 flex items-end justify-between gap-2 px-2">
+                            {# 12 months #}
+                            {% set months = [
+                                ('Jan', 65, 45), ('Feb', 85, 60), ('Mar', 40, 25), ('Apr', 75, 55),
+                                ('May', 50, 38), ('Jun', 90, 70), ('Jul', 35, 22), ('Aug', 70, 52),
+                                ('Sep', 58, 40), ('Oct', 80, 64), ('Nov', 88, 72), ('Dec', 98, 85)
+                            ] %}
+                            {% for m, g, n in months %}
+                            <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                                <div class="w-full flex items-end justify-center gap-0.5 h-44">
+                                    <div class="w-2.5 sm:w-3.5 bg-muted rounded-t-md" style="height: {{ g }}%;"></div>
+                                    <div class="w-2.5 sm:w-3.5 bg-primary rounded-t-md" style="height: {{ n }}%;"></div>
+                                </div>
+                                <span class="text-[11px] text-muted-foreground font-mono">{{ m }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                {# Inventory Table Card #}
+                <div class="rounded-3xl bg-card border-0 ring-1 ring-foreground/10 p-5 shadow-none">
+                    <div class="flex flex-col gap-3 pb-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="text-[17px] font-semibold tracking-tight">
+                            Inventory <span class="text-muted-foreground font-normal tabular-nums">({{ inventory_items|length }})</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            {{ bc.button(content='<i data-lucide="plus"></i>Add Product', variant='default', size='sm', class='h-8 text-xs') }}
+                            <button type="button" class="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-background px-3 text-xs font-normal hover:bg-muted text-foreground">
+                                <i data-lucide="filter" class="size-3.5"></i>
+                                Filter
+                            </button>
+                            <button type="button" class="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-background px-3 text-xs font-normal hover:bg-muted text-foreground">
+                                Name A to Z
+                                <i data-lucide="chevron-down" class="size-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full caption-bottom min-w-[760px] text-[13px]">
+                            <thead>
+                                <tr class="border-b border-border/40 text-muted-foreground">
+                                    <th class="bg-muted/70 h-11 text-left px-4 text-xs font-medium tracking-wide uppercase first:rounded-l-xl">Product</th>
+                                    <th class="bg-muted/70 h-11 text-left px-4 text-xs font-medium tracking-wide uppercase">SKU</th>
+                                    <th class="bg-muted/70 h-11 text-left px-4 text-xs font-medium tracking-wide uppercase">Status</th>
+                                    <th class="bg-muted/70 h-11 text-left px-4 text-xs font-medium tracking-wide uppercase">Stock</th>
+                                    <th class="bg-muted/70 h-11 text-left px-4 text-xs font-medium tracking-wide uppercase">Price</th>
+                                    <th class="bg-muted/70 h-11 text-right px-4 text-xs font-medium tracking-wide uppercase rounded-r-xl">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prod in inventory_items %}
+                                <tr class="border-b border-border/20 hover:bg-muted/30 transition-colors">
+                                    <td class="py-3 px-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="bg-muted text-foreground flex shrink-0 items-center justify-center rounded-xl size-10">
+                                                <i data-lucide="{{ prod.icon }}" class="size-5"></i>
+                                            </span>
+                                            <span class="text-sm font-medium whitespace-nowrap">{{ prod.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-muted-foreground tabular-nums">{{ prod.sku }}</td>
+                                    <td class="py-3 px-4">
+                                        <span class="inline-flex items-center gap-2 whitespace-nowrap text-xs">
+                                            {% if prod.status_type == 'emerald' %}
+                                            <span class="size-2 rounded-full bg-emerald-500"></span>
+                                            {% elif prod.status_type == 'amber' %}
+                                            <span class="size-2 rounded-full bg-amber-500"></span>
+                                            {% else %}
+                                            <span class="size-2 rounded-full bg-destructive"></span>
+                                            {% endif %}
+                                            {{ prod.status }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4 tabular-nums">{{ prod.stock }}</td>
+                                    <td class="py-3 px-4 font-medium tabular-nums">{{ prod.price }}</td>
+                                    <td class="py-3 px-4 text-right">
+                                        <button type="button" class="inline-flex size-8 items-center justify-center rounded-full hover:bg-muted text-muted-foreground hover:text-foreground">
+                                            <i data-lucide="more-horizontal" class="size-4"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 Interactive Component Gallery Blueprint for Basecoat UI.
 """
 from flask import Blueprint, render_template, request, flash, redirect, url_for
+from .gallery_registry import gallery_entries
 from wtforms import Form, StringField, PasswordField, BooleanField, SelectField, TextAreaField, validators
 
 gallery_bp = Blueprint('basecoat_gallery', __name__, template_folder='templates')
@@ -37,5 +38,22 @@ def gallery():
         'basecoat/gallery.html',
         form=form,
         sample_columns=sample_columns,
-        sample_rows=sample_rows
+        sample_rows=sample_rows,
+        header_nav_entries=gallery_entries('header-nav'),
+        header_entries=gallery_entries('header'),
+        nav_entries=gallery_entries('nav')
     )
+
+
+def _add_entry_page(entry):
+    def view():
+        if entry.themed:
+            theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
+            return render_template(entry.gallery_template, theme=theme, **entry.context)
+        return render_template(entry.gallery_template, **entry.context)
+
+    gallery_bp.add_url_rule(f'/gallery/{entry.name}', endpoint=entry.endpoint, view_func=view)
+
+
+for _entry in gallery_entries():
+    _add_entry_page(_entry)

@@ -1,4 +1,4 @@
-{# Basecoat WTForms Adapter #}
+{# Basecoat WTForms Adapter - 100% shadcn/ui #}
 
 {% macro render_field(field, label=none, placeholder='', class='', help_text='', required=none) %}
     {% set is_required = required if required is not none else (field.flags.required if field.flags else false) %}
@@ -6,24 +6,24 @@
 
     {% if field.type == 'BooleanField' %}
         {# Checkbox with label #}
-        <div class="flex items-center space-x-2 mb-4 {% if has_errors %}has-error{% endif %}">
-            {{ field(class="h-4 w-4 rounded border-border text-primary focus:ring-ring " ~ class) }}
-            <label for="{{ field.id }}" class="label text-sm font-medium leading-none cursor-pointer {% if has_errors %}text-destructive{% endif %}">
+        <div class="field form-group flex items-center space-x-2 mb-4 {% if has_errors %}has-error{% endif %}">
+            {{ field(class="h-4 w-4 rounded border-border text-primary focus:ring-ring " ~ ('border-destructive' if has_errors else '') ~ ' ' ~ class, **({'aria-invalid': 'true'} if has_errors else {})) }}
+            <label for="{{ field.id }}" class="label text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {% if has_errors %}text-destructive{% endif %}">
                 {{ label or field.label.text }}
                 {% if is_required %}<span class="text-destructive">*</span>{% endif %}
             </label>
         </div>
         {% if has_errors %}
             {% for error in field.errors %}
-                <p class="text-xs font-medium text-destructive -mt-3 mb-3">{{ error }}</p>
+                <p class="text-[0.8rem] font-medium text-destructive -mt-2 mb-3">{{ error }}</p>
             {% endfor %}
         {% endif %}
 
     {% elif field.type == 'RadioField' %}
         {# Radio button group #}
-        <div class="form-group mb-4 {% if has_errors %}has-error{% endif %}">
+        <div class="field form-group space-y-1.5 mb-4 {% if has_errors %}has-error{% endif %}">
             {% if label != false %}
-                <span class="label text-sm font-medium {% if has_errors %}text-destructive{% endif %}">
+                <span class="label text-sm font-medium leading-none {% if has_errors %}text-destructive{% endif %}">
                     {{ label or field.label.text }}
                     {% if is_required %}<span class="text-destructive">*</span>{% endif %}
                 </span>
@@ -38,79 +38,79 @@
             </div>
             {% if has_errors %}
                 {% for error in field.errors %}
-                    <p class="text-xs font-medium text-destructive mt-1">{{ error }}</p>
+                    <p class="text-[0.8rem] font-medium text-destructive mt-1">{{ error }}</p>
                 {% endfor %}
             {% endif %}
         </div>
 
     {% elif field.type == 'TextAreaField' %}
         {# Textarea #}
-        <div class="form-group mb-4 {% if has_errors %}has-error{% endif %}">
+        <div class="field form-group space-y-1.5 mb-4 {% if has_errors %}has-error{% endif %}">
             {% if label != false %}
-                <label for="{{ field.id }}" class="label text-sm font-medium {% if has_errors %}text-destructive{% endif %}">
+                <label for="{{ field.id }}" class="label text-sm font-medium leading-none {% if has_errors %}text-destructive{% endif %}">
                     {{ label or field.label.text }}
                     {% if is_required %}<span class="text-destructive">*</span>{% endif %}
                 </label>
             {% endif %}
             
-            {% set base_textarea_class = 'textarea w-full ' ~ ('border-destructive focus:border-destructive' if has_errors else '') ~ ' ' ~ class %}
-            {{ field(class=base_textarea_class, placeholder=placeholder or (field.description if field.description else '')) }}
+            {% set base_textarea_class = 'textarea flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 ' ~ ('border-destructive focus-visible:ring-destructive' if has_errors else '') ~ ' ' ~ class %}
+            {{ field(class=base_textarea_class, placeholder=placeholder or (field.description if field.description else ''), **({'aria-invalid': 'true'} if has_errors else {})) }}
 
             {% if help_text %}
-                <p class="text-xs text-muted-foreground mt-1">{{ help_text }}</p>
+                <p class="text-[0.8rem] text-muted-foreground mt-1">{{ help_text }}</p>
             {% endif %}
 
             {% if has_errors %}
                 {% for error in field.errors %}
-                    <p class="text-xs font-medium text-destructive mt-1">{{ error }}</p>
+                    <p class="text-[0.8rem] font-medium text-destructive mt-1">{{ error }}</p>
                 {% endfor %}
             {% endif %}
         </div>
 
     {% elif field.type == 'SelectField' %}
         {# Select dropdown #}
-        <div class="form-group mb-4 {% if has_errors %}has-error{% endif %}">
+        <div class="field form-group space-y-1.5 mb-4 {% if has_errors %}has-error{% endif %}">
             {% if label != false %}
-                <label for="{{ field.id }}" class="label text-sm font-medium {% if has_errors %}text-destructive{% endif %}">
+                <label for="{{ field.id }}" class="label text-sm font-medium leading-none {% if has_errors %}text-destructive{% endif %}">
                     {{ label or field.label.text }}
                     {% if is_required %}<span class="text-destructive">*</span>{% endif %}
                 </label>
             {% endif %}
 
-            {% set base_select_class = 'select w-full ' ~ ('border-destructive' if has_errors else '') ~ ' ' ~ class %}
-            {{ field(class=base_select_class) }}
+            {% set base_select_class = 'select flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 ' ~ ('border-destructive focus-visible:ring-destructive' if has_errors else '') ~ ' ' ~ class %}
+            {{ field(class=base_select_class, **({'aria-invalid': 'true'} if has_errors else {})) }}
 
             {% if help_text %}
-                <p class="text-xs text-muted-foreground mt-1">{{ help_text }}</p>
+                <p class="text-[0.8rem] text-muted-foreground mt-1">{{ help_text }}</p>
             {% endif %}
 
             {% if has_errors %}
                 {% for error in field.errors %}
-                    <p class="text-xs font-medium text-destructive mt-1">{{ error }}</p>
+                    <p class="text-[0.8rem] font-medium text-destructive mt-1">{{ error }}</p>
                 {% endfor %}
             {% endif %}
         </div>
 
     {% else %}
         {# Standard Input (Text, Password, Email, Number, etc.) #}
-        <div class="form-group mb-4 {% if has_errors %}has-error{% endif %}">
+        <div class="field form-group space-y-1.5 mb-4 {% if has_errors %}has-error{% endif %}">
             {% if label != false %}
-                <label for="{{ field.id }}" class="label text-sm font-medium {% if has_errors %}text-destructive{% endif %}">
+                <label for="{{ field.id }}" class="label text-sm font-medium leading-none {% if has_errors %}text-destructive{% endif %}">
                     {{ label or field.label.text }}
                     {% if is_required %}<span class="text-destructive">*</span>{% endif %}
                 </label>
             {% endif %}
 
-            {% set base_input_class = 'input w-full ' ~ ('border-destructive focus:border-destructive' if has_errors else '') ~ ' ' ~ class %}
-            {{ field(class=base_input_class, placeholder=placeholder or (field.description if field.description else '')) }}
+            {% set base_input_class = 'input flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 ' ~ ('border-destructive focus-visible:ring-destructive' if has_errors else '') ~ ' ' ~ class %}
+            {{ field(class=base_input_class, placeholder=placeholder or (field.description if field.description else ''), **({'aria-invalid': 'true'} if has_errors else {})) }}
 
             {% if help_text %}
-                <p class="text-xs text-muted-foreground mt-1">{{ help_text }}</p>
+                <p class="text-[0.8rem] text-muted-foreground mt-1">{{ help_text }}</p>
             {% endif %}
 
             {% if has_errors %}
                 {% for error in field.errors %}
-                    <p class="text-xs font-medium text-destructive mt-1">{{ error }}</p>
+                    <p class="text-[0.8rem] font-medium text-destructive mt-1">{{ error }}</p>
                 {% endfor %}
             {% endif %}
         </div>
@@ -129,7 +129,7 @@
 
         <div class="pt-2">
             {% from 'basecoat/button.html' import button %}
-            {{ button(text=submit_text, type='submit', variant=submit_variant) }}
+            {{ button(content=submit_text, type='submit', variant=submit_variant) }}
         </div>
     </form>
 {% endmacro %}
