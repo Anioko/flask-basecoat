@@ -1,6 +1,10 @@
 {% extends 'docs/layout.html' %}
 {% from 'docs/macros/components.html' import component_showcase, render_button, render_badge, render_card, render_alert, render_avatar, render_input %}
 
+{% block extra_scripts %}
+{% if component.name == 'checkbox' %}<script src="{{ url_for('basecoat.static', filename='js/checkbox.js') }}" defer></script>{% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="docs-section">
   <div class="docs-callout docs-callout--info">
@@ -104,6 +108,27 @@
   </div>
   {% endif %}
 </section>
+
+{% if component.name == 'checkbox' %}
+<section class="docs-section" id="checkbox-macro">
+  <h2>Checkbox macro</h2>
+  <p>
+    <code>{% raw %}{% from 'basecoat/checkbox.html' import checkbox %}{% endraw %}</code> renders the shadcn checkbox
+    (a <code>role="checkbox"</code> button) with its classes and <code>data-slot</code> attributes unchanged.
+    Include <code>js/checkbox.js</code> for click and Space toggling; a <code>name</code> adds a hidden input so the value submits with the form.
+  </p>
+  <div class="docs-preview" data-preview>
+    {% from 'basecoat/checkbox.html' import checkbox %}
+    {% from 'basecoat/label.html' import label %}
+    <div class="flex flex-col gap-3">
+      {% call checkbox(id='docs-cb-terms', name='terms') %}{{ label(content='Accept terms and conditions', for='docs-cb-terms') }}{% endcall %}
+      {% call checkbox(id='docs-cb-mixed', indeterminate=true) %}{{ label(content='Indeterminate', for='docs-cb-mixed') }}{% endcall %}
+      {% call checkbox(id='docs-cb-off', disabled=true) %}{{ label(content='Disabled', for='docs-cb-off') }}{% endcall %}
+    </div>
+  </div>
+  <p>Arguments: <code>name</code>, <code>value</code>, <code>checked</code>, <code>indeterminate</code>, <code>disabled</code>, <code>invalid</code>, <code>required</code>, <code>id</code>, <code>aria_label</code>, <code>class</code>. A <code>caller()</code> block renders beside the box, normally a label whose <code>for</code> is the box id. Space toggles, Enter does nothing, and an indeterminate box becomes checked. See the <a class="docs-link" href="{{ url_for('basecoat_gallery.gallery_checkbox') }}">gallery entry</a> for every state.</p>
+</section>
+{% endif %}
 
 <section class="docs-section">
   <h2>Implementation Notes</h2>

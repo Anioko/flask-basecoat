@@ -111,3 +111,16 @@ class CheckboxMacroTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class CheckboxDocsPageTestCase(unittest.TestCase):
+    def test_component_docs_page_has_checkbox_macro_entry(self):
+        from app import create_app
+
+        app = create_app('testing')
+        response = app.test_client().get('/docs/components/checkbox')
+        self.assertEqual(response.status_code, 200)
+        html = response.get_data(as_text=True)
+        self.assertIn('Checkbox macro', html)
+        self.assertIn('data-slot="checkbox"', html)
+        self.assertIn('js/checkbox.js', html)
