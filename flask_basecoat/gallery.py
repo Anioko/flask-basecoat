@@ -39,3 +39,8 @@ def gallery():
         sample_columns=sample_columns,
         sample_rows=sample_rows
     )
+
+
+@gallery_bp.route('/gallery/input')
+def gallery_input():
+    return render_template('basecoat/gallery_input.html')
