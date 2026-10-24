@@ -24,6 +24,9 @@ jobs:
         run: |
           npm ci
           cd compliance/golden && npm ci
+          # The pinned upstream sources under compliance/upstream import react, recharts and the rest; they resolve
+          # them from compliance/node_modules, which is the golden renderer's install.
+          cd .. && ln -s golden/node_modules node_modules
       - name: Render the upstream golden pages and build stylesheets
         run: |
           python compliance/scripts/gen_theme.py
@@ -35,6 +38,10 @@ jobs:
           python compliance/scripts/extract_recipes.py > /dev/null
           python scripts/gen_macros.py --force > /dev/null
           git diff --exit-code -- compliance/recipes flask_basecoat/data flask_basecoat/templates/basecoat/*.html compliance/golden/out
+      - name: Render the chart goldens in this browser
+        # Recharts measures label text to thin axis ticks, so the chart goldens are drawn with this runner's fonts,
+        # the same fonts the checks draw our charts with.
+        run: cd compliance/golden && npm run charts
       - name: Compliance checks
         run: python scripts/shadcn_compliance.py --browser
       - uses: actions/upload-artifact@v4
