@@ -1,0 +1,61 @@
+{% from 'basecoat/button.html' import button %}
+{% from 'basecoat/label.html' import label %}
+{% from 'basecoat/input.html' import input %}
+<!DOCTYPE html>
+<html lang="en" class="h-full{% if theme == 'dark' %} dark{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label - Basecoat UI Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/basecoat.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <script src="{{ url_for('basecoat.static', filename='js/all.min.js') }}" defer></script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 font-sans">
+    <main class="max-w-3xl mx-auto space-y-8" data-gallery="label" data-theme="{{ theme }}">
+        <header class="flex items-center justify-between border-b border-border pb-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Label</h1>
+                <p class="text-sm text-muted-foreground mt-1">Default, with children, and disabled states ({{ theme }} theme).</p>
+            </div>
+            <nav class="flex items-center gap-2" aria-label="Gallery">
+                {{ button(content='Gallery index', variant='ghost', href=url_for('basecoat_gallery.gallery'), id='gallery-index-link') }}
+                {{ button(content='Light', variant='outline', size='sm', href=url_for('basecoat_gallery.gallery_label'), id='theme-light') }}
+                {{ button(content='Dark', variant='outline', size='sm', href=url_for('basecoat_gallery.gallery_label', theme='dark'), id='theme-dark') }}
+            </nav>
+        </header>
+
+        <section class="space-y-3" aria-labelledby="h-default">
+            <h2 id="h-default" class="text-lg font-semibold">Default</h2>
+            <div class="grid w-full max-w-sm gap-3">
+                {{ label(for='email', content='Email') }}
+                {{ input(id='email', name='email', type='email', placeholder='you@example.com') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-children">
+            <h2 id="h-children" class="text-lg font-semibold">With children (call block)</h2>
+            <div class="flex items-center gap-3">
+                <input type="checkbox" id="terms" name="terms" class="peer size-4 accent-primary">
+                {% call label(for='terms') %}Accept terms and conditions{% endcall %}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-peer">
+            <h2 id="h-peer" class="text-lg font-semibold">Disabled control (peer-disabled)</h2>
+            <div class="grid w-full max-w-sm gap-3">
+                {{ input(id='disabled-input', name='disabled', disabled=true, placeholder='Cannot edit', class='peer') }}
+                {{ label(for='disabled-input', content='Disabled field') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-group">
+            <h2 id="h-group" class="text-lg font-semibold">Disabled group (data-disabled)</h2>
+            <div class="group grid w-full max-w-sm gap-3" data-disabled="true">
+                {{ label(for='group-input', content='Group disabled field') }}
+                {{ input(id='group-input', name='group', disabled=true, placeholder='Cannot edit') }}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
