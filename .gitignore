@@ -20,3 +20,7 @@ dump.rdb
 *.egg-info/
 .pytest_cache/
 .coverage
+
+# Local tool installs and stray screenshots
+node-v*/
+/*.png
