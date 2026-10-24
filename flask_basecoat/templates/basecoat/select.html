@@ -51,8 +51,13 @@
     {%- if disabled %} aria-disabled="true"{% endif %}
     class="focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 {{ class }}"
 >
+    <span class="absolute right-2 flex size-3.5 items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="hidden in-aria-selected:block size-4"><path d="M20 6 9 17l-5-5"/></svg></span>
     <span>{{ content|safe if content else (caller() if caller else value) }}</span>
 </div>
+{%- endmacro -%}
+
+{% macro select_scroll_button(direction='up', class='') %}
+<div hidden aria-hidden="true" data-slot="select-scroll-{{ direction }}-button" class="flex cursor-default items-center justify-center py-1 {{ class }}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-4"><path d="{{ 'm18 15-6-6-6 6' if direction == 'up' else 'm6 9 6 6 6-6' }}"/></svg></div>
 {%- endmacro -%}
 
 {% macro select_separator(class='') %}
@@ -86,17 +91,22 @@
         disabled=disabled, invalid=invalid, required=required, label=label,
         placeholder=(value is none and placeholder)
     ) }}
-    <div data-popover aria-hidden="true" data-slot="select-content" class="{{ content_class }}">
-        <div role="listbox" id="{{ listbox_id }}" aria-labelledby="{{ trigger_id }}" data-slot="select-viewport">
-            {%- if caller %}
-            {{ caller() }}
-            {%- else %}
-            {%- for o in (options or []) %}
-            {%- set ov = o.value if o is mapping else o[0] %}
-            {%- set ol = o.label if o is mapping else o[1] %}
-            {{ select_item(value=ov, content=ol, selected=(value is not none and ov|string == value|string), disabled=(o.disabled if o is mapping else False), id=id ~ '-opt-' ~ loop.index) }}
-            {%- endfor %}
-            {%- endif %}
+    {#- data-popover is Basecoat's positioned popper wrapper (Radix's data-radix-popper-content-wrapper); its own surface is neutralised so the shadcn content panel inside carries the look. -#}
+    <div data-popover aria-hidden="true" class="[--radix-select-content-available-height:18rem] [--check-icon:none] [&_[data-slot=select-scroll-up-button]]:sticky [&_[data-slot=select-scroll-up-button]]:top-0 [&_[data-slot=select-scroll-up-button]]:z-10 [&_[data-slot=select-scroll-up-button]]:bg-popover [&_[data-slot=select-scroll-down-button]]:sticky [&_[data-slot=select-scroll-down-button]]:bottom-0 [&_[data-slot=select-scroll-down-button]]:z-10 [&_[data-slot=select-scroll-down-button]]:bg-popover border-0! bg-transparent! p-0! shadow-none! overflow-visible!">
+        <div data-slot="select-content" class="bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md {{ content_class }}">
+            {{ select_scroll_button('up') }}
+            <div role="listbox" id="{{ listbox_id }}" aria-labelledby="{{ trigger_id }}" data-slot="select-viewport" class="p-1 w-full scroll-my-1">
+                {%- if caller %}
+                {{ caller() }}
+                {%- else %}
+                {%- for o in (options or []) %}
+                {%- set ov = o.value if o is mapping else o[0] %}
+                {%- set ol = o.label if o is mapping else o[1] %}
+                {{ select_item(value=ov, content=ol, selected=(value is not none and ov|string == value|string), disabled=(o.disabled if o is mapping else False), id=id ~ '-opt-' ~ loop.index) }}
+                {%- endfor %}
+                {%- endif %}
+            </div>
+            {{ select_scroll_button('down') }}
         </div>
     </div>
     <input type="hidden" name="{{ name }}" value="{{ value if value is not none else '' }}"{% if disabled %} disabled{% endif %}>
