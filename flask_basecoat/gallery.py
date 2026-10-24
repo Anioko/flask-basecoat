@@ -39,6 +39,7 @@ def gallery():
         form=form,
         sample_columns=sample_columns,
         sample_rows=sample_rows,
+        header_nav_entries=gallery_entries('header-nav'),
         header_entries=gallery_entries('header'),
         nav_entries=gallery_entries('nav')
     )

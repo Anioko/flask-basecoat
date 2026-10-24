@@ -14,7 +14,8 @@ ENTRY keys (all optional except ``name``):
 ``themed``            True (default): the page gets ``theme`` ('light' or 'dark') from ``?theme=``.
 ``context``           Dict of extra template variables to pass to the gallery template.
 ``index_label``       Link text on the gallery index. Required with ``gallery_template``.
-``index_slot``        ``'nav'`` (default, the Components list) or ``'header'`` (button row in the page header).
+``index_slot``        ``'nav'`` (default, the Components list), ``'header'`` (button row in the page header),
+                      or ``'header-nav'`` (nav element in the page header before the buttons).
 ``order``             Sort position on the index; ties sort by name. Default 1000.
 ``docs``              Jinja source for the usage examples on the docs component page.
 ``related``           Component names listed under Related Components on the docs page.
@@ -24,7 +25,7 @@ import pkgutil
 from dataclasses import dataclass
 from functools import lru_cache
 
-INDEX_SLOTS = ('nav', 'header')
+INDEX_SLOTS = ('nav', 'header', 'header-nav')
 _KEYS = {'name', 'gallery_template', 'themed', 'context', 'index_label', 'index_slot', 'order', 'docs', 'related'}
 
 

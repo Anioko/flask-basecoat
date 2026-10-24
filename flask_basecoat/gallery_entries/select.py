@@ -3,8 +3,8 @@ ENTRY = {
     'gallery_template': 'basecoat/gallery_select.html',
     'themed': False,
     'index_label': 'Select',
+    'index_slot': 'header-nav',
     'context': {'numbers': [(n, f'Number {n}') for n in range(1, 31)]},
-    'related': ['input', 'label'],
     'docs': r'''  <div class="docs-preview" data-preview data-docs-entry="select">
     <div class="component-usage">
       <h4>Jinja macro</h4>
