@@ -37,7 +37,7 @@ jobs:
         run: |
           python compliance/scripts/extract_recipes.py > /dev/null
           python scripts/gen_macros.py --force > /dev/null
-          git diff --exit-code -- compliance/recipes flask_basecoat/data flask_basecoat/templates/basecoat/*.html compliance/golden/out
+          git diff --quiet -- compliance/recipes flask_basecoat/data flask_basecoat/templates/basecoat/*.html compliance/golden/out \n            || { python compliance/scripts/first_difference.py compliance/recipes flask_basecoat/data flask_basecoat/templates/basecoat compliance/golden/out; exit 1; }
       - name: Render the chart goldens in this browser
         # Recharts measures label text to thin axis ticks, so the chart goldens are drawn with this runner's fonts,
         # the same fonts the checks draw our charts with.

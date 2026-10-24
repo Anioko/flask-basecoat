@@ -271,20 +271,7 @@
   },
   "chart": {
     "status": "rendered",
-    "source": "upstream-example",
-    "bytes": 18200,
-    "slots": [
-      "card",
-      "card-content",
-      "card-description",
-      "card-footer",
-      "card-header",
-      "card-title",
-      "chart",
-      "example",
-      "example-content",
-      "example-wrapper"
-    ]
+    "source": "browser (charts/render_charts.py)"
   },
   "checkbox": {
     "status": "rendered",
