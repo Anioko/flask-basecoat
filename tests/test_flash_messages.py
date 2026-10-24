@@ -81,7 +81,8 @@ class FlashMessageBrowserTest(unittest.TestCase):
         self.assertTrue(close_button.is_enabled())
         from selenium.webdriver.common.action_chains import ActionChains
         ActionChains(self.driver).move_to_element(flash_message).perform()
-        time.sleep(0.3)
+        # The button fades in on hover; wait for the transition instead of a fixed pause (slow CI machines).
+        WebDriverWait(self.driver, 5).until(lambda d: close_button.is_displayed())
         self.assertTrue(close_button.is_displayed())
 
     def test_flash_message_dismissable(self):
