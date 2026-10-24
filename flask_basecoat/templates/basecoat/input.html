@@ -1,13 +1,22 @@
-{# shadcn input macro - exact class parity with shadcn/ui input.tsx #}
-{% macro input(type='text', class='', placeholder='', disabled=false, name='', value='', id='') %}
+{# shadcn input macro - exact class parity with shadcn/ui input.tsx.
+   shadcn Input is a void element, so there is no caller() slot.
+   States: disabled, readonly, required, invalid (aria-invalid), file type.
+   Extra HTML attributes (aria-*, autocomplete, accept, ...) pass through as keyword arguments. #}
+{% macro input(type='text', class='', placeholder='', disabled=false, readonly=false, required=false, invalid=false, name='', value='', id='', describedby='', label='') %}
 <input
     type="{{ type }}"
     data-slot="input"
     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive {{ class }}"
-    {%- if placeholder %} placeholder="{{ placeholder }}"{% endif %}
-    {%- if disabled %} disabled{% endif %}
-    {%- if name %} name="{{ name }}"{% endif %}
-    {%- if value %} value="{{ value }}"{% endif %}
     {%- if id %} id="{{ id }}"{% endif %}
+    {%- if name %} name="{{ name }}"{% endif %}
+    {%- if placeholder %} placeholder="{{ placeholder }}"{% endif %}
+    {%- if value %} value="{{ value }}"{% endif %}
+    {%- if label %} aria-label="{{ label }}"{% endif %}
+    {%- if describedby %} aria-describedby="{{ describedby }}"{% endif %}
+    {%- if invalid %} aria-invalid="true"{% endif %}
+    {%- if required %} required aria-required="true"{% endif %}
+    {%- if readonly %} readonly{% endif %}
+    {%- if disabled %} disabled{% endif %}
+    {%- for k, v in kwargs.items() %}{% if v is sameas true %} {{ k|replace('_', '-') }}{% elif v is not sameas false and v is not none %} {{ k|replace('_', '-') }}="{{ v }}"{% endif %}{% endfor %}
 >
 {%- endmacro -%}
