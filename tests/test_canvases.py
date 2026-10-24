@@ -59,18 +59,18 @@ def test_canvas_content_comes_from_the_data(slug):
     boxes[first] = list(boxes[first]) + [marker]
     assert marker not in page(slug)
     out = page(slug, changed)
-    assert out.count(marker) == 2          # once in the drawing, once in the list route
+    assert out.count(marker) == 3          # the note card, its hover card, and the list route
 
 
 @pytest.mark.parametrize('slug', BUILT)
 def test_list_route_has_the_same_notes_as_the_drawing(slug):
     doc = lxml_html.fromstring(page(slug))
-    drawn = [li.text_content().strip() for li in doc.xpath('//*[@data-canvas-notes]/li')]
+    drawn = [li.text_content().strip() for li in doc.xpath('//*[@data-canvas-notes]/li//*[@data-note-text]')]
     if not drawn:
         pytest.skip('this canvas has its own list route, covered by its own test')
     rows = doc.xpath('//*[@data-canvas-rows]//tr')
     listed = [r.xpath('./td')[-1].text_content().strip() for r in rows]
-    assert sorted(x for x in listed if x != 'No notes yet') == sorted(drawn)
+    assert sorted(x for x in listed if not x.startswith('Empty.')) == sorted(drawn)
     assert doc.xpath('//*[@data-slot="table"]//th[@scope="col"]')
     assert doc.xpath('//*[@data-canvas-rows]//th[@scope="row"]')
 

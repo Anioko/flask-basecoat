@@ -58,3 +58,19 @@ def available():
     """Canvases whose macro, data and page all exist (a canvas appears as soon as its three files do)."""
     t = _HERE / 'templates'
     return [c for c in canvases() if (t / c['macro_file']).exists() and (DATA / f"{c['slug']}.json").exists() and (t / c['page']).exists()]
+
+
+def box_meta(slug, key):
+    """Zone (chart token 1 to 5), zone label, ArchiMate element type and guidance of one canvas box (data/canvases/_boxes.json).
+
+    The example is the first two notes of the canvas's own Northwind seed, so the "i" popover always has a real example."""
+    meta = json.loads((DATA / '_boxes.json').read_text(encoding='utf8')).get(slug, {}).get(key, {})
+    out = dict(zone=meta.get('zone', 1), zone_label=meta.get('zone_label', ''), element=meta.get('element', 'Note'),
+               guidance=meta.get('guidance', ''), example='',
+               canvas=next((t for sl, t, *_ in CANVASES if sl == slug), slug))
+    try:
+        notes = (canvas_data(slug).get('boxes') or {}).get(key) or []
+    except FileNotFoundError:
+        notes = []
+    out['example'] = meta.get('example') or '; '.join(notes[:2])
+    return out

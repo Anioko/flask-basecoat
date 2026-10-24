@@ -19,7 +19,7 @@
 {% macro ansoff_matrix(data, id='ansoff-matrix') -%}
 {%- set boxes = data.boxes or {} -%}
 {%- set rows = [] -%}
-{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or [f.EMPTY_ROW] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
 {% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, width='min-w-240') %}
   <div class="flex flex-col gap-3">
     <div class="grid grid-cols-11 gap-2 rounded-lg border bg-muted/30 p-2">

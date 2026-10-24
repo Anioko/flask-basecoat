@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Flask-Basecoat examples{% endblock %}</title>
   {{ basecoat.css() }}
+  {% if request.args.get('brand') == 'entelim' %}<link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/entelim-brand.css') }}">{% endif %}
   {{ basecoat.js() }}
   <script>
     // Theme preference is applied before first paint so dark pages do not flash.

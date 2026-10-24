@@ -25,13 +25,10 @@
 <div class="flex items-center justify-center text-muted-foreground {{ area }}" aria-hidden="true">{{ lucide(icon, 'size-6') }}</div>
 {%- endmacro %}
 
-{% macro perspective(key, p, rows) -%}
-{% call ui.card(size='sm', class=p.area) %}
-  {% call ui.card_header() %}
-    {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide(p.icon, 'size-4 text-muted-foreground') }}<span>{{ p.title }}</span>{% endcall %}
-    {{ ui.card_description(text=p.question, class='text-xs') }}
-  {% endcall %}
-  {% call ui.card_content() %}
+{% macro perspective(key, p, rows, id='balanced-scorecard') -%}
+{% call ui.card(size='sm', class=p.area ~ ' gap-0 overflow-hidden py-0') %}
+  {{ f.band(id, {'key': key, 'title': p.title, 'question': p.question, 'icon': p.icon}, canvas_box_meta(id, key), rows, edit=false) }}
+  {% call ui.card_content(class='py-3') %}
     {% call ui.table_container() %}{% call ui.table(class='text-xs', attrs={'aria-label': p.title ~ ' perspective'}) %}
       {% call ui.table_header() %}{% call ui.table_row() %}
         {% for c in ['Objectives', 'Measures', 'Targets', 'Initiatives'] %}{{ ui.table_head(text=c, attrs={'scope': 'col'}) }}{% endfor %}
@@ -66,11 +63,9 @@
     {{ arrow('arrow-up-down', 'col-span-4 col-start-11 row-start-2') }}
     {{ perspective('internal', PERSPECTIVES.internal, data.perspectives.internal) }}
     {{ arrow('arrow-right', 'col-start-10 row-start-3') }}
-    {% call ui.card(size='sm', class='col-span-4 col-start-11 row-start-3 self-center') %}
-      {% call ui.card_header() %}
-        {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide('target', 'size-4 text-muted-foreground') }}<span>Vision and Strategy</span>{% endcall %}
-      {% endcall %}
-      {% call ui.card_content(class='flex flex-col gap-3 text-sm') %}
+    {% call ui.card(size='sm', class='col-span-4 col-start-11 row-start-3 self-center gap-0 overflow-hidden py-0') %}
+      {{ f.band(id, {'key': 'vision', 'title': 'Vision and Strategy', 'question': 'What do we want to become, and how?', 'icon': 'target'}, canvas_box_meta(id, 'vision'), [data.vision, data.strategy], edit=false) }}
+      {% call ui.card_content(class='flex flex-col gap-3 py-3 text-sm') %}
         <div class="flex flex-col gap-1"><span class="text-xs font-medium text-muted-foreground">Vision</span><p>{{ data.vision }}</p></div>
         {{ ui.separator() }}
         <div class="flex flex-col gap-1"><span class="text-xs font-medium text-muted-foreground">Strategy</span><p>{{ data.strategy }}</p></div>

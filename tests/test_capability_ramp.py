@@ -18,6 +18,6 @@ def test_closest_pair_meets_the_threshold_in_every_simulation():
 def test_the_page_ramp_classes_are_the_five_opacity_steps_of_primary():
     from flask_basecoat import capability
     text = (pathlib.Path(ramp.__file__).resolve().parents[1] / 'flask_basecoat/templates/basecoat/capability_map/_parts.html').read_text()
-    for cls in ('bg-primary/20', 'bg-primary/40', 'bg-primary/60', 'bg-primary/80', "5: 'bg-primary'", "0: 'border-dashed'"):
+    for cls in ('bg-primary/20', 'bg-primary/38', 'bg-primary/56', 'bg-primary/76', "5: 'bg-primary'", "0: 'border-dashed'"):
         assert cls in text
     assert capability.steps({'maturity': 4, 'strategicImportance': 'critical', 'currentInvestment': 'none'}) == {'maturity': 4, 'importance': 5, 'investment': 0}

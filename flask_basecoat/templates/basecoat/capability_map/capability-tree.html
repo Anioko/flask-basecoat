@@ -10,10 +10,10 @@
 <li data-cap-tile="{{ c.id }}">
   <div class="flex items-center gap-3 border-b py-1.5">
     {% if kids %}{% call ui.button(variant='ghost', size='icon-xs', class=p.CHEVRON, attrs={'data-cap-toggle': c.id, 'aria-expanded': 'true' if depth == 0 else 'false', 'aria-label': 'Show sub-capabilities of ' ~ c.name}) %}{{ lucide('chevron-right', 'group-aria-expanded/button:hidden') }}{{ lucide('chevron-down', 'hidden group-aria-expanded/button:block') }}{% endcall %}{% else %}<span class="size-6 shrink-0"></span>{% endif %}
-    {{ p.swatch(c) }}
+    <span class="flex shrink-0 rounded-lg bg-muted p-1.5" role="presentation">{{ lucide(capability_icon(c), 'size-4') }}</span>
     {% call ui.button(variant='link', class='h-auto min-w-0 flex-1 justify-start p-0 text-left whitespace-normal text-foreground ' ~ ('font-semibold' if depth == 0 else 'font-normal'), attrs={'data-fb-open': sheet, 'data-cap-open': c.id}) %}{{ c.name }}{% endcall %}
     <span class="w-56 shrink-0 text-xs text-muted-foreground">{{ c.metrics.owner or 'No owner. Assign one' }}</span>
-    <span class="w-44 shrink-0 text-xs">{{ p.metric_text(c) }}</span>
+    <span class="flex w-56 shrink-0 justify-end">{{ p.chip(c) }}</span>
     {{ ui.badge(text='L' ~ c.level, variant='outline') }}
   </div>
   {% if kids %}
@@ -49,9 +49,11 @@
     <div class="overflow-x-auto rounded-lg" role="region" tabindex="0" aria-label="Capability tree, scroll horizontally" data-entelim-form="C2">
       <div class="flex min-w-240 flex-col gap-4">
         {% for g in groups %}
-        <section class="flex flex-col gap-2 rounded-lg border p-4" aria-labelledby="{{ id }}-grp-{{ g.key }}">
+        <section class="flex flex-col overflow-hidden rounded-lg border" aria-labelledby="{{ id }}-grp-{{ g.key }}">
           {{ p.group_heading(g, id) }}
-          {% if g['items'] %}<ul class="flex flex-col">{% for c in g['items'] %}{{ row(c, caps, 0, sheet) }}{% endfor %}</ul>{% else %}{{ p.empty_group(g) }}{% endif %}
+          <div class="p-4">
+            {% if g['items'] %}<ul class="flex flex-col">{% for c in g['items'] %}{{ row(c, caps, 0, sheet) }}{% endfor %}</ul>{% else %}{{ p.empty_group(g) }}{% endif %}
+          </div>
         </section>
         {% endfor %}
       </div>

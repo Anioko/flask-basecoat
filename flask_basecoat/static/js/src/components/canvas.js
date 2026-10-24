@@ -1,8 +1,10 @@
 /* Strategy canvases (templates/basecoat/canvas). One [data-canvas] root per canvas:
    - the ToggleGroup [data-canvas-view] switches between the drawing and the list route (panes [data-canvas-pane]);
-   - a button [data-canvas-edit="<box key>"] fills the canvas's edit Sheet from the box's notes and opens it;
-   - [data-canvas-save] writes the Textarea back: one note per line, into the drawing ([data-canvas-notes]) and into the
-     list table ([data-canvas-rows]), and tells the polite live region. */
+   - a button [data-canvas-edit="<box key>"] (or a note's own text, [data-canvas-edit-from-note]) fills the canvas's edit
+     Sheet from the box's notes and opens it;
+   - [data-canvas-save] writes the Textarea back: one note per line, as one note card per line (cloned from
+     <template data-canvas-note-template>) into the drawing ([data-canvas-notes]), the entry count Badge and the empty state
+     of the box, and into the list table ([data-canvas-rows]), and tells the polite live region. */
 (function (FB) {
   'use strict';
 
@@ -24,12 +26,16 @@
         });
       }
 
-      const notesOf = (k) => FB.qsa(root, `[data-canvas-notes="${k}"] > li`).map((li) => li.textContent.trim());
+      const EMPTY_ROW = 'Empty. Add the first entry from the canvas view.';
+      const textOf = (li) => (FB.qs(li, '[data-note-text]') || li).textContent.trim();
+      const notesOf = (k) => FB.qsa(root, `[data-canvas-notes="${k}"] > li`).map(textOf);
 
       root.addEventListener('click', (e) => {
-        const edit = e.target.closest('[data-canvas-edit]');
+        const fromNote = e.target.closest('[data-canvas-edit-from-note]');
+        const list = fromNote && fromNote.closest('[data-canvas-notes]');
+        const edit = list || e.target.closest('[data-canvas-edit]');
         if (edit && sheet) {
-          key = edit.getAttribute('data-canvas-edit');
+          key = edit.getAttribute('data-canvas-notes') || edit.getAttribute('data-canvas-edit');
           title = edit.getAttribute('data-title') || key;
           FB.qs(sheet, '[data-canvas-sheet-title]').textContent = 'Edit ' + title;
           FB.qs(sheet, '[data-canvas-sheet-question]').textContent = (edit.getAttribute('data-question') || '') + ' One note per line.';
@@ -42,22 +48,29 @@
       function save() {
         const lines = input.value.split('\n').map((l) => l.trim()).filter(Boolean);
         const list = FB.qs(root, `[data-canvas-notes="${key}"]`);
-        if (list) {
+        const proto = FB.qs(root, 'template[data-canvas-note-template]');
+        if (list && proto) {
           list.replaceChildren(...lines.map((text) => {
-            const li = document.createElement('li');
-            li.className = 'rounded-md border bg-muted px-2 py-1.5 text-sm';
-            li.textContent = text;
+            const li = proto.content.firstElementChild.cloneNode(true);
+            FB.qsa(li, '[data-note-text], [data-note-hover-title]').forEach((n) => { n.textContent = text; });
+            FB.qs(li, '[data-note-field="element"]').textContent = list.getAttribute('data-element') || 'Note';
+            FB.qs(li, '[data-note-field="box"]').textContent = title;
             return li;
           }));
+          FB.initAll(list);   // pairs the new hover cards with their triggers
+          const empty = FB.qs(root, `[data-canvas-empty="${key}"]`);
+          if (empty) empty.hidden = lines.length > 0;
+          const count = FB.qs(root, `[data-canvas-count="${key}"]`);
+          if (count) count.textContent = String(lines.length);
         }
         const body = FB.qs(root, '[data-canvas-rows]');
-        const proto = FB.qs(root, 'template[data-canvas-row]');
-        if (body && proto) {   // rebuild the list route from the drawing, so both always hold the same notes
+        const rowProto = FB.qs(root, 'template[data-canvas-row]');
+        if (body && rowProto) {   // rebuild the list route from the drawing, so both always hold the same notes
           const rows = [];
           FB.qsa(root, '[data-canvas-notes]').forEach((ul) => {
-            const notes = Array.from(ul.children).map((li) => li.textContent.trim());
-            (notes.length ? notes : ['No notes yet']).forEach((text) => {
-              const tr = proto.content.firstElementChild.cloneNode(true);
+            const notes = Array.from(ul.children).map(textOf);
+            (notes.length ? notes : [EMPTY_ROW]).forEach((text) => {
+              const tr = rowProto.content.firstElementChild.cloneNode(true);
               tr.setAttribute('data-box', ul.getAttribute('data-notes-key') || ul.getAttribute('data-canvas-notes'));
               tr.querySelector('th').textContent = ul.getAttribute('data-title');
               tr.querySelector('td').textContent = text;

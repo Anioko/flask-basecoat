@@ -56,6 +56,7 @@
 
   {% if credit %}<p class="text-xs text-muted-foreground">{{ credit }}</p>{% endif %}
   <p class="sr-only" role="status" aria-live="polite" data-canvas-live></p>
+  <template data-canvas-note-template>{{ note_card(id, '', '', '', name) }}</template>
 
   {# One edit sheet for the whole canvas: opened by any [data-canvas-edit] button. #}
   {{ ui.sheet_overlay() }}
@@ -80,35 +81,128 @@
 </div>
 {%- endmacro %}
 
-{#- The notes of one box (or sub-area): chips in a list, the edit button's target. -#}
-{% macro notes(key, items, title) -%}
-<ul class="flex flex-col gap-1.5" data-canvas-notes="{{ key }}" data-title="{{ title }}" aria-label="{{ title }} notes">
-  {% for n in items %}<li class="rounded-md border bg-muted px-2 py-1.5 text-sm">{{ n }}</li>{% endfor %}
-</ul>
+{#- Zone tints (R16): a chart token at low opacity on the header band, its rule at 30 percent. Written out in full so the
+    stylesheet build finds every class. Text on the band is foreground and foreground at 70 percent: muted-foreground is 4.7:1 on white, so any tint under it falls below 4.5:1 (measured in the report). -#}
+{% set ZONES = {
+  1: 'bg-chart-1/10 border-chart-1/30', 2: 'bg-chart-2/10 border-chart-2/30', 3: 'bg-chart-3/10 border-chart-3/30',
+  4: 'bg-chart-4/10 border-chart-4/30', 5: 'bg-chart-5/10 border-chart-5/30'} %}
+{% set EMPTY_ROW = 'Empty. Add the first entry from the canvas view.' %}
+
+{#- One note card: an Item with the note as the trigger of a hover card that previews the model element (help-and-overlays-v1 3).
+    The text lives in [data-note-text] and the preview fields in [data-note-field]; the script fills both for a note added from the sheet. -#}
+{% macro note_card(canvas_id, box_title, element, text='', canvas_name='', editable=true) -%}
+<li data-canvas-note>
+  {% call ui.hover_card() %}
+    {% call ui.item(variant='outline', size='xs') %}
+      {% call ui.item_content() %}
+        {% call ui.hover_card_trigger(variant='link', class='h-auto min-w-0 justify-start p-0 text-left text-sm font-normal whitespace-normal text-foreground', attrs=({'data-note-text': '', 'data-fb-open': 'canvas-edit-' ~ canvas_id, 'data-canvas-edit-from-note': ''} if editable else {'data-note-text': ''})) %}{{ text }}{% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.hover_card_content(class='w-72', attrs={'data-side': 'right'}) %}
+      <div class="flex flex-col gap-2 text-sm">
+        <p class="font-medium" data-note-hover-title>{{ text }}</p>
+        <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+          <dt class="text-muted-foreground">Type</dt><dd data-note-field="element">{{ element }}</dd>
+          <dt class="text-muted-foreground">Box</dt><dd data-note-field="box">{{ box_title }}</dd>
+          <dt class="text-muted-foreground">Used in</dt><dd>{{ canvas_name }}, list view</dd>
+          <dt class="text-muted-foreground">Owner</dt><dd>Not assigned. Link the entry to a model element to set one.</dd>
+          <dt class="text-muted-foreground">Last change</dt><dd>Not tracked for a plain entry.</dd>
+        </dl>
+      </div>
+    {% endcall %}
+  {% endcall %}
+</li>
 {%- endmacro %}
 
-{#- One box: a Card with an icon title, the framework's guiding question and its notes.
-    b = {'key', 'title', 'question', 'icon', 'area' (grid placement classes), 'number' (fill-in order), 'subs': [{'key', 'title', 'question'}]} -#}
-{% macro box(canvas_id, b, boxes) -%}
-{% call ui.card(size='sm', class=b.area ~ ' ' ~ (b.class or '')) %}
-  {% call ui.card_header() %}
+{#- The notes of one box (or sub-area): one note card per entry, then the empty state when there is none.
+    A box with entries never shows the empty state (it stays in the page, hidden, for the script). -#}
+{% macro notes(canvas_id, key, items, title, question='', element='Note', canvas_name='') -%}
+<ul class="flex flex-col gap-2" data-canvas-notes="{{ key }}" data-title="{{ title }}" data-element="{{ element }}" data-question="{{ question }}" aria-label="{{ title }} notes">
+  {% for n in items %}{{ note_card(canvas_id, title, element, n, canvas_name) }}{% endfor %}
+</ul>
+<div{% if items %} hidden{% endif %} data-canvas-empty="{{ key }}">
+  {% call ui.empty(class='gap-3 rounded-lg border border-dashed p-4') %}
+    {% call ui.empty_header(class='gap-1') %}
+      {{ ui.empty_title(text='No ' ~ title|lower ~ ' yet', class='text-sm') }}
+      {{ ui.empty_description(text=(question ~ ' ' if question else '') ~ 'Add the first entry, or pick one from your model.', class='text-xs') }}
+    {% endcall %}
+    {% call ui.empty_content() %}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-fb-open': 'canvas-edit-' ~ canvas_id, 'data-canvas-edit': key, 'data-title': title, 'data-question': question}) %}{{ lucide('plus') }}Add to {{ title }}{% endcall %}
+    {% endcall %}
+  {% endcall %}
+</div>
+{%- endmacro %}
+
+{#- The "i" button: a popover with the fuller guidance and an example, and a tooltip naming the icon-only button. -#}
+{% macro info(box_title, guidance, example) -%}
+{% call ui.tooltip() %}
+  {% call ui.tooltip_trigger(as_=none, tag='span', class='inline-flex') %}
+    {% call ui.popover() %}
+      {% call ui.popover_trigger(variant='ghost', size='icon-xs', class='text-muted-foreground', attrs={'aria-label': 'About ' ~ box_title}) %}{{ lucide('info') }}{% endcall %}
+      {% call ui.popover_content(align='end', class='w-72') %}
+        {% call ui.popover_header() %}
+          {{ ui.popover_title(text=box_title) }}
+          {{ ui.popover_description(text=guidance) }}
+        {% endcall %}
+        {% if example %}<p class="text-xs text-muted-foreground">Example from Northwind Logistics: {{ example }}</p>{% endif %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+  {{ ui.tooltip_content(text='About ' ~ box_title) }}
+{% endcall %}
+{%- endmacro %}
+
+{#- The edit button of a box, with its tooltip. -#}
+{% macro edit_button(canvas_id, key, title, question) -%}
+{% call ui.tooltip() %}
+  {% call ui.tooltip_trigger(variant='ghost', size='icon-xs', class='text-muted-foreground', attrs={'data-fb-open': 'canvas-edit-' ~ canvas_id, 'data-canvas-edit': key, 'data-title': title, 'data-question': question, 'aria-label': 'Edit ' ~ title}) %}{{ lucide('pencil') }}{% endcall %}
+  {{ ui.tooltip_content(text='Edit ' ~ title) }}
+{% endcall %}
+{%- endmacro %}
+
+{#- The header band of a box: the zone tint with its label, the entry count, the "i" popover and the edit button, then the icon,
+    title and the framework's question in muted text. b needs key, title, question, icon, number. edit=false drops the edit button. -#}
+{% macro band(canvas_id, b, m, items, edit=true) -%}
+  <div class="flex flex-col gap-1 border-b px-4 py-3 {{ ZONES[m.zone] }}" data-canvas-band="{{ m.zone }}">
+    <div class="flex items-center justify-between gap-2">
+      <span class="min-w-0 truncate text-xs font-medium text-foreground/70">{{ m.zone_label }}</span>
+      <span class="flex shrink-0 items-center gap-1">
+        {{ ui.badge(text=items|length, variant='secondary', attrs={'data-canvas-count': b.key, 'aria-label': 'Entries'}) }}
+        {{ info(b.title, m.guidance, m.example) }}
+        {% if edit %}{{ edit_button(canvas_id, b.key, b.title, b.question) }}{% endif %}
+      </span>
+    </div>
     {% call ui.card_title(class='flex items-center gap-2') %}
-      {% if b.number %}{{ ui.badge(text=b.number, variant='outline', class='size-5 rounded-full px-0') }}{% elif b.icon %}{{ lucide(b.icon, 'size-4 text-muted-foreground') }}{% endif %}
+      {% if b.number %}{{ ui.badge(text=b.number, variant='outline', class='size-5 rounded-full px-0') }}{% endif %}
+      {% if b.icon %}{{ lucide(b.icon, 'size-4 shrink-0') }}{% endif %}
       <span>{{ b.title }}</span>
     {% endcall %}
-    {{ ui.card_description(text=b.question, class='text-xs') }}
-    {% call ui.card_action() %}{% call ui.button(variant='ghost', size='icon-xs', class='text-muted-foreground', attrs={'data-fb-open': 'canvas-edit-' ~ canvas_id, 'data-canvas-edit': b.key, 'data-title': b.title, 'data-question': b.question, 'aria-label': 'Edit ' ~ b.title}) %}{{ lucide('pencil') }}{% endcall %}{% endcall %}
-  {% endcall %}
-  {% call ui.card_content(class='flex flex-1 flex-col gap-3') %}
-    {{ notes(b.key, boxes.get(b.key) or [], b.title) }}
+    {{ ui.card_description(text=b.question, class='text-xs text-foreground/70') }}
+  </div>
+{%- endmacro %}
+
+{#- One box: a Card whose header band carries the zone tint, the icon, the title, the entry count, the "i" popover and the edit
+    button, with the framework's question in muted text under it; the body is one note card per entry.
+    b = {'key', 'title', 'question', 'icon', 'area' (grid placement classes), 'number' (fill-in order), 'subs': [{'key', 'title', 'question'}]} -#}
+{% macro box(canvas_id, b, boxes, canvas_name='') -%}
+{%- set m = canvas_box_meta(canvas_id, b.key) -%}
+{%- set canvas_name = canvas_name or m.canvas -%}
+{% call ui.card(size='sm', class=b.area ~ ' ' ~ (b.class or '') ~ ' gap-0 overflow-hidden py-0') %}
+  {{ band(canvas_id, b, m, boxes.get(b.key) or [], edit=true) }}
+  {% call ui.card_content(class='flex flex-1 flex-col gap-3 py-3') %}
+    {{ notes(canvas_id, b.key, boxes.get(b.key) or [], b.title, b.question, m.element, canvas_name) }}
     {% for s in (b.subs or []) %}
+    {%- set sm = canvas_box_meta(canvas_id, s.key) -%}
     {{ ui.separator() }}
-    <div class="flex flex-col gap-1.5">
+    <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between gap-2">
         <span class="text-xs font-medium text-muted-foreground">{{ s.title }}</span>
-        {% call ui.button(variant='ghost', size='icon-xs', class='text-muted-foreground', attrs={'data-fb-open': 'canvas-edit-' ~ canvas_id, 'data-canvas-edit': s.key, 'data-title': s.title, 'data-question': s.question, 'aria-label': 'Edit ' ~ s.title}) %}{{ lucide('pencil') }}{% endcall %}
+        <span class="flex items-center gap-1">
+          {{ ui.badge(text=(boxes.get(s.key) or [])|length, variant='secondary', attrs={'data-canvas-count': s.key, 'aria-label': 'Entries'}) }}
+          {{ edit_button(canvas_id, s.key, s.title, s.question) }}
+        </span>
       </div>
-      {{ notes(s.key, boxes.get(s.key) or [], s.title) }}
+      {{ notes(canvas_id, s.key, boxes.get(s.key) or [], s.title, s.question, sm.element, canvas_name) }}
     </div>
     {% endfor %}
   {% endcall %}
@@ -120,8 +214,8 @@
 {%- set boxes = data.boxes or {} -%}
 {%- set rows = [] -%}
 {%- for b in spec.boxes -%}
-  {%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}
-  {%- for s in b.subs or [] -%}{%- for n in boxes.get(s.key) or ['No notes yet'] %}{% set _ = rows.append([s.key, s.title, n]) %}{% endfor -%}{%- endfor -%}
+  {%- for n in boxes.get(b.key) or [EMPTY_ROW] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}
+  {%- for s in b.subs or [] -%}{%- for n in boxes.get(s.key) or [EMPTY_ROW] %}{% set _ = rows.append([s.key, s.title, n]) %}{% endfor -%}{%- endfor -%}
 {%- endfor -%}
 {% call frame(id, spec.form, spec.name, data, rows, spec.hint, credit=spec.credit, width=spec.width or 'min-w-240') %}
   <div class="grid gap-2 rounded-lg border bg-muted/30 p-2 {{ spec.grid }}">

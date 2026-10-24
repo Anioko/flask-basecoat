@@ -59,13 +59,13 @@
         {% endcall %}{% endcall %}
         {% for g in groups %}
         {% call ui.table_body(attrs={'data-cap-group': g.key}) %}
-          {% call ui.table_row(class='bg-muted/50') %}{% call ui.table_head(class='font-semibold', attrs={'colspan': '5', 'scope': 'rowgroup', 'id': id ~ '-grp-' ~ g.key}) %}{{ g.label }}{% if g.key != 'unset' %} capabilities{% endif %} · {{ g['items']|length }}{% endcall %}{% endcall %}
+          {% call ui.table_row(class=p.ZONE[g.key]) %}{% call ui.table_head(class='font-semibold', attrs={'colspan': '5', 'scope': 'rowgroup', 'id': id ~ '-grp-' ~ g.key}) %}<span class="flex items-center gap-2">{{ lucide(p.ZONE_ICON[g.key], 'size-4 shrink-0') }}{{ g.label }}{% if g.key != 'unset' %} capabilities{% endif %} · {{ g['items']|length }}</span>{% endcall %}{% endcall %}
           {% for c in g['items'] %}
           {% set mine = supporting[c.id] %}
           {% call ui.table_row(attrs={'data-covered': '1' if mine else '0', 'data-cap-tile': c.id}) %}
             {% call ui.table_head(class='font-medium whitespace-normal', attrs={'scope': 'row'}) %}<span class="{{ {0: '', 1: 'ml-4', 2: 'ml-8', 3: 'ml-12', 4: 'ml-16'}.get(c.level, '') }}">{{ c.name }}</span>{% endcall %}
             {{ ui.table_cell(text='L' ~ c.level, class='tabular-nums') }}
-            {% call ui.table_cell() %}<span class="flex items-center gap-2">{{ p.swatch(c, fixed=true) }}<span class="whitespace-nowrap">{{ c.metrics.maturity }}/5, {{ p.MATURITY.get(c.metrics.maturity, '') }}</span></span>{% endcall %}
+            {% call ui.table_cell() %}{{ p.chip(c, fixed=true) }}{% endcall %}
             {% call ui.table_cell(class='whitespace-normal') %}
               {% if mine %}<span class="flex flex-wrap gap-1">{% for a in mine %}{% call ui.badge(variant='outline') %}{{ lucide(p.LIFECYCLE_ICON.get(a.lifecycle, 'circle')) }}{{ a.name }}{% endcall %}{% endfor %}</span>
               {% else %}<span class="text-muted-foreground">No application supports this capability. Add one.</span>{% endif %}

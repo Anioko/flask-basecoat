@@ -172,7 +172,7 @@ def test_browser_phone_keeps_the_shape_and_the_page_does_not_overflow(browser, b
 
 def test_browser_metric_switch_changes_the_ramp_and_the_words(browser, base):
     pg = page(browser, base, 'capability-map')
-    first = pg.locator('[data-cap-tile] [data-ramp]').first
+    first = pg.locator('[data-cap-tile] [data-ramp-chip]').first
     before = first.evaluate('e => [...e.classList].sort().join(" ")')
     pg.locator('[data-capmap-metric] [data-slot="toggle-group-item"]', has_text='Investment').click()
     assert pg.locator('[data-legend="investment"]').is_visible() and not pg.locator('[data-legend="maturity"]').is_visible()
@@ -190,7 +190,8 @@ def test_browser_keyboard_opens_detail_and_toggles_a_tile(browser, base):
     dialog.wait_for(state='visible')
     assert 'Strategy & Planning' in dialog.inner_text() and 'Strategic' in dialog.inner_text()
     pg.keyboard.press('Escape')
-    btn = pg.get_by_role('button', name='Show sub-capabilities of Portfolio & Investment Planning')
+    cid = pg.locator('[data-cap-open]', has_text='Portfolio & Investment Planning').first.get_attribute('data-cap-open')
+    btn = pg.locator(f'[data-cap-toggle="{cid}"]')
     btn.focus(); pg.keyboard.press('Enter')
     assert btn.get_attribute('aria-expanded') == 'true'
     pg.close()

@@ -3,16 +3,24 @@
    Groups: every macro takes `capability_type` from the capability data and groups by it (flask_basecoat/capability.py):
    Strategic, Operational, Supporting, then "Type not set". Nothing else is read as a type.
 
-   The ramp (maturity, importance, investment): ONE sequential ramp of the primary token, five steps at opacity 20, 40,
-   60, 80 and 100 percent; step 0 means "nothing" and is a dashed outline with no fill. A step is a swatch or a band
-   beside text that is always printed ("Maturity 3/5, Defined"), so colour is never the only signal, and the text sits
-   on the card, never on a step, so its contrast does not depend on the token values. Distances between steps in
+   The ramp (maturity, importance, investment): ONE sequential ramp of the primary token, five steps at opacity 20, 38,
+   56, 76 and 100 percent (76 is 80 in dark mode, where the text on it needs it); step 0 means "nothing" and is a dashed
+   outline with no fill. A capability card shows its measure as a filled Badge chip in the step for its level, with the level
+   in words ("Managed, 4/5") in the chip's own text colour (foreground on steps 1 to 4, primary-foreground on step 5, and in
+   dark mode on step 4), so colour is never the only signal and the card body stays on the card surface. Distances between steps in
    normal vision, protanopia, deuteranopia and tritanopia are printed by scripts/capability_ramp.py and asserted by
-   tests/test_capability_ramp.py (closest pair at least 0.08 OKLab).
+   tests/test_capability_ramp.py (closest pair at least 0.08 OKLab); the text contrast of every step is measured by
+   scripts/contrast_check.py.
+   Type groups carry a chart token at low opacity on their header band (R16): Strategic chart-1, Operational chart-2,
+   Supporting chart-3, "Type not set" neutral.
    Behaviour is flask_basecoat/static/js/src/components/capability-map.js. #}
 {% import 'basecoat/index.html' as ui %}
 
-{% set RAMP = {0: 'border-dashed', 1: 'bg-primary/20', 2: 'bg-primary/40', 3: 'bg-primary/60', 4: 'bg-primary/80', 5: 'bg-primary'} %}
+{% set RAMP = {0: 'border-dashed', 1: 'bg-primary/20', 2: 'bg-primary/38', 3: 'bg-primary/56', 4: 'bg-primary/76 dark:bg-primary/80', 5: 'bg-primary'} %}
+{% set CHIP = {0: 'border-dashed', 1: 'bg-primary/20 text-foreground', 2: 'bg-primary/38 text-foreground', 3: 'bg-primary/56 text-foreground',
+  4: 'bg-primary/76 text-foreground dark:bg-primary/80 dark:text-primary-foreground', 5: 'bg-primary text-primary-foreground'} %}
+{% set ZONE = {'strategic': 'bg-chart-1/10 border-chart-1/30', 'operational': 'bg-chart-2/10 border-chart-2/30', 'supporting': 'bg-chart-3/10 border-chart-3/30', 'unset': 'bg-muted border'} %}
+{% set ZONE_ICON = {'strategic': 'target', 'operational': 'settings', 'supporting': 'shield', 'unset': 'circle-help'} %}
 {% set MATURITY = {1: 'Initial', 2: 'Developing', 3: 'Defined', 4: 'Managed', 5: 'Optimized'} %}
 {% set METRICS = [('maturity', 'Maturity'), ('importance', 'Importance'), ('investment', 'Investment')] %}
 {% set LEGENDS = {
@@ -22,22 +30,24 @@
 {% set LIFECYCLE_ICON = {'Invest': 'circle-check', 'Tolerate': 'circle-dashed', 'Migrate': 'loader', 'Eliminate': 'circle-alert'} %}
 {% set CHEVRON = 'shrink-0 text-muted-foreground' %}
 
-{#- The text of the selected metric, all three rendered, one visible. -#}
+{#- The text of the selected metric, all three rendered, one visible: the level in words with its figure. -#}
 {% macro metric_text(c) -%}
 {%- set m = c.metrics or {} -%}
-<span data-metric-text="maturity">Maturity {{ m.maturity or 0 }}/5{% if MATURITY.get(m.maturity) %}, {{ MATURITY[m.maturity] }}{% endif %}</span><span data-metric-text="importance" hidden>{{ (m.strategicImportance or 'not set')|capitalize }} importance</span><span data-metric-text="investment" hidden>{{ (m.currentInvestment or 'not set')|capitalize }} investment</span>
+<span data-metric-text="maturity">{% if MATURITY.get(m.maturity) %}{{ MATURITY[m.maturity] }}, {{ m.maturity }}/5{% else %}Not assessed{% endif %}</span><span data-metric-text="importance" hidden>{{ (m.strategicImportance or 'not set')|capitalize }} importance</span><span data-metric-text="investment" hidden>{{ (m.currentInvestment or 'not set')|capitalize }} investment</span>
+{%- endmacro %}
+
+{#- The measure chip of a capability: a filled Badge in the ramp step of the selected measure, the level in words inside it.
+    fixed=true freezes it on maturity (tables); otherwise the script swaps the step and the words when "Heat by" changes. -#}
+{% macro chip(c, fixed=false) -%}
+{%- set s = capability_steps(c.metrics) -%}
+{% if fixed %}{% call ui.badge(variant='outline', class=CHIP[s.maturity]) %}{{ MATURITY[c.metrics.maturity] ~ ', ' ~ c.metrics.maturity ~ '/5' if MATURITY.get(c.metrics.maturity) else 'Not assessed' }}{% endcall %}
+{%- else %}{% call ui.badge(variant='outline', class=CHIP[s.maturity], attrs={'data-ramp-chip': '', 'data-h-maturity': s.maturity, 'data-h-importance': s.importance, 'data-h-investment': s.investment}) %}{{ metric_text(c) }}{% endcall %}{% endif %}
 {%- endmacro %}
 
 {#- A swatch of the ramp: a plain token class for the step (border-dashed for step 0), swapped by the script when the metric changes. -#}
 {% macro swatch(c, class='size-4', fixed=false) -%}
 {%- set s = capability_steps(c.metrics) -%}
 <span class="{{ RAMP[s.maturity] }} {{ class }} shrink-0 rounded-sm border" role="presentation" data-ramp{% if not fixed %} data-h-maturity="{{ s.maturity }}" data-h-importance="{{ s.importance }}" data-h-investment="{{ s.investment }}"{% endif %}></span>
-{%- endmacro %}
-
-{#- The heat bar across the top of a map tile. -#}
-{% macro bar(c) -%}
-{%- set s = capability_steps(c.metrics) -%}
-<span class="{{ RAMP[s.maturity] }} block h-1.5 w-full shrink-0 rounded-full border" role="presentation" data-ramp data-h-maturity="{{ s.maturity }}" data-h-importance="{{ s.importance }}" data-h-investment="{{ s.investment }}"></span>
 {%- endmacro %}
 
 {#- The metric ToggleGroup ("Heat by"). -#}
@@ -47,13 +57,13 @@
 {% endcall %}
 {%- endmacro %}
 
-{#- The legend: one Badge per step, each with its swatch and its word; one row per metric, the selected one visible. -#}
+{#- The legend: one filled chip per step, in the step's colour with its word; one row per measure, the selected one visible. -#}
 {% macro legend() -%}
 {% for key, label in METRICS %}
 <div class="flex flex-wrap items-center gap-2" data-legend="{{ key }}"{% if key != 'maturity' %} hidden{% endif %} role="group" aria-label="Legend, {{ label|lower }}">
   <span class="text-xs font-medium text-muted-foreground">{{ label }}</span>
-  {% for step, text in LEGENDS[key] %}{% call ui.badge(variant='outline') %}<span class="{{ RAMP[step] }} size-3 rounded-sm border" role="presentation"></span>{{ text }}{% endcall %}{% endfor %}
-  {% if key == 'maturity' %}{% call ui.badge(variant='outline') %}<span class="{{ RAMP[0] }} size-3 rounded-sm border" role="presentation"></span>Not assessed{% endcall %}{% endif %}
+  {% for step, text in LEGENDS[key] %}{% call ui.badge(variant='outline', class=CHIP[step]) %}{{ text }}{% endcall %}{% endfor %}
+  {% if key == 'maturity' %}{% call ui.badge(variant='outline', class=CHIP[0]) %}Not assessed{% endcall %}{% endif %}
 </div>
 {% endfor %}
 {%- endmacro %}
@@ -79,7 +89,7 @@
       {{ ui.table_cell(text=capability_type_label(c)) }}
       {{ ui.table_cell(text='L' ~ c.level, class='tabular-nums') }}
       {{ ui.table_cell(text=c.metrics.owner or 'No owner. Assign one') }}
-      {% call ui.table_cell() %}<span class="flex items-center gap-2">{{ swatch(c, fixed=true) }}<span>{{ c.metrics.maturity }}/5, {{ MATURITY.get(c.metrics.maturity, '') }}</span></span>{% endcall %}
+      {% call ui.table_cell() %}{{ chip(c, fixed=true) }}{% endcall %}
       {{ ui.table_cell(text=c.metrics.strategicImportance|capitalize) }}
       {{ ui.table_cell(text=c.metrics.currentInvestment|capitalize) }}
       {{ ui.table_cell(text=(c.metrics.riskLevel or 'medium')|capitalize) }}
@@ -112,15 +122,23 @@
 <script type="application/json" data-capmap-data>{{ {'capabilities': data.capabilities, 'applications': data.applications}|tojson }}</script>
 {%- endmacro %}
 
-{#- Group heading used by the map and the tree. -#}
+{#- The header band of a type group, used by the map and the tree: its icon, name, description and count on the group's chart tint. -#}
 {% macro group_heading(g, prefix) -%}
-<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+<div class="flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-4 py-3 {{ ZONE[g.key] }}" data-group-band="{{ g.key }}">
+  {{ lucide(ZONE_ICON[g.key], 'size-5 shrink-0') }}
   <h3 class="text-sm font-semibold" id="{{ prefix }}-grp-{{ g.key }}">{{ g.label }}{% if g.key != 'unset' %} capabilities{% endif %}</h3>
-  <p class="text-xs text-muted-foreground">{{ g.description }}{% if g.description %} · {% endif %}{{ g['items']|length }} {{ 'capability' if g['items']|length == 1 else 'capabilities' }}</p>
+  <p class="min-w-0 flex-1 text-xs text-foreground/70">{{ g.description }}</p>
+  {{ ui.badge(text=g['items']|length ~ ' ' ~ ('capability' if g['items']|length == 1 else 'capabilities'), variant='secondary') }}
 </div>
 {%- endmacro %}
 
 {#- The empty state of a group with no capabilities. -#}
 {% macro empty_group(g) -%}
-<p class="text-sm text-muted-foreground">No {{ g.label|lower }} capabilities yet. Add one, or set the type of an existing capability.</p>
+{% call ui.empty(class='gap-3 rounded-lg border border-dashed p-6') %}
+  {% call ui.empty_header(class='gap-1') %}
+    {{ ui.empty_title(text='No ' ~ g.label|lower ~ ' capabilities yet', class='text-sm') }}
+    {{ ui.empty_description(text='Add the first one, or set the type of an existing capability to ' ~ g.label|lower ~ ' so it appears here.', class='text-xs') }}
+  {% endcall %}
+  {% call ui.empty_content() %}{% call ui.button(variant='outline', size='sm', attrs={'data-cap-action': 'add', 'data-group': g.key}) %}{{ lucide('plus') }}Add a {{ g.label|lower }} capability{% endcall %}{% endcall %}
+{% endcall %}
 {%- endmacro %}

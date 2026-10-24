@@ -1,4 +1,4 @@
-"""Maturity ramp: primary at 20/40/60/80/100 percent over the card, light and dark, for the library's token file and
+"""Maturity ramp: primary at 20/38/56/76/100 percent over the card, light and dark, for the library's token file and
 Entelim's brand token file. Prints OKLab distance of the closest pair under normal vision, protanopia, deuteranopia and
 tritanopia (Machado et al. 2009, severity 1.0, applied in linear sRGB), and text contrast on each composed step."""
 import math, itertools, sys
@@ -33,7 +33,7 @@ SETS={
  'library tokens (shadcn neutral)':{'light':dict(primary=(0.205,0,0),card=(1,0,0),fg=(0.145,0,0),pfg=(0.985,0,0)),'dark':dict(primary=(0.922,0,0),card=(0.205,0,0),fg=(0.985,0,0),pfg=(0.205,0,0))},
  'Entelim brand tokens (brand-decision-v1)':{'light':dict(primary=(0.497,0.163,257),card=(1,0,0),fg=(0.145,0,0),pfg=(0.985,0,0)),'dark':dict(primary=(0.70,0.14,257),card=(0.205,0,0),fg=(0.985,0,0),pfg=(0.205,0,0))},
 }
-STEPS=[('20',.2),('40',.4),('60',.6),('80',.8),('100',1.0)]
+STEPS=[('20',.2),('38',.38),('56',.56),('76',.76),('100',1.0)]
 def run(verbose=True):
     out={}
     for sname,themes in SETS.items():

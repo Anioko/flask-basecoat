@@ -17,7 +17,7 @@
 {% macro swot_analysis(data, id='swot-analysis') -%}
 {%- set boxes = data.boxes or {} -%}
 {%- set rows = [] -%}
-{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or [f.EMPTY_ROW] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
 {% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, width='min-w-240') %}
   <div class="grid grid-cols-5 gap-2 rounded-lg border bg-muted/30 p-2">
     <div class="col-start-2 col-span-2 row-start-1 flex flex-col items-center gap-0.5 py-1"><span class="text-sm font-semibold">Helpful</span><span class="text-xs text-muted-foreground">to achieving the objective</span></div>

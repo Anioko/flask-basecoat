@@ -55,7 +55,7 @@
 {%- endfor -%}
 {% call f.frame(id, 'C1', 'Wardley map', data, rows,
     'Scroll sideways on a narrow screen to see the whole map. Select a component to open its detail. The List view has the same ' ~ comps|length ~ ' components as a table.',
-    credit='Wardley Map after Simon Wardley, Wardley Maps (CC BY-SA 4.0).',
+    credit='Wardley Map after Simon Wardley, Wardley Maps.',
     width='min-w-240', columns=['Component', 'Evolution stage', 'Visibility', 'Depends on', 'Movement', 'Notes']) %}
   <div class="relative h-150 rounded-lg border bg-muted/30">
     <div class="absolute top-4 bottom-14 left-0 flex w-22 flex-col justify-between pr-2 text-right text-xs text-muted-foreground">

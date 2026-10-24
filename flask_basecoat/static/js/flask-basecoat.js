@@ -401,9 +401,11 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 /* ---- canvas ---- */
 /* Strategy canvases (templates/basecoat/canvas). One [data-canvas] root per canvas:
    - the ToggleGroup [data-canvas-view] switches between the drawing and the list route (panes [data-canvas-pane]);
-   - a button [data-canvas-edit="<box key>"] fills the canvas's edit Sheet from the box's notes and opens it;
-   - [data-canvas-save] writes the Textarea back: one note per line, into the drawing ([data-canvas-notes]) and into the
-     list table ([data-canvas-rows]), and tells the polite live region. */
+   - a button [data-canvas-edit="<box key>"] (or a note's own text, [data-canvas-edit-from-note]) fills the canvas's edit
+     Sheet from the box's notes and opens it;
+   - [data-canvas-save] writes the Textarea back: one note per line, as one note card per line (cloned from
+     <template data-canvas-note-template>) into the drawing ([data-canvas-notes]), the entry count Badge and the empty state
+     of the box, and into the list table ([data-canvas-rows]), and tells the polite live region. */
 (function (FB) {
   'use strict';
 
@@ -425,12 +427,16 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
         });
       }
 
-      const notesOf = (k) => FB.qsa(root, `[data-canvas-notes="${k}"] > li`).map((li) => li.textContent.trim());
+      const EMPTY_ROW = 'Empty. Add the first entry from the canvas view.';
+      const textOf = (li) => (FB.qs(li, '[data-note-text]') || li).textContent.trim();
+      const notesOf = (k) => FB.qsa(root, `[data-canvas-notes="${k}"] > li`).map(textOf);
 
       root.addEventListener('click', (e) => {
-        const edit = e.target.closest('[data-canvas-edit]');
+        const fromNote = e.target.closest('[data-canvas-edit-from-note]');
+        const list = fromNote && fromNote.closest('[data-canvas-notes]');
+        const edit = list || e.target.closest('[data-canvas-edit]');
         if (edit && sheet) {
-          key = edit.getAttribute('data-canvas-edit');
+          key = edit.getAttribute('data-canvas-notes') || edit.getAttribute('data-canvas-edit');
           title = edit.getAttribute('data-title') || key;
           FB.qs(sheet, '[data-canvas-sheet-title]').textContent = 'Edit ' + title;
           FB.qs(sheet, '[data-canvas-sheet-question]').textContent = (edit.getAttribute('data-question') || '') + ' One note per line.';
@@ -443,22 +449,29 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       function save() {
         const lines = input.value.split('\n').map((l) => l.trim()).filter(Boolean);
         const list = FB.qs(root, `[data-canvas-notes="${key}"]`);
-        if (list) {
+        const proto = FB.qs(root, 'template[data-canvas-note-template]');
+        if (list && proto) {
           list.replaceChildren(...lines.map((text) => {
-            const li = document.createElement('li');
-            li.className = 'rounded-md border bg-muted px-2 py-1.5 text-sm';
-            li.textContent = text;
+            const li = proto.content.firstElementChild.cloneNode(true);
+            FB.qsa(li, '[data-note-text], [data-note-hover-title]').forEach((n) => { n.textContent = text; });
+            FB.qs(li, '[data-note-field="element"]').textContent = list.getAttribute('data-element') || 'Note';
+            FB.qs(li, '[data-note-field="box"]').textContent = title;
             return li;
           }));
+          FB.initAll(list);   // pairs the new hover cards with their triggers
+          const empty = FB.qs(root, `[data-canvas-empty="${key}"]`);
+          if (empty) empty.hidden = lines.length > 0;
+          const count = FB.qs(root, `[data-canvas-count="${key}"]`);
+          if (count) count.textContent = String(lines.length);
         }
         const body = FB.qs(root, '[data-canvas-rows]');
-        const proto = FB.qs(root, 'template[data-canvas-row]');
-        if (body && proto) {   // rebuild the list route from the drawing, so both always hold the same notes
+        const rowProto = FB.qs(root, 'template[data-canvas-row]');
+        if (body && rowProto) {   // rebuild the list route from the drawing, so both always hold the same notes
           const rows = [];
           FB.qsa(root, '[data-canvas-notes]').forEach((ul) => {
-            const notes = Array.from(ul.children).map((li) => li.textContent.trim());
-            (notes.length ? notes : ['No notes yet']).forEach((text) => {
-              const tr = proto.content.firstElementChild.cloneNode(true);
+            const notes = Array.from(ul.children).map(textOf);
+            (notes.length ? notes : [EMPTY_ROW]).forEach((text) => {
+              const tr = rowProto.content.firstElementChild.cloneNode(true);
               tr.setAttribute('data-box', ul.getAttribute('data-notes-key') || ul.getAttribute('data-canvas-notes'));
               tr.querySelector('th').textContent = ul.getAttribute('data-title');
               tr.querySelector('td').textContent = text;
@@ -486,8 +499,11 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
   'use strict';
   const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');
   const TYPES = { strategic: 'Strategic', operational: 'Operational', supporting: 'Supporting' };
-  // The ramp: primary at 20, 40, 60, 80 and 100 percent (step 0 is a dashed outline). Literal class names, so Tailwind builds them.
-  const RAMP = ['border-dashed', 'bg-primary/20', 'bg-primary/40', 'bg-primary/60', 'bg-primary/80', 'bg-primary'];
+  // The ramp chips: primary at 20, 38, 56, 76 and 100 percent (step 0 is a dashed outline), with the text colour that holds 4.5:1 on
+  // each step. Literal class names, so Tailwind builds them; the same strings as CHIP in capability_map/_parts.html.
+  const CHIP = ['border-dashed', 'bg-primary/20 text-foreground', 'bg-primary/38 text-foreground', 'bg-primary/56 text-foreground',
+    'bg-primary/76 text-foreground dark:bg-primary/80 dark:text-primary-foreground', 'bg-primary text-primary-foreground'].map((c) => c.split(' '));
+  const CHIP_ALL = Array.from(new Set(CHIP.flat()));
   const MATURITY = { 1: 'Initial', 2: 'Developing', 3: 'Defined', 4: 'Managed', 5: 'Optimized' };
 
   let data = null;
@@ -525,7 +541,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 
       const apply = (m) => {
         metric = m;
-        FB.qsa(root, '[data-ramp][data-h-maturity]').forEach((el) => { el.classList.remove(...RAMP); el.classList.add(RAMP[Number(el.getAttribute('data-h-' + m))]); });
+        FB.qsa(root, '[data-ramp-chip]').forEach((el) => { el.classList.remove(...CHIP_ALL); el.classList.add(...CHIP[Number(el.getAttribute('data-h-' + m))]); });
         FB.qsa(root, '[data-metric-text]').forEach((el) => { el.hidden = el.getAttribute('data-metric-text') !== m; });
         FB.qsa(root, '[data-legend]').forEach((el) => { el.hidden = el.getAttribute('data-legend') !== m; });
       };
@@ -563,7 +579,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     f('name', c.name); f('description', c.description || '');
     f('type', TYPES[String(c.capability_type || '').toLowerCase()] || 'Type not set');
     f('level', 'L' + c.level); f('owner', m.owner || 'No owner. Assign one');
-    f('maturity', m.maturity + '/5, ' + (MATURITY[m.maturity] || '')); f('importance', cap(m.strategicImportance));
+    f('maturity', (MATURITY[m.maturity] || 'Not assessed') + ', ' + m.maturity + '/5'); f('importance', cap(m.strategicImportance));
     f('investment', cap(m.currentInvestment) + ' now, ' + (m.plannedInvestment || '') + ' planned'); f('risk', cap(m.riskLevel || 'medium'));
     f('apps', apps.length ? apps.join(', ') : 'No application supports this capability. Add one.');
   }

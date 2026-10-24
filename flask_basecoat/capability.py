@@ -58,3 +58,32 @@ def steps(metrics):
     m = metrics or {}
     return {'maturity': int(m.get('maturity') or 0), 'importance': IMPORTANCE_STEP.get(m.get('strategicImportance'), 0),
             'investment': INVESTMENT_STEP.get(m.get('currentInvestment'), 0)}
+
+
+# One lucide icon per capability: the first keyword found in its name, else the icon of its type. Every name is in icons.ICONS.
+ICON_KEYWORDS = [
+    ('sustainability', 'file-bar-chart'), ('carbon', 'flame'), ('sustainable', 'globe'), ('strategy', 'target'),
+    ('portfolio', 'briefcase'), ('business case', 'file-text'), ('benefit', 'trophy'), ('market intelligence', 'chart-line'),
+    ('partnership', 'handshake'), ('modelling', 'chart-area'), ('hub', 'map-pin'), ('capacity', 'gauge'), ('lane', 'tag'),
+    ('network', 'globe'), ('onboarding', 'user-plus'), ('customer service', 'headphones'), ('account management', 'user-check'),
+    ('customer', 'users'), ('quot', 'receipt'), ('tender', 'clipboard-list'), ('sales', 'shopping-bag'), ('booking', 'calendar-check'),
+    ('order', 'clipboard-list'), ('billing', 'receipt'), ('rating', 'calculator'), ('dispute', 'circle-alert'),
+    ('eta', 'clock'), ('tracking', 'map-pin'), ('visibility', 'eye'), ('customs', 'landmark'), ('route', 'map'), ('load', 'container'),
+    ('carrier payables', 'wallet'), ('carrier', 'truck'), ('transportation', 'truck'), ('inbound', 'arrow-down-from-line'),
+    ('inventory', 'box'), ('wave', 'waves'), ('pick', 'package'), ('return', 'rotate-ccw'), ('warehouse', 'warehouse'),
+    ('electrification', 'zap'), ('telematics', 'gauge'), ('maintenance', 'settings-2'), ('driver', 'user'), ('fleet', 'car'),
+    ('planning & analysis', 'chart-line'), ('payroll', 'banknote'), ('accounting', 'landmark'), ('finance', 'banknote'),
+    ('talent', 'user-plus'), ('training', 'book-open'), ('people', 'users'), ('integration', 'blocks'), ('master data', 'database'),
+    ('analytics', 'chart-bar'), ('reporting', 'chart-pie'), ('cyber', 'shield-check'), ('cloud', 'cloud'), ('technology', 'server'),
+    ('planning', 'calendar-days'), ('data', 'database'),
+]
+TYPE_ICON = {'strategic': 'target', 'operational': 'settings', 'supporting': 'shield', '': 'circle-help'}
+
+
+def icon_for(capability):
+    """The one lucide icon of a capability."""
+    name = str((capability.get('name') if hasattr(capability, 'get') else '') or '').lower()
+    for word, icon in ICON_KEYWORDS:
+        if word in name:
+            return icon
+    return TYPE_ICON[type_of(capability)]

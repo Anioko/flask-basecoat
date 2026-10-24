@@ -37,14 +37,11 @@
     {%- set scores = [] -%}
     {%- for kr in o.key_results %}{% set _ = scores.append(score_of(kr)|float) %}{% endfor -%}
     {%- set avg = (scores|sum) / (scores|length) -%}
-    {% call ui.card() %}
-      {% call ui.card_header() %}
-        {{ ui.card_description(text='Objective ' ~ o.id) }}
-        {{ ui.card_title(text=o.title, class='text-xl font-semibold') }}
-        {% call ui.card_action() %}{% call ui.badge(variant='secondary') %}{{ lucide('gauge') }}Confidence {{ o.confidence }}/10{% endcall %}{% endcall %}
-      {% endcall %}
-      {% call ui.card_content(class='flex flex-col gap-4') %}
+    {% call ui.card(class='gap-0 overflow-hidden py-0') %}
+      {{ f.band(id, {'key': o.id, 'title': o.title, 'question': 'Objective ' ~ o.id ~ '. Key results below show how we will know it is met.', 'icon': 'target'}, canvas_box_meta(id, 'objective'), o.key_results, edit=false) }}
+      {% call ui.card_content(class='flex flex-col gap-4 py-4') %}
         <div class="flex flex-wrap items-center gap-x-8 gap-y-2 text-sm">
+          {% call ui.badge(variant='secondary') %}{{ lucide('gauge') }}Confidence {{ o.confidence }}/10{% endcall %}
           <div class="flex flex-col"><span class="text-xs text-muted-foreground">Owner</span><span class="font-medium">{{ o.owner }}</span></div>
           <div class="flex flex-col"><span class="text-xs text-muted-foreground">Quarter</span><span class="font-medium">{{ data.quarter }}</span></div>
           <div class="flex flex-col"><span class="text-xs text-muted-foreground">Average score</span><span class="font-medium tabular-nums">{{ '%.2f'|format(avg) }} · {{ data.week|lower }}</span></div>

@@ -45,9 +45,9 @@
         {% call ui.table_row() %}
           {% call ui.table_head(class='font-medium whitespace-normal', attrs={'scope': 'row'}) %}{{ g.cap.name }}{% endcall %}
           {{ ui.table_cell(text=capability_type_label(g.cap)) }}
-          {% call ui.table_cell() %}<span class="flex items-center gap-2">{{ p.swatch(g.cap, fixed=true) }}<span class="whitespace-nowrap tabular-nums">{{ g.cap.metrics.maturity }}/5, {{ p.MATURITY[g.cap.metrics.maturity] }}</span></span>{% endcall %}
-          {% call ui.table_cell() %}<span class="flex items-center gap-2"><span class="{{ p.RAMP[5] }} size-4 shrink-0 rounded-sm border" role="presentation"></span><span class="whitespace-nowrap tabular-nums">5/5, Optimized</span></span>{% endcall %}
-          {% call ui.table_cell(class='tabular-nums') %}{{ g.gap }} {{ 'level' if g.gap == 1 else 'levels' }}{% endcall %}
+          {% call ui.table_cell() %}{{ p.chip(g.cap, fixed=true) }}{% endcall %}
+          {% call ui.table_cell() %}{% call ui.badge(variant='outline', class=p.CHIP[5]) %}Optimized, 5/5{% endcall %}{% endcall %}
+          {% call ui.table_cell() %}<span class="flex items-center gap-2">{% call ui.progress(value=g.gap * 25, class='w-24', attrs={'aria-label': 'Gap, ' ~ g.gap ~ ' of 4 levels'}) %}{{ ui.progress_indicator(value=g.gap * 25, class=p.RAMP[g.gap + 1]) }}{% endcall %}<span class="whitespace-nowrap tabular-nums">{{ g.gap }} {{ 'level' if g.gap == 1 else 'levels' }}</span></span>{% endcall %}
           {% call ui.table_cell() %}{{ ui.badge(text=g.priority|capitalize, variant=variant[g.priority]) }}{% endcall %}
           {{ ui.table_cell(text=g.cap.metrics.owner or 'No owner. Assign one') }}
         {% endcall %}

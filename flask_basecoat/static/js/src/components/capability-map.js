@@ -9,8 +9,11 @@
   'use strict';
   const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');
   const TYPES = { strategic: 'Strategic', operational: 'Operational', supporting: 'Supporting' };
-  // The ramp: primary at 20, 40, 60, 80 and 100 percent (step 0 is a dashed outline). Literal class names, so Tailwind builds them.
-  const RAMP = ['border-dashed', 'bg-primary/20', 'bg-primary/40', 'bg-primary/60', 'bg-primary/80', 'bg-primary'];
+  // The ramp chips: primary at 20, 38, 56, 76 and 100 percent (step 0 is a dashed outline), with the text colour that holds 4.5:1 on
+  // each step. Literal class names, so Tailwind builds them; the same strings as CHIP in capability_map/_parts.html.
+  const CHIP = ['border-dashed', 'bg-primary/20 text-foreground', 'bg-primary/38 text-foreground', 'bg-primary/56 text-foreground',
+    'bg-primary/76 text-foreground dark:bg-primary/80 dark:text-primary-foreground', 'bg-primary text-primary-foreground'].map((c) => c.split(' '));
+  const CHIP_ALL = Array.from(new Set(CHIP.flat()));
   const MATURITY = { 1: 'Initial', 2: 'Developing', 3: 'Defined', 4: 'Managed', 5: 'Optimized' };
 
   let data = null;
@@ -48,7 +51,7 @@
 
       const apply = (m) => {
         metric = m;
-        FB.qsa(root, '[data-ramp][data-h-maturity]').forEach((el) => { el.classList.remove(...RAMP); el.classList.add(RAMP[Number(el.getAttribute('data-h-' + m))]); });
+        FB.qsa(root, '[data-ramp-chip]').forEach((el) => { el.classList.remove(...CHIP_ALL); el.classList.add(...CHIP[Number(el.getAttribute('data-h-' + m))]); });
         FB.qsa(root, '[data-metric-text]').forEach((el) => { el.hidden = el.getAttribute('data-metric-text') !== m; });
         FB.qsa(root, '[data-legend]').forEach((el) => { el.hidden = el.getAttribute('data-legend') !== m; });
       };
@@ -86,7 +89,7 @@
     f('name', c.name); f('description', c.description || '');
     f('type', TYPES[String(c.capability_type || '').toLowerCase()] || 'Type not set');
     f('level', 'L' + c.level); f('owner', m.owner || 'No owner. Assign one');
-    f('maturity', m.maturity + '/5, ' + (MATURITY[m.maturity] || '')); f('importance', cap(m.strategicImportance));
+    f('maturity', (MATURITY[m.maturity] || 'Not assessed') + ', ' + m.maturity + '/5'); f('importance', cap(m.strategicImportance));
     f('investment', cap(m.currentInvestment) + ' now, ' + (m.plannedInvestment || '') + ' planned'); f('risk', cap(m.riskLevel || 'medium'));
     f('apps', apps.length ? apps.join(', ') : 'No application supports this capability. Add one.');
   }

@@ -71,6 +71,9 @@ class Basecoat:
         app.jinja_env.globals.setdefault('capability_children', _capability.capability_children)
         app.jinja_env.globals.setdefault('capability_type_label', _capability.type_label)
         app.jinja_env.globals.setdefault('capability_steps', _capability.steps)
+        app.jinja_env.globals.setdefault('capability_icon', _capability.icon_for)
+        from . import canvases as _canvases
+        app.jinja_env.globals.setdefault('canvas_box_meta', _canvases.box_meta)
         from . import charts as _charts
         app.jinja_env.globals.setdefault('chart_spec', _charts.load_spec)
         app.jinja_env.globals.setdefault('chart_style_css', _charts.chart_style_css)

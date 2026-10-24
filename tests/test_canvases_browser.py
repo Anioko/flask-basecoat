@@ -73,7 +73,7 @@ def test_keyboard_reaches_every_control(browser, base, slug):
 @pytest.mark.parametrize('slug', BUILT)
 def test_list_view_by_keyboard_and_back(browser, base, slug):
     pg = open_page(browser, base, slug)
-    notes = pg.locator('[data-canvas-notes] > li').count()
+    notes = pg.locator('[data-canvas-notes] > li [data-note-text]').count()
     pg.locator('[data-canvas-view] [data-slot="toggle-group-item"]', has_text='List').focus()
     pg.keyboard.press('Enter')
     table = pg.get_by_role('table')
@@ -134,7 +134,7 @@ def test_editing_a_box_updates_the_drawing_and_the_list(browser, base, slug):
     area.fill(area.input_value() + '\nA note added from the sheet')
     sheet.get_by_role('button', name='Save notes').click()
     pg.wait_for_selector('[role="dialog"]', state='hidden')
-    assert pg.locator(f'[data-canvas-notes="{box}"] > li', has_text='A note added from the sheet').count() == 1
+    assert pg.locator(f'[data-canvas-notes="{box}"] > li [data-note-text]', has_text='A note added from the sheet').count() == 1
     assert 'A note added from the sheet' in pg.locator('[data-canvas-rows]').inner_text()
     assert 'Saved' in pg.locator('[data-canvas-live]').inner_text()
     pg.close()

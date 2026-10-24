@@ -83,7 +83,7 @@ def test_four_actions_grid_is_eliminate_raise_reduce_create():
     assert titles == ['Eliminate', 'Raise', 'Reduce', 'Create']
     data = registry.canvas_data(SLUG)
     for key in ('eliminate', 'raise', 'reduce', 'create'):
-        notes = [li.text_content().strip() for li in d.xpath(f'//*[@data-blue-ocean-action="{key}"]/li')]
+        notes = [li.text_content().strip() for li in d.xpath(f'//*[@data-blue-ocean-action="{key}"]/li//*[@data-note-text]')]
         assert notes == data['actions'][key]
 
 
@@ -105,7 +105,7 @@ def test_content_comes_from_the_data():
     data['actions']['create'].append('Zephyr-7 marker action')
     data['factors'][0]['name'] = 'Zephyr-7 marker factor'
     out = page(data)
-    assert out.count('Zephyr-7 marker action') == 2          # the grid and the list
+    assert out.count('Zephyr-7 marker action') == 3          # the note card, its hover card and the list
     assert out.count('Zephyr-7 marker factor') == 2          # the chart data and the list row
 
 

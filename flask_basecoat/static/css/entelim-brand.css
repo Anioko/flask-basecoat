@@ -1,0 +1,28 @@
+/* Entelim brand tokens (foundations-v1 section 8, brand-decision-v1): primary, ring, sidebar-primary and chart-1 to chart-5.
+   Opt-in: the example pages link this file when the URL has ?brand=entelim. Everything else stays the library's shadcn theme. */
+:root {
+  --primary: oklch(0.497 0.163 257);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.497 0.163 257);
+  --sidebar-primary: oklch(0.497 0.163 257);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-ring: oklch(0.497 0.163 257);
+  --chart-1: oklch(0.497 0.163 257);
+  --chart-2: oklch(0.66 0.16 55);
+  --chart-3: oklch(0.45 0.10 160);
+  --chart-4: oklch(0.64 0.10 230);
+  --chart-5: oklch(0.40 0.14 320);
+}
+.dark {
+  --primary: oklch(0.70 0.14 257);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.70 0.14 257);
+  --sidebar-primary: oklch(0.70 0.14 257);
+  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-ring: oklch(0.70 0.14 257);
+  --chart-1: oklch(0.70 0.14 257);
+  --chart-2: oklch(0.76 0.15 60);
+  --chart-3: oklch(0.62 0.12 160);
+  --chart-4: oklch(0.82 0.09 230);
+  --chart-5: oklch(0.56 0.17 310);
+}

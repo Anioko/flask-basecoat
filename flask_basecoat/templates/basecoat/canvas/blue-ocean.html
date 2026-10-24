@@ -71,14 +71,12 @@
     {% endcall %}
     <div class="grid grid-cols-2 gap-2">
       {% for a in ACTIONS %}
-      {% call ui.card(size='sm') %}
-        {% call ui.card_header() %}
-          {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide(a.icon, 'size-4 text-muted-foreground') }}<span>{{ a.title }}</span>{% endcall %}
-          {{ ui.card_description(text=a.question, class='text-xs') }}
-        {% endcall %}
-        {% call ui.card_content() %}
-          <ul class="flex flex-col gap-1.5" data-blue-ocean-action="{{ a.key }}" aria-label="{{ a.title }} notes">
-            {% for n in data.actions[a.key] %}<li class="rounded-md border bg-muted px-2 py-1.5 text-sm">{{ n }}</li>{% endfor %}
+      {%- set m = canvas_box_meta(id, a.key) -%}
+      {% call ui.card(size='sm', class='gap-0 overflow-hidden py-0') %}
+        {{ f.band(id, {'key': a.key, 'title': a.title, 'question': a.question, 'icon': a.icon}, m, data.actions[a.key], edit=false) }}
+        {% call ui.card_content(class='py-3') %}
+          <ul class="flex flex-col gap-2" data-blue-ocean-action="{{ a.key }}" aria-label="{{ a.title }} notes">
+            {% for n in data.actions[a.key] %}{{ f.note_card(id, a.title, m.element, n, 'Blue Ocean Strategy', editable=false) }}{% endfor %}
           </ul>
         {% endcall %}
       {% endcall %}

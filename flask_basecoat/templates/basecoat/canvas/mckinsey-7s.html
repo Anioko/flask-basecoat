@@ -1,39 +1,42 @@
 {# McKinsey 7S, C2. After Tom Peters and Robert Waterman, In Search of Excellence (1982), from the 7-S framework of
    Waterman, Peters and Phillips, "Structure Is Not Organization" (Business Horizons, 1980). Shared Values in the centre,
-   the other six elements on a hexagon around it, clockwise from the upper left: Strategy, Structure, Systems (the hard S
-   elements) then Skills, Style, Staff (the soft S elements), every element joined to its neighbours and to the centre by
-   a line. The hard and soft split is written in each box's question and in the legend above the drawing.
-   The hexagon is a six-column grid of boxes two columns wide: the upper and lower rows are offset by one column.
+   the other six elements on a hexagon with a vertex at the top and at the bottom, clockwise from the top: Strategy,
+   Structure, Systems, Staff, Style, Skills, every element joined to its neighbours and to the centre by a line. This is
+   the arrangement of the published figure (the Wikimedia Commons redrawing "McKinsey 7S framework.svg", shown on the
+   Wikipedia page "McKinsey 7S Framework", whose centre reads "Superordinate Goals (Shared Values)"); read on 24 October
+   2026, not from memory. The hard and soft split (Strategy, Structure, Systems hard; Skills, Style, Staff and Shared
+   Values soft, as Tom Peters's history of the model states) is written in each box's question and in the legend.
+   The hexagon is a six-column grid of boxes two columns wide on five rows.
    Usage: {{ canvas.mckinsey_7s(data) }}. Box keys: shared-values strategy structure systems skills style staff. #}
 {% import 'basecoat/canvas/_frame.html' as f %}
 {% import 'basecoat/index.html' as ui %}
 {% set SPEC = {
   'form': 'C2', 'name': 'McKinsey 7S',
   'hint': 'Scroll sideways on a narrow screen to see the whole hexagon.',
-  'credit': 'McKinsey 7S framework after Tom Peters and Robert Waterman, as published in In Search of Excellence (1982).',
+  'credit': '7-S framework after Robert Waterman, Tom Peters and Julien Phillips, "Structure Is Not Organization", Business Horizons, 1980. Figure arrangement after the Wikimedia Commons figure "McKinsey 7S framework".',
   'boxes': [
-    {'key': 'shared-values', 'title': 'Shared Values', 'icon': 'heart', 'question': 'At the centre. What do we stand for and believe in?', 'area': 'col-span-2 col-start-3 row-start-2'},
-    {'key': 'strategy', 'title': 'Strategy', 'icon': 'target', 'question': 'Hard S. How will we build and keep our advantage?', 'area': 'col-span-2 col-start-2 row-start-1'},
-    {'key': 'structure', 'title': 'Structure', 'icon': 'layout-grid', 'question': 'Hard S. How is the company organised and who reports to whom?', 'area': 'col-span-2 col-start-4 row-start-1'},
-    {'key': 'systems', 'title': 'Systems', 'icon': 'server', 'question': 'Hard S. Which processes and tools run the daily work?', 'area': 'col-span-2 col-start-5 row-start-2'},
-    {'key': 'skills', 'title': 'Skills', 'icon': 'award', 'question': 'Soft S. What are we distinctively good at?', 'area': 'col-span-2 col-start-4 row-start-3'},
-    {'key': 'style', 'title': 'Style', 'icon': 'messages-square', 'question': 'Soft S. How do leaders behave and decide?', 'area': 'col-span-2 col-start-2 row-start-3'},
-    {'key': 'staff', 'title': 'Staff', 'icon': 'users', 'question': 'Soft S. Who works here and how do we develop them?', 'area': 'col-span-2 col-start-1 row-start-2'},
+    {'key': 'shared-values', 'title': 'Shared Values', 'icon': 'heart', 'question': 'Soft S, at the centre. What do we stand for and believe in?', 'area': 'col-span-2 col-start-3 row-start-3'},
+    {'key': 'strategy', 'title': 'Strategy', 'icon': 'target', 'question': 'Hard S. How will we build and keep our advantage?', 'area': 'col-span-2 col-start-3 row-start-1'},
+    {'key': 'structure', 'title': 'Structure', 'icon': 'layout-grid', 'question': 'Hard S. How is the company organised and who reports to whom?', 'area': 'col-span-2 col-start-5 row-start-2'},
+    {'key': 'systems', 'title': 'Systems', 'icon': 'server', 'question': 'Hard S. Which processes and tools run the daily work?', 'area': 'col-span-2 col-start-5 row-start-4'},
+    {'key': 'skills', 'title': 'Skills', 'icon': 'award', 'question': 'Soft S. What are we distinctively good at?', 'area': 'col-span-2 col-start-1 row-start-2'},
+    {'key': 'style', 'title': 'Style', 'icon': 'messages-square', 'question': 'Soft S. How do leaders behave and decide?', 'area': 'col-span-2 col-start-1 row-start-4'},
+    {'key': 'staff', 'title': 'Staff', 'icon': 'users', 'question': 'Soft S. Who works here and how do we develop them?', 'area': 'col-span-2 col-start-3 row-start-5'},
   ]} %}
 {#- Centres of the boxes in percent of the drawing: [x, y]. Ring order is the clockwise order of the hexagon. -#}
-{% set AT = {'shared-values': (50, 50), 'strategy': (33.3, 16.7), 'structure': (66.7, 16.7), 'systems': (83.3, 50),
-             'skills': (66.7, 83.3), 'style': (33.3, 83.3), 'staff': (16.7, 50)} %}
-{% set RING = ['strategy', 'structure', 'systems', 'skills', 'style', 'staff'] %}
+{% set AT = {'shared-values': (50, 50), 'strategy': (50, 10), 'structure': (83.3, 30), 'systems': (83.3, 70),
+             'staff': (50, 90), 'style': (16.7, 70), 'skills': (16.7, 30)} %}
+{% set RING = ['strategy', 'structure', 'systems', 'staff', 'style', 'skills'] %}
 
 {% macro mckinsey_7s(data, id='mckinsey-7s') -%}
 {%- set boxes = data.boxes or {} -%}
 {%- set rows = [] -%}
-{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or [f.EMPTY_ROW] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
 {% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, credit=SPEC.credit, width='min-w-240') %}
   <div class="flex flex-col gap-3">
     <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
       {{ ui.badge(text='Hard S', variant='default') }}<span>Strategy, Structure, Systems</span>
-      {{ ui.badge(text='Soft S', variant='outline', class='ml-4') }}<span>Skills, Style, Staff</span>
+      {{ ui.badge(text='Soft S', variant='outline', class='ml-4') }}<span>Skills, Style, Staff and Shared Values</span>
     </div>
     <div class="relative rounded-lg border bg-muted/30 p-2">
       <svg class="absolute inset-0 size-full stroke-muted-foreground" aria-hidden="true">
