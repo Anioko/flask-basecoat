@@ -23,6 +23,10 @@ Checks (each prints PASS/FAIL with the offending nodes):
   density      regions under the header <= the original's (6 for dashboard-01); stat row <= 4 cards of one shape;
                <= 2 chart cards; <= 1 primary table
   frame        the frame (sidebar, inset, site header and their parts) has the same part signature as the original's
+  form         (Tier C pages, criteria-v3 1.5) one element marked data-entelim-form is a focusable named scroll region
+               that keeps its natural width, carries geometry only as --x/--y/--w/--h/--col/--row custom properties,
+               and the page offers the accessible alternative (a "... view" ToggleGroup and a Table). The marked
+               region counts as one region in the density check; everything outside it is held to Tier B.
   browser      (--browser) every computed colour is a token value or an alpha of one, in light and dark; no
                horizontal overflow at 390px; no accessibility finding beyond those of the original
 
@@ -243,8 +247,41 @@ def companion_control(el, orig_styles):
     return bool(el.get('style')) and style_signature(el.get('style')) in orig_styles and in_component(el) is not None
 
 
+FORM_CUSTOM_PROPERTIES = {'--x', '--y', '--w', '--h', '--col', '--row'}
+FORMS = {'C1', 'C2', 'C3', 'C4', 'C5'}
+
+
+def check_form(doc, marked):
+    """Tier C shared conditions (criteria-v3 1.5, accessibility-v1 section 2): one marked region, a focusable named
+    horizontal scroll region, geometry only through the sanctioned custom properties, and the accessible alternative."""
+    if not marked:
+        return []
+    out = []
+    if len(marked) > 1:
+        out.append(f'{len(marked)} regions are marked data-entelim-form; a page has one')
+    m = marked[0]
+    if m.get('data-entelim-form') not in FORMS:
+        out.append(f'data-entelim-form="{m.get("data-entelim-form")}" is not one of {sorted(FORMS)}')
+    if m.get('role') != 'region' or not (m.get('aria-label') or m.get('aria-labelledby')):
+        out.append('the marked region is not role="region" with an accessible name')
+    if m.get('tabindex') != '0':
+        out.append('the marked region is not focusable (tabindex="0"), so a keyboard user cannot scroll it')
+    if 'overflow-x-auto' not in (m.get('class') or '').split():
+        out.append('the marked region does not scroll horizontally (overflow-x-auto) on a phone')
+    for el in m.iter():
+        if isinstance(el.tag, str) and el.get('style'):
+            props = {d.split(':', 1)[0].strip() for d in el.get('style').split(';') if ':' in d}
+            if props - FORM_CUSTOM_PROPERTIES and not (el.get('data-slot') in MACRO_STYLE_SLOTS):
+                out.append(f'{describe(el)}: geometry style uses {sorted(props - FORM_CUSTOM_PROPERTIES)}; only --x --y --w --h --col --row are allowed')
+    if not [g for g in doc.xpath('//*[@data-slot="toggle-group"]') if 'view' in (g.get('aria-label') or '').lower()]:
+        out.append('no view switch: a ToggleGroup whose name ends in "view" must offer the list route')
+    if not doc.xpath('//*[@data-slot="table"]'):
+        out.append('no Table: the same data must be reachable as a real table')
+    return out
+
+
 def check(doc, original_doc, original_name, limits):
-    res = {k: [] for k in ('components', 'recipes', 'wrappers', 'colours', 'styles', 'structure', 'density', 'frame')}
+    res = {k: [] for k in ('components', 'recipes', 'wrappers', 'colours', 'styles', 'structure', 'density', 'frame', 'form')}
     orig_cls = original_classes(original_doc) if original_doc is not None else set()
     orig_styles = original_styles(original_doc) if original_doc is not None else set()
     body = doc.xpath('//body')[0]
@@ -329,11 +366,14 @@ def check(doc, original_doc, original_name, limits):
         for r in content:
             out += ([r] if r.xpath('self::*' + xp[len('.//*'):]) else []) + r.xpath(xp)
         return out
-    top_cards = [c for c in within('.//*[@data-slot="card"]') if not c.xpath('ancestor::*[@data-slot="card"]')]
-    regions = len(top_cards)
+    marked = doc.xpath('//*[@data-entelim-form]')
+    top_cards = [c for c in within('.//*[@data-slot="card"]') if not c.xpath('ancestor::*[@data-slot="card"]')
+                 and not c.xpath('ancestor::*[@data-entelim-form]')]
+    regions = len(top_cards) + (1 if marked and any(in_roots(m, content) for m in marked) else 0)
     chart_cards = [c for c in top_cards if c.xpath('.//*[@data-slot="chart"]')]
     table_cards = [c for c in top_cards if c.xpath('.//*[@data-slot="table"]')]
     loose_tables = [t for t in within('.//*[@data-slot="table"]') if not t.xpath('ancestor::*[@data-slot="card"]')]
+    res['form'] += check_form(doc, marked)
     stat = [c for c in top_cards if c.xpath('./*[@data-slot="card-header"]/*[@data-slot="card-action"]') and not c.xpath('.//*[@data-slot="chart"] | .//*[@data-slot="table"]')]
     shapes = {tuple(x.get('data-slot') for x in c.iter() if isinstance(x.tag, str) and x.get('data-slot')) for c in stat}
     if regions > limits['regions']:
@@ -468,7 +508,9 @@ def main(argv):
             original_url = f'{u.scheme}://{u.netloc}/basecoat/golden/{gp}'
         res['browser'] = browser_checks(url, text if not url else None, original_url)
     failed = [k for k, v in res.items() if v]
-    print(f'{where}  nearest original: {nearest or "(none named)"}')
+    marked = doc.xpath('//*[@data-entelim-form]')
+    tier = f'Tier C ({marked[0].get("data-entelim-form")})' if marked else 'Tier B'
+    print(f'{where}  nearest original: {nearest or "(none named)"}  {tier}')
     for k, v in res.items():
         print(f"{'PASS' if not v else 'FAIL'} {k}" + (f' ({len(v)})' if v else ''))
         for line in v[:12]:
