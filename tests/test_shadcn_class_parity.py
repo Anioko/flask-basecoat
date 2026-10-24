@@ -16,7 +16,7 @@ SHADCN_FORK = Path("/tmp/shadcn-fork")
 COMPONENTS_PATH = SHADCN_FORK / "components/ui"
 
 # Path to our macro templates
-TEMPLATES_PATH = Path(__file__).parent.parent / "flask_basecoat/templates/shadcn"
+TEMPLATES_PATH = Path(__file__).parent.parent / "flask_basecoat/templates/basecoat"
 
 
 def parse_cva_component(tsx_content, component_name):

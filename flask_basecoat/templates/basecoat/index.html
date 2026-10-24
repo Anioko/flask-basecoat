@@ -1,38 +1,167 @@
-{# Basecoat Barrel Macro File: Exports all 11 core components #}
-{% import 'basecoat/button.html' as _btn %}
-{% set button = _btn.button %}
+{# Basecoat Barrel Macro File: Exports all components #}
 
+{# Alert #}
+{% import 'basecoat/alert.html' as _alert %}
+{% set alert = _alert.alert %}
+{% set alert_title = _alert.alert_title %}
+{% set alert_description = _alert.alert_description %}
+
+{# Avatar #}
+{% import 'basecoat/avatar.html' as _avatar %}
+{% set avatar = _avatar.avatar %}
+{% set avatar_image = _avatar.avatar_image %}
+{% set avatar_fallback = _avatar.avatar_fallback %}
+
+{# Badge #}
 {% import 'basecoat/badge.html' as _badge %}
 {% set badge = _badge.badge %}
 
+{# Breadcrumb #}
+{% import 'basecoat/breadcrumb.html' as _breadcrumb %}
+{% set breadcrumb = _breadcrumb.breadcrumb %}
+{% set breadcrumb_list = _breadcrumb.breadcrumb_list %}
+{% set breadcrumb_item = _breadcrumb.breadcrumb_item %}
+{% set breadcrumb_link = _breadcrumb.breadcrumb_link %}
+{% set breadcrumb_page = _breadcrumb.breadcrumb_page %}
+{% set breadcrumb_separator = _breadcrumb.breadcrumb_separator %}
+{% set breadcrumb_ellipsis = _breadcrumb.breadcrumb_ellipsis %}
+
+{# Button #}
+{% import 'basecoat/button.html' as _btn %}
+{% set button = _btn.button %}
+
+{# Card #}
 {% import 'basecoat/card.html' as _card %}
 {% set card = _card.card %}
 {% set card_header = _card.card_header %}
 {% set card_title = _card.card_title %}
 {% set card_description = _card.card_description %}
+{% set card_action = _card.card_action %}
 {% set card_content = _card.card_content %}
 {% set card_footer = _card.card_footer %}
 
+{# Checkbox #}
+{% import 'basecoat/checkbox.html' as _checkbox %}
+{% set checkbox = _checkbox.checkbox %}
+
+{# Dialog #}
+{% import 'basecoat/dialog.html' as _dialog %}
+{% set dialog_overlay = _dialog.dialog_overlay %}
+{% set dialog_content = _dialog.dialog_content %}
+{% set dialog_header = _dialog.dialog_header %}
+{% set dialog_footer = _dialog.dialog_footer %}
+{% set dialog_title = _dialog.dialog_title %}
+{% set dialog_description = _dialog.dialog_description %}
+
+{# Dropdown #}
+{% import 'basecoat/dropdown.html' as _dropdown %}
+{% set dropdown = _dropdown.dropdown %}
+{% set dropdown_item = _dropdown.dropdown_item %}
+{% set dropdown_separator = _dropdown.dropdown_separator %}
+{% set dropdown_label = _dropdown.dropdown_label %}
+{% set dropdown_shortcut = _dropdown.dropdown_shortcut %}
+{% set dropdown_menu_trigger = _dropdown.dropdown_menu_trigger %}
+{% set dropdown_menu_content = _dropdown.dropdown_menu_content %}
+{% set dropdown_menu_item = _dropdown.dropdown_menu_item %}
+{% set dropdown_menu_separator = _dropdown.dropdown_menu_separator %}
+{% set dropdown_menu_label = _dropdown.dropdown_menu_label %}
+{% set dropdown_menu_shortcut = _dropdown.dropdown_menu_shortcut %}
+
+{# Input #}
+{% import 'basecoat/input.html' as _input %}
+{% set input = _input.input %}
+
+{# Label #}
+{% import 'basecoat/label.html' as _label %}
+{% set label = _label.label %}
+
+{# Pagination #}
+{% import 'basecoat/pagination.html' as _pagination %}
+{% set pagination = _pagination.pagination %}
+{% set pagination_content = _pagination.pagination_content %}
+{% set pagination_item = _pagination.pagination_item %}
+{% set pagination_link = _pagination.pagination_link %}
+{% set pagination_previous = _pagination.pagination_previous %}
+{% set pagination_next = _pagination.pagination_next %}
+{% set pagination_ellipsis = _pagination.pagination_ellipsis %}
+
+{# Popover #}
+{% import 'basecoat/popover.html' as _popover %}
+{% set popover_content = _popover.popover_content %}
+
+{# Progress #}
+{% import 'basecoat/progress.html' as _progress %}
+{% set progress = _progress.progress %}
+
+{# Radio Group #}
+{% import 'basecoat/radio-group.html' as _radio_group %}
+{% set radio_group = _radio_group.radio_group %}
+{% set radio_group_item = _radio_group.radio_group_item %}
+
+{# Select #}
+{% import 'basecoat/select.html' as _select %}
+{% set select_trigger = _select.select_trigger %}
+
+{# Separator #}
+{% import 'basecoat/separator.html' as _separator %}
+{% set separator = _separator.separator %}
+
+{# Sheet #}
+{% import 'basecoat/sheet.html' as _sheet %}
+{% set sheet_overlay = _sheet.sheet_overlay %}
+{% set sheet_content = _sheet.sheet_content %}
+{% set sheet_header = _sheet.sheet_header %}
+{% set sheet_footer = _sheet.sheet_footer %}
+{% set sheet_title = _sheet.sheet_title %}
+{% set sheet_description = _sheet.sheet_description %}
+
+{# Skeleton #}
+{% import 'basecoat/skeleton.html' as _skeleton %}
+{% set skeleton = _skeleton.skeleton %}
+{% set skeleton_table = _skeleton.skeleton_table %}
+
+{# Switch #}
+{% import 'basecoat/switch.html' as _switch %}
+{% set switch = _switch.switch %}
+
+{# Table #}
+{% import 'basecoat/table.html' as _table %}
+{% set table = _table.table %}
+{% set table_header = _table.table_header %}
+{% set table_body = _table.table_body %}
+{% set table_footer = _table.table_footer %}
+{% set table_head = _table.table_head %}
+{% set table_row = _table.table_row %}
+{% set table_cell = _table.table_cell %}
+{% set table_caption = _table.table_caption %}
+
+{# Tabs #}
+{% import 'basecoat/tabs.html' as _tabs %}
+{% set tabs = _tabs.tabs %}
+{% set tabs_list = _tabs.tabs_list %}
+{% set tabs_trigger = _tabs.tabs_trigger %}
+{% set tabs_content = _tabs.tabs_content %}
+{% set tab_panel = _tabs.tab_panel %}
+
+{# Textarea #}
+{% import 'basecoat/textarea.html' as _textarea %}
+{% set textarea = _textarea.textarea %}
+
+{# Toggle #}
+{% import 'basecoat/toggle.html' as _toggle %}
+{% set toggle = _toggle.toggle %}
+
+{# Tooltip #}
+{% import 'basecoat/tooltip.html' as _tooltip %}
+{% set tooltip_content = _tooltip.tooltip_content %}
+
+{# Legacy Components (kept for compatibility) #}
 {% import 'basecoat/form.html' as _form %}
 {% set render_field = _form.render_field %}
 {% set render_form = _form.render_form %}
 
-{% import 'basecoat/table.html' as _table %}
-{% set table = _table.table %}
-
 {% import 'basecoat/empty_state.html' as _empty %}
 {% set empty_state = _empty.empty_state %}
-
-{% import 'basecoat/dialog.html' as _dialog %}
-{% set dialog = _dialog.dialog %}
-
-{% import 'basecoat/dropdown.html' as _dropdown %}
-{% set dropdown = _dropdown.dropdown %}
-{% set dropdown_item = _dropdown.dropdown_item %}
-
-{% import 'basecoat/tabs.html' as _tabs %}
-{% set tabs = _tabs.tabs %}
-{% set tab_panel = _tabs.tab_panel %}
 
 {% import 'basecoat/sidebar.html' as _sidebar %}
 {% set sidebar = _sidebar.sidebar %}
@@ -40,7 +169,3 @@
 
 {% import 'basecoat/toast.html' as _toast %}
 {% set toast_container = _toast.toast_container %}
-
-{% import 'basecoat/skeleton.html' as _skeleton %}
-{% set skeleton = _skeleton.skeleton %}
-{% set skeleton_table = _skeleton.skeleton_table %}
