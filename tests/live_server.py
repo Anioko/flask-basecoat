@@ -26,6 +26,30 @@ class LiveServerManager:
     def is_running(self):
         return self._thread is not None
 
+    def ensure_database(self):
+        """Ensure database tables exist (recreate if dropped by other tests)"""
+        if not self.is_running():
+            return
+        # Check if tables exist by trying to query roles
+        try:
+            Role.query.first()
+        except Exception:
+            # Tables don't exist, recreate them
+            db.create_all()
+            Role.insert_roles()
+            admin_role = Role.query.filter_by(name="Administrator").first()
+            if admin_role and User.query.filter_by(email=TEST_ADMIN_EMAIL).first() is None:
+                user = User(
+                    first_name="Admin",
+                    last_name="User",
+                    email=TEST_ADMIN_EMAIL,
+                    password=TEST_ADMIN_PASSWORD,
+                    confirmed=True,
+                    role=admin_role,
+                )
+                db.session.add(user)
+                db.session.commit()
+
     def start(self):
         if self.is_running():
             return

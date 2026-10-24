@@ -250,8 +250,12 @@
                 <span>Acme Platform</span>
             </div>
             <div class="flex items-center gap-2">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
+                <a href="{{ url_for('basecoat_examples.index') }}">
+                    {{ bc.button(content='All Examples', variant='ghost', size='sm') }}
+                </a>
+                <button type="button" onclick="toggleDarkMode()" class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5">
+                    <i data-lucide="moon"></i>Toggle Theme
+                </button>
             </div>
         </div>
 
@@ -540,7 +544,7 @@
                         </div>
 
                         <div class="pt-2">
-                            {{ bc.button('Go to Dashboard', href=url_for('basecoat_examples.dashboard'), variant='default', class='px-8 font-semibold') }}
+                            <a href="{{ url_for('basecoat_examples.dashboard') }}" class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-8 py-2 font-semibold">Go to Dashboard</a>
                         </div>
                     </div>
 

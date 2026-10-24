@@ -1,54 +1,76 @@
-{# Basecoat Card Component - 100% shadcn/ui Canonical #}
-{% macro card(title=none, description=none, footer=none, class='', id=none) %}
-    <div class="card rounded-xl border border-border bg-card text-card-foreground shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if title or description %}
-            <header class="card-header flex flex-col space-y-1.5 p-6">
-                {% if title %}
-                    <h2 class="card-title font-semibold leading-none tracking-tight text-lg">{{ title }}</h2>
-                {% endif %}
-                {% if description %}
-                    <p class="card-description text-sm text-muted-foreground">{{ description }}</p>
-                {% endif %}
-            </header>
-            <section class="card-content p-6 pt-0">
-                {{ caller() if caller }}
-            </section>
-        {% else %}
-            <section class="card-content p-6">
-                {{ caller() if caller }}
-            </section>
-        {% endif %}
-        
-        {% if footer %}
-            <footer class="card-footer flex items-center p-6 pt-0">
-                {{ footer }}
-            </footer>
-        {% endif %}
-    </div>
-{% endmacro %}
+{# shadcn card macros - exact class parity with shadcn/ui card.tsx #}
 
-{% macro card_header(class='') %}
-    <header class="card-header flex flex-col space-y-1.5 p-6 {{ class }}">
-        {{ caller() if caller }}
-    </header>
-{% endmacro %}
+{% macro card(content='', class='') %}
+<div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm {{ class }}"
+    data-slot="card"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</div>
+{%- endmacro -%}
 
-{% macro card_title(text='', class='') %}
-    <h2 class="card-title font-semibold leading-none tracking-tight text-lg {{ class }}">{{ text }}{{ caller() if caller }}</h2>
-{% endmacro %}
+{% macro card_header(content='', class='') %}
+<div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 {{ class }}"
+    data-slot="card-header"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</div>
+{%- endmacro -%}
 
-{% macro card_description(text='', class='') %}
-    <p class="card-description text-sm text-muted-foreground {{ class }}">{{ text }}{{ caller() if caller }}</p>
-{% endmacro %}
+{% macro card_title(content='', class='') %}
+<div
+    class="leading-none font-semibold {{ class }}"
+    data-slot="card-title"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
 
-{% macro card_content(class='') %}
-    <section class="card-content p-6 pt-0 {{ class }}">
-        {{ caller() if caller }}
-    </section>
-{% endmacro %}
+{% macro card_description(content='', class='') %}
+<div
+    class="text-muted-foreground text-sm {{ class }}"
+    data-slot="card-description"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
 
-{% macro card_footer(class='') %}
-    <footer class="card-footer flex items-center p-6 pt-0 {{ class }}">
-        {{ caller() if caller }}
-    </footer>
-{% endmacro %}
+{% macro card_action(content='', class='') %}
+<div
+    class="col-start-2 row-span-2 row-start-1 self-start justify-self-end {{ class }}"
+    data-slot="card-action"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_content(content='', class='') %}
+<div
+    class="px-6 {{ class }}"
+    data-slot="card-content"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</div>
+{%- endmacro -%}
+
+{% macro card_footer(content='', class='') %}
+<div
+    class="flex items-center px-6 [.border-t]:pt-6 {{ class }}"
+    data-slot="card-footer"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}

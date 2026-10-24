@@ -1,0 +1,41 @@
+{# shadcn alert macros - exact class parity with shadcn/ui alert.tsx #}
+
+{% macro alert(content='', variant='default', class='') %}
+{%- set base_classes = "relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current" -%}
+
+{%- if variant == 'default' -%}
+    {%- set variant_classes = "bg-card text-card-foreground" -%}
+{%- elif variant == 'destructive' -%}
+    {%- set variant_classes = "text-destructive bg-card [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90" -%}
+{%- else -%}
+    {%- set variant_classes = "" -%}
+{%- endif -%}
+
+{%- set all_classes = [base_classes, variant_classes, class]|reject('equalto', '')|join(' ') -%}
+
+<div
+    class="{{ all_classes }}"
+    data-slot="alert"
+    role="alert"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro alert_title(content='', class='') %}
+<div
+    class="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight {{ class }}"
+    data-slot="alert-title"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro alert_description(content='', class='') %}
+<div
+    class="col-start-2 text-sm [&_p]:leading-relaxed {{ class }}"
+    data-slot="alert-description"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}

@@ -1,23 +1,29 @@
-{# Basecoat Badge Component - 100% shadcn/ui Canonical #}
+{# shadcn badge macro - exact class parity with shadcn/ui badge.tsx #}
 {% macro badge(
-    text='',
+    content='',
     variant='default',
-    class='',
-    id=none
+    class=''
 ) %}
-    {% set base_classes = 'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2' %}
+{%- set base_classes = "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden" -%}
 
-    {% set variant_map = {
-        'default': 'badge badge-primary border-transparent bg-primary text-primary-foreground shadow-sm hover:bg-primary/80',
-        'secondary': 'badge badge-secondary border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        'destructive': 'badge badge-destructive border-transparent bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80',
-        'outline': 'badge badge-outline text-foreground border-border'
-    } %}
-    
-    {% set variant_str = variant_map.get(variant, variant_map['default']) %}
-    {% set badge_classes = (base_classes ~ ' ' ~ variant_str ~ (' ' ~ class if class else '')) | trim %}
-    
-    <span class="{{ badge_classes }}" {% if id %}id="{{ id }}"{% endif %}>
-        {{ text }}{{ caller() if caller }}
-    </span>
-{% endmacro %}
+{%- if variant == 'default' -%}
+    {%- set variant_classes = "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90" -%}
+{%- elif variant == 'secondary' -%}
+    {%- set variant_classes = "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90" -%}
+{%- elif variant == 'destructive' -%}
+    {%- set variant_classes = "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60" -%}
+{%- elif variant == 'outline' -%}
+    {%- set variant_classes = "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground" -%}
+{%- else -%}
+    {%- set variant_classes = "" -%}
+{%- endif -%}
+
+{%- set all_classes = [base_classes, variant_classes, class]|reject('equalto', '')|join(' ') -%}
+
+<span
+    class="{{ all_classes }}"
+    data-slot="badge"
+>
+    {{- content -}}
+</span>
+{%- endmacro -%}

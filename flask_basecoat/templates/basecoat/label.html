@@ -1,0 +1,10 @@
+{# shadcn label macro - exact class parity with shadcn/ui label.tsx #}
+{% macro label(content='', for='', class='') %}
+<label
+    data-slot="label"
+    class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 {{ class }}"
+    {%- if for %} for="{{ for }}"{% endif %}
+>
+    {{- content|safe -}}
+</label>
+{%- endmacro -%}

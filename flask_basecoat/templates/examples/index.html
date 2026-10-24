@@ -42,29 +42,41 @@
                 </p>
             </div>
             <div class="flex items-center gap-3">
-                {{ bc.button('Component Gallery', variant='outline', href='/basecoat/gallery') }}
-                {{ bc.button('Toggle Dark Mode', variant='outline', icon='moon', on_click='toggleDarkMode()') }}
+                <a href="/basecoat/gallery" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    Component Gallery
+                </a>
+                <button type="button" onclick="toggleDarkMode()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                    Toggle Dark Mode
+                </button>
             </div>
         </header>
 
         {# Examples Grid #}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {% for ex in examples %}
-                {% set card_action %}
-                    <div class="w-full pt-4">
-                        {{ bc.button('View Screen Demo', href=ex.href, variant='default', class='w-full justify-center') }}
+                <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm flex flex-col justify-between hover:border-primary/50 transition-colors" data-slot="card">
+                    <div class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6" data-slot="card-header">
+                        <div class="leading-none font-semibold" data-slot="card-title">{{ ex.title }}</div>
+                        <div class="text-muted-foreground text-sm" data-slot="card-description">{{ ex.description }}</div>
                     </div>
-                {% endset %}
-
-                {% call bc.card(title=ex.title, description=ex.description, footer=card_action, class='flex flex-col justify-between hover:border-primary/50 transition-colors') %}
-                    <div class="space-y-4 my-2">
-                        <div class="flex flex-wrap gap-1.5">
-                            {% for tag in ex.tags %}
-                                {{ bc.badge(tag, variant='secondary') }}
-                            {% endfor %}
+                    <div class="px-6" data-slot="card-content">
+                        <div class="space-y-4 my-2">
+                            <div class="flex flex-wrap gap-1.5">
+                                {% for tag in ex.tags %}
+                                    {{ bc.badge(content=tag, variant='secondary') }}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                {% endcall %}
+                    <div class="flex items-center px-6" data-slot="card-footer">
+                        <div class="w-full pt-4">
+                            <a href="{{ ex.href }}">
+                                {{ bc.button(content='View Screen Demo', variant='default', class='w-full justify-center') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>

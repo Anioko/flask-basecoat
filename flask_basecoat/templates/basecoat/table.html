@@ -1,32 +1,130 @@
-{# Basecoat Table Component - 100% shadcn/ui Canonical #}
-{% macro table(columns=[], rows=[], empty_title='No records found', empty_description='', class='', id=none) %}
-    <div class="relative w-full overflow-auto rounded-xl border border-border bg-card shadow-sm {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if caller %}
-            <table class="table w-full caption-bottom text-sm">
-                {{ caller() }}
-            </table>
-        {% elif rows and rows|length > 0 %}
-            <table class="table w-full caption-bottom text-sm">
-                <thead>
-                    <tr class="border-b border-border bg-muted/40 transition-colors">
-                        {% for col in columns %}
-                            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground text-xs uppercase tracking-wider">{{ col }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                    {% for row in rows %}
-                        <tr class="hover:bg-muted/50 transition-colors">
-                            {% for cell in row %}
-                                <td class="p-4 align-middle text-sm text-foreground">{{ cell }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            {% from 'basecoat/empty_state.html' import empty_state %}
-            {{ empty_state(title=empty_title, description=empty_description) }}
-        {% endif %}
-    </div>
-{% endmacro %}
+{# shadcn table macros - exact class parity with shadcn/ui table.tsx #}
+
+{% macro table(content='', class='') %}
+<div
+    data-slot="table-container"
+    class="relative w-full overflow-x-auto"
+>
+    <table
+        data-slot="table"
+        class="w-full caption-bottom text-sm {{ class }}"
+    >
+        {%- if caller is defined -%}
+            {{- caller() -}}
+        {%- else -%}
+            {{- content|safe -}}
+        {%- endif -%}
+    </table>
+</div>
+{%- endmacro -%}
+
+{% macro table_header(content='', class='') %}
+<thead
+    data-slot="table-header"
+    class="[&_tr]:border-b {{ class }}"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</thead>
+{%- endmacro -%}
+
+{% macro table_body(content='', class='') %}
+<tbody
+    data-slot="table-body"
+    class="[&_tr:last-child]:border-0 {{ class }}"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</tbody>
+{%- endmacro -%}
+
+{% macro table_footer(content='', class='') %}
+<tfoot
+    data-slot="table-footer"
+    class="bg-muted/50 border-t font-medium [&>tr]:last:border-b-0 {{ class }}"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</tfoot>
+{%- endmacro -%}
+
+{% macro table_row(content='', class='') %}
+<tr
+    data-slot="table-row"
+    class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors {{ class }}"
+>
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
+</tr>
+{%- endmacro -%}
+
+{% macro table_head(content='', class='') %}
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] {{ class }}"
+>
+    {{- content|safe -}}
+</th>
+{%- endmacro -%}
+
+{% macro table_cell(content='', class='') %}
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] {{ class }}"
+>
+    {{- content|safe -}}
+</td>
+{%- endmacro -%}
+
+{% macro table_caption(content='', class='') %}
+<caption
+    data-slot="table-caption"
+    class="text-muted-foreground mt-4 text-sm {{ class }}"
+>
+    {{- content|safe -}}
+</caption>
+{%- endmacro -%}
+
+{# Helper macro to build a complete table from columns and rows #}
+{% macro data_table(columns=[], rows=[], empty_title='', empty_description='', class='') %}
+{% if rows %}
+{% call table(class=class) %}
+    {% call table_header() %}
+        {% call table_row() %}
+            {% for column in columns %}
+                {{ table_head(content=column) }}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+    {% call table_body() %}
+        {% for row in rows %}
+            {% call table_row() %}
+                {% for cell in row %}
+                    {{ table_cell(content=cell) }}
+                {% endfor %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% endcall %}
+{% else %}
+    {# Show empty state if there are no rows #}
+    {% if empty_title or empty_description %}
+        {% from 'basecoat/empty_state.html' import empty_state %}
+        {{ empty_state(title=empty_title, description=empty_description) }}
+    {% else %}
+        <div class="text-center text-muted-foreground py-8">No data available</div>
+    {% endif %}
+{% endif %}
+{%- endmacro -%}

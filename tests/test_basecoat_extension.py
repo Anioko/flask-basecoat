@@ -24,9 +24,9 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         
         html = response.get_data(as_text=True)
         self.assertIn('Basecoat UI Component Gallery', html)
-        self.assertIn('btn btn-primary', html)
-        self.assertIn('badge badge-primary', html)
-        self.assertIn('Confirm Action', html)
+        self.assertIn('data-slot="button"', html)
+        self.assertIn('data-slot="badge"', html)
+        self.assertIn('Architecture Overview', html)
 
     def test_gallery_form_submission_success(self):
         app = Flask(__name__)
