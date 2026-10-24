@@ -3,318 +3,216 @@
 {# Port of the upstream shadcn/ui example `bubble` (pinned source in compliance/upstream). #}
 {% block title %}bubble · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Sizes') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content() %}This is a one line bubble.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content() %}This bubble has multiple lines. It should wrap to the next line and you should see a different radius on the corners.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content() %}This is a one line bubble.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content() %}This bubble has multiple lines. It should wrap to the next line and you should see a different radius on the corners.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default') %}
           {% call ui.bubble_content() %}
-            <p>This bubble has multiple lines.</p>
-            <p>It should wrap to the next line and you should see a different radius on the corners.</p>
-            <p>Here is some more text to see how it wraps.</p>
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Variants') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content() %}Default bubbles use the primary color for the active user side of a chat.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary') %}
-          {% call ui.bubble_content() %}Secondary bubbles are the standard neutral surface for assistant and conversation content.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='muted') %}
-          {% call ui.bubble_content() %}Muted bubbles lower the emphasis for quiet system notes or for displaying supporting content.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='tinted', align='end') %}
-          {% call ui.bubble_content() %}Tinted bubbles use a softer primary tint when primary fill is too strong.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='outline') %}
-          {% call ui.bubble_content() %}Outline bubbles can be used to frame message content and give it a border.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='destructive') %}
-          {% call ui.bubble_content() %}Destructive bubbles flag errors or failed actions in a conversation.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='ghost') %}
+            <p>This bubble has multiple lines.</p><p>It should wrap to the next line and you should see a different radius on the corners.</p><p>Here is some more text to see how it wraps.</p>{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Variants') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content() %}Default bubbles use the primary color for the active user side of a chat.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+          {% call ui.bubble_content() %}Secondary bubbles are the standard neutral surface for assistant and conversation content.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='muted') %}
+          {% call ui.bubble_content() %}Muted bubbles lower the emphasis for quiet system notes or for displaying supporting content.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='tinted', align='end') %}
+          {% call ui.bubble_content() %}Tinted bubbles use a softer primary tint when primary fill is too strong.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='outline') %}
+          {% call ui.bubble_content() %}Outline bubbles can be used to frame message content and give it a border.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='destructive') %}
+          {% call ui.bubble_content() %}Destructive bubbles flag errors or failed actions in a conversation.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='ghost') %}
           {% call ui.bubble_content() %}
             <span class="whitespace-pre-wrap">Ghost bubbles work for assistant text and other content that should not be framed.
 
 This is perfect for assistant messages that should not have a frame and can take the full width of the container.
 
 Ghost bubbles are full width and can take the full width of the container.
-</span>
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Alignment') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.bubble(variant='muted') %}
-          {% call ui.bubble_content() %}This bubble is aligned to the start.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default', align='end') %}
-          {% call ui.bubble_content() %}This bubble is aligned to the end.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='muted') %}
-          {% call ui.bubble_content() %}This multiline bubble is aligned to the start. The corners should adjust when the text wraps to show the grouped side of the conversation.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default', align='end') %}
-          {% call ui.bubble_content() %}This multiline bubble is aligned to the end. It should sit on the opposite side with the matching corner radius for wrapped text.
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Grouped') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.bubble_group() %}
+</span>{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Alignment') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.bubble(variant='muted') %}
+          {% call ui.bubble_content() %}This bubble is aligned to the start.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default', align='end') %}
+          {% call ui.bubble_content() %}This bubble is aligned to the end.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='muted') %}
+          {% call ui.bubble_content() %}This multiline bubble is aligned to the start. The corners should adjust when the text wraps to show the grouped side of the conversation.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default', align='end') %}
+          {% call ui.bubble_content() %}This multiline bubble is aligned to the end. It should sit on the opposite side with the matching corner radius for wrapped text.{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Grouped') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.bubble_group() %}
           {% call ui.bubble(variant='secondary') %}
-            {% call ui.bubble_content() %}I finished the audit pass.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.bubble(variant='secondary') %}
-            {% call ui.bubble_content() %}The registry output looks clean, but I found one stale route.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.bubble(variant='secondary') %}
-            {% call ui.bubble_content() %}Want me to remove it now?
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble_group() %}
+            {% call ui.bubble_content() %}I finished the audit pass.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+            {% call ui.bubble_content() %}The registry output looks clean, but I found one stale route.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+            {% call ui.bubble_content() %}Want me to remove it now?{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.bubble_group() %}
           {% call ui.bubble(variant='tinted', align='end') %}
-            {% call ui.bubble_content() %}Yes, clean that up.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.bubble(variant='tinted', align='end') %}
-            {% call ui.bubble_content() %}Then rerun the registry build.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Collapsible') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.collapsible() %}
+            {% call ui.bubble_content() %}Yes, clean that up.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='tinted', align='end') %}
+            {% call ui.bubble_content() %}Then rerun the registry build.{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Collapsible') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.collapsible() %}
           {% call ui.bubble(variant='muted', align='end') %}
-            {% call ui.bubble_content(class='whitespace-pre-line') %}
-              <div data-fb-preview>The accessibility review found two focus states that were visually too subtle in dark mode.
+            {# whitespace-pre-line: no template whitespace between the children #}
+{% call ui.bubble_content(class='whitespace-pre-line') %}<div data-fb-preview>The accessibility review found two focus states that were visually too subtle in dark mode.
 
-I checked the dialog, menu, and drawer paths because each one renders focusable control...</div>
-              <div data-fb-full>The accessibility review found two focus states that were visually too subtle in dark mode.
+I checked the dialog, menu, and drawer paths because each one renders focusable control...</div><div data-fb-full>The accessibility review found two focus states that were visually too subtle in dark mode.
 
 I checked the dialog, menu, and drawer paths because each one renders focusable controls inside a layered surface.
 
 The dialog and drawer are fine. The menu needs the hover and focus tokens split so keyboard focus stays visible when the pointer is not involved.
 
-I also recommend keeping the change in the style file instead of the primitive so the other themes can choose their own focus treatment later.</div>
-              {% call ui.collapsible_trigger(size='default', variant='link', class='gap-1 p-0 text-muted-foreground') %}<span data-fb-preview>Show more</span><span data-fb-full>Show less</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down group-data-open/button:rotate-180" aria-hidden="true" data-icon="inline-end">
-                  <path d="m6 9 6 6 6-6"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='ghost') %}
+I also recommend keeping the change in the style file instead of the primitive so the other themes can choose their own focus treatment later.</div>{% call ui.collapsible_trigger(size='default', variant='link', class='gap-1 p-0 text-muted-foreground') %}<span data-fb-preview>Show more</span><span data-fb-full>Show less</span>{{ lucide('chevron-down', 'group-data-open/button:rotate-180', aria_hidden='true', data_icon='inline-end') }}{% endcall %}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='ghost') %}
           {% call ui.bubble_content() %}
             <span class="whitespace-pre-wrap">Ghost bubbles work for assistant text and other content that should not be framed.
 
 This is perfect for assistant messages that should not have a frame and can take the full width of the container.
 
-Use this for content that needs the whole row.</span>
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Button & Links') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content(href='#') %}This bubble is a link.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary') %}
-          {% call ui.bubble_content(tag='button', type='button') %}This one is a button you can click.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='muted') %}
-          {% call ui.bubble_content(tag='button', type='button') %}You can also do tinted buttons. Even ones that are multilines.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.marker(variant='separator') %}
-          {% call ui.marker_content() %}Chat Suggestions
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content() %}How can I help you today?
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble_group() %}
+Use this for content that needs the whole row.</span>{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Button & Links') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content(href='#') %}This bubble is a link.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+          {% call ui.bubble_content(tag='button', type='button') %}This one is a button you can click.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='muted') %}
+          {% call ui.bubble_content(tag='button', type='button') %}You can also do tinted buttons. Even ones that are multilines.{% endcall %}
+{% endcall %}
+{% call ui.marker(variant='separator') %}
+          {% call ui.marker_content() %}Chat Suggestions{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content() %}How can I help you today?{% endcall %}
+{% endcall %}
+{% call ui.bubble_group() %}
           {% call ui.bubble(variant='outline', align='end') %}
-            {% call ui.bubble_content(tag='button', type='button', class='border-dashed border-primary') %}I need help with my account.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.bubble(variant='outline', align='end') %}
-            {% call ui.bubble_content(tag='button', type='button', class='border-dashed border-primary') %}I forgot my password.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.bubble(variant='outline', align='end') %}
-            {% call ui.bubble_content(tag='button', type='button', class='border-dashed border-primary') %}I have another question. I'd like to talk to a human. Can you help me?
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Reaction Placement') %}
-      <div class="flex w-full max-w-md flex-col gap-12">
-        {% call ui.marker(variant='separator') %}
-          {% call ui.marker_content() %}side=bottom align=end
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content() %}This is a one line message.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='end', side='bottom', attrs={'role': 'img', 'aria-label': 'Reaction: thumbs up'}) %}
-            <span>👍</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary', align='end') %}
-          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='start', side='bottom', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised'}) %}
-            <span>👍</span>
-            <span>😮</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='tinted') %}
-          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='end', side='bottom', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes, and 8 more'}) %}
-            <span>👍</span>
-            <span>😮</span>
-            <span>🔥</span>
-            <span>👀</span>
-            <span>+8</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.marker(variant='separator') %}
-          {% call ui.marker_content() %}side=bottom align=start
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary') %}
-          {% call ui.bubble_content() %}This is a one line message.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='start', side='bottom', attrs={'role': 'img', 'aria-label': 'Reaction: fire'}) %}
-            <span>🔥</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary') %}
-          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='start', side='bottom', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes'}) %}
-            <span>👍</span>
-            <span>😮</span>
-            <span>🔥</span>
-            <span>👀</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.marker(variant='separator') %}
-          {% call ui.marker_content() %}side=top align=start
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary') %}
-          {% call ui.bubble_content() %}This is a one line message.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='start', side='top', attrs={'role': 'img', 'aria-label': 'Reaction: fire'}) %}
-            <span>🔥</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='secondary') %}
-          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='start', side='top', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes'}) %}
-            <span>👍</span>
-            <span>😮</span>
-            <span>🔥</span>
-            <span>👀</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.marker(variant='separator') %}
-          {% call ui.marker_content() %}side=bottom align=end
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='muted') %}
-          {% call ui.bubble_content() %}This is a one line message.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='end', side='top', attrs={'role': 'img', 'aria-label': 'Reaction: thumbs up'}) %}
-            <span>👍</span>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='muted') %}
-          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='end', side='top', class='px-1.5 py-0.5', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes'}) %}
-            <span>👍</span>
-            <span>😮</span>
-            <span>🔥</span>
-            <span>👀</span>
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Reactions Buttons') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.bubble(variant='default') %}
-          {% call ui.bubble_content() %}This is a one line message.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='end', side='bottom') %}
-            {% call ui.button(size='xs', variant='outline') %}Button
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='default', align='end') %}
-          {% call ui.bubble_content() %}This is a one line message.
-          {% endcall %}
-          {% call ui.bubble_reactions(align='start', side='bottom') %}
-            {% call ui.button(size='icon-xs', variant='ghost') %}🎉
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.bubble(variant='tinted') %}
-          {% call ui.bubble_content() %}We are going to the movies first then dinner. Are you in?
-          {% endcall %}
-          {% call ui.bubble_reactions(align='end', side='bottom', class='gap-1 bg-background') %}
+            {% call ui.bubble_content(tag='button', type='button', class='border-dashed border-primary') %}I need help with my account.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='outline', align='end') %}
+            {% call ui.bubble_content(tag='button', type='button', class='border-dashed border-primary') %}I forgot my password.{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='outline', align='end') %}
+            {% call ui.bubble_content(tag='button', type='button', class='border-dashed border-primary') %}I have another question. I'd like to talk to a human. Can you help me?{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Reaction Placement') %}
+      <div class="flex w-full max-w-md flex-col gap-12">{% call ui.marker(variant='separator') %}
+          {% call ui.marker_content() %}side=bottom align=end{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content() %}This is a one line message.{% endcall %}
+{% call ui.bubble_reactions(align='end', side='bottom', attrs={'role': 'img', 'aria-label': 'Reaction: thumbs up'}) %}
+            <span>👍</span>{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary', align='end') %}
+          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.{% endcall %}
+{% call ui.bubble_reactions(align='start', side='bottom', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised'}) %}
+            <span>👍</span><span>😮</span>{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='tinted') %}
+          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.{% endcall %}
+{% call ui.bubble_reactions(align='end', side='bottom', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes, and 8 more'}) %}
+            <span>👍</span><span>😮</span><span>🔥</span><span>👀</span><span>+8</span>{% endcall %}
+{% endcall %}
+{% call ui.marker(variant='separator') %}
+          {% call ui.marker_content() %}side=bottom align=start{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+          {% call ui.bubble_content() %}This is a one line message.{% endcall %}
+{% call ui.bubble_reactions(align='start', side='bottom', attrs={'role': 'img', 'aria-label': 'Reaction: fire'}) %}
+            <span>🔥</span>{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.{% endcall %}
+{% call ui.bubble_reactions(align='start', side='bottom', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes'}) %}
+            <span>👍</span><span>😮</span><span>🔥</span><span>👀</span>{% endcall %}
+{% endcall %}
+{% call ui.marker(variant='separator') %}
+          {% call ui.marker_content() %}side=top align=start{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+          {% call ui.bubble_content() %}This is a one line message.{% endcall %}
+{% call ui.bubble_reactions(align='start', side='top', attrs={'role': 'img', 'aria-label': 'Reaction: fire'}) %}
+            <span>🔥</span>{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='secondary') %}
+          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset is easier to inspect.{% endcall %}
+{% call ui.bubble_reactions(align='start', side='top', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes'}) %}
+            <span>👍</span><span>😮</span><span>🔥</span><span>👀</span>{% endcall %}
+{% endcall %}
+{% call ui.marker(variant='separator') %}
+          {% call ui.marker_content() %}side=bottom align=end{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='muted') %}
+          {% call ui.bubble_content() %}This is a one line message.{% endcall %}
+{% call ui.bubble_reactions(align='end', side='top', attrs={'role': 'img', 'aria-label': 'Reaction: thumbs up'}) %}
+            <span>👍</span>{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='muted') %}
+          {% call ui.bubble_content() %}A longer message that wraps across lines so the reaction offset.{% endcall %}
+{% call ui.bubble_reactions(align='end', side='top', class='px-1.5 py-0.5', attrs={'role': 'img', 'aria-label': 'Reactions: thumbs up, surprised, fire, eyes'}) %}
+            <span>👍</span><span>😮</span><span>🔥</span><span>👀</span>{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Reactions Buttons') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.bubble(variant='default') %}
+          {% call ui.bubble_content() %}This is a one line message.{% endcall %}
+{% call ui.bubble_reactions(align='end', side='bottom') %}
+            {% call ui.button(size='xs', variant='outline') %}Button{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='default', align='end') %}
+          {% call ui.bubble_content() %}This is a one line message.{% endcall %}
+{% call ui.bubble_reactions(align='start', side='bottom') %}
+            {% call ui.button(size='icon-xs', variant='ghost') %}🎉{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.bubble(variant='tinted') %}
+          {% call ui.bubble_content() %}We are going to the movies first then dinner. Are you in?{% endcall %}
+{% call ui.bubble_reactions(align='end', side='bottom', class='gap-1 bg-background') %}
             {% call ui.button(size='icon-xs', variant='secondary', attrs={'aria-label': 'Thumbs up'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up" aria-hidden="true">
-                <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"></path>
-                <path d="M7 10v12"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.button(size='icon-xs', variant='secondary', attrs={'aria-label': 'Thumbs down'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down" aria-hidden="true">
-                <path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"></path>
-                <path d="M17 14V2"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-  {% endcall %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up" aria-hidden="true"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"></path><path d="M7 10v12"></path></svg>{% endcall %}
+{% call ui.button(size='icon-xs', variant='secondary', attrs={'aria-label': 'Thumbs down'}) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down" aria-hidden="true"><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"></path><path d="M17 14V2"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% endcall %}
 {% endblock %}

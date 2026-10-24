@@ -74,7 +74,7 @@
         if (!it || it.getAttribute('data-disabled') === 'true') return;
         FB.emit(root, 'select', { value: it.getAttribute('data-value') || it.textContent.trim(), item: it });
         const dialog = root.closest('[data-slot="dialog-content"]');
-        if (dialog) { const w = dialog.closest('[data-fb="dialog"]'); if (w && w.fbClose) w.fbClose(); }
+        if (dialog && dialog.fbClose) dialog.fbClose();
       });
       ctl.filter('');
       root.fbCommand = ctl;
@@ -91,19 +91,20 @@
 
   /* ---- Combobox ---- */
   FB.register('combobox', {
-    selector: '[data-fb="combobox"]',
-    init(wrapper) {
-      const content = FB.qs(wrapper, '[data-slot="combobox-content"]');
-      const trigger = FB.qs(wrapper, '[data-slot="combobox-trigger"], [data-slot="input-group-button"][role="combobox"]');
-      const input = FB.qs(wrapper, '[data-slot="combobox-input"], [data-slot="combobox-chip-input"], [data-slot="input-group-control"][role="combobox"]');
-      const valueEl = FB.qs(wrapper, '[data-slot="combobox-value"]');
-      const clear = FB.qs(wrapper, '[data-slot="combobox-clear"]');
-      const chips = FB.qs(wrapper, '[data-slot="combobox-chips"]');
-      const list = content && (FB.qs(content, '[data-slot="combobox-list"]') || content);
-      if (!content || !list) return;
-      const anchor = trigger || (input && (input.closest('[data-slot="input-group"]') || input)) || wrapper;
-      const multiple = !!chips || wrapper.hasAttribute('data-multiple');
-      const name = wrapper.getAttribute('data-name') || wrapper.getAttribute('name');
+    selector: '[data-slot="combobox-content"]',
+    init(content) {
+      const trigger = FB.pairWith(content, '[data-slot="combobox-trigger"], [data-slot="input-group-button"][role="combobox"]');
+      const input = FB.pairWith(content, '[data-slot="combobox-input"], [data-slot="combobox-chip-input"], [data-slot="input-group-control"][role="combobox"]');
+      if (!trigger && !input) return;
+      // the host is the visible control group the content belongs to
+      const host = (input || trigger).closest('[data-slot="combobox-chips"], [data-slot="input-group"]') || trigger || input;
+      const valueEl = trigger && FB.qs(trigger, '[data-slot="combobox-value"]');
+      const clear = FB.qs(host, '[data-slot="combobox-clear"]') || FB.pairWith(content, '[data-slot="combobox-clear"]');
+      const chips = host.matches('[data-slot="combobox-chips"]') ? host : FB.qs(host, '[data-slot="combobox-chips"]');
+      const list = FB.qs(content, '[data-slot="combobox-list"]') || content;
+      const anchor = host;
+      const multiple = !!chips || host.hasAttribute('data-multiple') || content.hasAttribute('data-multiple');
+      const name = host.getAttribute('data-name') || content.getAttribute('data-name') || (trigger && trigger.getAttribute('data-name')) || (input && input.getAttribute('name'));
       content.setAttribute('data-floating', ''); content.setAttribute('data-popper-var', 'combobox');
       const id = FB.ensureId(content, 'combobox');
       [trigger, input].forEach((t) => t && t.setAttribute('aria-controls', id));
@@ -111,7 +112,7 @@
       const placeholder = valueEl ? valueEl.textContent : '';
       let selected = multiple ? [] : null;
       let layer = null;
-      const hidden = () => { let h = FB.qs(wrapper, 'input[type=hidden][data-fb-combobox]'); if (!h && name) { h = document.createElement('input'); h.type = 'hidden'; h.name = name; h.setAttribute('data-fb-combobox', ''); wrapper.appendChild(h); } return h; };
+      const hidden = () => { let h = host.fbHidden; if (!h && name && !(input && input.getAttribute('name') === name)) { h = document.createElement('input'); h.type = 'hidden'; h.name = name; h.setAttribute('data-fb-combobox', ''); host.insertAdjacentElement('afterend', h); host.fbHidden = h; } return h || null; };
 
       function reposition() { FB.float(anchor, content, { side: content.getAttribute('data-side') || 'bottom', align: content.getAttribute('data-align') || 'start', sideOffset: Number(content.getAttribute('data-side-offset') || 4), alignOffset: Number(content.getAttribute('data-align-offset') || 0) }); }
       function open() {
@@ -150,13 +151,13 @@
       function sync() {
         const values = multiple ? selected.map(valueOf) : (selected ? [valueOf(selected)] : []);
         const h = hidden(); if (h) h.value = values.join(',');
-        wrapper.setAttribute('data-value', values.join(','));
+        host.setAttribute('data-value', values.join(','));
         if (valueEl) { valueEl.textContent = multiple ? (values.length ? selected.map(labelOf).join(', ') : placeholder) : (selected ? labelOf(selected) : placeholder); }
         if (input && !multiple && selected) input.value = labelOf(selected);
         if (clear) clear.toggleAttribute('data-visible', values.length > 0);
         ctl.items().forEach((i) => { const on = multiple ? selected.includes(i) : i === selected; i.setAttribute('data-checked', String(on)); i.setAttribute('aria-selected', String(on || i === ctl.highlighted)); const ind = FB.qs(i, '[data-slot="combobox-item-indicator"]'); if (ind) ind.style.visibility = on ? '' : 'hidden'; });
         renderChips();
-        FB.emit(wrapper, 'change', { value: multiple ? values : values[0] || null });
+        FB.emit(host, 'change', { value: multiple ? values : values[0] || null });
       }
       function toggleItem(item) {
         if (multiple) { const i = selected.indexOf(item); if (i >= 0) selected.splice(i, 1); else selected.push(item); sync(); if (input) { input.value = ''; ctl.filter(''); input.focus(); } }
@@ -171,7 +172,7 @@
         trigger.addEventListener('keydown', (e) => { if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); open(); if (!input) ctl.move(1); } });
       }
       if (input) {
-        input.addEventListener('focus', () => { if (!wrapper.hasAttribute('data-open-on-click-only')) open(); });
+        input.addEventListener('focus', () => { if (!host.hasAttribute('data-open-on-click-only')) open(); });
         input.addEventListener('click', open);
         input.addEventListener('input', () => { open(); ctl.filter(input.value); if (!multiple && selected && labelOf(selected) !== input.value) { selected = null; const h = hidden(); if (h) h.value = ''; } });
         input.addEventListener('keydown', (e) => {
@@ -189,7 +190,7 @@
       });
       list.addEventListener('click', (e) => { const it = e.target.closest('[data-slot="combobox-item"]'); if (it && it.getAttribute('aria-disabled') !== 'true') toggleItem(it); });
       if (clear) clear.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); selected = multiple ? [] : null; if (input) input.value = ''; sync(); ctl.filter(''); });
-      wrapper.fbOpen = open; wrapper.fbClose = close;
+      content.fbOpen = open; content.fbClose = close; host.fbOpen = open; host.fbClose = close;
     },
   });
 })(window.FlaskBasecoat);

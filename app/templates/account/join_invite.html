@@ -1,12 +1,20 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 {% import 'macros/form_macros.html' as f %}
 {% import 'macros/check_password.html' as check %}
 
 {% block content %}
-    <div class="container mx-auto px-4">
-        <div class="max-w-md mx-auto w-full">
-            <h2 class="text-2xl font-semibold mb-4">Create your password</h2>
-            {{ f.render_form(form) }}
+    <div class="flex w-full items-center justify-center p-6 md:p-10">
+        <div class="w-full max-w-sm">
+            {% call ui.card() %}
+                {% call ui.card_header() %}
+                    {{ ui.card_title(text='Create your password') }}
+                    {{ ui.card_description(text='Your account is confirmed. Choose a password to finish joining.') }}
+                {% endcall %}
+                {% call ui.card_content() %}
+                    {{ f.render_form(form, submit_class='w-full') }}
+                {% endcall %}
+            {% endcall %}
         </div>
     </div>
     {{ check.password_check('password', 0) }}

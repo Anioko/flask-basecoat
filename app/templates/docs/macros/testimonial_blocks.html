@@ -1,62 +1,72 @@
+{# Testimonial block previews built from the card, avatar and badge macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
+{% macro _author(quote) -%}
+<div class="flex items-center gap-3">
+  {% call ui.avatar() %}{{ ui.avatar_fallback(text=quote.get('initials', quote.get('author', '')[:1])) }}{% endcall %}
+  <div class="flex flex-col text-sm">
+    <span class="font-medium">{{ quote.get('author') }}</span>
+    {% if quote.get('role') or quote.get('company') %}
+    <span class="text-muted-foreground">{{ quote.get('role', '') }}{% if quote.get('role') and quote.get('company') %} &middot; {% endif %}{{ quote.get('company', '') }}</span>
+    {% endif %}
+  </div>
+</div>
+{%- endmacro %}
+
 {% macro testimonial_quote_collection(quotes, layout='grid') -%}
-<section class="testimonial-grid" data-layout="{{ layout }}">
+<section class="grid gap-4 {{ 'sm:grid-cols-2 lg:grid-cols-3' if layout in ['grid', 'logo-wall'] else 'sm:grid-cols-2' }}" data-layout="{{ layout }}">
   {% for quote in quotes %}
-  <article class="testimonial-card" data-variant="{{ layout }}">
-    <p class="testimonial-card__quote">&ldquo;{{ quote.get('quote') }}&rdquo;</p>
-    <footer class="testimonial-card__meta">
-      <div class="testimonial-card__avatar" aria-hidden="true">{{ quote.get('initials', quote.get('author', '')[:1]) }}</div>
-      <div>
-        <p class="testimonial-card__author">{{ quote.get('author') }}</p>
-        {% if quote.get('role') or quote.get('company') %}
-        <p class="testimonial-card__role">
-          {{ quote.get('role', '') }}{% if quote.get('role') and quote.get('company') %} &middot; {% endif %}{{ quote.get('company', '') }}
-        </p>
-        {% endif %}
-      </div>
-    </footer>
-  </article>
+  {% call ui.card(size='sm', class='flex h-full flex-col', attrs={'data-variant': layout}) %}
+    {% call ui.card_content(class='flex-1') %}
+      <blockquote class="text-sm leading-6">&ldquo;{{ quote.get('quote') }}&rdquo;</blockquote>
+    {% endcall %}
+    {% call ui.card_footer() %}{{ _author(quote) }}{% endcall %}
+  {% endcall %}
   {% endfor %}
 </section>
 {%- endmacro %}
 
 {% macro testimonial_featured(featured, layout='highlight') -%}
-<article class="testimonial-featured" data-layout="{{ layout }}">
-  {% if featured.get('badge') %}<span class="testimonial-featured__badge">{{ featured['badge'] }}</span>{% endif %}
-  <p class="testimonial-featured__quote">&ldquo;{{ featured.get('quote') }}&rdquo;</p>
-  <div class="testimonial-featured__meta">
-    <div class="testimonial-card__avatar" aria-hidden="true">{{ featured.get('initials', featured.get('author', '')[:1]) }}</div>
-    <div>
-      <p class="testimonial-featured__author">{{ featured.get('author') }}</p>
-      {% if featured.get('role') or featured.get('company') %}
-      <p class="testimonial-featured__role">{{ featured.get('role', '') }}{% if featured.get('role') and featured.get('company') %} &middot; {% endif %}{{ featured.get('company', '') }}</p>
+{% call ui.card(class='bg-muted/40', attrs={'data-layout': layout}) %}
+  {% call ui.card_header() %}
+    {% if featured.get('badge') %}{{ ui.badge(text=featured['badge'], class='w-fit') }}{% endif %}
+    <blockquote class="text-xl font-medium leading-8 tracking-tight sm:text-2xl">&ldquo;{{ featured.get('quote') }}&rdquo;</blockquote>
+  {% endcall %}
+  {% call ui.card_footer(class='flex-wrap items-center justify-between gap-4') %}
+    {{ _author(featured) }}
+    {% if featured.get('rating') or featured.get('metric') %}
+    <div class="flex items-center gap-3 text-sm text-muted-foreground">
+      {% if featured.get('rating') %}
+      <span class="flex items-center gap-1" aria-label="Rated {{ featured['rating'] }} out of 5">
+        {% for _ in range(featured['rating']|int) %}{{ lucide('star', 'size-4 fill-current text-primary') }}{% endfor %}
+        <span class="ml-1">{{ featured['rating'] }}/5</span>
+      </span>
       {% endif %}
+      {% if featured.get('metric') %}{{ ui.badge(text=featured['metric'], variant='outline') }}{% endif %}
     </div>
-  </div>
-  {% if featured.get('rating') or featured.get('metric') %}
-  <p class="testimonial-featured__signal">
-    {% if featured.get('rating') %}Rated {{ featured['rating'] }}/5{% endif %}
-    {% if featured.get('rating') and featured.get('metric') %}<span class="testimonial-featured__divider">&middot;</span>{% endif %}
-    {% if featured.get('metric') %}{{ featured['metric'] }}{% endif %}
-  </p>
-  {% endif %}
-</article>
+    {% endif %}
+  {% endcall %}
+{% endcall %}
 {%- endmacro %}
 
 {% macro testimonial_logo_wall(logos) -%}
-<ul class="testimonial-logo-wall">
+<ul class="flex flex-wrap items-center justify-center gap-3">
   {% for logo in logos %}
-  <li>{{ logo.get('name') }}</li>
+  <li>{{ ui.badge(text=logo.get('name'), variant='outline', class='px-3 py-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground') }}</li>
   {% endfor %}
 </ul>
 {%- endmacro %}
 
 {% macro testimonial_stats(stats) -%}
-<ul class="testimonial-stats">
+<dl class="grid grid-cols-2 gap-4">
   {% for stat in stats %}
-  <li>
-    <p class="testimonial-stats__value">{{ stat.get('value') }}</p>
-    <p class="testimonial-stats__label">{{ stat.get('label') }}</p>
-  </li>
+  {% call ui.card(size='sm') %}
+    {% call ui.card_content() %}
+      <dd class="text-2xl font-semibold tracking-tight tabular-nums">{{ stat.get('value') }}</dd>
+      <dt class="text-xs text-muted-foreground">{{ stat.get('label') }}</dt>
+    {% endcall %}
+  {% endcall %}
   {% endfor %}
-</ul>
+</dl>
 {%- endmacro %}

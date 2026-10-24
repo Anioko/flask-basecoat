@@ -42,25 +42,20 @@ def macro_source(slot_name, rec, void, virtual):
     comp = rec.get('component', '')
     if virtual:
         return (
-            f"{{#- {comp}: renders no element upstream; a display:contents wrapper groups the parts for the runtime. -#}}\n"
+            f"{{#- {comp}: renders no element upstream. The macro groups trigger and content in the template only; "
+            f"the runtime pairs each content with the trigger that precedes it in document order. -#}}\n"
             f"{{% macro {name}(class='', id=none, attrs={{}}) -%}}\n"
-            f"{{%- set s = slot('{slot_name}', kwargs, class, id, attrs) -%}}\n"
-            f"<div{{{{ s.attributes }}}}>{{{{ caller() if caller }}}}</div>\n"
+            f"{{{{ caller() if caller }}}}\n"
             f"{{%- endmacro %}}\n"
         )
-    if void:
-        return (
-            f"{{#- {comp} -#}}\n"
-            f"{{% macro {name}(class='', id=none, attrs={{}}) -%}}\n"
-            f"{{%- set s = slot('{slot_name}', kwargs, class, id, attrs) -%}}\n"
-            f"<{{{{ s.tag }}}}{{{{ s.attributes }}}}>\n"
-            f"{{%- endmacro %}}\n"
-        )
+    # One template for every part: the tag may be overridden at call time (tag='textarea' on an input part),
+    # so whether the element is void is decided when it renders.
     return (
         f"{{#- {comp} -#}}\n"
         f"{{% macro {name}(text='', class='', id=none, attrs={{}}) -%}}\n"
         f"{{%- set s = slot('{slot_name}', kwargs, class, id, attrs) -%}}\n"
-        f"<{{{{ s.tag }}}}{{{{ s.attributes }}}}>{{{{ s.inner }}}}{{{{ text }}}}{{{{ caller() if caller }}}}</{{{{ s.tag }}}}>\n"
+        f"{{%- if s.void %}}<{{{{ s.tag }}}}{{{{ s.attributes }}}}>{{%- else %}}"
+        f"<{{{{ s.tag }}}}{{{{ s.attributes }}}}>{{{{ s.inner }}}}{{{{ text }}}}{{{{ caller() if caller }}}}</{{{{ s.tag }}}}>{{%- endif %}}\n"
         f"{{%- endmacro %}}\n"
     )
 

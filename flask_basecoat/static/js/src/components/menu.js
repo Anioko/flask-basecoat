@@ -14,10 +14,9 @@
     ind.innerHTML = on ? (icons[icon] || '') : '';
   }
 
-  function setupMenu(kind, wrapper, opts) {
-    const trigger = FB.qs(wrapper, `:scope > [data-slot="${kind}-trigger"], [data-slot="${kind}-trigger"]`);
-    const content = FB.qs(wrapper, `:scope > [data-slot="${kind}-content"], [data-slot="${kind}-content"]`);
-    if (!trigger || !content) return null;
+  function setupMenu(kind, content, opts) {
+    const trigger = FB.pairWith(content, `[data-slot="${kind}-trigger"]`);
+    if (!trigger) return null;
     const id = FB.ensureId(content, kind);
     content.setAttribute('data-floating', '');
     content.setAttribute('data-popper-var', kind);
@@ -89,11 +88,10 @@
       if (link && link !== item) link.click();
     }
 
-    /* submenus: [data-slot="kind-sub"] > sub-trigger + sub-content */
-    const subs = FB.qsa(content, `[data-fb="${kind}-sub"]`).map((sub) => {
-      const st = FB.qs(sub, `[data-slot="${kind}-sub-trigger"]`);
-      const sc = FB.qs(sub, `[data-slot="${kind}-sub-content"]`);
-      if (!st || !sc) return null;
+    /* submenus: a sub-content follows its sub-trigger inside the menu */
+    const subs = FB.qsa(content, `[data-slot="${kind}-sub-content"]`).map((sc) => {
+      const st = FB.pairWith(sc, `[data-slot="${kind}-sub-trigger"]`);
+      if (!st) return null;
       sc.setAttribute('data-floating', ''); sc.setAttribute('data-popper-var', kind);
       st.setAttribute('aria-controls', FB.ensureId(sc, `${kind}-sub`));
       let timer = 0;
@@ -143,18 +141,22 @@
       trigger.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     }
     const api = { trigger, content, open, close, isOpen: () => FB.isOpen(content) };
-    wrapper.fbOpen = open; wrapper.fbClose = close;
+    content.fbOpen = open; content.fbClose = close; trigger.fbOpen = open; trigger.fbClose = close;
     return api;
   }
 
-  FB.register('dropdown-menu', { selector: '[data-fb="dropdown-menu"]', init: (el) => setupMenu('dropdown-menu', el, {}) });
-  FB.register('context-menu', { selector: '[data-fb="context-menu"]', init: (el) => setupMenu('context-menu', el, {}) });
+  FB.register('dropdown-menu', { selector: '[data-slot="dropdown-menu-content"]', init: (el) => setupMenu('dropdown-menu', el, {}) });
+  FB.register('context-menu', { selector: '[data-slot="context-menu-content"]', init: (el) => setupMenu('context-menu', el, {}) });
 
   /* Menubar: a row of menus; hovering across triggers while one is open switches menus. */
   FB.register('menubar', {
     selector: '[data-slot="menubar"]',
     init(bar) {
-      const menus = FB.qsa(bar, '[data-fb="menubar-menu"]').map((m) => setupMenu('menubar', m, { side: 'bottom', align: 'start' })).filter(Boolean);
+      // Each trigger inside the bar is followed (in document order) by its content.
+      const triggersInBar = FB.qsa(bar, '[data-slot="menubar-trigger"]');
+      const menus = FB.qsa(document, '[data-slot="menubar-content"]')
+        .filter((c) => { const t = FB.qsa(document, '[data-slot="menubar-trigger"]').filter((x) => !x.fbPaired && (x.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING)).pop(); return t && triggersInBar.includes(t); })
+        .map((c) => setupMenu('menubar', c, { side: 'bottom', align: 'start' })).filter(Boolean);
       const triggers = () => menus.map((m) => m.trigger);
       const nav = FB.roving(triggers, { orientation: 'horizontal', loop: true, typeahead: false });
       menus.forEach((m, i) => {

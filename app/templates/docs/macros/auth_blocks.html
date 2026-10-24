@@ -1,145 +1,96 @@
-{# Authentication block macros for docs previews #}
+{# Authentication block macros for docs previews, composed from the field, input, button and card macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 
-{%- macro auth_form(data) -%}
-<form class="auth-form" method="post">
-  <div class="auth-form__header">
-    <h1 class="auth-form__title">{{ data.title }}</h1>
-    {%- if data.subtitle %}
-    <span class="auth-form__subtitle">{{ data.subtitle }}</span>
-    {%- endif %}
-    {%- if data.description %}
-    <p class="auth-form__description">{{ data.description }}</p>
-    {%- endif %}
+{%- macro auth_form(data, uid='auth') -%}
+<form class="flex flex-col gap-6" method="post">
+  <div class="flex flex-col gap-1.5 text-center">
+    <h1 class="text-2xl font-semibold tracking-tight">{{ data.title }}{% if data.subtitle %} <span class="text-muted-foreground">{{ data.subtitle }}</span>{% endif %}</h1>
+    {% if data.description %}<p class="text-sm text-muted-foreground">{{ data.description }}</p>{% endif %}
   </div>
 
-  {%- if data.get('social') %}
-  <div class="auth-social">
-    {%- for provider in data.social %}
-    <button type="button" class="auth-social__button">
-      <span class="auth-social__icon">{{ provider.provider[0] }}</span>
+  {% if data.get('social') %}
+  <div class="grid gap-2 {{ 'sm:grid-cols-' ~ (data.social|length) }}">
+    {% for provider in data.social %}
+    {% call ui.button(variant='outline', class='w-full') %}
+      <span class="flex size-4 items-center justify-center rounded-sm bg-foreground text-[10px] font-bold text-background">{{ provider.provider[0] }}</span>
       Continue with {{ provider.provider }}
-    </button>
-    {%- endfor %}
+    {% endcall %}
+    {% endfor %}
   </div>
-  {%- if data.get('divider') %}
-  <div class="auth-divider">
-    <span class="auth-divider__text">{{ data.divider }}</span>
-  </div>
-  {%- endif %}
-  {%- endif %}
+  {% if data.get('divider') %}{{ ui.field_separator(text=data.divider) }}{% endif %}
+  {% endif %}
 
-  <div class="auth-form__fields">
-    {%- for field in data.fields %}
-    <div class="form-field">
-      <label class="form-field__label" for="field-{{ loop.index }}">{{ field.label }}</label>
-      {%- if field.type == 'email' %}
-      <input 
-        class="form-field__input" 
-        type="email" 
-        id="field-{{ loop.index }}" 
-        placeholder="{{ field.placeholder }}" 
-        required
-      />
-      {%- elif field.type == 'password' %}
-      <input 
-        class="form-field__input" 
-        type="password" 
-        id="field-{{ loop.index }}" 
-        placeholder="Enter your password"
-        required
-      />
-      {%- if field.get('requirements') %}
-      <p class="form-field__hint">Must be at least 8 characters</p>
-      {%- endif %}
-      {%- else %}
-      <input 
-        class="form-field__input" 
-        type="text" 
-        id="field-{{ loop.index }}" 
-        placeholder="{{ field.placeholder }}" 
-        required
-      />
-      {%- endif %}
-    </div>
-    {%- endfor %}
+  {% call ui.field_group() %}
+    {% for field in data.fields %}
+    {% set field_id = uid ~ '-field-' ~ loop.index %}
+    {% call ui.field() %}
+      {{ ui.field_label(text=field.label, for_=field_id) }}
+      {% if field.type == 'email' %}
+      {{ ui.input(id=field_id, type='email', required=true, attrs={'placeholder': field.placeholder, 'autocomplete': 'email'}) }}
+      {% elif field.type == 'password' %}
+      {{ ui.input(id=field_id, type='password', required=true, attrs={'placeholder': 'Enter your password', 'autocomplete': 'current-password'}) }}
+      {% if field.get('requirements') %}{{ ui.field_description(text='Must be at least 8 characters') }}{% endif %}
+      {% else %}
+      {{ ui.input(id=field_id, type='text', required=true, attrs={'placeholder': field.placeholder}) }}
+      {% endif %}
+    {% endcall %}
+    {% endfor %}
+  {% endcall %}
+
+  {% if data.get('terms') %}
+  <p class="text-center text-xs text-muted-foreground">
+    {{ data.terms.text }}
+    {% for link in data.terms.links %}{{ d.link(link.label, link.url, class='text-xs') }}{% if not loop.last %} and {% endif %}{% endfor %}
+  </p>
+  {% endif %}
+
+  <div class="flex flex-col gap-2">
+    {% for action in data.actions %}
+    {{ ui.button(text=action.label, type=(action.type or 'button'), variant=d.variant_for(action.style), class='w-full') }}
+    {% endfor %}
   </div>
 
-  {%- if data.get('terms') %}
-  <div class="auth-terms">
-    <p class="auth-terms__text">
-      {{ data.terms.text }}
-      {%- for link in data.terms.links %}
-      <a href="{{ link.url }}" class="auth-terms__link">{{ link.label }}</a>{% if not loop.last %} and {% endif %}
-      {%- endfor %}
-    </p>
+  {% if data.get('links') %}
+  <div class="flex flex-col items-center gap-1">
+    {% for link in data.links %}{{ ui.button(text=link.label, variant='link', size='sm', href=link.url, class='h-auto p-0') }}{% endfor %}
   </div>
-  {%- endif %}
+  {% endif %}
 
-  <div class="auth-form__actions">
-    {%- for action in data.actions %}
-    <button 
-      type="{{ action.type or 'button' }}" 
-      class="btn btn-{{ action.style }}"
-    >
-      {{ action.label }}
-    </button>
-    {%- endfor %}
-  </div>
-
-  {%- if data.get('links') %}
-  <div class="auth-form__links">
-    {%- for link in data.links %}
-    <a href="{{ link.url }}" class="auth-link">{{ link.label }}</a>
-    {%- endfor %}
-  </div>
-  {%- endif %}
-
-  {%- if data.get('footer') %}
-  <div class="auth-form__footer">
-    <p class="auth-footer__text">
-      {{ data.footer.text }} 
-      <a href="{{ data.footer.link.url }}" class="auth-footer__link">{{ data.footer.link.label }}</a>
-    </p>
-  </div>
-  {%- endif %}
+  {% if data.get('footer') %}
+  <p class="text-center text-sm text-muted-foreground">
+    {{ data.footer.text }} {{ d.link(data.footer.link.label, data.footer.link.url) }}
+  </p>
+  {% endif %}
 </form>
 {%- endmacro -%}
 
 {%- macro auth_cover(cover) -%}
-<div class="auth-cover">
-  <div class="auth-cover__content">
-    <h2 class="auth-cover__title">{{ cover.title }}</h2>
-    <p class="auth-cover__description">{{ cover.description }}</p>
-    
-    {%- if cover.get('stats') %}
-    <div class="auth-stats">
-      {%- for stat in cover.stats %}
-      <div class="auth-stats__item">
-        <span class="auth-stats__value">{{ stat.value }}</span>
-        <span class="auth-stats__label">{{ stat.label }}</span>
+<div class="flex h-full flex-col justify-between gap-10 rounded-xl bg-muted p-8 text-foreground">
+  <div class="flex flex-col gap-3">
+    <h2 class="text-2xl font-semibold tracking-tight">{{ cover.title }}</h2>
+    <p class="text-muted-foreground">{{ cover.description }}</p>
+    {% if cover.get('stats') %}
+    <dl class="mt-4 grid gap-4 sm:grid-cols-3">
+      {% for stat in cover.stats %}
+      <div>
+        <dt class="text-xs text-muted-foreground">{{ stat.label }}</dt>
+        <dd class="text-xl font-semibold tabular-nums">{{ stat.value }}</dd>
       </div>
-      {%- endfor %}
-    </div>
-    {%- endif %}
+      {% endfor %}
+    </dl>
+    {% endif %}
   </div>
-  
-  <div class="auth-cover__media">
-    <div class="auth-cover__image">
-      {{ cover.get('image', 'Design System Preview') }}
-    </div>
+  <div class="flex aspect-video items-center justify-center rounded-xl border bg-background/60 text-sm text-muted-foreground">
+    {{ lucide('image', 'mr-2 size-4') }}{{ cover.get('image', 'Design System Preview') }}
   </div>
 </div>
 {%- endmacro -%}
 
 {%- macro auth_benefits(benefits) -%}
-<div class="auth-benefits">
-  <ul class="auth-benefits__list">
-    {%- for benefit in benefits %}
-    <li class="auth-benefits__item">
-      <span class="auth-benefits__check">✓</span>
-      {{ benefit }}
-    </li>
-    {%- endfor %}
-  </ul>
-</div>
+<ul class="grid gap-2 text-sm">
+  {% for benefit in benefits %}
+  <li class="flex items-center gap-2">{{ lucide('check', 'size-4 text-primary') }}<span>{{ benefit }}</span></li>
+  {% endfor %}
+</ul>
 {%- endmacro -%}

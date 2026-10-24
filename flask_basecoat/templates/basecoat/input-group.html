@@ -3,23 +3,23 @@
 {#- InputGroup -#}
 {% macro input_group(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('input-group', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- InputGroupAddon -#}
 {% macro input_group_addon(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('input-group-addon', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- InputGroupButton -#}
 {% macro input_group_button(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('input-group-button', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- InputGroupInput -#}
-{% macro input_group_control(class='', id=none, attrs={}) -%}
+{% macro input_group_control(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('input-group-control', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}

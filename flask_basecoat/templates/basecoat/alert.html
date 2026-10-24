@@ -3,23 +3,23 @@
 {#- Alert -#}
 {% macro alert(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('alert', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- AlertTitle -#}
 {% macro alert_title(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('alert-title', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- AlertDescription -#}
 {% macro alert_description(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('alert-description', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- AlertAction -#}
 {% macro alert_action(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('alert-action', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}

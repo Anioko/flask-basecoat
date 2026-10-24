@@ -1,19 +1,18 @@
-/* Popover, Hover Card and Tooltip: non-modal floating layers anchored to a trigger.
+/* Popover, Hover Card and Tooltip: non-modal floating layers anchored to the trigger that precedes them.
    Popover opens on click (dismiss on outside/Escape, focus moves into the content).
    Hover Card opens on pointer hover / focus with open and close delays.
    Tooltip opens on hover / focus with a delay, closes on pointer leave, blur or Escape. */
 (function (FB) {
   'use strict';
 
-  function setup(kind, wrapper) {
-    const trigger = FB.qs(wrapper, `[data-slot="${kind}-trigger"]`) || FB.qs(wrapper, `[data-slot="${kind}-anchor"]`);
-    const content = FB.qs(wrapper, `[data-slot="${kind}-content"]`);
-    if (!trigger || !content) return;
+  function setup(kind, content) {
+    const trigger = FB.pairWith(content, `[data-slot="${kind}-trigger"], [data-slot="${kind}-anchor"]`);
+    if (!trigger) return;
     const id = FB.ensureId(content, kind);
     content.setAttribute('data-floating', '');
-    content.setAttribute('data-popper-var', kind === 'popover' ? 'popover' : kind === 'hover-card' ? 'hover-card' : 'tooltip');
-    const side = content.getAttribute('data-side') || wrapper.getAttribute('data-side') || (kind === 'tooltip' ? 'top' : 'bottom');
-    const align = content.getAttribute('data-align') || wrapper.getAttribute('data-align') || 'center';
+    content.setAttribute('data-popper-var', kind);
+    const side = content.getAttribute('data-side') || (kind === 'tooltip' ? 'top' : 'bottom');
+    const align = content.getAttribute('data-align') || 'center';
     const sideOffset = Number(content.getAttribute('data-side-offset') || (kind === 'tooltip' ? 0 : 4));
     const alignOffset = Number(content.getAttribute('data-align-offset') || 0);
     if (kind === 'popover') trigger.setAttribute('aria-controls', id);
@@ -47,8 +46,8 @@
       trigger.addEventListener('click', (e) => { e.preventDefault(); FB.isOpen(content) ? close() : open(); });
       content.addEventListener('click', (e) => { if (e.target.closest('[data-fb-close]')) close(); });
     } else {
-      const openDelay = Number(wrapper.getAttribute('data-open-delay') || (kind === 'tooltip' ? 0 : 700));
-      const closeDelay = Number(wrapper.getAttribute('data-close-delay') || (kind === 'tooltip' ? 0 : 300));
+      const openDelay = Number(content.getAttribute('data-open-delay') || trigger.getAttribute('data-open-delay') || (kind === 'tooltip' ? 0 : 700));
+      const closeDelay = Number(content.getAttribute('data-close-delay') || trigger.getAttribute('data-close-delay') || (kind === 'tooltip' ? 0 : 300));
       const scheduleOpen = () => { clearTimeout(closeTimer); openTimer = setTimeout(open, openDelay); };
       const scheduleClose = () => { clearTimeout(openTimer); closeTimer = setTimeout(close, closeDelay); };
       trigger.addEventListener('pointerenter', scheduleOpen);
@@ -59,11 +58,11 @@
       content.addEventListener('pointerleave', scheduleClose);
       if (kind === 'tooltip') trigger.addEventListener('pointerdown', close);
     }
-    wrapper.fbOpen = open; wrapper.fbClose = close;
+    content.fbOpen = open; content.fbClose = close; trigger.fbOpen = open; trigger.fbClose = close;
     if (content.getAttribute('data-state') === 'open') { FB.setState(content, 'closed'); open(); }
   }
 
   ['popover', 'hover-card', 'tooltip'].forEach((kind) => {
-    FB.register(kind, { selector: `[data-fb="${kind}"]`, init: (el) => setup(kind, el) });
+    FB.register(kind, { selector: `[data-slot="${kind}-content"]`, init: (el) => setup(kind, el) });
   });
 })(window.FlaskBasecoat);

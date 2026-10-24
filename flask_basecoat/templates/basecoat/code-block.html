@@ -3,59 +3,59 @@
 {#- CodeBlock -#}
 {% macro code_block(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockHeader -#}
 {% macro code_block_header(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-header', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockTitle -#}
 {% macro code_block_title(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-title', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockActions -#}
 {% macro code_block_actions(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-actions', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockCopyButton -#}
 {% macro code_block_copy_button(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-copy-button', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockContent -#}
 {% macro code_block_content(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-content', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockContent -#}
 {% macro code_block_code(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-code', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockLine -#}
 {% macro code_block_line(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-line', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockLine -#}
 {% macro code_block_line_content(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-line-content', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- CodeBlockFooter -#}
 {% macro code_block_footer(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('code-block-footer', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}

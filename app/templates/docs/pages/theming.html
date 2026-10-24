@@ -1,53 +1,115 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-section">
-  <h2>Design tokens</h2>
-  <p>The docs shell exposes CSS variables so you can retheme the experience without touching the markup. Values live under the <code>:root</code> selector and automatically switch when the dark theme is active.</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-css">:root {
-  --docs-bg: #fafafa;
-  --docs-border: rgba(15, 23, 42, 0.08);
-  --docs-text: #0f172a;
-  --docs-muted: #475569;
-  --docs-card: #ffffff;
-  --docs-code-bg: #0f172a;
+{{ d.h2('Design tokens') }}
+{% call d.p() %}Colour never comes from a palette class or a literal value. Every macro and every page uses the semantic tokens the upstream shadcn/ui theme defines on {{ d.c(':root') }}; the {{ d.c('.dark') }} class on {{ d.c('&lt;html&gt;') }} swaps the whole set at once.{% endcall %}
+{% call d.code(title='compliance/golden/generated/tokens.css', icon='palette') -%}
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
 }
 
-[data-color-theme="dark"] {
-  --docs-bg: #0f172a;
-  --docs-border: rgba(148, 163, 184, 0.16);
-  --docs-text: #e2e8f0;
-  --docs-muted: #94a3b8;
-  --docs-card: rgba(15, 23, 42, 0.75);
-  --docs-code-bg: #020617;
-}</code></pre>
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --ring: oklch(0.556 0 0);
+}
+{%- endcall %}
+{{ d.p('The tokens map to utilities you use directly in templates. Each swatch below is rendered with the utility named under it:') }}
+{% call d.preview() %}
+  <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    {% for bg, fg, name in [
+      ('bg-background', 'text-foreground', 'bg-background'),
+      ('bg-card', 'text-card-foreground', 'bg-card'),
+      ('bg-popover', 'text-popover-foreground', 'bg-popover'),
+      ('bg-primary', 'text-primary-foreground', 'bg-primary'),
+      ('bg-secondary', 'text-secondary-foreground', 'bg-secondary'),
+      ('bg-muted', 'text-muted-foreground', 'bg-muted'),
+      ('bg-accent', 'text-accent-foreground', 'bg-accent'),
+      ('bg-destructive', 'text-primary-foreground', 'bg-destructive'),
+      ('bg-sidebar', 'text-sidebar-foreground', 'bg-sidebar'),
+      ('bg-sidebar-primary', 'text-sidebar-primary-foreground', 'bg-sidebar-primary'),
+      ('bg-chart-1', 'text-foreground', 'bg-chart-1'),
+      ('bg-chart-2', 'text-foreground', 'bg-chart-2')
+    ] %}
+    <div class="flex flex-col gap-2">
+      <div class="{{ bg }} {{ fg }} flex h-16 items-center justify-center rounded-lg border text-xs font-medium">Aa</div>
+      <code class="font-mono text-xs text-muted-foreground">{{ name }}</code>
+    </div>
+    {% endfor %}
   </div>
-</section>
-<section class="docs-section">
-  <h2>Typography</h2>
-  <p>Shadcn defaults to the <em>Inter</em> family. Basecoat already includes a neutral sans-serif stack, so we simply declare it on the docs shell:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-css">body.docs-shell {
-  font-family: "Inter", "SF Pro Text", ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  letter-spacing: 0.01em;
-}</code></pre>
+{% endcall %}
+
+{{ d.h2('Style pack') }}
+{% call d.p() %}Pages carry {{ d.c('class="style-vega"') }} on {{ d.c('&lt;html&gt;') }}. The Vega style pack scopes every component recipe ({{ d.c('.cn-button') }}, {{ d.c('.cn-card') }}, {{ d.c('.cn-sidebar-menu-button') }} and so on) under that class, which is how the macros stay free of hard-coded colour, radius or typography.{% endcall %}
+{% call d.code(title='app/assets/styles/input.css', icon='file-code') -%}
+@import "tailwindcss";
+@source "../../templates";
+@source "../../../flask_basecoat/templates";
+
+@import "tw-animate-css";
+@import "../../../compliance/upstream/shadcn/shadcn-tailwind.css";
+@import "../../../compliance/golden/generated/theme.css";
+@import "../../../compliance/golden/generated/tokens.css";
+@import "../../../compliance/upstream/shadcn/styles/style-vega.css" layer(base);
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+}
+{%- endcall %}
+
+{{ d.h2('Typography') }}
+{% call d.p() %}The style pack declares the neutral sans-serif stack and the type scale of shadcn/ui. Headings use tightened leading and subtle tracking; body copy sits at {{ d.c('leading-7') }}. The docs pages reuse the same utilities:{% endcall %}
+{% call d.preview(class='gap-3') %}
+  <h2 class="text-3xl font-bold tracking-tight">Heading, text-3xl font-bold tracking-tight</h2>
+  <h3 class="text-xl font-semibold tracking-tight">Subheading, text-xl font-semibold</h3>
+  <p class="leading-7">Body copy at leading-7 keeps long paragraphs comfortable to read on every breakpoint.</p>
+  <p class="text-sm text-muted-foreground">Supporting text uses text-sm text-muted-foreground.</p>
+  <p><code class="rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">inline code sits on bg-muted</code></p>
+{% endcall %}
+
+{{ d.h2('Component tokens') }}
+{{ d.p('A handful of tokens shape every surface. Change them once and cards, popovers, dialogs and the sidebar follow:') }}
+{{ d.ul([
+  '<strong>Radius:</strong> <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">--radius</code> drives <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">rounded-md</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">rounded-lg</code> and <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">rounded-xl</code> throughout the recipes.',
+  '<strong>Borders and rings:</strong> <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">border-border</code> and <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">ring-ring/50</code> are applied globally, so focus states stay consistent.',
+  '<strong>Sidebar:</strong> <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">--sidebar</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">--sidebar-accent</code> and <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">--sidebar-primary</code> theme the navigation independently from the page.',
+  '<strong>Charts:</strong> <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">--chart-1</code> to <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">--chart-5</code> provide the data series colours used by the dashboard blocks.'
+]) }}
+{% call d.preview() %}
+  <div class="flex flex-wrap items-center gap-3">
+    {{ ui.button(text='Primary') }}{{ ui.button(text='Secondary', variant='secondary') }}{{ ui.button(text='Outline', variant='outline') }}{{ ui.button(text='Destructive', variant='destructive') }}
+    {{ ui.badge(text='Badge') }}{{ ui.badge(text='Outline', variant='outline') }}
   </div>
-  <p>Headers use tightened leading plus subtle tracking to match shadcn&rsquo;s editorial rhythm.</p>
-</section>
-<section class="docs-section">
-  <h2>Component tokens</h2>
-  <p>These utilities provide a consistent feel across cards, callouts, and pagination links:</p>
-  <ul class="docs-list">
-    <li><strong>Radius:</strong> 0.75rem corners for page chrome, 0.5rem for callouts.</li>
-    <li><strong>Shadows:</strong> <code>0 10px 40px rgba(15, 23, 42, 0.08)</code> for cards in light mode, softened in dark mode.</li>
-    <li><strong>Spacing:</strong> 1.25rem base padding, with vertical rhythm controlled by CSS clamp utilities.</li>
-  </ul>
-</section>
-<section class="docs-section">
-  <h2>Dark mode strategy</h2>
-  <p>The theme toggle flips a <code>data-color-theme</code> attribute on the <code>&lt;html&gt;</code> element. All color tokens derive from that attribute, so you can adjust hues in one place without refactoring markup.</p>
-</section>
+  {% call ui.card(class='max-w-sm') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Card surface') }}{{ ui.card_description(text='bg-card, text-card-foreground and the shared radius token.') }}{% endcall %}
+    {% call ui.card_content() %}{% call ui.progress(value=66) %}{{ ui.progress_indicator(value=66) }}{% endcall %}{% endcall %}
+  {% endcall %}
+{% endcall %}
+
+{{ d.h2('Dark mode strategy') }}
+{% call d.p() %}The theme toggle in the top bar flips the {{ d.c('dark') }} class on {{ d.c('&lt;html&gt;') }} and remembers the choice in {{ d.c('localStorage') }} under {{ d.c('flask-basecoat-theme') }}. All colour tokens derive from that class, so you adjust hues in one place without refactoring markup. Any element with {{ d.c('data-theme-toggle') }} becomes a switch:{% endcall %}
+{% call d.code(title='theme toggle', icon='moon') -%}
+{% raw %}{% call ui.button(variant='ghost', size='icon-sm', attrs={'data-theme-toggle': '', 'aria-label': 'Toggle theme'}) %}
+  {{ lucide('sun', 'dark:hidden') }}{{ lucide('moon', 'hidden dark:block') }}
+{% endcall %}{% endraw %}
+{%- endcall %}
+{% call d.preview(class='flex-row items-center gap-4') %}
+  {% call ui.button(variant='outline', attrs={'data-theme-toggle': ''}) %}{{ lucide('sun', 'dark:hidden') }}{{ lucide('moon', 'hidden dark:block') }}Toggle theme{% endcall %}
+  <span class="text-sm text-muted-foreground">Try it: the whole page re-themes without a reload.</span>
+{% endcall %}
 {% endblock %}

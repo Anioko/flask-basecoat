@@ -1,73 +1,83 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-section">
-  <h2>Before you start</h2>
-  <p>This guide assumes you are integrating the docs into an existing Basecoat-enabled Flask project. Confirm the following so the experience matches <code>ui.shadcn.com</code> out of the gate:</p>
-  <ul class="docs-list">
-    <li>Python 3.11 or newer with a virtual environment available for local development.</li>
-    <li>Node.js 18+ installed (the same runtime used by the Basecoat Tailwind pipeline).</li>
-    <li><code>pip</code>, <code>flask</code>, and <code>npm</code> accessible from your PowerShell session.</li>
-  </ul>
-  <div class="docs-callout docs-callout--info">
-    <p><strong>Tip</strong> &mdash; Run <code>pip install -r requirements-dev.txt</code> and <code>npm install</code> before you begin if you are upgrading from Flask-Base. Keeping Python and Node dependencies in sync avoids asset compilation surprises later.</p>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Install backend requirements</h2>
-  <h3>Create and activate a virtual environment</h3>
-  <p>Keep the docs dependencies isolated from the rest of your machine by working inside a dedicated virtual environment:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-powershell">python -m venv .venv
+{{ d.h2('Before you start') }}
+{% call d.p() %}This guide assumes you are adding the docs to an existing Flask project. Confirm the following so the experience matches {{ d.c('ui.shadcn.com') }} out of the gate:{% endcall %}
+{{ d.ul([
+  'Python 3.11 or newer with a virtual environment available for local development.',
+  'Node.js 18 or newer, used by the Tailwind CSS v4 build that compiles the stylesheet.',
+  '<code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">pip</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">flask</code> and <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">npm</code> accessible from your shell.'
+]) }}
+{% call d.callout(title='Tip', icon='info') %}Run <code class="font-mono">pip install -r requirements-dev.txt</code> and <code class="font-mono">npm install</code> before you begin if you are upgrading from Flask-Base. Keeping Python and Node dependencies in sync avoids asset compilation surprises later.{% endcall %}
+
+{{ d.h2('Install backend requirements') }}
+{{ d.h3('Create and activate a virtual environment') }}
+{{ d.p('Keep the dependencies isolated from the rest of your machine by working inside a dedicated virtual environment:') }}
+{% call d.code(title='PowerShell') -%}
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements-dev.txt</code></pre>
-  </div>
-  <h3>Sync the database (optional)</h3>
-  <p>The docs themselves do not require data, but aligning your environment with the rest of the app ensures blueprints load cleanly. Apply migrations before launching the server:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-powershell">flask db upgrade</code></pre>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Install frontend toolchain</h2>
-  <h3>Install Node dependencies</h3>
-  <p>Basecoat Docs use PostCSS to compile Tailwind and Basecoat utilities into <code>app/static/styles/app.css</code>. Install the toolchain, then run a one-off build:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-powershell">npm install
-npm run build:css</code></pre>
-  </div>
-  <h3>Watch for changes</h3>
-  <p>During development, keep Tailwind compiling live so updates to <code>app/assets/styles/input.css</code> instantly refresh your docs:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-powershell">npm run watch:css</code></pre>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Register the docs blueprint</h2>
-  <h3>Mount the blueprint</h3>
-  <p>The documentation blueprint lives in <code>app/docs</code>. Import and register it inside <code>create_app</code> in <code>app/__init__.py</code> so every page mounts under <code>/docs</code>:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-python">from .docs import docs as docs_blueprint
+pip install -r requirements-dev.txt
+{%- endcall %}
+{{ d.h3('Sync the database (optional)') }}
+{{ d.p('The docs themselves do not require data, but aligning your environment with the rest of the app ensures blueprints load cleanly. Apply migrations before launching the server:') }}
+{% call d.code(title='PowerShell') -%}
+flask db upgrade
+{%- endcall %}
+
+{{ d.h2('Install the frontend toolchain') }}
+{{ d.h3('Install Node dependencies') }}
+{% call d.p() %}The stylesheet is compiled by Tailwind CSS v4 from {{ d.c('app/assets/styles/input.css') }}, which imports the pinned shadcn/ui pipeline, the neutral design tokens and the Vega style pack. Install the toolchain, then run a one-off build:{% endcall %}
+{% call d.code(title='PowerShell') -%}
+npm install
+npm run build:css
+{%- endcall %}
+{{ d.h3('Watch for changes') }}
+{% call d.p() %}During development, keep Tailwind compiling live so new utility classes in your templates land in {{ d.c('app/static/styles/app.css') }} immediately:{% endcall %}
+{% call d.code(title='PowerShell') -%}
+npm run watch:css
+{%- endcall %}
+
+{{ d.h2('Register the extension and the docs blueprint') }}
+{{ d.h3('Initialise Flask-Basecoat') }}
+{% call d.p() %}The {{ d.c('Basecoat') }} extension registers the macro templates, the behaviour runtime and the {{ d.c('lucide') }} icon helper. Initialise it in {{ d.c('create_app') }} before registering your blueprints:{% endcall %}
+{% call d.code(title='app/__init__.py', icon='file-code') -%}
+from flask import Flask
+from flask_basecoat import Basecoat
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    app.register_blueprint(docs_blueprint, url_prefix="/docs")
-    return app</code></pre>
-  </div>
-  <h3>Seed navigation</h3>
-  <p>Pages are declared in <code>app/docs/navigation.py</code>. Add entries for every template you want to expose in the sidebar:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-python">DOCS_NAV = [
+    Basecoat().init_app(app)
+
+    from .docs import docs as docs_blueprint
+    app.register_blueprint(docs_blueprint)
+    return app
+{%- endcall %}
+{{ d.h3('Build the layout') }}
+{% call d.p() %}Every page extends a layout whose {{ d.c('&lt;html&gt;') }} carries {{ d.c('class="style-vega"') }} and loads the compiled stylesheet plus the runtime script. The macros then render exactly the markup the upstream components produce:{% endcall %}
+{% call d.code(title='templates/layout.html', icon='file-code') -%}
+{% raw %}{% import 'basecoat/index.html' as ui %}
+&lt;!doctype html&gt;
+&lt;html lang="en" class="style-vega"&gt;
+  &lt;head&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}"&gt;
+    {{ basecoat.js() }}
+  &lt;/head&gt;
+  &lt;body class="min-h-svh bg-background text-foreground antialiased"&gt;
+    {{ ui.button(text='Save', type='submit') }}
+    {% call ui.button(variant='outline', size='sm', href=url_for('main.index')) %}{{ lucide('arrow-left') }} Back{% endcall %}
+  &lt;/body&gt;
+&lt;/html&gt;{% endraw %}
+{%- endcall %}
+{{ d.h3('Seed navigation') }}
+{% call d.p() %}Pages are declared in {{ d.c('app/docs/navigation.py') }}. Add entries for every template you want to expose in the sidebar:{% endcall %}
+{% call d.code(title='app/docs/navigation.py', icon='file-code') -%}
+DOCS_NAV = [
     {
         "title": "Getting Started",
-        "description": "Installation and project conventions.",
         "pages": [
             {
                 "title": "Installation",
@@ -77,27 +87,22 @@ def create_app(config_class=Config):
             },
         ],
     },
-]</code></pre>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Verify the docs shell</h2>
-  <h3>Launch the development server</h3>
-  <p>Run Flask from PowerShell so the docs and the rest of your app share the same host:</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-powershell">$env:FLASK_APP = "manage.py"
+]
+{%- endcall %}
+
+{{ d.h2('Verify the docs shell') }}
+{{ d.h3('Launch the development server') }}
+{{ d.p('Run Flask so the docs and the rest of your app share the same host:') }}
+{% call d.code(title='PowerShell') -%}
+$env:FLASK_APP = "manage.py"
 $env:FLASK_ENV = "development"
-flask run --host=0.0.0.0 --port=5100</code></pre>
-  </div>
-  <h3>Smoke test the experience</h3>
-  <ul class="docs-list">
-    <li>Visit <code>http://localhost:5100/docs/installation</code> and confirm the sidebar highlights the current page.</li>
-    <li>Toggle between light and dark mode and verify the theme preference persists between refreshes.</li>
-    <li>Update a template under <code>app/templates/docs/pages</code> and ensure Flask’s reloader picks up the change.</li>
-  </ul>
-  <div class="docs-callout">
-    <p><strong>Next up</strong> &mdash; Continue with the <a href="{{ url_for('docs.page', slug='project-structure') }}">project structure guide</a> to see how navigation metadata, macros, and static assets stay organized.</p>
-  </div>
-</section>
+flask run --host=0.0.0.0 --port=5100
+{%- endcall %}
+{{ d.h3('Smoke test the experience') }}
+{{ d.ul([
+  'Visit <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">http://localhost:5100/docs/installation</code> and confirm the sidebar highlights the current page.',
+  'Toggle between light and dark mode and verify the preference persists between refreshes.',
+  'Update a template under <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">app/templates/docs/pages</code> and ensure the reloader picks up the change.'
+]) }}
+{% call d.callout(title='Next up', icon='arrow-right') %}Continue with the {{ d.link('project structure guide', url_for('docs.page', slug='project-structure')) }} to see how navigation metadata, macros and static assets stay organized.{% endcall %}
 {% endblock %}

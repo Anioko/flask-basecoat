@@ -34,14 +34,13 @@ def exercise(page):
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       const key = (el, k) => el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true }));
       const esc = () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
-      const openOf = (w, kind) => w.querySelector(`[data-slot="${kind === 'menubar-menu' ? 'menubar' : kind}-content"]`) || (kind === 'combobox' && w.querySelector('[data-slot="combobox-content"]'));
       for (const [kind, how] of Object.entries(families)) {
-        const wrappers = Array.from(document.querySelectorAll(`[data-fb="${kind}"]`)).slice(0, 4);
-        for (const w of wrappers) {
-          const content = openOf(w, kind);
-          let trigger = w.querySelector(`[data-slot="${kind === 'menubar-menu' ? 'menubar' : kind}-trigger"], [data-slot="input-group-button"][role=combobox], [data-slot="combobox-input"], [data-slot="combobox-chip-input"]`);
-          if (!trigger && content && content.id) trigger = document.querySelector(`[data-fb-open="${content.id}"]`);
-          if (!content) { problems.push(`${kind}: wrapper without content`); continue; }
+        const slot = kind === 'menubar-menu' ? 'menubar' : kind;
+        const contents = Array.from(document.querySelectorAll(`[data-slot="${slot}-content"]`)).slice(0, 4);
+        for (const content of contents) {
+          let trigger = content.id && (document.querySelector(`[aria-controls="${content.id}"]:not([data-slot$="-content"])`) || document.querySelector(`[data-fb-open="${content.id}"]`));
+          if (!trigger && kind === 'tooltip') trigger = document.querySelector(`[aria-describedby="${content.id}"]`);
+          if (!trigger && (kind === 'hover-card' || kind === 'context-menu')) { const all = Array.from(document.querySelectorAll(`[data-slot="${slot}-trigger"]`)).filter((t) => t.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING); trigger = all[all.length - 1]; }
           if (!trigger) continue; // opened programmatically only
           if (trigger.closest('[data-state="closed"][data-slot$="-content"]')) continue; // lives inside another closed popup
           if (trigger.disabled) continue;

@@ -1,15 +1,33 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 
 {% block content %}
-    <div class="container mx-auto prose">
-      <h1>Hello {% if not (current_user.is_authenticated) %} world {% else %} {{ current_user.full_name() }} {% endif %},</h1>
+    <div class="container mx-auto px-4 py-8">
+        <div class="mx-auto flex max-w-3xl flex-col gap-6">
+            {% call ui.card() %}
+                {% call ui.card_header() %}
+                    {{ ui.card_title(text='Hello ' ~ (current_user.full_name() if current_user.is_authenticated else 'world') ~ ',', class='text-2xl') }}
+                    {{ ui.card_description(text='A modern Flask application boilerplate with the shadcn/ui design system rendered server-side.') }}
+                {% endcall %}
+                {% call ui.card_content(class='flex flex-col gap-4 text-sm leading-6') %}
+                    <p>This is a modern <a class="underline underline-offset-4" href="http://flask.pocoo.org">Flask</a> application boilerplate. The goal is to reduce the work
+                    necessary to get a new project off the ground, by providing boilerplate code (such as account management
+                    facilities), as well as uncontroversial and extensible defaults. We have integrated
+                    <a class="underline underline-offset-4" href="https://tailwindcss.com">Tailwind CSS</a> with <a class="underline underline-offset-4" href="https://basecoatui.com">Basecoat UI</a>
+                    for modern, responsive styling that looks similar to shadcn/ui.</p>
 
-        <p>This is a modern <a href="http://flask.pocoo.org">Flask</a> application boilerplate. The goal is to reduce the work
-        necessary to get a new project off the ground, by providing boilerplate code (such as account management
-        facilities), as well as uncontroversial and extensible defaults. We have integrated
-        <a href="https://tailwindcss.com">Tailwind CSS</a> with <a href="https://basecoatui.com">Basecoat UI</a>
-        for modern, responsive styling that looks similar to shadcn/ui.</p>
-
-        <p>{{ lipsum(6) }}</p>
+                    <p class="text-muted-foreground">{{ lipsum(6) }}</p>
+                {% endcall %}
+                {% call ui.card_footer(class='flex flex-wrap gap-2') %}
+                    {% call ui.button(href=url_for('main.sidebar_demo')) %}{{ lucide('panel-left') }}Sidebar demo{% endcall %}
+                    {% call ui.button(variant='outline', href=url_for('main.kitchen_sink')) %}{{ lucide('layout-grid') }}Kitchen sink{% endcall %}
+                    {% if current_user.is_authenticated %}
+                        {% call ui.button(variant='ghost', href=url_for('account.manage')) %}{{ lucide('user') }}Your account{% endcall %}
+                    {% else %}
+                        {% call ui.button(variant='ghost', href=url_for('account.login')) %}{{ lucide('lock') }}Log in{% endcall %}
+                    {% endif %}
+                {% endcall %}
+            {% endcall %}
+        </div>
     </div>
 {% endblock %}

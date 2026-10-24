@@ -1,586 +1,235 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Detail - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Task Detail - shadcn/ui Example{% endblock %}
+{% block head %}
+<script>
+  function updateTaskProgress() {
+    const checkboxes = document.querySelectorAll('.task-item-checkbox');
+    let completed = 0;
+    checkboxes.forEach(cb => {
+      const done = cb.getAttribute('aria-checked') === 'true';
+      if (done) completed++;
+      const label = document.querySelector(`label[for="${cb.id}"]`);
+      if (label) {
+        label.classList.toggle('line-through', done);
+        label.classList.toggle('text-muted-foreground', done);
+        label.classList.toggle('text-foreground', !done);
+      }
+    });
+    const total = checkboxes.length;
+    const label = document.getElementById('tasks-progress-label');
+    const bar = document.getElementById('tasks-progress-bar');
+    const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+    if (label) label.textContent = `${completed} / ${total} completed`;
+    if (bar) bar.style.transform = `translateX(-${100 - pct}%)`;
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    updateTaskProgress();
+    document.addEventListener('basecoat:change', (e) => {
+      if (e.target.classList && e.target.classList.contains('task-item-checkbox')) updateTaskProgress();
+    });
+    const input = document.getElementById('new-comment-input');
+    const button = document.getElementById('post-comment-button');
+    if (input && button) {
+      input.addEventListener('input', () => { button.disabled = !input.value.trim(); });
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) postComment(e); });
+    }
+  });
+  function postComment(e) {
+    e.preventDefault();
+    const input = document.getElementById('new-comment-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const list = document.getElementById('comments-container');
+    if (list) {
+      const tpl = document.getElementById('comment-tpl');
+      const commentEl = tpl.content.firstElementChild.cloneNode(true);
+      commentEl.querySelector('[data-text]').textContent = text;
+      list.insertBefore(commentEl, list.firstChild);
+    }
+    input.value = '';
+    document.getElementById('post-comment-button').disabled = true;
+  }
+</script>
+{% endblock %}
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-            updateTaskProgress();
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+{% macro property(label, align='items-center') %}
+<div class="grid grid-cols-[76px_1fr] {{ align }} gap-2">
+  <span class="text-xs text-muted-foreground{% if align == 'items-start' %} pt-1{% endif %}">{{ label }}</span>
+  {{ caller() }}
+</div>
+{% endmacro %}
 
-        function updateTaskProgress() {
-            const checkboxes = document.querySelectorAll('.task-item-checkbox');
-            let completed = 0;
-            checkboxes.forEach(cb => { if (cb.checked) completed++; });
-            const total = checkboxes.length;
-            const label = document.getElementById('tasks-progress-label');
-            const bar = document.getElementById('tasks-progress-bar');
-            if (label) label.textContent = `${completed} of ${total} completed`;
-            if (bar && total > 0) bar.style.width = `${Math.round((completed / total) * 100)}%`;
-        }
-
-        function postComment(e) {
-            e.preventDefault();
-            const input = document.getElementById('new-comment-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const list = document.getElementById('comments-container');
-            if (list) {
-                const commentEl = document.createElement('div');
-                commentEl.className = 'flex gap-3 text-sm animate-in fade-in slide-in-from-top-2';
-                commentEl.innerHTML = `
-                    <div class="size-8 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">JD</div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium text-foreground">John Doe</span>
-                            <span class="text-xs text-muted-foreground">Just now</span>
-                        </div>
-                        <p class="text-muted-foreground leading-relaxed">${text}</p>
-                    </div>
-                `;
-                list.insertBefore(commentEl, list.firstChild);
-            }
-            input.value = '';
-        }
-    </script>
-</head>
-<body class="bg-background text-foreground antialiased min-h-screen">
+{% block body %}
 <div class="bg-muted/30 min-h-screen">
-<div class="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-<div class="mb-6 flex items-center justify-between gap-4">
-<div class="flex min-w-0 items-center gap-1 text-sm text-muted-foreground">
-<button class="group/button inline-flex items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 gap-1.5 px-2 shrink-0" data-size="sm" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-arrow-left size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="m12 19-7-7 7-7">
-</path>
-<path d="M19 12H5">
-</path>
-</svg>
-<span class="hidden sm:inline">
-      Back
-     </span>
-</button>
-<svg aria-hidden="true" class="lucide lucide-chevron-right size-3.5 shrink-0" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="m9 18 6-6-6-6">
-</path>
-</svg>
-<span class="hidden sm:inline shrink-0">
-     Safety 2024
-    </span>
-<svg aria-hidden="true" class="lucide lucide-chevron-right size-3.5 shrink-0 hidden sm:block" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="m9 18 6-6-6-6">
-</path>
-</svg>
-<span class="text-foreground font-medium truncate">
-     Workplace Safety Guide
-    </span>
-</div>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9 shrink-0" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_j9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-<div class="mb-6 space-y-3">
-<div class="flex flex-wrap items-center gap-2">
-<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center overflow-hidden rounded-4xl border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! [a]:hover:bg-secondary/80 gap-1.5 border-amber-200 bg-amber-50 text-amber-700" data-slot="badge" data-variant="secondary">
-<svg aria-hidden="true" class="lucide lucide-circle size-1.5 fill-amber-500 text-amber-500" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="10">
-</circle>
-</svg>
-     To-Do
-    </span>
-<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! [a]:hover:bg-secondary/80 border-blue-200 bg-blue-50 text-blue-700" data-slot="badge" data-variant="secondary">
-     Low Priority
-    </span>
-</div>
-<h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">
-    Workplace Safety Guide 2024
-   </h1>
-</div>
-<div class="grid gap-6 lg:grid-cols-[1fr_264px]">
-<div class="order-2 space-y-6 lg:order-1">
-<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground shadow-xs ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-size="default" data-slot="card">
-<div class="flex flex-col gap-3 px-(--card-spacing) pt-5" data-slot="card-content">
-<p class="text-sm font-medium mb-3">
-       Description
-      </p>
-<p class="text-sm text-muted-foreground leading-relaxed">
-       Create a comprehensive safety guide for the workplace, focusing on updated safety protocols, regulations, and best practices for 2024. The guide should cover essential topics such as emergency procedures, hazard identification, employee training, and equipment safety. Ensure the content is clear, practical, and accessible to all employees. Include visual aids, checklists, and real-life examples to enhance understanding and compliance.
-      </p>
-</div>
-</div>
-<div class="space-y-4">
-<h2 class="text-base font-semibold">
-      Phase 1
-     </h2>
-<p class="text-sm text-muted-foreground leading-relaxed">
-      The guide should be aligned with current industry standards and legal requirements, promoting a safe and healthy work environment for everyone.
-     </p>
-<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground shadow-xs ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-size="default" data-slot="card">
-<div class="flex flex-col gap-3 px-(--card-spacing) pt-5" data-slot="card-content">
-<div class="mb-1 flex items-center justify-between">
-<p class="text-sm font-medium">
-         Tasks
-        </p>
-<span class="text-xs text-muted-foreground">
-         3
-         <!-- -->
-         /
-         <!-- -->
-         4
-         <!-- -->
-         completed
-        </span>
-</div>
-<div aria-valuemax="100" aria-valuemin="0" class="relative flex w-full items-center overflow-x-hidden rounded-full bg-muted mb-4 h-1.5" data-max="100" data-slot="progress" data-state="indeterminate" role="progressbar">
-<div class="size-full flex-1 bg-primary transition-all" data-max="100" data-slot="progress-indicator" data-state="indeterminate" style="transform:translateX(-25%)">
-</div>
-</div>
-<div class="space-y-0.5">
-<label class="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50">
-<button aria-checked="true" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="checked" role="checkbox" type="button" value="on">
-<span class="grid place-content-center text-current transition-none [&amp;&gt;svg]:size-3.5" data-slot="checkbox-indicator" data-state="checked" style="pointer-events:none">
-<svg aria-hidden="true" class="lucide lucide-check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 6 9 17l-5-5">
-</path>
-</svg>
-</span>
-</button>
-<span class="text-sm transition-colors text-muted-foreground line-through">
-          Update Safety Protocols
-         </span>
-</label>
-<label class="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50">
-<button aria-checked="true" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="checked" role="checkbox" type="button" value="on">
-<span class="grid place-content-center text-current transition-none [&amp;&gt;svg]:size-3.5" data-slot="checkbox-indicator" data-state="checked" style="pointer-events:none">
-<svg aria-hidden="true" class="lucide lucide-check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 6 9 17l-5-5">
-</path>
-</svg>
-</span>
-</button>
-<span class="text-sm transition-colors text-muted-foreground line-through">
-          Develop Clear Emergency Procedures
-         </span>
-</label>
-<label class="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50">
-<button aria-checked="true" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="checked" role="checkbox" type="button" value="on">
-<span class="grid place-content-center text-current transition-none [&amp;&gt;svg]:size-3.5" data-slot="checkbox-indicator" data-state="checked" style="pointer-events:none">
-<svg aria-hidden="true" class="lucide lucide-check" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 6 9 17l-5-5">
-</path>
-</svg>
-</span>
-</button>
-<span class="text-sm transition-colors text-muted-foreground line-through">
-          Create Employee Training Modules
-         </span>
-</label>
-<label class="flex cursor-pointer items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<span class="text-sm transition-colors text-foreground">
-          Include Visuals and Checklists
-         </span>
-</label>
-</div>
-</div>
-</div>
-</div>
-<div class="space-y-4">
-<h2 class="text-base font-semibold">
-      Comments
-      <span class="text-muted-foreground ml-2 text-sm font-normal">
-       2
-      </span>
-</h2>
-<div class="space-y-4">
-<div class="flex gap-3">
-<span class="group/avatar relative flex rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten size-7 shrink-0 mt-0.5" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         RS
-        </span>
-</span>
-<div class="flex-1 space-y-1.5">
-<div class="flex items-center gap-2">
-<span class="text-sm font-medium">
-          Raden Sam Pitak
-         </span>
-<span class="text-xs text-muted-foreground">
-          2 days ago
-         </span>
-</div>
-<div class="bg-card rounded-lg border px-4 py-3">
-<p class="text-sm leading-relaxed">
-          I've finished the first draft of the safety protocols section. Please review when you get a chance — particularly the hazard identification part, I'm not sure we've covered all edge cases.
-         </p>
-</div>
-</div>
-</div>
-<div class="flex gap-3">
-<span class="group/avatar relative flex rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten size-7 shrink-0 mt-0.5" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         JK
-        </span>
-</span>
-<div class="flex-1 space-y-1.5">
-<div class="flex items-center gap-2">
-<span class="text-sm font-medium">
-          James Kokoklomel
-         </span>
-<span class="text-xs text-muted-foreground">
-          1 day ago
-         </span>
-</div>
-<div class="bg-card rounded-lg border px-4 py-3">
-<p class="text-sm leading-relaxed">
-          Reviewed the draft. Looks solid overall. The emergency procedures section needs to reference the updated fire evacuation map from HR. I'll attach the latest version once I get it.
-         </p>
-</div>
-</div>
-</div>
-</div>
-<div class="flex gap-3">
-<span class="group/avatar relative flex rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten size-7 shrink-0 mt-0.5" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-        YO
-       </span>
-</span>
-<div class="flex-1 space-y-2">
-<textarea class="flex field-sizing-content w-full rounded-md border border-input bg-transparent px-2.5 py-2 shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 min-h-[80px] resize-none text-sm" data-slot="textarea" placeholder="Write a comment..."></textarea>
-<div class="flex items-center justify-between">
-<span class="text-xs text-muted-foreground">
-<kbd class="bg-muted rounded px-1 py-0.5 font-mono text-xs">
-          ⌘ Enter
-         </kbd>
-         to send
-        </span>
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 gap-1.5" data-size="sm" data-slot="button" data-variant="default" disabled="">
-<svg aria-hidden="true" class="lucide lucide-send-horizontal size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z">
-</path>
-<path d="M6 12h16">
-</path>
-</svg>
-         Comment
-        </button>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="order-1 space-y-4 lg:order-2">
-<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground shadow-xs ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-size="default" data-slot="card">
-<div class="flex flex-col gap-3 px-(--card-spacing) pt-5" data-slot="card-content">
-<p class="text-sm font-medium mb-4">
-       Properties
-      </p>
-<div class="space-y-3">
-<div class="grid grid-cols-[76px_1fr] items-center gap-2">
-<span class="text-xs text-muted-foreground">
-         Status
-        </span>
-<span class="group/badge inline-flex h-5 shrink-0 items-center justify-center overflow-hidden rounded-4xl border px-2 py-0.5 font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! [a]:hover:bg-secondary/80 w-fit gap-1.5 border-amber-200 bg-amber-50 text-xs text-amber-700" data-slot="badge" data-variant="secondary">
-<svg aria-hidden="true" class="lucide lucide-circle size-1.5 fill-amber-500 text-amber-500" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="10">
-</circle>
-</svg>
-         To-Do
-        </span>
-</div>
-<div class="grid grid-cols-[76px_1fr] items-center gap-2">
-<span class="text-xs text-muted-foreground">
-         Priority
-        </span>
-<span class="group/badge inline-flex h-5 shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border px-2 py-0.5 font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! [a]:hover:bg-secondary/80 w-fit border-blue-200 bg-blue-50 text-xs text-blue-700" data-slot="badge" data-variant="secondary">
-         Low
-        </span>
-</div>
-<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
-</div>
-<div class="grid grid-cols-[76px_1fr] items-start gap-2">
-<span class="pt-1 text-xs text-muted-foreground">
-         Assignees
-        </span>
-<div class="space-y-2">
-<div class="flex items-center gap-2">
-<span class="group/avatar relative flex shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten size-5" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-            RS
-           </span>
-</span>
-<span class="text-xs">
-           Raden Sam Pitak
-          </span>
-</div>
-<div class="flex items-center gap-2">
-<span class="group/avatar relative flex shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten size-5" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-            JK
-           </span>
-</span>
-<span class="text-xs">
-           James Kokoklomel
-          </span>
-</div>
-</div>
-</div>
-<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
-</div>
-<div class="grid grid-cols-[76px_1fr] items-center gap-2">
-<span class="text-xs text-muted-foreground">
-         Started
-        </span>
-<div class="flex items-center gap-1.5 text-xs">
-<svg aria-hidden="true" class="lucide lucide-calendar-days size-3.5 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M8 2v3">
-</path>
-<path d="M16 2v3">
-</path>
-<rect height="18" rx="2" width="18" x="3" y="3">
-</rect>
-<path d="M3 9h18">
-</path>
-<path d="M8 13h.01">
-</path>
-<path d="M12 13h.01">
-</path>
-<path d="M16 13h.01">
-</path>
-<path d="M8 17h.01">
-</path>
-<path d="M12 17h.01">
-</path>
-<path d="M16 17h.01">
-</path>
-</svg>
-         May 18, 2024
-        </div>
-</div>
-<div class="grid grid-cols-[76px_1fr] items-center gap-2">
-<span class="text-xs text-muted-foreground">
-         Due date
-        </span>
-<div class="flex items-center gap-1.5 text-xs">
-<svg aria-hidden="true" class="lucide lucide-calendar-days size-3.5 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M8 2v3">
-</path>
-<path d="M16 2v3">
-</path>
-<rect height="18" rx="2" width="18" x="3" y="3">
-</rect>
-<path d="M3 9h18">
-</path>
-<path d="M8 13h.01">
-</path>
-<path d="M12 13h.01">
-</path>
-<path d="M16 13h.01">
-</path>
-<path d="M8 17h.01">
-</path>
-<path d="M12 17h.01">
-</path>
-<path d="M16 17h.01">
-</path>
-</svg>
-         May 26, 2024
-        </div>
-</div>
-<div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-orientation="horizontal" data-slot="separator" role="none">
-</div>
-<div class="grid grid-cols-[76px_1fr] items-center gap-2">
-<span class="text-xs text-muted-foreground">
-         Labels
-        </span>
-<div class="flex flex-wrap gap-1">
-<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground px-2 py-0 text-xs" data-slot="badge" data-variant="outline">
-          Documentation
-         </span>
-<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground px-2 py-0 text-xs" data-slot="badge" data-variant="outline">
-          Safety
-         </span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground shadow-xs ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-size="default" data-slot="card">
-<div class="flex flex-col gap-3 px-(--card-spacing) pt-5" data-slot="card-content">
-<div class="mb-3 flex items-center justify-between">
-<p class="text-sm font-medium">
-        Attachments
-       </p>
-<span class="text-xs text-muted-foreground">
-        3
-        <!-- -->
-        files
-       </span>
-</div>
-<div class="space-y-1">
-<div class="flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-muted/50">
-<div class="flex size-8 shrink-0 items-center justify-center rounded-md bg-red-50">
-<svg aria-hidden="true" class="lucide lucide-file-text size-4 text-red-500" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
-</path>
-<path d="M14 2v5a1 1 0 0 0 1 1h5">
-</path>
-<path d="M10 9H8">
-</path>
-<path d="M16 13H8">
-</path>
-<path d="M16 17H8">
-</path>
-</svg>
-</div>
-<div class="min-w-0 flex-1">
-<p class="truncate text-xs font-medium">
-          safety_protocols_2024.pdf
-         </p>
-<p class="text-xs text-muted-foreground">
-          20 MB
-         </p>
-</div>
-<div class="flex shrink-0">
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7" data-size="icon" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-eye size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-</path>
-<circle cx="12" cy="12" r="3">
-</circle>
-</svg>
-</button>
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7" data-size="icon" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-download size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 15V3">
-</path>
-<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
-</path>
-<path d="m7 10 5 5 5-5">
-</path>
-</svg>
-</button>
-</div>
-</div>
-<div class="flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-muted/50">
-<div class="flex size-8 shrink-0 items-center justify-center rounded-md bg-red-50">
-<svg aria-hidden="true" class="lucide lucide-file-text size-4 text-red-500" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
-</path>
-<path d="M14 2v5a1 1 0 0 0 1 1h5">
-</path>
-<path d="M10 9H8">
-</path>
-<path d="M16 13H8">
-</path>
-<path d="M16 17H8">
-</path>
-</svg>
-</div>
-<div class="min-w-0 flex-1">
-<p class="truncate text-xs font-medium">
-          guideline_fix_2024.pdf
-         </p>
-<p class="text-xs text-muted-foreground">
-          101 MB
-         </p>
-</div>
-<div class="flex shrink-0">
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7" data-size="icon" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-eye size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-</path>
-<circle cx="12" cy="12" r="3">
-</circle>
-</svg>
-</button>
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7" data-size="icon" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-download size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 15V3">
-</path>
-<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
-</path>
-<path d="m7 10 5 5 5-5">
-</path>
-</svg>
-</button>
-</div>
-</div>
-<div class="flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-muted/50">
-<div class="flex size-8 shrink-0 items-center justify-center rounded-md bg-red-50">
-<svg aria-hidden="true" class="lucide lucide-file-text size-4 text-red-500" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
-</path>
-<path d="M14 2v5a1 1 0 0 0 1 1h5">
-</path>
-<path d="M10 9H8">
-</path>
-<path d="M16 13H8">
-</path>
-<path d="M16 17H8">
-</path>
-</svg>
-</div>
-<div class="min-w-0 flex-1">
-<p class="truncate text-xs font-medium">
-          training_materials.pdf
-         </p>
-<p class="text-xs text-muted-foreground">
-          82 MB
-         </p>
-</div>
-<div class="flex shrink-0">
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7" data-size="icon" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-eye size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
-</path>
-<circle cx="12" cy="12" r="3">
-</circle>
-</svg>
-</button>
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7" data-size="icon" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-download size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 15V3">
-</path>
-<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
-</path>
-<path d="m7 10 5 5 5-5">
-</path>
-</svg>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+  <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+    <div class="mb-6 flex items-center justify-between gap-4">
+      {% call ui.breadcrumb(class='min-w-0') %}
+        {% call ui.breadcrumb_list(class='gap-1 sm:gap-1') %}
+          {% call ui.breadcrumb_item() %}
+            {% call ui.button(variant='ghost', size='sm', href=url_for('basecoat_examples.tasks')) %}{{ lucide('arrow-left', 'size-4', data_icon='inline-start') }}<span class="hidden sm:inline">Back</span>{% endcall %}
+          {% endcall %}
+          {% call ui.breadcrumb_separator() %}{{ lucide('chevron-right') }}{% endcall %}
+          {% call ui.breadcrumb_item(class='hidden sm:inline-flex') %}{{ ui.breadcrumb_link(text='Safety 2024', href='#') }}{% endcall %}
+          {% call ui.breadcrumb_separator(class='hidden sm:block') %}{{ lucide('chevron-right') }}{% endcall %}
+          {% call ui.breadcrumb_item() %}{{ ui.breadcrumb_page(text='Workplace Safety Guide', class='truncate font-medium text-foreground') }}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', attrs={'aria-label': 'Task actions'}) %}{{ lucide('ellipsis', 'size-4') }}{% endcall %}
+        {% call ui.dropdown_menu_content(align='end') %}
+          {{ ui.dropdown_menu_item(text='Edit task') }}
+          {{ ui.dropdown_menu_item(text='Duplicate') }}
+          {{ ui.dropdown_menu_item(text='Move to project') }}
+          {{ ui.dropdown_menu_separator() }}
+          {{ ui.dropdown_menu_item(text='Delete task', variant='destructive') }}
+        {% endcall %}
+      {% endcall %}
+    </div>
 
-</body>
-</html>
+    <div class="mb-6 space-y-3">
+      <div class="flex flex-wrap items-center gap-2">
+        {% call ui.badge(variant='secondary', class='gap-1.5') %}{{ lucide('circle', 'size-1.5 fill-chart-4 text-chart-4') }} To-Do{% endcall %}
+        {{ ui.badge(text='Low Priority', variant='secondary') }}
+      </div>
+      <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">Workplace Safety Guide 2024</h1>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-[1fr_264px]">
+      <div class="order-2 space-y-6 lg:order-1">
+        {% call ui.card() %}
+          {% call ui.card_content(class='flex flex-col gap-3') %}
+            <p class="text-sm font-medium">Description</p>
+            <p class="text-sm text-muted-foreground leading-relaxed">Create a comprehensive safety guide for the workplace, focusing on updated safety protocols, regulations, and best practices for 2024. The guide should cover essential topics such as emergency procedures, hazard identification, employee training, and equipment safety. Ensure the content is clear, practical, and accessible to all employees. Include visual aids, checklists, and real-life examples to enhance understanding and compliance.</p>
+          {% endcall %}
+        {% endcall %}
+
+        <div class="space-y-4">
+          <h2 class="text-base font-semibold">Phase 1</h2>
+          <p class="text-sm text-muted-foreground leading-relaxed">The guide should be aligned with current industry standards and legal requirements, promoting a safe and healthy work environment for everyone.</p>
+          {% call ui.card() %}
+            {% call ui.card_content(class='flex flex-col gap-3') %}
+              <div class="mb-1 flex items-center justify-between">
+                <p class="text-sm font-medium">Tasks</p>
+                <span id="tasks-progress-label" class="text-xs text-muted-foreground">3 / 4 completed</span>
+              </div>
+              {% call ui.progress(value=75, class='mb-4 h-1.5', attrs={'aria-label': 'Tasks completed'}) %}{{ ui.progress_indicator(value=75, id='tasks-progress-bar') }}{% endcall %}
+              <div class="space-y-0.5">
+                {% for id, text, done in [('task-1', 'Update Safety Protocols', true), ('task-2', 'Develop Clear Emergency Procedures', true), ('task-3', 'Create Employee Training Modules', true), ('task-4', 'Include Visuals and Checklists', false)] %}
+                <div class="flex items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50">
+                  {{ ui.checkbox(id=id, checked=done, class='task-item-checkbox') }}
+                  {{ ui.label(text=text, for_=id, class='cursor-pointer text-sm font-normal transition-colors ' ~ ('text-muted-foreground line-through' if done else 'text-foreground')) }}
+                </div>
+                {% endfor %}
+              </div>
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        <div class="space-y-4">
+          <h2 class="text-base font-semibold">Comments <span class="text-muted-foreground ml-2 text-sm font-normal">2</span></h2>
+          <div id="comments-container" class="space-y-4">
+            {% for initials, name, when, text in [('RS', 'Raden Sam Pitak', '2 days ago', "I've finished the first draft of the safety protocols section. Please review when you get a chance — particularly the hazard identification part, I'm not sure we've covered all edge cases."), ('JK', 'James Kokoklomel', '1 day ago', "Reviewed the draft. Looks solid overall. The emergency procedures section needs to reference the updated fire evacuation map from HR. I'll attach the latest version once I get it.")] %}
+            <div class="flex gap-3">
+              {% call ui.avatar(size='sm', class='mt-0.5 size-7') %}{{ ui.avatar_fallback(text=initials) }}{% endcall %}
+              <div class="flex-1 space-y-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium">{{ name }}</span>
+                  <span class="text-xs text-muted-foreground">{{ when }}</span>
+                </div>
+                <div class="bg-card rounded-lg border border-border px-4 py-3">
+                  <p class="text-sm leading-relaxed">{{ text }}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <template id="comment-tpl">
+            <div class="flex gap-3">
+              {% call ui.avatar(size='sm', class='mt-0.5 size-7') %}{{ ui.avatar_fallback(text='JD') }}{% endcall %}
+              <div class="flex-1 space-y-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium">John Doe</span>
+                  <span class="text-xs text-muted-foreground">Just now</span>
+                </div>
+                <div class="bg-card rounded-lg border border-border px-4 py-3">
+                  <p class="text-sm leading-relaxed" data-text></p>
+                </div>
+              </div>
+            </div>
+          </template>
+          <div class="flex gap-3">
+            {% call ui.avatar(size='sm', class='mt-0.5 size-7') %}{{ ui.avatar_fallback(text='YO') }}{% endcall %}
+            <div class="flex-1 space-y-2">
+              {{ ui.textarea(id='new-comment-input', placeholder='Write a comment...', class='min-h-[80px] resize-none text-sm', attrs={'aria-label': 'New comment'}) }}
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-muted-foreground">{{ ui.kbd(text='⌘ Enter') }} to send</span>
+                {% call ui.button(size='sm', type='button', id='post-comment-button', disabled=true, attrs={'onclick': 'postComment(event)'}) %}{{ lucide('send', 'size-3.5', data_icon='inline-start') }} Comment{% endcall %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-1 space-y-4 lg:order-2">
+        {% call ui.card() %}
+          {% call ui.card_content(class='flex flex-col gap-3') %}
+            <p class="text-sm font-medium mb-1">Properties</p>
+            <div class="space-y-3">
+              {% call property('Status') %}{% call ui.badge(variant='secondary', class='gap-1.5') %}{{ lucide('circle', 'size-1.5 fill-chart-4 text-chart-4') }} To-Do{% endcall %}{% endcall %}
+              {% call property('Priority') %}{{ ui.badge(text='Low', variant='secondary') }}{% endcall %}
+              {{ ui.separator() }}
+              {% call property('Assignees', align='items-start') %}
+                <div class="space-y-2">
+                  {% for initials, name in [('RS', 'Raden Sam Pitak'), ('JK', 'James Kokoklomel')] %}
+                  <div class="flex items-center gap-2">
+                    {% call ui.avatar(size='sm', class='size-5') %}{{ ui.avatar_fallback(text=initials, class='text-[10px]') }}{% endcall %}
+                    <span class="text-xs">{{ name }}</span>
+                  </div>
+                  {% endfor %}
+                </div>
+              {% endcall %}
+              {{ ui.separator() }}
+              {% call property('Started') %}<div class="flex items-center gap-1.5 text-xs">{{ lucide('calendar', 'size-3.5 text-muted-foreground') }} May 18, 2024</div>{% endcall %}
+              {% call property('Due date') %}<div class="flex items-center gap-1.5 text-xs">{{ lucide('calendar', 'size-3.5 text-muted-foreground') }} May 26, 2024</div>{% endcall %}
+              {{ ui.separator() }}
+              {% call property('Labels') %}
+                <div class="flex flex-wrap gap-1">
+                  {{ ui.badge(text='Documentation', variant='outline') }}
+                  {{ ui.badge(text='Safety', variant='outline') }}
+                </div>
+              {% endcall %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_content(class='flex flex-col gap-3') %}
+            <div class="mb-1 flex items-center justify-between">
+              <p class="text-sm font-medium">Attachments</p>
+              <span class="text-xs text-muted-foreground">3 files</span>
+            </div>
+            <div class="space-y-1">
+              {% for fname, size in [('safety_protocols_2024.pdf', '20 MB'), ('guideline_fix_2024.pdf', '101 MB'), ('training_materials.pdf', '82 MB')] %}
+              <div class="flex items-center gap-3 rounded-md p-2 transition-colors hover:bg-muted/50">
+                <div class="flex size-8 shrink-0 items-center justify-center rounded-md bg-destructive/10">
+                  {{ lucide('file-text', 'size-4 text-destructive') }}
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-xs font-medium">{{ fname }}</p>
+                  <p class="text-xs text-muted-foreground">{{ size }}</p>
+                </div>
+                <div class="flex shrink-0">
+                  {% call ui.button(variant='ghost', size='icon-sm', type='button', attrs={'aria-label': 'Preview ' ~ fname}) %}{{ lucide('eye', 'size-3.5') }}{% endcall %}
+                  {% call ui.button(variant='ghost', size='icon-sm', type='button', attrs={'aria-label': 'Download ' ~ fname}) %}{{ lucide('download', 'size-3.5') }}{% endcall %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

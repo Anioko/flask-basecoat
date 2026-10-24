@@ -3,188 +3,123 @@
 {# Port of the upstream shadcn/ui example `checkbox` (pinned source in compliance/upstream). #}
 {% block title %}checkbox · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
       {% call ui.field(orientation='horizontal') %}
-        {{ ui.checkbox(checked=false, id='terms') }}
-        <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-        {% call ui.field_label(as_='label', for_='terms') %}Accept terms and conditions
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Description') %}
+        {{ ui.checkbox(checked=false, id='terms') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='terms') %}Accept terms and conditions{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Description') %}
       {% call ui.field(orientation='horizontal') %}
         {% call ui.checkbox(checked=true, id='terms-2') %}
           {% call ui.checkbox_indicator(checked=true, attrs={'style': 'pointer-events:none'}) %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-              <path d="M20 6 9 17l-5-5"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">
-        {% call ui.field_content() %}
-          {% call ui.field_label(as_='label', for_='terms-2') %}Accept terms and conditions
-          {% endcall %}
-          {% call ui.field_description() %}By clicking this checkbox, you agree to the terms and conditions.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Invalid') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% endcall %}
+<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% call ui.field_content() %}
+          {% call ui.field_label(as_='label', for_='terms-2') %}Accept terms and conditions{% endcall %}
+{% call ui.field_description() %}By clicking this checkbox, you agree to the terms and conditions.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Invalid') %}
       {% call ui.field(orientation='horizontal', invalid=true) %}
-        {{ ui.checkbox(checked=false, invalid=true, id='terms-3') }}
-        <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-        {% call ui.field_label(as_='label', for_='terms-3') %}Accept terms and conditions
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Disabled') %}
+        {{ ui.checkbox(checked=false, invalid=true, id='terms-3') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='terms-3') %}Accept terms and conditions{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Disabled') %}
       {% call ui.field(orientation='horizontal') %}
-        {{ ui.checkbox(checked=false, disabled=true, id='toggle') }}
-        <input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-        {% call ui.field_label(as_='label', for_='toggle') %}Enable notifications
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Title') %}
+        {{ ui.checkbox(checked=false, disabled=true, id='toggle') }}<input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='toggle') %}Enable notifications{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Title') %}
       {% call ui.field_group() %}
         {% call ui.field_label(as_='label', for_='toggle-2') %}
           {% call ui.field(orientation='horizontal') %}
             {% call ui.checkbox(checked=true, id='toggle-2') %}
               {% call ui.checkbox_indicator(checked=true, attrs={'style': 'pointer-events:none'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-                  <path d="M20 6 9 17l-5-5"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">
-            {% call ui.field_content() %}
-              {% call ui.field_label(tag='div') %}Enable notifications
-              {% endcall %}
-              {% call ui.field_description() %}You can enable or disable notifications at any time.
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.field_label(as_='label', for_='toggle-4') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% endcall %}
+<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% call ui.field_content() %}
+              {% call ui.field_label(tag='div') %}Enable notifications{% endcall %}
+{% call ui.field_description() %}You can enable or disable notifications at any time.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_label(as_='label', for_='toggle-4') %}
           {% call ui.field(orientation='horizontal', disabled=true) %}
-            {{ ui.checkbox(checked=false, disabled=true, id='toggle-4') }}
-            <input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-            {% call ui.field_content() %}
-              {% call ui.field_label(tag='div') %}Enable notifications
-              {% endcall %}
-              {% call ui.field_description() %}You can enable or disable notifications at any time.
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='In Table') %}
+            {{ ui.checkbox(checked=false, disabled=true, id='toggle-4') }}<input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_content() %}
+              {% call ui.field_label(tag='div') %}Enable notifications{% endcall %}
+{% call ui.field_description() %}You can enable or disable notifications at any time.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='In Table') %}
       {% call ui.table_container() %}
         {% call ui.table() %}
           {% call ui.table_header() %}
             {% call ui.table_row() %}
               {% call ui.table_head(class='w-8') %}
-                {{ ui.checkbox(checked=false, id='select-all') }}
-                <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-              {% endcall %}
-              {% call ui.table_head() %}Name
-              {% endcall %}
-              {% call ui.table_head() %}Email
-              {% endcall %}
-              {% call ui.table_head() %}Role
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.table_body() %}
+                {{ ui.checkbox(checked=false, id='select-all') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% endcall %}
+{% call ui.table_head() %}Name{% endcall %}
+{% call ui.table_head() %}Email{% endcall %}
+{% call ui.table_head() %}Role{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.table_body() %}
             {% call ui.table_row(selected=true) %}
               {% call ui.table_cell() %}
                 {% call ui.checkbox(checked=true, id='row-1') %}
                   {% call ui.checkbox_indicator(checked=true, attrs={'style': 'pointer-events:none'}) %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-                      <path d="M20 6 9 17l-5-5"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-                <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">
-              {% endcall %}
-              {% call ui.table_cell(class='font-medium') %}Sarah Chen
-              {% endcall %}
-              {% call ui.table_cell() %}sarah.chen@example.com
-              {% endcall %}
-              {% call ui.table_cell() %}Admin
-              {% endcall %}
-            {% endcall %}
-            {% call ui.table_row() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% endcall %}
+<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% endcall %}
+{% call ui.table_cell(class='font-medium') %}Sarah Chen{% endcall %}
+{% call ui.table_cell() %}sarah.chen@example.com{% endcall %}
+{% call ui.table_cell() %}Admin{% endcall %}
+{% endcall %}
+{% call ui.table_row() %}
               {% call ui.table_cell() %}
-                {{ ui.checkbox(checked=false, id='row-2') }}
-                <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-              {% endcall %}
-              {% call ui.table_cell(class='font-medium') %}Marcus Rodriguez
-              {% endcall %}
-              {% call ui.table_cell() %}marcus.rodriguez@example.com
-              {% endcall %}
-              {% call ui.table_cell() %}User
-              {% endcall %}
-            {% endcall %}
-            {% call ui.table_row() %}
+                {{ ui.checkbox(checked=false, id='row-2') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% endcall %}
+{% call ui.table_cell(class='font-medium') %}Marcus Rodriguez{% endcall %}
+{% call ui.table_cell() %}marcus.rodriguez@example.com{% endcall %}
+{% call ui.table_cell() %}User{% endcall %}
+{% endcall %}
+{% call ui.table_row() %}
               {% call ui.table_cell() %}
-                {{ ui.checkbox(checked=false, id='row-3') }}
-                <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-              {% endcall %}
-              {% call ui.table_cell(class='font-medium') %}Priya Patel
-              {% endcall %}
-              {% call ui.table_cell() %}priya.patel@example.com
-              {% endcall %}
-              {% call ui.table_cell() %}User
-              {% endcall %}
-            {% endcall %}
-            {% call ui.table_row() %}
+                {{ ui.checkbox(checked=false, id='row-3') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% endcall %}
+{% call ui.table_cell(class='font-medium') %}Priya Patel{% endcall %}
+{% call ui.table_cell() %}priya.patel@example.com{% endcall %}
+{% call ui.table_cell() %}User{% endcall %}
+{% endcall %}
+{% call ui.table_row() %}
               {% call ui.table_cell() %}
-                {{ ui.checkbox(checked=false, id='row-4') }}
-                <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-              {% endcall %}
-              {% call ui.table_cell(class='font-medium') %}David Kim
-              {% endcall %}
-              {% call ui.table_cell() %}david.kim@example.com
-              {% endcall %}
-              {% call ui.table_cell() %}Editor
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Group') %}
+                {{ ui.checkbox(checked=false, id='row-4') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% endcall %}
+{% call ui.table_cell(class='font-medium') %}David Kim{% endcall %}
+{% call ui.table_cell() %}david.kim@example.com{% endcall %}
+{% call ui.table_cell() %}Editor{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Group') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label') %}Show these items on the desktop:
-        {% endcall %}
-        {% call ui.field(orientation='horizontal') %}
-          {{ ui.checkbox(checked=false, id='finder-pref-9k2-hard-disks-ljj') }}
-          <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-          {% call ui.field_label(as_='label', for_='finder-pref-9k2-hard-disks-ljj', class='font-normal') %}Hard disks
-          {% endcall %}
-        {% endcall %}
-        {% call ui.field(orientation='horizontal') %}
-          {{ ui.checkbox(checked=false, id='finder-pref-9k2-external-disks-1yg') }}
-          <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-          {% call ui.field_label(as_='label', for_='finder-pref-9k2-external-disks-1yg', class='font-normal') %}External disks
-          {% endcall %}
-        {% endcall %}
-        {% call ui.field(orientation='horizontal') %}
-          {{ ui.checkbox(checked=false, id='finder-pref-9k2-cds-dvds-fzt') }}
-          <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-          {% call ui.field_label(as_='label', for_='finder-pref-9k2-cds-dvds-fzt', class='font-normal') %}CDs, DVDs, and iPods
-          {% endcall %}
-        {% endcall %}
-        {% call ui.field(orientation='horizontal') %}
-          {{ ui.checkbox(checked=false, id='finder-pref-9k2-connected-servers-6l2') }}
-          <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-          {% call ui.field_label(as_='label', for_='finder-pref-9k2-connected-servers-6l2', class='font-normal') %}Connected servers
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+        {% call ui.field_label(as_='label') %}Show these items on the desktop:{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+          {{ ui.checkbox(checked=false, id='finder-pref-9k2-hard-disks-ljj') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='finder-pref-9k2-hard-disks-ljj', class='font-normal') %}Hard disks{% endcall %}
+{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+          {{ ui.checkbox(checked=false, id='finder-pref-9k2-external-disks-1yg') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='finder-pref-9k2-external-disks-1yg', class='font-normal') %}External disks{% endcall %}
+{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+          {{ ui.checkbox(checked=false, id='finder-pref-9k2-cds-dvds-fzt') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='finder-pref-9k2-cds-dvds-fzt', class='font-normal') %}CDs, DVDs, and iPods{% endcall %}
+{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+          {{ ui.checkbox(checked=false, id='finder-pref-9k2-connected-servers-6l2') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='finder-pref-9k2-connected-servers-6l2', class='font-normal') %}Connected servers{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

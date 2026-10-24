@@ -3,41 +3,41 @@
 {#- Pagination -#}
 {% macro pagination(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- PaginationContent -#}
 {% macro pagination_content(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination-content', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- PaginationItem -#}
 {% macro pagination_item(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination-item', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- PaginationLink -#}
 {% macro pagination_link(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination-link', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- PaginationPrevious -#}
 {% macro pagination_previous(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination-previous', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- PaginationNext -#}
 {% macro pagination_next(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination-next', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- PaginationEllipsis -#}
 {% macro pagination_ellipsis(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('pagination-ellipsis', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}

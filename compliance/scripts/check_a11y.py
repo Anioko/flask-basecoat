@@ -60,7 +60,10 @@ def main(argv):
 
         def audit(url, mode):
             page.goto(base + url, wait_until='load')
+            # Freeze transitions so contrast is measured on final colours, not mid-animation.
+            page.add_style_tag(content='*, *::before, *::after { transition: none !important; animation: none !important; }')
             page.evaluate(f"document.documentElement.classList.toggle('dark', {str(mode == 'dark').lower()})")
+            page.wait_for_timeout(100)
             page.add_script_tag(content=axe_src)
             return page.evaluate(AXE_RUN, DISABLED)
 

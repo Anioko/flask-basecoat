@@ -1,54 +1,58 @@
+{# FAQ block previews built from the card, accordion and button macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
 {% macro faq_articles(entries, layout='cards') -%}
-<section class="faq-block__answers" data-layout="{{ layout }}">
+<section class="grid gap-4 {{ 'sm:grid-cols-2' if layout in ['cards', 'grid', none] else '' }}" data-layout="{{ layout }}">
   {% for item in entries %}
-  <article class="faq-block__item">
-    <h3 class="faq-block__question">{{ item['question'] }}</h3>
-    <p class="faq-block__answer">{{ item['answer'] }}</p>
-  </article>
+  {% call ui.card(size='sm') %}
+    {% call ui.card_header() %}{{ ui.card_title(text=item['question']) }}{% endcall %}
+    {% call ui.card_content() %}<p class="text-sm text-muted-foreground">{{ item['answer'] }}</p>{% endcall %}
+  {% endcall %}
   {% endfor %}
 </section>
 {%- endmacro %}
 
 {% macro faq_accordion(entries) -%}
-<section class="faq-block__accordion" data-accordion>
+{% call ui.accordion(class='w-full rounded-xl border px-4') %}
   {% for item in entries %}
-  <details class="faq-accordion__item"{% if loop.first %} open{% endif %}>
-    <summary class="faq-accordion__summary">
-      <span>{{ item['question'] }}</span>
-      <span class="faq-accordion__icon" aria-hidden="true">▸</span>
-    </summary>
-    <div class="faq-accordion__content">
-      <p>{{ item['answer'] }}</p>
-    </div>
-  </details>
+  {% call ui.accordion_item() %}
+    <h3 class="flex">{% call ui.accordion_trigger(open=loop.first) %}{{ item['question'] }}{{ ui.accordion_trigger_icon() }}{% endcall %}</h3>
+    {% call ui.accordion_content(open=loop.first) %}<div class="pb-4 text-muted-foreground">{{ item['answer'] }}</div>{% endcall %}
+  {% endcall %}
   {% endfor %}
-</section>
+{% endcall %}
 {%- endmacro %}
 
 {% macro faq_support_panel(support) -%}
-<aside class="faq-block__support">
-  <div class="faq-block__support-header">
-    <h3>{{ support['title'] }}</h3>
-    <p>{{ support['description'] }}</p>
-  </div>
-  <div class="faq-block__support-actions">
+{% call ui.card(class='bg-muted/40') %}
+  {% call ui.card_header() %}
+    {{ ui.card_title(text=support['title']) }}
+    {{ ui.card_description(text=support['description']) }}
+  {% endcall %}
+  {% call ui.card_footer(class='flex-wrap gap-2') %}
     {% for action in support.get('actions', []) %}
-    <button class="btn btn-{{ action.get('style', 'primary') }}" type="button">{{ action.get('label') }}</button>
+    {{ ui.button(text=action.get('label'), variant=d.variant_for(action.get('style', 'primary'))) }}
     {% endfor %}
-  </div>
-</aside>
+  {% endcall %}
+{% endcall %}
 {%- endmacro %}
 
 {% macro faq_sidebar(sidebar) -%}
-<aside class="faq-block__sidebar">
-  <h3>{{ sidebar['title'] }}</h3>
-  <ul>
-    {% for item in sidebar.get('items', []) %}
-    <li>
-      <p class="faq-block__sidebar-label">{{ item['label'] }}</p>
-      <p class="faq-block__sidebar-description">{{ item['description'] }}</p>
-    </li>
-    {% endfor %}
-  </ul>
-</aside>
+{% call ui.card(size='sm') %}
+  {% call ui.card_header() %}{{ ui.card_title(text=sidebar['title']) }}{% endcall %}
+  {% call ui.card_content() %}
+    <ul class="grid gap-3">
+      {% for item in sidebar.get('items', []) %}
+      <li class="flex gap-3">
+        {{ lucide('circle-help', 'mt-0.5 size-4 shrink-0 text-muted-foreground') }}
+        <div>
+          <p class="text-sm font-medium">{{ item['label'] }}</p>
+          <p class="text-sm text-muted-foreground">{{ item['description'] }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endcall %}
+{% endcall %}
 {%- endmacro %}

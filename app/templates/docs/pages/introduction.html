@@ -1,74 +1,78 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-hero">
-  <div class="docs-hero__content">
-    <p class="docs-hero__eyebrow">Overview</p>
-    <h2 class="docs-hero__title">Design parity with shadcn/ui — without leaving Flask</h2>
-    <p class="docs-hero__lead">Basecoat Docs recreate the shadcn/ui documentation experience in a Python-friendly stack. Ship onboarding-ready docs, live previews, and copyable markup alongside your Flask app.</p>
-    <div class="docs-hero__actions">
-      <a class="docs-hero__button" href="{{ url_for('docs.page', slug='installation') }}">Start installing</a>
-      <a class="docs-hero__link" href="https://ui.shadcn.com" target="_blank" rel="noreferrer">Compare with shadcn/ui →</a>
+<section class="mt-10 grid gap-8 rounded-xl border bg-card p-6 text-card-foreground sm:p-10 lg:grid-cols-[1.4fr_1fr]">
+  <div class="flex flex-col gap-4">
+    {{ ui.badge(text='Overview', variant='secondary', class='w-fit') }}
+    <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">Design parity with shadcn/ui, without leaving Flask</h2>
+    <p class="text-muted-foreground">Basecoat Docs recreate the shadcn/ui documentation experience in a Python-friendly stack. Every component is a Jinja macro imported from <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">basecoat/index.html</code>, so live previews, copyable markup and the pages you ship all come from the same source.</p>
+    <div class="flex flex-wrap items-center gap-3">
+      {% call ui.button(href=url_for('docs.page', slug='installation')) %}Start installing{{ lucide('arrow-right') }}{% endcall %}
+      {% call ui.button(variant='link', href='https://ui.shadcn.com', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}Compare with shadcn/ui{{ lucide('external-link') }}{% endcall %}
     </div>
   </div>
-  <dl class="docs-hero__meta">
-    <div class="docs-hero__stat">
-      <dt>Blueprint pages</dt>
-      <dd>14 core guides</dd>
-    </div>
-    <div class="docs-hero__stat">
-      <dt>Block families</dt>
-      <dd>Expanding to full registry</dd>
-    </div>
-    <div class="docs-hero__stat">
-      <dt>Framework lock-in</dt>
-      <dd>None — Flask + Jinja</dd>
-    </div>
+  <dl class="grid gap-3 self-start">
+    {% for label, value in [('Component macros', '65 shadcn/ui parts'), ('Block families', '27 ported layouts'), ('Framework lock-in', 'None, Flask and Jinja')] %}
+    {% call ui.card(size='sm') %}
+      {% call ui.card_content() %}
+        <dt class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{{ label }}</dt>
+        <dd class="mt-1 text-lg font-semibold">{{ value }}</dd>
+      {% endcall %}
+    {% endcall %}
+    {% endfor %}
   </dl>
 </section>
-<section class="docs-section">
-  <h2>Why Basecoat docs exist</h2>
-  <p>Teams love the polish of shadcn/ui, but its starter defaults assume a Next.js workspace. Basecoat Docs bring the same navigation, layout, and interaction patterns to Flask so product squads can document UI decisions where the backend already lives.</p>
-  <div class="docs-grid docs-grid--two">
-    <div class="docs-card">
-      <h3>Aligned with Basecoat UI</h3>
-      <p>Components ship with Basecoat class names, giving you light/dark theming, spacing tokens, and state styles out of the box.</p>
-    </div>
-    <div class="docs-card">
-      <h3>Optimized for cross-functional teams</h3>
-      <p>Writers, designers, and engineers collaborate in the same repo: editorial updates happen in Jinja, while previews stay wired to live Tailwind utilities.</p>
-    </div>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>What you get today</h2>
-  <ul class="docs-list">
-    <li><strong>Interactive shell</strong> mirroring <code>ui.shadcn.com</code>, including responsive sidebar, theme toggle, and contextual pagination.</li>
-    <li><strong>Foundational guides</strong> covering installation, configuration, theming, and project conventions tailored for Flask deployments.</li>
-    <li><strong>Block previews</strong> rewritten with Basecoat primitives and wired for copy-to-clipboard and forthcoming code tabs.</li>
-    <li><strong>Registry scaffolding</strong> ready to import the entire shadcn/ui block catalogue as we expand coverage beyond the initial set.</li>
-  </ul>
-</section>
-<section class="docs-section">
-  <h2>How the documentation is structured</h2>
-  <p>The <code>docs</code> blueprint keeps content declarative: each page is registered in <code>app/docs/navigation.py</code> with its slug, description, and template. Rendered pages combine prose, macros, and live previews so your team can ship design decisions and implementation details together.</p>
-  <div class="docs-grid">
-    <div class="docs-card">
-      <h3>Getting Started</h3>
-      <p>Install dependencies, wire Tailwind assets, and align Basecoat tokens with your Flask environment.</p>
-    </div>
-    <div class="docs-card">
-      <h3>Foundations</h3>
-      <p>Document typography, colors, spacing, and accessibility expectations derived from Basecoat defaults.</p>
-    </div>
-    <div class="docs-card">
-      <h3>Blocks</h3>
-      <p>Browse production-ready patterns and drop them directly into your product with copyable markup.</p>
-    </div>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>When to use this blueprint</h2>
-  <p>Reach for Basecoat Docs when you want shadcn/ui ergonomics without adopting a new frontend stack. Because everything renders server-side, you can document API contracts, business rules, and UI decisions right next to the routes that need them.</p>
-  <p>As the registry grows, your docs serve as the canonical reference: the same markup powers live previews, component snippets, and the UI your customers see.</p>
-</section>
+
+{{ d.h2('Why Basecoat docs exist') }}
+{{ d.p('Teams love the polish of shadcn/ui, but its starter defaults assume a Next.js workspace. Basecoat Docs bring the same navigation, layout and interaction patterns to Flask so product squads can document UI decisions where the backend already lives.') }}
+{% call d.grid(cols=2) %}
+  {% call ui.card() %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text='One macro per shadcn/ui part') }}
+      {{ ui.card_description(text='Buttons, cards, dialogs, sidebars and tables render the upstream markup, data-slot attributes and class recipes.') }}
+    {% endcall %}
+    {% call ui.card_content() %}
+      <div class="flex flex-wrap gap-2">
+        {{ ui.badge(text='button') }}{{ ui.badge(text='card', variant='secondary') }}{{ ui.badge(text='dialog', variant='outline') }}{{ ui.badge(text='sidebar', variant='secondary') }}{{ ui.badge(text='table', variant='outline') }}
+      </div>
+    {% endcall %}
+  {% endcall %}
+  {% call ui.card() %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text='Optimized for cross-functional teams') }}
+      {{ ui.card_description(text='Writers, designers and engineers collaborate in the same repository: copy changes happen in Jinja while previews stay wired to the live design tokens.') }}
+    {% endcall %}
+    {% call ui.card_content() %}
+      <div class="flex items-center gap-3">
+        {% call ui.avatar_group() %}
+          {% for initials in ['AO', 'MP', 'JL'] %}{% call ui.avatar() %}{{ ui.avatar_fallback(text=initials) }}{% endcall %}{% endfor %}
+          {{ ui.avatar_group_count(text='+8') }}
+        {% endcall %}
+        <span class="text-sm text-muted-foreground">Design, content and engineering in one repo</span>
+      </div>
+    {% endcall %}
+  {% endcall %}
+{% endcall %}
+
+{{ d.h2('What you get today') }}
+{{ d.ul([
+  '<strong>Interactive shell</strong> mirroring <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">ui.shadcn.com</code>: collapsible sidebar, breadcrumbs, theme toggle, search and contextual pagination, all built from the sidebar macros.',
+  '<strong>Foundational guides</strong> covering installation, project structure and theming for Flask deployments.',
+  '<strong>Block previews</strong> rendered with the component macros and paired with copyable Jinja markup.',
+  '<strong>Component catalogue</strong> with every variant of the shadcn/ui registry adapted for Flask-Basecoat.'
+]) }}
+
+{{ d.h2('How the documentation is structured') }}
+{% call d.p() %}The {{ d.c('docs') }} blueprint keeps content declarative: each page is registered in {{ d.c('app/docs/navigation.py') }} with its slug, description and template. Rendered pages combine prose, macros and live previews so your team can ship design decisions and implementation details together.{% endcall %}
+{% call d.grid(cols=3) %}
+  {{ d.link_card('Getting Started', url_for('docs.page', slug='installation'), 'Install dependencies, compile the stylesheet and register the Basecoat extension.', cta='Install') }}
+  {{ d.link_card('Foundations', url_for('docs.page', slug='theming'), 'Design tokens, dark mode and the Vega style pack that every macro relies on.', cta='Theme') }}
+  {{ d.link_card('Blocks', url_for('docs.page', slug='blocks'), 'Browse production-ready layouts and drop them into your product with copyable macros.', cta='Browse') }}
+{% endcall %}
+
+{{ d.h2('When to use this blueprint') }}
+{{ d.p('Reach for Basecoat Docs when you want shadcn/ui ergonomics without adopting a new frontend stack. Because everything renders server-side, you can document API contracts, business rules and UI decisions right next to the routes that need them.') }}
+{{ d.p('As the catalogue grows, your docs serve as the canonical reference: the same macros power live previews, component snippets and the UI your customers see.') }}
+{% call d.callout(title='Start with the macros', icon='sparkles') %}Import the barrel once per template with <code class="font-mono">{% raw %}{% import 'basecoat/index.html' as ui %}{% endraw %}</code> and every component is one call away.{% endcall %}
 {% endblock %}

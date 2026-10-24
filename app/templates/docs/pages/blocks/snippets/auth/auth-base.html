@@ -1,22 +1,23 @@
-{%- from "docs/macros/auth_blocks.html" import auth_form, auth_cover, auth_benefits -%}
-
-{%- set data = variant.data -%}
-
-{%- if data.layout == 'split' -%}
-<div class="auth-split">
-  <div class="auth-split__form">
-    {{ auth_form(data) }}
-    {%- if data.get('benefits') %}
-    {{ auth_benefits(data.benefits) }}
-    {%- endif %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+{% from 'docs/macros/auth_blocks.html' import auth_form, auth_cover, auth_benefits %}
+{% set data = variant.data %}
+{% call d.preview(class='p-0 overflow-hidden sm:p-0', attrs={'data-layout': data.layout}) %}
+  {% if data.layout == 'split' %}
+  <div class="grid min-h-[32rem] w-full lg:grid-cols-2">
+    <div class="flex flex-col items-center justify-center gap-6 p-6 sm:p-10">
+      {% call ui.card(class='w-full max-w-sm') %}
+        {% call ui.card_content() %}{{ auth_form(data, uid=variant.name) }}{% endcall %}
+      {% endcall %}
+      {% if data.get('benefits') %}{{ auth_benefits(data.benefits) }}{% endif %}
+    </div>
+    <div class="hidden p-4 lg:block">{{ auth_cover(data.cover) }}</div>
   </div>
-  <div class="auth-split__cover">
-    {{ auth_cover(data.cover) }}
+  {% else %}
+  <div class="flex min-h-[32rem] w-full items-center justify-center p-6 sm:p-10">
+    {% call ui.card(class='w-full max-w-sm') %}
+      {% call ui.card_content() %}{{ auth_form(data, uid=variant.name) }}{% endcall %}
+    {% endcall %}
   </div>
-</div>
-
-{%- else -%}
-<div class="auth-simple">
-  {{ auth_form(data) }}
-</div>
-{%- endif -%}
+  {% endif %}
+{% endcall %}

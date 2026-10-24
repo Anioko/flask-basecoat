@@ -3,17 +3,17 @@
 {#- RadioGroup -#}
 {% macro radio_group(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('radio-group', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- RadioGroupItem -#}
 {% macro radio_group_item(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('radio-group-item', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}
 
 {#- RadioGroupItem -#}
 {% macro radio_group_indicator(text='', class='', id=none, attrs={}) -%}
 {%- set s = slot('radio-group-indicator', kwargs, class, id, attrs) -%}
-<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
 {%- endmacro %}

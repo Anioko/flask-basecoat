@@ -1,91 +1,88 @@
+{# Feature block previews built from the card and badge macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
 {% macro feature_icon_grid(features) -%}
-<section class="feature-grid">
+<section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
   {% for item in features %}
-  <article class="feature-card">
-    {% if item.get('icon') %}
-    <span class="feature-icon">{{ item['icon'] }}</span>
-    {% endif %}
-    <div class="feature-card__body">
-      <h3 class="feature-card__title">{{ item.get('title') }}</h3>
-      <p class="feature-card__description">{{ item.get('description') }}</p>
-    </div>
-    {% if item.get('badge') %}
-    <span class="feature-card__badge">{{ item['badge'] }}</span>
-    {% endif %}
-  </article>
+  {% call ui.card(size='sm', class='h-full') %}
+    {% call ui.card_header() %}
+      {% if item.get('icon') %}<div class="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-lg" aria-hidden="true">{{ item['icon'] }}</div>{% endif %}
+      {{ ui.card_title(text=item.get('title')) }}
+      {{ ui.card_description(text=item.get('description')) }}
+      {% if item.get('badge') %}{% call ui.card_action() %}{{ ui.badge(text=item['badge'], variant='secondary') }}{% endcall %}{% endif %}
+    {% endcall %}
+  {% endcall %}
   {% endfor %}
 </section>
 {%- endmacro %}
 
 {% macro feature_list(features, variant='list') -%}
-<ul class="feature-list" data-variant="{{ variant }}">
+<ul class="grid gap-4" data-variant="{{ variant }}">
   {% for item in features %}
-  <li>
-    <h3>{{ item.get('title') }}</h3>
-    <p>{{ item.get('description') }}</p>
+  <li class="flex gap-3">
+    {{ lucide('circle-check', 'mt-0.5 size-5 shrink-0 text-primary') }}
+    <div>
+      <h3 class="text-sm font-semibold">{{ item.get('title') }}</h3>
+      <p class="text-sm text-muted-foreground">{{ item.get('description') }}</p>
+    </div>
   </li>
   {% endfor %}
 </ul>
 {%- endmacro %}
 
 {% macro feature_split(features, media) -%}
-<div class="feature-split">
-  <div class="feature-split__content">
-    {{ feature_list(features, 'split') }}
-  </div>
-  <aside class="feature-media">
-    <div class="feature-media__surface">
-      <h3 class="feature-media__title">{{ media.get('title') }}</h3>
-      <p class="feature-media__description">{{ media.get('description') }}</p>
-      {% if media.get('items') %}
-      <ul class="feature-media__stats">
+<div class="grid gap-8 lg:grid-cols-2 lg:items-center">
+  <div>{{ feature_list(features, 'split') }}</div>
+  {% call ui.card(class='bg-muted/40') %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text=media.get('title')) }}
+      {{ ui.card_description(text=media.get('description')) }}
+    {% endcall %}
+    {% if media.get('items') %}
+    {% call ui.card_content() %}
+      <dl class="grid grid-cols-3 gap-4">
         {% for item in media.get('items', []) %}
-        <li>
-          <p class="feature-media__value">{{ item.get('value') }}</p>
-          <p class="feature-media__label">{{ item.get('label') }}</p>
-        </li>
+        <div>
+          <dd class="text-2xl font-semibold tracking-tight tabular-nums">{{ item.get('value') }}</dd>
+          <dt class="text-xs text-muted-foreground">{{ item.get('label') }}</dt>
+        </div>
         {% endfor %}
-      </ul>
-      {% endif %}
-    </div>
-    {% if media.get('caption') %}
-    <p class="feature-media__caption">{{ media.get('caption') }}</p>
+      </dl>
+    {% endcall %}
     {% endif %}
-  </aside>
+    {% if media.get('caption') %}{% call ui.card_footer() %}<p class="text-xs text-muted-foreground">{{ media.get('caption') }}</p>{% endcall %}{% endif %}
+  {% endcall %}
 </div>
 {%- endmacro %}
 
 {% macro feature_metrics(metrics, highlights) -%}
-<section class="feature-metrics">
-  <div class="feature-metrics__grid">
+<section class="flex flex-col gap-8">
+  <dl class="grid gap-4 sm:grid-cols-3">
     {% for metric in metrics %}
-    <article>
-      <p class="feature-metrics__value">{{ metric.get('value') }}</p>
-      <p class="feature-metrics__label">{{ metric.get('label') }}</p>
-    </article>
+    {% call ui.card(size='sm') %}
+      {% call ui.card_content() %}
+        <dd class="text-3xl font-semibold tracking-tight tabular-nums">{{ metric.get('value') }}</dd>
+        <dt class="mt-1 text-sm text-muted-foreground">{{ metric.get('label') }}</dt>
+      {% endcall %}
+    {% endcall %}
     {% endfor %}
-  </div>
-  {% if highlights %}
-  <div class="feature-metrics__details">
-    {{ feature_list(highlights, 'metrics') }}
-  </div>
-  {% endif %}
+  </dl>
+  {% if highlights %}{{ feature_list(highlights, 'metrics') }}{% endif %}
 </section>
 {%- endmacro %}
 
 {% macro feature_timeline(steps) -%}
-<section class="feature-timeline">
+<ol class="flex flex-col gap-6">
   {% for step in steps %}
-  <article class="feature-timeline__item">
-    <span class="feature-timeline__marker">{{ loop.index }}</span>
-    <div class="feature-timeline__body">
-      <h3 class="feature-timeline__title">{{ step.get('title') }}</h3>
-      <p class="feature-timeline__description">{{ step.get('description') }}</p>
-      {% if step.get('note') %}
-      <p class="feature-timeline__note">{{ step.get('note') }}</p>
-      {% endif %}
+  <li class="flex gap-4">
+    <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">{{ loop.index }}</span>
+    <div class="flex flex-col gap-1">
+      <h3 class="text-base font-semibold">{{ step.get('title') }}</h3>
+      <p class="text-sm text-muted-foreground">{{ step.get('description') }}</p>
+      {% if step.get('note') %}{{ ui.badge(text=step.get('note'), variant='outline', class='mt-1 w-fit') }}{% endif %}
     </div>
-  </article>
+  </li>
   {% endfor %}
-</section>
+</ol>
 {%- endmacro %}

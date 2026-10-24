@@ -1,6 +1,17 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 
 {% block content %}
-    <h1 class="text-4xl font-bold">404</h1>
-    <h3 class="text-xl font-semibold">Page not found</h3>
+    <div class="container mx-auto flex min-h-[60svh] items-center justify-center px-4 py-16">
+        {% call ui.empty() %}
+            {% call ui.empty_header() %}
+                {% call ui.empty_icon(variant='icon') %}{{ lucide('file-search') }}{% endcall %}
+                {{ ui.empty_title(text='404 · Page not found') }}
+                {{ ui.empty_description(text="The page you are looking for doesn't exist or has moved.") }}
+            {% endcall %}
+            {% call ui.empty_content() %}
+                {% call ui.button(href=url_for('main.index')) %}{{ lucide('home') }}Back to home{% endcall %}
+            {% endcall %}
+        {% endcall %}
+    </div>
 {% endblock %}

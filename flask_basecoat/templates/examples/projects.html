@@ -1,95 +1,73 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects List - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Projects List - Shadcn UI Examples{% endblock %}
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
+{# Project icons from the route mapped onto the shipped lucide set. #}
+{% set icon_map = {'smartphone': 'app-window', 'graduation-cap': 'book-open', 'chart-column': 'chart-bar'} %}
 
-    <div class="bg-background">
-        <div class="min-h-screen p-4 sm:p-6 lg:p-8">
-            <div class="mx-auto max-w-7xl space-y-6">
-                {# Header #}
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold tracking-tight">Projects Board</h1>
-                        <p class="text-muted-foreground mt-1 text-sm">{{ projects|length }} ongoing projects</p>
-                    </div>
-                    <button class="inline-flex shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 px-3 text-sm font-medium shadow-xs transition-colors sm:self-start">
-                        <i data-lucide="plus" class="size-4"></i>
-                        New Project
-                    </button>
-                </div>
-
-                {# Cards Grid #}
-                <div class="grid grid-cols-1 gap-4 lg:gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {% for p in projects %}
-                    <div class="overflow-hidden rounded-xl bg-card p-5 text-sm text-card-foreground border border-border shadow-xs transition-shadow hover:shadow-md">
-                        <div class="flex flex-col gap-3">
-                            <div class="flex items-start justify-between">
-                                <div class="rounded-lg p-2 bg-muted text-foreground">
-                                    <i data-lucide="{{ p.icon }}" class="size-5"></i>
-                                </div>
-                                <button class="inline-flex shrink-0 items-center justify-center rounded-md hover:bg-muted text-muted-foreground -mr-1 size-8" aria-label="Project actions">
-                                    <i data-lucide="ellipsis" class="size-4"></i>
-                                </button>
-                            </div>
-
-                            <div class="mt-4 space-y-1">
-                                <h3 class="leading-relaxed font-semibold">{{ p.title }}</h3>
-                                <span class="inline-flex h-5 w-fit items-center justify-center rounded-full px-2 py-0.5 text-xs font-normal bg-secondary text-secondary-foreground">
-                                    {{ p.category }}
-                                </span>
-                            </div>
-
-                            <div class="mt-4 space-y-1.5">
-                                <div class="flex justify-between text-xs">
-                                    <span class="text-muted-foreground">Progress</span>
-                                    <span class="font-medium">{{ p.progress }}%</span>
-                                </div>
-                                <div class="relative flex w-full items-center overflow-x-hidden rounded-full bg-muted h-1.5">
-                                    <div class="h-full bg-primary rounded-full transition-all" style="width: {{ p.progress }}%"></div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 flex items-center justify-between">
-                                <div class="flex -space-x-2">
-                                    {% for m in p.members %}
-                                    <span class="relative flex shrink-0 rounded-full border-background size-7 border-2 overflow-hidden" title="{{ m.name }}">
-                                        <img class="aspect-square size-full object-cover" alt="{{ m.name }}" src="{{ m.avatar }}">
-                                    </span>
-                                    {% endfor %}
-                                </div>
-                                <span class="text-muted-foreground text-xs">{{ p.time_left }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+{% block body %}
+<div class="bg-background">
+  <div class="min-h-screen p-4 sm:p-6 lg:p-8">
+    <div class="mx-auto max-w-7xl space-y-6">
+      {# Header #}
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight">Projects Board</h1>
+          <p class="text-muted-foreground mt-1 text-sm">{{ projects|length }} ongoing projects</p>
         </div>
+        {% call ui.button(type='button', class='sm:self-start') %}{{ lucide('plus', 'size-4', data_icon='inline-start') }} New Project{% endcall %}
+      </div>
+
+      {# Cards Grid #}
+      <div class="grid grid-cols-1 gap-4 lg:gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {% for p in projects %}
+        {% call ui.card(class='py-5 transition-shadow hover:shadow-md') %}
+          {% call ui.card_content(class='flex flex-col gap-3 px-5') %}
+            <div class="flex items-start justify-between">
+              <div class="rounded-lg p-2 bg-muted text-foreground">
+                {{ lucide(icon_map.get(p.icon, p.icon), 'size-5') }}
+              </div>
+              {% call ui.dropdown_menu() %}
+                {% call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', class='-mr-1 text-muted-foreground', attrs={'aria-label': 'Project actions'}) %}{{ lucide('ellipsis', 'size-4') }}{% endcall %}
+                {% call ui.dropdown_menu_content(align='end') %}
+                  {{ ui.dropdown_menu_item(text='Edit project') }}
+                  {{ ui.dropdown_menu_item(text='Share') }}
+                  {{ ui.dropdown_menu_item(text='Archive') }}
+                  {{ ui.dropdown_menu_separator() }}
+                  {{ ui.dropdown_menu_item(text='Delete', variant='destructive') }}
+                {% endcall %}
+              {% endcall %}
+            </div>
+
+            <div class="mt-4 space-y-1">
+              <h3 class="leading-relaxed font-semibold">{{ p.title }}</h3>
+              {{ ui.badge(text=p.category, variant='secondary', class='font-normal') }}
+            </div>
+
+            <div class="mt-4 space-y-1.5">
+              <div class="flex justify-between text-xs">
+                <span class="text-muted-foreground">Progress</span>
+                <span class="font-medium">{{ p.progress }}%</span>
+              </div>
+              {% call ui.progress(value=p.progress, class='h-1.5', attrs={'aria-label': p.title ~ ' progress'}) %}{{ ui.progress_indicator(value=p.progress) }}{% endcall %}
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+              {% call ui.avatar_group() %}
+                {% for m in p.members %}
+                {% call ui.avatar(size='sm', class='size-7', attrs={'title': m.name}) %}
+                  {{ ui.avatar_image(src=m.avatar, alt=m.name) }}
+                  {{ ui.avatar_fallback(text=m.name.split(' ')|map('first')|join('')) }}
+                {% endcall %}
+                {% endfor %}
+              {% endcall %}
+              <span class="text-muted-foreground text-xs">{{ p.time_left }}</span>
+            </div>
+          {% endcall %}
+        {% endcall %}
+        {% endfor %}
+      </div>
     </div>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

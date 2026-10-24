@@ -1,102 +1,88 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-section">
-  <h2>Docs blueprint at a glance</h2>
-  <p>The documentation experience lives inside its own Flask blueprint so we can iterate on content, layout, and demos without touching the rest of the product. Think of it as a mini site with familiar shadcn/ui ergonomics layered on Basecoat primitives.</p>
-  <ul class="docs-list">
-    <li><strong>Self-contained routing.</strong> All requests flow through the <code>docs</code> blueprint.</li>
-    <li><strong>Declarative navigation.</strong> Every page is registered in <code>DOCS_NAV</code> for ordering, metadata, and pagination.</li>
-    <li><strong>Reusable shell.</strong> A single layout template renders the sidebar, top bar, search, table of contents, and pagination.</li>
-    <li><strong>Live previews.</strong> Snippets and macros keep Basecoat markup alongside the prose that documents it.</li>
-  </ul>
-  <div class="docs-callout docs-callout--info">
-    <p><strong>Remember</strong> &mdash; Because the docs blueprint is independent, you can deploy content-only updates (copy tweaks, new blocks, accessibility notes) without redeploying your customer-facing blueprints.</p>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Where everything lives</h2>
-  <p>These are the core files that power the docs experience:</p>
-  <table class="docs-table">
-    <thead>
-      <tr>
-        <th>Path</th>
-        <th>Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>app/docs/__init__.py</code></td>
-        <td>Initializes the <code>docs</code> blueprint and exposes it for registration in <code>create_app</code>.</td>
-      </tr>
-      <tr>
-        <td><code>app/docs/routes.py</code></td>
-        <td>Provides the <code>/docs/&lt;slug&gt;</code> route, resolves navigation metadata, and renders the requested page.</td>
-      </tr>
-      <tr>
-        <td><code>app/docs/navigation.py</code></td>
-        <td>Holds the <code>DOCS_NAV</code> structure plus helpers for breadcrumbs, pagination, and sidebar rendering.</td>
-      </tr>
-      <tr>
-        <td><code>app/templates/docs/layout.html</code></td>
-        <td>Shared shell that outputs the sidebar, search, top toolbar, page header, on-page TOC, and pagination links.</td>
-      </tr>
-      <tr>
-        <td><code>app/templates/docs/pages/*</code></td>
-        <td>Content pages that extend the shell and provide prose, code, and component previews.</td>
-      </tr>
-      <tr>
-        <td><code>app/templates/docs/macros/*</code></td>
-        <td>Reusable snippet macros for block previews and UI patterns.</td>
-      </tr>
-      <tr>
-        <td><code>app/static/styles/docs.css</code></td>
-        <td>Layer of custom styling that replicates the shadcn/ui look-and-feel on top of Basecoat utilities.</td>
-      </tr>
-      <tr>
-        <td><code>app/static/scripts/docs.js</code></td>
-        <td>Client-side enhancements: theme persistence, copy buttons, mobile nav, search, and sticky table of contents.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-<section class="docs-section">
-  <h2>How requests resolve</h2>
-  <h3>Request pipeline</h3>
-  <ol class="docs-steps">
-    <li>Flask receives <code>/docs/&lt;slug&gt;</code> and hands it to the docs blueprint.</li>
-    <li><code>find_page</code> in <code>navigation.py</code> validates the slug and returns the full nav record.</li>
-    <li><code>routes.py</code> computes breadcrumbs, previous/next pointers, and pulls the template path from the nav record.</li>
-    <li>The layout template receives <code>page</code>, <code>breadcrumbs</code>, <code>prev_page</code>, and <code>next_page</code> to render the chrome.</li>
-  </ol>
-  <h3>Breadcrumbs, search, and TOC</h3>
-  <p>The layout uses the metadata provided by <code>DOCS_NAV</code> to populate breadcrumbs and the new top-bar search. On the client, <code>docs.js</code> scans each page for <code>h2</code>/<code>h3</code> headings to build the sticky “On this page” navigation automatically.</p>
-</section>
-<section class="docs-section">
-  <h2>Templates and macros</h2>
-  <h3>Layout shell</h3>
-  <p><code>app/templates/docs/layout.html</code> is the only template rendered directly by the route. It wraps your content with the sidebar, top bar, search overlay, sticky TOC, and pagination controls.</p>
-  <h3>Page templates</h3>
-  <p>Each page under <code>app/templates/docs/pages</code> extends the layout and provides prose, headings, and component embeds. Keep headings semantic so the on-page TOC renders useful anchors.</p>
-  <h3>Snippet macros</h3>
-  <p>Macros in <code>app/templates/docs/macros</code> (and supporting data in <code>app/docs/snippets.py</code>) let you reuse block previews across categories. As we expand Basecoat’s coverage of the shadcn registry, add new macros rather than duplicating markup between pages.</p>
-</section>
-<section class="docs-section">
-  <h2>Static assets</h2>
-  <h3>CSS pipeline</h3>
-  <p><code>app/assets/styles/input.css</code> imports Tailwind, Basecoat, and any docs-only utilities. Running <code>npm run build:css</code> compiles everything into <code>app/static/styles/app.css</code>; <code>docs.css</code> overlays the shadcn-inspired treatment.</p>
-  <h3>Docs JavaScript</h3>
-  <p><code>docs.js</code> ships minimal vanilla JS so the docs stay dependency-light: theme persistence via <code>localStorage</code>, mobile sidebar toggling, copy-to-clipboard buttons, search filtering, and the scroll-spy TOC.</p>
-</section>
-<section class="docs-section">
-  <h2>Add a new page</h2>
-  <ol class="docs-steps">
-    <li>Create <code>app/templates/docs/pages/&lt;your-slug&gt;.html</code> and extend <code>{% raw %}{% extends 'docs/layout.html' %}{% endraw %}</code>.</li>
-    <li>Add semantic headings (<code>h2</code>, <code>h3</code>) and include snippet macros or code blocks as needed.</li>
-    <li>Register the page in <code>DOCS_NAV</code> with its title, slug, description, and template path.</li>
-    <li>Restart Flask (or let the reloader handle it) and confirm the sidebar, search, TOC, and pagination pick up the new entry.</li>
-  </ol>
-  <div class="docs-callout">
-    <p><strong>Style guide</strong> &mdash; Keep sidebar descriptions short (ideally under 90 characters). Clear summaries make the new search results easier to scan.</p>
-  </div>
-</section>
+{{ d.h2('Docs blueprint at a glance') }}
+{{ d.p('The documentation experience lives inside its own Flask blueprint so we can iterate on content, layout and demos without touching the rest of the product. Think of it as a mini site with familiar shadcn/ui ergonomics layered on the component macros.') }}
+{{ d.ul([
+  '<strong>Self-contained routing.</strong> All requests flow through the <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">docs</code> blueprint.',
+  '<strong>Declarative navigation.</strong> Every page is registered in <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">DOCS_NAV</code> for ordering, metadata and pagination.',
+  '<strong>Reusable shell.</strong> A single layout template renders the sidebar, top bar, search, table of contents and pagination from the sidebar macros.',
+  '<strong>Live previews.</strong> Snippets and macros keep the component markup alongside the prose that documents it.'
+]) }}
+{% call d.callout(title='Remember', icon='info') %}Because the docs blueprint is independent, you can deploy content-only updates (copy tweaks, new blocks, accessibility notes) without redeploying your customer-facing blueprints.{% endcall %}
+
+{{ d.h2('Where everything lives') }}
+{{ d.p('These are the core files that power the docs experience:') }}
+{{ d.table(['Path', 'Role'], [
+  ['<code class="font-mono text-xs">flask_basecoat/templates/basecoat/index.html</code>', 'Barrel exposing every component macro. Import it as <code class="font-mono text-xs">ui</code>.'],
+  ['<code class="font-mono text-xs">flask_basecoat/templates/basecoat/&lt;name&gt;.html</code>', 'One macro file per shadcn/ui component, rendering the upstream element, <code class="font-mono text-xs">data-slot</code> and class recipe.'],
+  ['<code class="font-mono text-xs">flask_basecoat/static/js/flask-basecoat.js</code>', 'Behaviour runtime for dialogs, menus, tabs, the sidebar, toasts and every other interactive part.'],
+  ['<code class="font-mono text-xs">app/docs/__init__.py</code>', 'Initializes the <code class="font-mono text-xs">docs</code> blueprint and exposes it for registration in <code class="font-mono text-xs">create_app</code>.'],
+  ['<code class="font-mono text-xs">app/docs/routes.py</code>', 'Provides the <code class="font-mono text-xs">/docs/&lt;slug&gt;</code> route, resolves navigation metadata and renders the requested page.'],
+  ['<code class="font-mono text-xs">app/docs/navigation.py</code>', 'Holds the <code class="font-mono text-xs">DOCS_NAV</code> structure plus helpers for breadcrumbs and pagination.'],
+  ['<code class="font-mono text-xs">app/templates/docs/layout.html</code>', 'Shared shell built from the sidebar family: navigation, search, breadcrumbs, theme toggle, on-page TOC and pagination.'],
+  ['<code class="font-mono text-xs">app/templates/docs/pages/*</code>', 'Content pages that extend the shell and provide prose, code samples and component previews.'],
+  ['<code class="font-mono text-xs">app/templates/docs/macros/*</code>', 'Block preview macros composed from the component macros.'],
+  ['<code class="font-mono text-xs">app/assets/styles/input.css</code>', 'Tailwind entry importing the pinned shadcn/ui pipeline, tokens and the Vega style pack; compiled to <code class="font-mono text-xs">app/static/styles/app.css</code>.'],
+  ['<code class="font-mono text-xs">app/static/scripts/docs.js</code>', 'Docs-only enhancements: sidebar search and the sticky table of contents.']
+]) }}
+
+{{ d.h2('How requests resolve') }}
+{{ d.h3('Request pipeline') }}
+{{ d.steps([
+  'Flask receives <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">/docs/&lt;slug&gt;</code> and hands it to the docs blueprint.',
+  '<code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">find_page</code> in <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">navigation.py</code> validates the slug and returns the full nav record.',
+  '<code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">routes.py</code> computes breadcrumbs, previous/next pointers and pulls the template path from the nav record.',
+  'The layout template receives <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">page</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">breadcrumbs</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">prev_page</code> and <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">next_page</code> to render the chrome.'
+]) }}
+{{ d.h3('Breadcrumbs, search and TOC') }}
+{% call d.p() %}The layout uses the metadata provided by {{ d.c('DOCS_NAV') }} to populate the breadcrumb and the sidebar search. On the client, {{ d.c('docs.js') }} scans each page for {{ d.c('h2') }}/{{ d.c('h3') }} headings to build the sticky "On this page" navigation automatically.{% endcall %}
+
+{{ d.h2('Templates and macros') }}
+{{ d.h3('Layout shell') }}
+{% call d.p() %}{{ d.c('app/templates/docs/layout.html') }} is the only template rendered directly by the route. It composes {{ d.c('ui.sidebar_wrapper') }}, {{ d.c('ui.sidebar') }}, {{ d.c('ui.sidebar_inset') }} and the breadcrumb macros into the shell, exactly like the upstream sidebar block.{% endcall %}
+{% call d.code(title='docs/layout.html', icon='file-code') -%}
+{% raw %}{% call ui.sidebar_wrapper() %}
+  {% call ui.sidebar(variant='sidebar') %}
+    {{ ui.sidebar_gap() }}
+    {% call ui.sidebar_container() %}{% call ui.sidebar_inner() %}
+      {% call ui.sidebar_content() %}
+        {% for section in docs_nav %}
+          {% call ui.sidebar_group() %}
+            {{ ui.sidebar_group_label(text=section.title) }}
+            {% call ui.sidebar_menu() %}
+              {% for item in section.pages %}
+                {% call ui.sidebar_menu_item() %}
+                  {{ ui.sidebar_menu_button(text=item.title, href=url_for('docs.page', slug=item.slug), active=item.slug == page.slug) }}
+                {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}{% endcall %}
+  {% endcall %}
+  {% call ui.sidebar_inset() %}{% block content %}{% endblock %}{% endcall %}
+{% endcall %}{% endraw %}
+{%- endcall %}
+{{ d.h3('Page templates') }}
+{% call d.p() %}Each page under {{ d.c('app/templates/docs/pages') }} extends the layout and provides prose, headings and component embeds. Keep headings semantic so the on-page TOC renders useful anchors.{% endcall %}
+{{ d.h3('Snippet macros') }}
+{% call d.p() %}Macros in {{ d.c('app/templates/docs/macros') }} (with supporting data in {{ d.c('app/docs/snippets.py') }}) let you reuse block previews across categories. Each preview is built from {{ d.c('ui.card') }}, {{ d.c('ui.button') }}, {{ d.c('ui.field') }} and friends, so the markup you copy is the markup that renders.{% endcall %}
+
+{{ d.h2('Static assets') }}
+{{ d.h3('CSS pipeline') }}
+{% call d.p() %}{{ d.c('app/assets/styles/input.css') }} imports Tailwind, the pinned shadcn/ui stylesheet, the generated tokens and the Vega style pack. Running {{ d.c('npm run build:css') }} compiles everything into {{ d.c('app/static/styles/app.css') }}; there is no second stylesheet to maintain.{% endcall %}
+{{ d.h3('Scripts') }}
+{% call d.p() %}{{ d.c('{{ basecoat.js() }}') }} loads the behaviour runtime shipped with the package. {{ d.c('docs.js') }} adds only the docs-specific pieces: search filtering and the scroll-spy table of contents.{% endcall %}
+
+{{ d.h2('Add a new page') }}
+{{ d.steps([
+  'Create <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">app/templates/docs/pages/&lt;your-slug&gt;.html</code> and extend <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">docs/layout.html</code>.',
+  'Import the macros with <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">{% raw %}{% import \'basecoat/index.html\' as ui %}{% endraw %}</code> and add semantic headings, code samples and previews.',
+  'Register the page in <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">DOCS_NAV</code> with its title, slug, description and template path.',
+  'Restart Flask (or let the reloader handle it) and confirm the sidebar, search, TOC and pagination pick up the new entry.'
+]) }}
+{% call d.callout(title='Style guide', icon='pencil') %}Keep sidebar descriptions short (ideally under 90 characters). Clear summaries make the search results easier to scan.{% endcall %}
 {% endblock %}

@@ -3,35 +3,31 @@
 {# Port of the upstream shadcn/ui example `textarea` (pinned source in compliance/upstream). #}
 {% block title %}textarea · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
-      {{ ui.textarea(attrs={'placeholder': 'Type your message here.'}) }}
-    {% endcall %}
-    {% call ui.example(title='Invalid') %}
-      {{ ui.textarea(invalid=true, attrs={'placeholder': 'Type your message here.'}) }}
-    {% endcall %}
-    {% call ui.example(title='With Label') %}
+      {% call ui.textarea(attrs={'placeholder': 'Type your message here.'}) %}{% raw %}{% endraw %}{% endcall %}
+{% endcall %}
+{% call ui.example(title='Invalid') %}
+      {% call ui.textarea(invalid=true, attrs={'placeholder': 'Type your message here.'}) %}{% raw %}{% endraw %}{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Label') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='textarea-demo-message') %}Message
-        {% endcall %}
-        {{ ui.textarea(id='textarea-demo-message', attrs={'placeholder': 'Type your message here.', 'rows': '6'}) }}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Description') %}
+        {% call ui.field_label(as_='label', for_='textarea-demo-message') %}Message{% endcall %}
+{% call ui.textarea(id='textarea-demo-message', attrs={'placeholder': 'Type your message here.', 'rows': '6'}) %}{% raw %}{% endraw %}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Description') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='textarea-demo-message-2') %}Message
-        {% endcall %}
-        {{ ui.textarea(id='textarea-demo-message-2', attrs={'placeholder': 'Type your message here.', 'rows': '6'}) }}
-        {% call ui.field_description() %}Type your message and press enter to send.
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Disabled') %}
+        {% call ui.field_label(as_='label', for_='textarea-demo-message-2') %}Message{% endcall %}
+{% call ui.textarea(id='textarea-demo-message-2', attrs={'placeholder': 'Type your message here.', 'rows': '6'}) %}{% raw %}{% endraw %}{% endcall %}
+{% call ui.field_description() %}Type your message and press enter to send.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Disabled') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='textarea-demo-disabled') %}Message
-        {% endcall %}
-        {{ ui.textarea(disabled=true, id='textarea-demo-disabled', attrs={'placeholder': 'Type your message here.'}) }}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+        {% call ui.field_label(as_='label', for_='textarea-demo-disabled') %}Message{% endcall %}
+{% call ui.textarea(disabled=true, id='textarea-demo-disabled', attrs={'placeholder': 'Type your message here.'}) %}{% raw %}{% endraw %}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

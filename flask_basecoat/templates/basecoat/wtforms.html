@@ -48,10 +48,10 @@
     {{ _field.field_label(text=(label or field.label.text), for_=field.id) }}
     {% if field.type == 'TextAreaField' %}
       {{ _textarea.textarea(text=(field.data or ''), id=field.id, name=field.name, invalid=invalid, required=required, placeholder=(placeholder or field.render_kw.placeholder if field.render_kw else placeholder), attrs={'aria-describedby': describedby or none}) }}
-    {% elif field.type in ('SelectField', 'SelectMultipleField') %}
+    {% elif field.type in ('SelectField', 'SelectMultipleField', 'QuerySelectField', 'QuerySelectMultipleField') or field.iter_choices is defined %}
       {% call _ns.native_select_wrapper() %}
-        {% call _ns.native_select(id=field.id, name=field.name, invalid=invalid, required=required, attrs={'aria-describedby': describedby or none}) %}
-          {% for value, text in field.choices %}{{ _ns.native_select_option(text=text, value=value, attrs={'selected': (value == field.data) or none}) }}{% endfor %}
+        {% call _ns.native_select(id=field.id, name=field.name, invalid=invalid, required=required, attrs={'aria-describedby': describedby or none, 'multiple': true if field.type.endswith('MultipleField') else none}) %}
+          {% for choice in field.iter_choices() %}{{ _ns.native_select_option(text=choice[1], value=choice[0], attrs={'selected': true if choice[2] else none}) }}{% endfor %}
         {% endcall %}
         {{ _ns.native_select_icon() }}
       {% endcall %}

@@ -3,65 +3,22 @@
 {# Port of the upstream shadcn/ui example `skeleton` (pinned source in compliance/upstream). #}
 {% block title %}skeleton · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Avatar') %}
-      <div class="flex w-full items-center gap-4">
-        {{ ui.skeleton(class='size-10 shrink-0 rounded-full') }}
-        <div class="grid gap-2">
-          {{ ui.skeleton(class='h-4 w-[150px]') }}
-          {{ ui.skeleton(class='h-4 w-[100px]') }}
-        </div>
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Card') %}
+      <div class="flex w-full items-center gap-4">{{ ui.skeleton(class='size-10 shrink-0 rounded-full') }}<div class="grid gap-2">{{ ui.skeleton(class='h-4 w-[150px]') }}{{ ui.skeleton(class='h-4 w-[100px]') }}</div></div>{% endcall %}
+{% call ui.example(title='Card') %}
       {% call ui.card(size='default', class='w-full') %}
         {% call ui.card_header() %}
-          {{ ui.skeleton(class='h-4 w-2/3') }}
-          {{ ui.skeleton(class='h-4 w-1/2') }}
-        {% endcall %}
-        {% call ui.card_content() %}
-          {{ ui.skeleton(class='aspect-square w-full') }}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Text') %}
-      <div class="flex w-full flex-col gap-2">
-        {{ ui.skeleton(class='h-4 w-full') }}
-        {{ ui.skeleton(class='h-4 w-full') }}
-        {{ ui.skeleton(class='h-4 w-3/4') }}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Form') %}
-      <div class="flex w-full flex-col gap-7">
-        <div class="flex flex-col gap-3">
-          {{ ui.skeleton(class='h-4 w-20') }}
-          {{ ui.skeleton(class='h-10 w-full') }}
-        </div>
-        <div class="flex flex-col gap-3">
-          {{ ui.skeleton(class='h-4 w-24') }}
-          {{ ui.skeleton(class='h-10 w-full') }}
-        </div>
-        {{ ui.skeleton(class='h-9 w-24') }}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Table') %}
-      <div class="flex w-full flex-col gap-2">
-        <div class="flex gap-4">
-          {{ ui.skeleton(class='h-4 flex-1') }}
-          {{ ui.skeleton(class='h-4 w-24') }}
-          {{ ui.skeleton(class='h-4 w-20') }}
-        </div>
-        <div class="flex gap-4">
-          {{ ui.skeleton(class='h-4 flex-1') }}
-          {{ ui.skeleton(class='h-4 w-24') }}
-          {{ ui.skeleton(class='h-4 w-20') }}
-        </div>
-        <div class="flex gap-4">
-          {{ ui.skeleton(class='h-4 flex-1') }}
-          {{ ui.skeleton(class='h-4 w-24') }}
-          {{ ui.skeleton(class='h-4 w-20') }}
-        </div>
-      </div>
-    {% endcall %}
-  {% endcall %}
+          {{ ui.skeleton(class='h-4 w-2/3') }}{{ ui.skeleton(class='h-4 w-1/2') }}{% endcall %}
+{% call ui.card_content() %}
+          {{ ui.skeleton(class='aspect-square w-full') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Text') %}
+      <div class="flex w-full flex-col gap-2">{{ ui.skeleton(class='h-4 w-full') }}{{ ui.skeleton(class='h-4 w-full') }}{{ ui.skeleton(class='h-4 w-3/4') }}</div>{% endcall %}
+{% call ui.example(title='Form') %}
+      <div class="flex w-full flex-col gap-7"><div class="flex flex-col gap-3">{{ ui.skeleton(class='h-4 w-20') }}{{ ui.skeleton(class='h-10 w-full') }}</div><div class="flex flex-col gap-3">{{ ui.skeleton(class='h-4 w-24') }}{{ ui.skeleton(class='h-10 w-full') }}</div>{{ ui.skeleton(class='h-9 w-24') }}</div>{% endcall %}
+{% call ui.example(title='Table') %}
+      <div class="flex w-full flex-col gap-2"><div class="flex gap-4">{{ ui.skeleton(class='h-4 flex-1') }}{{ ui.skeleton(class='h-4 w-24') }}{{ ui.skeleton(class='h-4 w-20') }}</div><div class="flex gap-4">{{ ui.skeleton(class='h-4 flex-1') }}{{ ui.skeleton(class='h-4 w-24') }}{{ ui.skeleton(class='h-4 w-20') }}</div><div class="flex gap-4">{{ ui.skeleton(class='h-4 flex-1') }}{{ ui.skeleton(class='h-4 w-24') }}{{ ui.skeleton(class='h-4 w-20') }}</div></div>{% endcall %}
+{% endcall %}
 {% endblock %}

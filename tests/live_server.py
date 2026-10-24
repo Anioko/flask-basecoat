@@ -34,7 +34,16 @@ class LiveServerManager:
         fd, db_path = tempfile.mkstemp(prefix="browser-tests-", suffix=".sqlite")
         os.close(fd)
         os.environ["TEST_DATABASE_URL"] = f"sqlite:///{db_path}"
-        app = create_app("testing")
+        # TestingConfig reads TEST_DATABASE_URL when config.py is imported, so the environment variable alone
+        # does not isolate this server: point the config at the temporary database for the duration of create_app,
+        # otherwise the browser tests share data-test.sqlite with every other `create_app('testing')` on the machine.
+        from config import TestingConfig
+        previous_uri = TestingConfig.SQLALCHEMY_DATABASE_URI
+        TestingConfig.SQLALCHEMY_DATABASE_URI = f"sqlite:///{db_path}"
+        try:
+            app = create_app("testing")
+        finally:
+            TestingConfig.SQLALCHEMY_DATABASE_URI = previous_uri
         if previous_db_url is None:
             os.environ.pop("TEST_DATABASE_URL", None)
         else:

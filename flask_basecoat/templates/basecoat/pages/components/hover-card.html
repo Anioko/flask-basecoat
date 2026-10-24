@@ -3,46 +3,30 @@
 {# Port of the upstream shadcn/ui example `hover-card` (pinned source in compliance/upstream). #}
 {% block title %}hover-card · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Sides') %}
-      <div class="flex flex-wrap items-center justify-center gap-4">
-        {% for side in ['top', 'right', 'bottom', 'left'] %}
+      <div class="flex flex-wrap items-center justify-center gap-4">{% for side in ['top', 'right', 'bottom', 'left'] %}
         {% call ui.hover_card(attrs={'data-open-delay': '100', 'data-close-delay': '100'}) %}
-          {% call ui.hover_card_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}{{ side }}
-          {% endcall %}
-          {% call ui.hover_card_content(side=side, class='w-64') %}
-            <div class="flex flex-col style-vega:gap-2 style-nova:gap-1.5 style-lyra:gap-1 style-maia:gap-2 style-mira:gap-1 style-luma:gap-2 style-sera:gap-2">
-              <h4 class="font-medium style-sera:font-heading style-sera:font-semibold style-sera:tracking-wide">Hover Card</h4>
-              <p class="style-sera:leading-relaxed">This hover card appears on the {{ side }} side of the trigger.</p>
-            </div>
-          {% endcall %}
-        {% endcall %}
-        {% endfor %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='In Dialog') %}
+          {% call ui.hover_card_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}{{ side }}{% endcall %}
+{% call ui.hover_card_content(side=side, class='w-64') %}
+            <div class="flex flex-col style-vega:gap-2 style-nova:gap-1.5 style-lyra:gap-1 style-maia:gap-2 style-mira:gap-1 style-luma:gap-2 style-sera:gap-2"><h4 class="font-medium style-sera:font-heading style-sera:font-semibold style-sera:tracking-wide">Hover Card</h4><p class="style-sera:leading-relaxed">This hover card appears on the {{ side }} side of the trigger.</p></div>{% endcall %}
+{% endcall %}
+{% endfor %}
+</div>{% endcall %}
+{% call ui.example(title='In Dialog') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Hover Card Example') }}
-            {{ ui.dialog_description(text='Hover over the button below to see the hover card.') }}
-          {% endcall %}
-          {% call ui.hover_card(attrs={'data-open-delay': '100', 'data-close-delay': '100'}) %}
-            {% call ui.hover_card_trigger(size='default', variant='outline', class='w-fit') %}Hover me
-            {% endcall %}
-            {% call ui.hover_card_content(class='w-64') %}
-              <div class="flex flex-col style-vega:gap-2 style-nova:gap-1.5 style-lyra:gap-1 style-maia:gap-2 style-mira:gap-1 style-luma:gap-2 style-sera:gap-2">
-                <h4 class="font-medium style-sera:font-heading style-sera:font-semibold style-sera:tracking-wide">Hover Card</h4>
-                <p class="style-sera:leading-relaxed">This hover card appears inside a dialog. Hover over the button to see it.</p>
-              </div>
-            {% endcall %}
-          {% endcall %}
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+            {{ ui.dialog_title(text='Hover Card Example') }}{{ ui.dialog_description(text='Hover over the button below to see the hover card.') }}{% endcall %}
+{% call ui.hover_card(attrs={'data-open-delay': '100', 'data-close-delay': '100'}) %}
+            {% call ui.hover_card_trigger(size='default', variant='outline', class='w-fit') %}Hover me{% endcall %}
+{% call ui.hover_card_content(class='w-64') %}
+              <div class="flex flex-col style-vega:gap-2 style-nova:gap-1.5 style-lyra:gap-1 style-maia:gap-2 style-mira:gap-1 style-luma:gap-2 style-sera:gap-2"><h4 class="font-medium style-sera:font-heading style-sera:font-semibold style-sera:tracking-wide">Hover Card</h4><p class="style-sera:leading-relaxed">This hover card appears inside a dialog. Hover over the button to see it.</p></div>{% endcall %}
+{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

@@ -1,311 +1,164 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-        function sendMessage(event) {
-            if (event) event.preventDefault();
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-            const container = document.getElementById('messages-container');
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const bubble = document.createElement('div');
-            bubble.className = "flex items-end gap-2 justify-end";
-            bubble.innerHTML = `
-                <div class="flex max-w-[65%] flex-col gap-1 items-end">
-                    <div class="rounded-2xl px-3.5 py-2 text-sm leading-relaxed bg-primary text-primary-foreground rounded-br-sm">
-                        ${text}
-                    </div>
-                    <span class="text-muted-foreground px-1 text-[10px]">${timeStr}</span>
-                </div>
-            `;
-            container.appendChild(bubble);
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-        }
-        function handleKeyDown(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
-
-    <div class="bg-background">
-        <div class="flex h-screen overflow-hidden">
-            {# Left Sidebar / Contact List #}
-            <div class="flex w-full shrink-0 flex-col space-y-4 border-r border-border p-4 md:w-72">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-lg font-semibold">Messages</h1>
-                    <button class="inline-flex shrink-0 items-center justify-center rounded-md text-sm font-medium hover:bg-muted size-8 text-muted-foreground" aria-label="New chat">
-                        <i data-lucide="square-pen" class="size-4"></i>
-                    </button>
-                </div>
-
-                {# Search Input #}
-                <div class="flex items-stretch w-full">
-                    <input class="w-full rounded-md rounded-r-none border border-input bg-transparent px-2.5 py-1 text-sm shadow-none outline-none focus-visible:ring-1 focus-visible:ring-ring" placeholder="Search...">
-                    <button class="inline-flex items-center justify-center rounded-r-md border border-l-0 border-input bg-background hover:bg-muted size-8 px-2" type="button" aria-label="Search">
-                        <i data-lucide="search" class="size-4 text-muted-foreground"></i>
-                    </button>
-                </div>
-
-                {# Tabs #}
-                <div class="flex flex-1 flex-col overflow-hidden">
-                    <div class="flex items-stretch mb-2 w-full">
-                        <button class="inline-flex items-center justify-center text-sm font-medium h-8 px-2.5 flex-1 rounded-l-md border border-input bg-secondary text-secondary-foreground" type="button">Personal</button>
-                        <button class="inline-flex items-center justify-center text-sm font-medium h-8 px-2.5 flex-1 rounded-r-md border border-l-0 border-input bg-background text-muted-foreground hover:bg-muted" type="button">
-                            Groups
-                            <span class="bg-primary text-primary-foreground ml-1.5 flex size-4 items-center justify-center rounded-full text-[10px]">3</span>
-                        </button>
-                    </div>
-
-                    <div class="flex-1 overflow-y-auto space-y-0.5">
-                        {# Contact 1 (Active) #}
-                        <button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors bg-muted">
-                            <div class="relative shrink-0">
-                                <span class="relative flex shrink-0 rounded-full size-10 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Shannon Baker" src="https://randomuser.me/api/portraits/women/44.jpg">
-                                </span>
-                                <span class="border-background absolute right-0 bottom-0 size-2.5 rounded-full border-2 bg-emerald-500"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-medium">Shannon Baker</span>
-                                    <span class="text-muted-foreground shrink-0 text-[11px]">07:39 AM</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-muted-foreground truncate text-xs">Will do. Appreciate it!</p>
-                                </div>
-                            </div>
-                        </button>
-
-                        {# Contact 2 #}
-                        <button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60">
-                            <div class="relative shrink-0">
-                                <span class="relative flex shrink-0 rounded-full size-10 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Jessica Wells" src="https://randomuser.me/api/portraits/women/68.jpg">
-                                </span>
-                                <span class="border-background absolute right-0 bottom-0 size-2.5 rounded-full border-2 bg-amber-400"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-medium">Jessica Wells</span>
-                                    <span class="text-muted-foreground shrink-0 text-[11px]">05:39 PM</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-muted-foreground truncate text-xs">Perfect. I'll pack the camping gear.</p>
-                                    <span class="bg-primary text-primary-foreground flex size-4 shrink-0 items-center justify-center rounded-full p-0 text-[10px] leading-none">2</span>
-                                </div>
-                            </div>
-                        </button>
-
-                        {# Contact 3 #}
-                        <button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60">
-                            <div class="relative shrink-0">
-                                <span class="relative flex shrink-0 rounded-full size-10 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Arlene Pierce" src="https://randomuser.me/api/portraits/women/32.jpg">
-                                </span>
-                                <span class="border-background absolute right-0 bottom-0 size-2.5 rounded-full border-2 bg-muted-foreground/40"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-medium">Arlene Pierce</span>
-                                    <span class="text-muted-foreground shrink-0 text-[11px]">03:49 PM</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-muted-foreground truncate text-xs">Okay, Thanks 👋</p>
-                                </div>
-                            </div>
-                        </button>
-
-                        {# Contact 4 #}
-                        <button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60">
-                            <div class="relative shrink-0">
-                                <span class="relative flex shrink-0 rounded-full size-10 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Max Alexander" src="https://randomuser.me/api/portraits/men/22.jpg">
-                                </span>
-                                <span class="border-background absolute right-0 bottom-0 size-2.5 rounded-full border-2 bg-emerald-500"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-medium">Max Alexander</span>
-                                    <span class="text-muted-foreground shrink-0 text-[11px]">01:59 PM</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-muted-foreground truncate text-xs">I'd love that! Let's set something up.</p>
-                                </div>
-                            </div>
-                        </button>
-
-                        {# Contact 5 #}
-                        <button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60">
-                            <div class="relative shrink-0">
-                                <span class="relative flex shrink-0 rounded-full size-10 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Jeremiah Minsk" src="https://randomuser.me/api/portraits/men/51.jpg">
-                                </span>
-                                <span class="border-background absolute right-0 bottom-0 size-2.5 rounded-full border-2 bg-muted-foreground/40"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-medium">Jeremiah Minsk</span>
-                                    <span class="text-muted-foreground shrink-0 text-[11px]">02:59 AM</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-muted-foreground truncate text-xs">No problem. Got it sorted 😬</p>
-                                </div>
-                            </div>
-                        </button>
-
-                        {# Contact 6 #}
-                        <button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/60">
-                            <div class="relative shrink-0">
-                                <span class="relative flex shrink-0 rounded-full size-10 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Camila Simmons" src="https://randomuser.me/api/portraits/women/17.jpg">
-                                </span>
-                                <span class="border-background absolute right-0 bottom-0 size-2.5 rounded-full border-2 bg-emerald-500"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-medium">Camila Simmons</span>
-                                    <span class="text-muted-foreground shrink-0 text-[11px]">10:19 PM</span>
-                                </div>
-                                <div class="flex items-center justify-between gap-2">
-                                    <p class="text-muted-foreground truncate text-xs">True! I'll be more careful.</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {# Right Main Chat View #}
-            <div class="hidden flex-1 overflow-hidden md:flex">
-                <div class="flex flex-1 flex-col overflow-hidden">
-                    {# Chat Header #}
-                    <div class="flex items-center justify-between border-b border-border px-5 py-3">
-                        <div class="flex items-center gap-3">
-                            <div class="relative">
-                                <span class="relative flex shrink-0 rounded-full size-9 overflow-hidden">
-                                    <img class="aspect-square size-full object-cover" alt="Shannon Baker" src="https://randomuser.me/api/portraits/women/44.jpg">
-                                </span>
-                            </div>
-                            <div>
-                                <h2 class="text-sm font-semibold">Shannon Baker</h2>
-                                <p class="text-muted-foreground text-xs">Active now</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <button class="inline-flex shrink-0 items-center justify-center rounded-md hover:bg-muted text-muted-foreground size-8" aria-label="Call">
-                                <i data-lucide="phone" class="size-4"></i>
-                            </button>
-                            <button class="inline-flex shrink-0 items-center justify-center rounded-md hover:bg-muted text-muted-foreground size-8" aria-label="Video">
-                                <i data-lucide="video" class="size-4"></i>
-                            </button>
-                            <button class="inline-flex shrink-0 items-center justify-center rounded-md hover:bg-muted text-muted-foreground size-8" aria-label="More options">
-                                <i data-lucide="ellipsis" class="size-4"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    {# Chat Thread #}
-                    <div id="messages-container" class="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-                        {# Shannon Msg 1 #}
-                        <div class="flex items-end gap-2 justify-start">
-                            <span class="relative flex rounded-full mb-1 size-7 shrink-0 overflow-hidden">
-                                <img class="aspect-square size-full object-cover" alt="Shannon" src="https://randomuser.me/api/portraits/women/44.jpg">
-                            </span>
-                            <div class="flex max-w-[65%] flex-col gap-1">
-                                <span class="text-muted-foreground ml-1 text-[11px] font-medium">Shannon</span>
-                                <div class="rounded-2xl px-3.5 py-2 text-sm leading-relaxed bg-muted text-foreground rounded-bl-sm">
-                                    I think you should go for it. You're more than capable and it sounds like a great opportunity for growth.
-                                </div>
-                                <span class="text-muted-foreground px-1 text-[10px]">07:31 AM</span>
-                            </div>
-                        </div>
-
-                        {# User Msg 1 #}
-                        <div class="flex items-end gap-2 justify-end">
-                            <div class="flex max-w-[65%] flex-col gap-1 items-end">
-                                <div class="rounded-2xl px-3.5 py-2 text-sm leading-relaxed bg-primary text-primary-foreground rounded-br-sm">
-                                    It's a bigger company and a more challenging role. I'm worried it might be too much to handle.
-                                </div>
-                                <span class="text-muted-foreground px-1 text-[10px]">07:35 AM</span>
-                            </div>
-                        </div>
-
-                        {# User Msg 2 #}
-                        <div class="flex items-end gap-2 justify-end">
-                            <div class="flex max-w-[65%] flex-col gap-1 items-end">
-                                <div class="rounded-2xl px-3.5 py-2 text-sm leading-relaxed bg-primary text-primary-foreground rounded-br-sm">
-                                    Thanks, I needed that encouragement. I'll start working on my application tonight.
-                                </div>
-                                <span class="text-muted-foreground px-1 text-[10px]">07:36 AM</span>
-                            </div>
-                        </div>
-
-                        {# Shannon Msg 2 #}
-                        <div class="flex items-end gap-2 justify-start">
-                            <span class="relative flex rounded-full mb-1 size-7 shrink-0 overflow-hidden">
-                                <img class="aspect-square size-full object-cover" alt="Shannon" src="https://randomuser.me/api/portraits/women/44.jpg">
-                            </span>
-                            <div class="flex max-w-[65%] flex-col gap-1">
-                                <span class="text-muted-foreground ml-1 text-[11px] font-medium">Shannon</span>
-                                <div class="rounded-2xl px-3.5 py-2 text-sm leading-relaxed bg-muted text-foreground rounded-bl-sm">
-                                    Anytime! Let me know if you need any help with your resume or cover letter.
-                                </div>
-                                <span class="text-muted-foreground px-1 text-[10px]">07:38 AM</span>
-                            </div>
-                        </div>
-
-                        {# User Msg 3 #}
-                        <div class="flex items-end gap-2 justify-end">
-                            <div class="flex max-w-[65%] flex-col gap-1 items-end">
-                                <div class="rounded-2xl px-3.5 py-2 text-sm leading-relaxed bg-primary text-primary-foreground rounded-br-sm">
-                                    Will do. Appreciate it!
-                                </div>
-                                <span class="text-muted-foreground px-1 text-[10px]">07:39 AM</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# Message Input Footer #}
-                    <div class="border-t border-border px-4 py-3">
-                        <form onsubmit="sendMessage(event)" class="relative flex border border-input bg-muted/50 items-end rounded-xl py-1.5 pr-1.5 pl-2">
-                            <textarea id="chat-input" onkeydown="handleKeyDown(event)" class="flex w-full resize-none rounded-none border-0 bg-transparent shadow-none outline-none placeholder:text-muted-foreground max-h-32 min-h-8 py-2 pr-0 pl-1 text-sm leading-tight" placeholder="Type a message..." rows="1"></textarea>
-                            <button type="submit" class="inline-flex shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/80 size-8 p-0" aria-label="Send message">
-                                <i data-lucide="send" class="size-3.5"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Chat App - Shadcn UI Examples{% endblock %}
+{% block head %}
+  <script>
+    function sendMessage(event) {
+      if (event) event.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const container = document.getElementById('messages-container');
+      const template = document.getElementById('outgoing-message-template');
+      const node = template.content.firstElementChild.cloneNode(true);
+      node.querySelector('[data-message-body]').textContent = text;
+      node.querySelector('[data-message-time]').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      container.appendChild(node);
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+    }
+    function handleKeyDown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    }
+  </script>
+{% endblock %}
+{% set status_tone = {'online': 'bg-chart-2', 'away': 'bg-chart-4', 'offline': 'bg-muted-foreground/40'} %}
+{% macro outgoing(text, time) %}
+  <div class="flex items-end justify-end gap-2">
+    <div class="flex max-w-[65%] flex-col items-end gap-1">
+      <div class="rounded-2xl rounded-br-sm bg-primary px-3.5 py-2 text-sm leading-relaxed text-primary-foreground" data-message-body>{{ text }}</div>
+      <span class="px-1 text-[10px] text-muted-foreground" data-message-time>{{ time }}</span>
     </div>
-</body>
-</html>
+  </div>
+{% endmacro %}
+{% block body %}
+  {% set contacts = [
+    {'name': 'Shannon Baker', 'avatar': 'https://randomuser.me/api/portraits/women/44.jpg', 'time': '07:39 AM', 'preview': 'Will do. Appreciate it!', 'status': 'online', 'active': true, 'unread': 0},
+    {'name': 'Jessica Wells', 'avatar': 'https://randomuser.me/api/portraits/women/68.jpg', 'time': '05:39 PM', 'preview': "Perfect. I'll pack the camping gear.", 'status': 'away', 'active': false, 'unread': 2},
+    {'name': 'Arlene Pierce', 'avatar': 'https://randomuser.me/api/portraits/women/32.jpg', 'time': '03:49 PM', 'preview': 'Okay, Thanks 👋', 'status': 'offline', 'active': false, 'unread': 0},
+    {'name': 'Max Alexander', 'avatar': 'https://randomuser.me/api/portraits/men/22.jpg', 'time': '01:59 PM', 'preview': "I'd love that! Let's set something up.", 'status': 'online', 'active': false, 'unread': 0},
+    {'name': 'Jeremiah Minsk', 'avatar': 'https://randomuser.me/api/portraits/men/51.jpg', 'time': '02:59 AM', 'preview': 'No problem. Got it sorted 😬', 'status': 'offline', 'active': false, 'unread': 0},
+    {'name': 'Camila Simmons', 'avatar': 'https://randomuser.me/api/portraits/women/17.jpg', 'time': '10:19 PM', 'preview': "True! I'll be more careful.", 'status': 'online', 'active': false, 'unread': 0}
+  ] %}
+  {% set thread = [
+    {'from': 'them', 'text': "I think you should go for it. You're more than capable and it sounds like a great opportunity for growth.", 'time': '07:31 AM'},
+    {'from': 'me', 'text': "It's a bigger company and a more challenging role. I'm worried it might be too much to handle.", 'time': '07:35 AM'},
+    {'from': 'me', 'text': "Thanks, I needed that encouragement. I'll start working on my application tonight.", 'time': '07:36 AM'},
+    {'from': 'them', 'text': 'Anytime! Let me know if you need any help with your resume or cover letter.', 'time': '07:38 AM'},
+    {'from': 'me', 'text': 'Will do. Appreciate it!', 'time': '07:39 AM'}
+  ] %}
+  <div class="flex h-svh overflow-hidden bg-background">
+    {# Conversation list #}
+    <div class="flex w-full shrink-0 flex-col space-y-4 border-r border-border p-4 md:w-72">
+      <div class="flex items-center justify-between">
+        <h1 class="text-lg font-semibold">Messages</h1>
+        {% call ui.button(variant='ghost', size='icon-sm', type='button', class='text-muted-foreground', aria_label='New chat') %}
+          {{ lucide('pencil', 'size-4') }}
+        {% endcall %}
+      </div>
+
+      {# Search #}
+      {% call ui.button_group(class='w-full') %}
+        {{ ui.input(name='q', placeholder='Search...', aria_label='Search conversations') }}
+        {% call ui.button(variant='outline', size='icon', type='button', aria_label='Search') %}
+          {{ lucide('search', 'size-4 text-muted-foreground') }}
+        {% endcall %}
+      {% endcall %}
+
+      {# Personal / Groups #}
+      {% call ui.tabs(class='flex flex-1 flex-col overflow-hidden') %}
+        {% call ui.tabs_list(class='w-full') %}
+          {{ ui.tabs_trigger(text='Personal', active=true, attrs={'data-value': 'personal'}) }}
+          {% call ui.tabs_trigger(attrs={'data-value': 'groups'}) %}
+            Groups
+            {{ ui.badge(text='3', class='ml-1.5 size-4 rounded-full p-0 text-[10px]') }}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.tabs_content(active=true, attrs={'data-value': 'personal'}, class='flex-1 space-y-0.5 overflow-y-auto') %}
+          {% for c in contacts %}
+            {% call ui.button(variant='ghost', type='button', class='h-auto w-full justify-start gap-3 rounded-lg px-3 py-2.5 text-left' ~ (' bg-muted' if c.active else '')) %}
+              {% call ui.avatar(class='size-10') %}
+                {{ ui.avatar_image(src=c.avatar, alt=c.name) }}
+                {{ ui.avatar_fallback(text=c.name[:1]) }}
+                {{ ui.avatar_badge(class=status_tone[c.status]) }}
+              {% endcall %}
+              <span class="min-w-0 flex-1">
+                <span class="flex items-center justify-between gap-2">
+                  <span class="truncate text-sm font-medium">{{ c.name }}</span>
+                  <span class="shrink-0 text-[11px] text-muted-foreground">{{ c.time }}</span>
+                </span>
+                <span class="flex items-center justify-between gap-2">
+                  <span class="truncate text-xs font-normal text-muted-foreground">{{ c.preview }}</span>
+                  {% if c.unread %}{{ ui.badge(text=c.unread, class='size-4 shrink-0 rounded-full p-0 text-[10px]') }}{% endif %}
+                </span>
+              </span>
+            {% endcall %}
+          {% endfor %}
+        {% endcall %}
+        {% call ui.tabs_content(attrs={'data-value': 'groups'}, class='flex-1 overflow-y-auto') %}
+          <p class="p-4 text-center text-sm text-muted-foreground">No group conversations yet.</p>
+        {% endcall %}
+      {% endcall %}
+    </div>
+
+    {# Active conversation #}
+    <div class="hidden flex-1 overflow-hidden md:flex">
+      <div class="flex flex-1 flex-col overflow-hidden">
+        <div class="flex items-center justify-between border-b border-border px-5 py-3">
+          <div class="flex items-center gap-3">
+            {% call ui.avatar(class='size-9') %}
+              {{ ui.avatar_image(src='https://randomuser.me/api/portraits/women/44.jpg', alt='Shannon Baker') }}
+              {{ ui.avatar_fallback(text='SB') }}
+            {% endcall %}
+            <div>
+              <h2 class="text-sm font-semibold">Shannon Baker</h2>
+              <p class="text-xs text-muted-foreground">Active now</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            {% for icon, label in [('audio-lines', 'Call'), ('video', 'Video'), ('ellipsis', 'More options')] %}
+              {% call ui.button(variant='ghost', size='icon-sm', type='button', class='text-muted-foreground', aria_label=label) %}
+                {{ lucide(icon, 'size-4') }}
+              {% endcall %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div id="messages-container" class="flex-1 space-y-4 overflow-y-auto px-5 py-5">
+          {% for m in thread %}
+            {% if m.from == 'me' %}
+              {{ outgoing(m.text, m.time) }}
+            {% else %}
+              <div class="flex items-end justify-start gap-2">
+                {% call ui.avatar(class='mb-1 size-7') %}
+                  {{ ui.avatar_image(src='https://randomuser.me/api/portraits/women/44.jpg', alt='Shannon') }}
+                  {{ ui.avatar_fallback(text='S') }}
+                {% endcall %}
+                <div class="flex max-w-[65%] flex-col gap-1">
+                  <span class="ml-1 text-[11px] font-medium text-muted-foreground">Shannon</span>
+                  <div class="rounded-2xl rounded-bl-sm bg-muted px-3.5 py-2 text-sm leading-relaxed text-foreground">{{ m.text }}</div>
+                  <span class="px-1 text-[10px] text-muted-foreground">{{ m.time }}</span>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="border-t border-border px-4 py-3">
+          <form onsubmit="sendMessage(event)" class="relative flex items-end rounded-xl border border-input bg-muted/50 py-1.5 pr-1.5 pl-2">
+            {{ ui.textarea(id='chat-input', name='message', rows=1, placeholder='Type a message...', class='max-h-32 min-h-8 resize-none rounded-none border-0 bg-transparent py-2 pr-0 pl-1 text-sm leading-tight shadow-none focus-visible:ring-0 dark:bg-transparent', attrs={'onkeydown': 'handleKeyDown(event)'}) }}
+            {% call ui.button(type='submit', size='icon-sm', class='rounded-lg', aria_label='Send message') %}
+              {{ lucide('send', 'size-3.5') }}
+            {% endcall %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Cloned by sendMessage() for outgoing messages #}
+  <template id="outgoing-message-template">{{ outgoing('', '') }}</template>
+{% endblock %}

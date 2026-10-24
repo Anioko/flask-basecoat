@@ -1,72 +1,42 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>shadcn/ui Examples - Flask Basecoat</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-12">
-    {{ bc.toast_container() }}
-
-    <div class="max-w-6xl mx-auto space-y-10">
-        {# Header #}
-        <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-8">
-            <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">Official shadcn/ui Ports</span>
-                    <span class="text-xs text-muted-foreground">• Jinja2 & Basecoat UI</span>
-                </div>
-                <h1 class="text-3xl font-bold tracking-tight">Application Screen Examples</h1>
-                <p class="text-muted-foreground text-sm mt-1 max-w-xl">
-                    Real-world application screens ported directly from official shadcn/ui repositories. Built entirely with canonical macros, zero raw tags, and 100% theme variable fidelity.
-                </p>
-            </div>
-            <div class="flex items-center gap-3">
-                {{ bc.button('Component Gallery', variant='outline', href='/basecoat/gallery') }}
-                {{ bc.button('Toggle Dark Mode', variant='outline', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </header>
-
-        {# Examples Grid #}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {% for ex in examples %}
-                {% set card_action %}
-                    <div class="w-full pt-4">
-                        {{ bc.button('View Screen Demo', href=ex.href, variant='default', class='w-full justify-center') }}
-                    </div>
-                {% endset %}
-
-                {% call bc.card(title=ex.title, description=ex.description, footer=card_action, class='flex flex-col justify-between hover:border-primary/50 transition-colors') %}
-                    <div class="space-y-4 my-2">
-                        <div class="flex flex-wrap gap-1.5">
-                            {% for tag in ex.tags %}
-                                {{ bc.badge(tag, variant='secondary') }}
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endcall %}
-            {% endfor %}
-        </div>
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Application Screen Examples · flask-basecoat{% endblock %}
+{% block body %}
+<div class="mx-auto w-full max-w-6xl space-y-10 p-6 md:p-12">
+  <header class="flex flex-col gap-4 border-b border-border pb-8 md:flex-row md:items-center md:justify-between">
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        {{ ui.badge(text='Official shadcn/ui Ports', variant='secondary') }}
+        <span class="text-xs text-muted-foreground">Jinja2 &amp; Basecoat UI</span>
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight">Application Screen Examples</h1>
+      <p class="mt-1 max-w-xl text-sm text-muted-foreground">
+        Real-world application screens ported directly from official shadcn/ui repositories. Built entirely with canonical macros, zero raw tags, and 100% theme variable fidelity.
+      </p>
     </div>
-</body>
-</html>
+    <div class="flex items-center gap-3">
+      {% call ui.button(variant='outline', href='/basecoat/gallery') %}{{ lucide('layout-grid') }} Component Gallery{% endcall %}
+      {% call ui.button(variant='outline', attrs={'data-theme-toggle': true}) %}{{ lucide('moon', 'dark:hidden') }}{{ lucide('sun', 'hidden dark:block') }} Toggle Dark Mode{% endcall %}
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for ex in examples %}
+    {% call ui.card(class='flex flex-col transition-colors hover:border-primary/50') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text=ex.title) }}
+        {{ ui.card_description(text=ex.description) }}
+      {% endcall %}
+      {% call ui.card_content(class='flex-1') %}
+        <div class="flex flex-wrap gap-1.5">
+          {% for tag in ex.tags %}{{ ui.badge(text=tag, variant='secondary') }}{% endfor %}
+        </div>
+      {% endcall %}
+      {% call ui.card_footer() %}
+        {% call ui.button(href=ex.href, class='w-full') %}View Screen Demo {{ lucide('arrow-right') }}{% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

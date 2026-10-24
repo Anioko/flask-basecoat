@@ -1,109 +1,166 @@
+{% import 'basecoat/index.html' as ui %}
 {% set current_slug = page.slug if page else none %}
 <!DOCTYPE html>
-<html lang="en" data-color-theme="light">
+<html lang="en" class="style-vega">
   <head>
     {% include 'partials/_head.html' %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.3/dist/basecoat.cdn.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/docs.css') }}">
+    <script>
+      // Theme preference is applied before first paint so dark pages do not flash.
+      (function () {
+        try {
+          var stored = localStorage.getItem('flask-basecoat-theme');
+          var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {}
+      })();
+    </script>
+    {{ basecoat.js() }}
     {% block extra_head %}{% endblock %}
   </head>
-  <body class="docs-shell">
-    <button class="docs-mobile-toggle" type="button" data-mobile-toggle aria-label="Toggle navigation">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
-    </button>
-    <aside class="docs-sidebar" data-sidebar>
-      <div class="docs-sidebar__header">
-        <a href="{{ url_for('main.index') }}" class="docs-brand">
-          <span class="docs-brand__logo">🌗</span>
-          <span class="docs-brand__label">Basecoat Design System</span>
-        </a>
-      </div>
-      <nav class="docs-nav" aria-label="Documentation navigation">
-        {% for section in docs_nav %}
-          <div class="docs-nav__section">
-            <h2 class="docs-nav__heading">{{ section.title }}</h2>
-            <ul class="docs-nav__list">
-              {% for item in section.pages %}
-                {% set is_blocks_descendant = page.slug and page.slug.startswith('blocks/') %}
-                {% set is_active = item.slug == page.slug or (is_blocks_descendant and item.slug == 'blocks') %}
-                <li>
-                  <a href="{{ url_for('docs.page', slug=item.slug) }}" class="docs-nav__link {% if is_active %}is-active{% endif %}" {% if is_active %}aria-current="page"{% endif %}>
-                    <span class="docs-nav__title">{{ item.title }}</span>
-                    <span class="docs-nav__description">{{ item.description }}</span>
-                  </a>
-                </li>
+  <body class="min-h-svh bg-background text-foreground antialiased">
+    {% for category, message in get_flashed_messages(with_categories=true) %}<template data-fb-flash data-variant="{{ 'error' if category in ('error', 'danger') else category }}">{{ message }}</template>{% endfor %}
+    {# Classes rendered by docs.js (table of contents and search results) so the stylesheet build includes them:
+       text-sm font-medium mt-2 flex flex-col gap-1 border-l -ml-px block border-transparent py-1 pl-4 pl-8 text-muted-foreground
+       transition-colors hover:text-foreground data-[active=true]:border-foreground data-[active=true]:font-medium data-[active=true]:text-foreground
+       hidden rounded-sm px-2 py-1.5 outline-hidden hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
+       text-xs line-clamp-2 gap-0.5 #}
+    {% call ui.sidebar_wrapper(attrs={'style': '--sidebar-width:18rem;--sidebar-width-icon:3rem'}) %}
+      {% call ui.sidebar(variant='sidebar') %}
+        {{ ui.sidebar_gap() }}
+        {% call ui.sidebar_container() %}
+          {% call ui.sidebar_inner() %}
+            {% call ui.sidebar_header() %}
+              {% call ui.sidebar_menu() %}
+                {% call ui.sidebar_menu_item() %}
+                  {% call ui.sidebar_menu_button(size='lg', href=url_for('main.index')) %}
+                    <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                      {{ lucide('blocks') }}
+                    </div>
+                    <div class="grid flex-1 text-left text-sm leading-tight">
+                      <span class="truncate font-medium">Basecoat Design System</span>
+                      <span class="truncate text-xs text-sidebar-foreground/70">Documentation</span>
+                    </div>
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+              <form class="relative" role="search" aria-label="Docs search" onsubmit="return false">
+                {{ ui.label(text='Search the docs', for_='docs-search', class='sr-only') }}
+                {{ ui.sidebar_input(id='docs-search', type='search', class='pl-8', attrs={'name': 'query', 'placeholder': 'Search the docs...', 'autocomplete': 'off', 'spellcheck': 'false', 'data-docs-search': ''}) }}
+                {{ lucide('search', 'pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none') }}
+                <div data-docs-search-results class="absolute inset-x-0 top-full z-50 mt-1 hidden flex-col gap-0.5 rounded-md border bg-popover p-1 text-popover-foreground shadow-md" aria-live="polite"></div>
+              </form>
+            {% endcall %}
+            {% call ui.sidebar_content() %}
+              {% for section in docs_nav %}
+              {% call ui.sidebar_group() %}
+                {{ ui.sidebar_group_label(text=section.title) }}
+                {% call ui.sidebar_group_content() %}
+                  {% call ui.sidebar_menu() %}
+                    {% for item in section.pages %}
+                      {% set is_blocks_descendant = current_slug and current_slug.startswith('blocks/') %}
+                      {% set is_components_descendant = current_slug and current_slug.startswith('components/') and not (current_slug in ['components/test', 'components/kanban', 'components/list', 'components/gantt']) %}
+                      {% set is_active = item.slug == current_slug or (is_blocks_descendant and item.slug == 'blocks' and current_slug != 'blocks/sidebar-demo') or (is_components_descendant and item.slug == 'components') %}
+                      {% call ui.sidebar_menu_item() %}
+                        {{ ui.sidebar_menu_button(text=item.title, href=url_for('docs.page', slug=item.slug), active=is_active, attrs={'data-docs-nav': '', 'data-description': item.description, 'data-section': section.title, 'aria-current': 'page' if is_active else none}) }}
+                      {% endcall %}
+                    {% endfor %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
               {% endfor %}
-            </ul>
+            {% endcall %}
+            {% call ui.sidebar_footer() %}
+              {% call ui.sidebar_menu() %}
+                {% call ui.sidebar_menu_item() %}
+                  {% call ui.sidebar_menu_button(href='https://basecoatui.dev', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}
+                    {{ lucide('external-link') }}<span>Basecoat UI</span>
+                  {% endcall %}
+                {% endcall %}
+                {% call ui.sidebar_menu_item() %}
+                  {% call ui.sidebar_menu_button(href='https://github.com/hack4impact/flask-base', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}
+                    {{ lucide('git-branch') }}<span>View Original Flask-Base</span>
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+            {{ ui.sidebar_rail(attrs={'aria-label': 'Toggle Sidebar', 'title': 'Toggle Sidebar'}) }}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.sidebar_inset() %}
+        <header class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          {% call ui.sidebar_trigger(size='icon-sm', variant='ghost', class='-ml-1') %}
+            {{ lucide('panel-left', 'cn-rtl-flip') }}<span class="sr-only">Toggle Sidebar</span>
+          {% endcall %}
+          {{ ui.separator(orientation='vertical', class='mr-2 data-vertical:h-4 data-vertical:self-auto') }}
+          {% call ui.breadcrumb(attrs={'aria-label': 'Breadcrumb'}) %}
+            {% call ui.breadcrumb_list() %}
+              {% call ui.breadcrumb_item(class='hidden md:block') %}
+                {{ ui.breadcrumb_link(text='Docs', href=url_for('docs.docs_index')) }}
+              {% endcall %}
+              {% for crumb in breadcrumbs %}
+                {% call ui.breadcrumb_separator(class='hidden md:block') %}{{ lucide('chevron-right', 'cn-rtl-flip') }}{% endcall %}
+                {% call ui.breadcrumb_item(class=('hidden md:block' if not loop.last else '')) %}
+                  {% if loop.last %}
+                    {{ ui.breadcrumb_page(text=crumb.label) }}
+                  {% elif crumb.is_link %}
+                    {{ ui.breadcrumb_link(text=crumb.label, href=crumb.url) }}
+                  {% else %}
+                    <span class="text-muted-foreground">{{ crumb.label }}</span>
+                  {% endif %}
+                {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+          <div class="ml-auto flex items-center gap-1">
+            {% call ui.button(variant='ghost', size='icon-sm', attrs={'data-theme-toggle': '', 'aria-label': 'Toggle theme', 'title': 'Toggle theme'}) %}
+              {{ lucide('sun', 'dark:hidden') }}{{ lucide('moon', 'hidden dark:block') }}
+              <span class="sr-only">Toggle theme</span>
+            {% endcall %}
+            {% call ui.button(variant='ghost', size='sm', href='https://github.com/hack4impact/flask-basecoat', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}
+              {{ lucide('git-branch') }}GitHub
+            {% endcall %}
           </div>
-        {% endfor %}
-      </nav>
-      <div class="docs-sidebar__footer">
-        <a class="docs-sidebar__cta" href="https://github.com/hack4impact/flask-base" target="_blank" rel="noreferrer">View Original Flask-Base</a>
-        <a class="docs-sidebar__cta" href="https://basecoatui.dev" target="_blank" rel="noreferrer">Basecoat UI</a>
-      </div>
-    </aside>
-    <div class="docs-main" data-main>
-      <header class="docs-topbar">
-        <div class="docs-breadcrumbs" aria-label="Breadcrumb">
-          {% for crumb in breadcrumbs %}
-            {% if not loop.last %}
-              {% if crumb.is_link %}
-                <a href="{{ crumb.url }}">{{ crumb.label }}</a>
-              {% else %}
-                <span>{{ crumb.label }}</span>
-              {% endif %}
-              <span class="divider">/</span>
-            {% else %}
-              <span aria-current="page">{{ crumb.label }}</span>
-            {% endif %}
-          {% endfor %}
-        </div>
-        <form class="docs-search" role="search" aria-label="Docs search">
-          <label class="sr-only" for="docs-search">Search docs</label>
-          <svg class="docs-search__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-5.197-5.197m0 0A6.75 6.75 0 1 0 5.25 5.25a6.75 6.75 0 0 0 10.553 8.053Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <input id="docs-search" class="docs-search__input" type="search" name="query" placeholder="Search docs…" autocomplete="off" spellcheck="false" data-docs-search>
-          <div class="docs-search__results" data-docs-search-results aria-live="polite"></div>
-        </form>
-        <div class="docs-actions">
-          <button type="button" class="docs-action" data-theme-toggle>
-            <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5V3m0 18v-1.5M6.52 6.52 5.4 5.4m13.2 13.2-1.12-1.12M4.5 12H3m18 0h-1.5M6.52 17.48 5.4 18.6m13.2-13.2-1.12 1.12M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-            <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.25a8.25 8.25 0 0 0 13.72 6.12 8.25 8.25 0 0 1-8.09-11.17A8.25 8.25 0 0 0 4 12.25Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-            <span class="sr-only">Toggle theme</span>
-          </button>
-          <a class="docs-action" href="https://github.com/hack4impact/flask-basecoat" target="_blank" rel="noreferrer">GitHub</a>
-        </div>
-      </header>
-      <main class="docs-content" id="content">
-        <div class="docs-content__inner">
-          <article class="docs-article">
-            <header class="docs-page-header">
-              <p class="docs-eyebrow">{{ page.section if page.section else 'Basecoat Docs' }}</p>
-              <h1>{{ page.title }}</h1>
-              <p class="docs-page-description">{{ page.description }}</p>
+        </header>
+        <div class="flex flex-1 gap-10 px-4 py-8 sm:px-6 lg:px-10">
+          <article data-docs-article class="min-w-0 flex-1 max-w-3xl">
+            <header class="flex flex-col gap-2">
+              <p class="text-sm font-medium text-muted-foreground">{{ page.section if page.section else 'Basecoat Docs' }}</p>
+              <h1 class="scroll-m-20 text-3xl font-bold tracking-tight sm:text-4xl">{{ page.title }}</h1>
+              {% if page.description %}<p class="text-lg text-muted-foreground">{{ page.description }}</p>{% endif %}
             </header>
             {% block content %}{% endblock %}
+            <nav class="mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2" aria-label="Pagination">
+              {% if prev_page %}
+                {% call ui.button(variant='outline', href=url_for('docs.page', slug=prev_page.slug), class='h-auto justify-start whitespace-normal px-4 py-3 text-left') %}
+                  {{ lucide('chevron-left', 'cn-rtl-flip') }}
+                  <span class="grid gap-0.5">
+                    <span class="text-xs font-normal text-muted-foreground">Previous</span>
+                    <span>{{ prev_page.title }}</span>
+                  </span>
+                {% endcall %}
+              {% else %}
+                <span></span>
+              {% endif %}
+              {% if next_page %}
+                {% call ui.button(variant='outline', href=url_for('docs.page', slug=next_page.slug), class='h-auto justify-end whitespace-normal px-4 py-3 text-right') %}
+                  <span class="grid gap-0.5">
+                    <span class="text-xs font-normal text-muted-foreground">Next</span>
+                    <span>{{ next_page.title }}</span>
+                  </span>
+                  {{ lucide('chevron-right', 'cn-rtl-flip') }}
+                {% endcall %}
+              {% endif %}
+            </nav>
           </article>
-          <aside class="docs-toc" data-docs-toc aria-label="On this page" role="navigation"></aside>
+          <aside class="hidden w-56 shrink-0 xl:block" aria-label="On this page">
+            <nav class="sticky top-24" data-docs-toc></nav>
+          </aside>
         </div>
-        <nav class="docs-pagination" aria-label="Pagination">
-          {% if prev_page %}
-            <a class="docs-pagination__link prev" href="{{ url_for('docs.page', slug=prev_page.slug) }}">
-              <span class="label">Previous</span>
-              <span class="title">{{ prev_page.title }}</span>
-            </a>
-          {% endif %}
-          {% if next_page %}
-            <a class="docs-pagination__link next" href="{{ url_for('docs.page', slug=next_page.slug) }}">
-              <span class="label">Next</span>
-              <span class="title">{{ next_page.title }}</span>
-            </a>
-          {% endif %}
-        </nav>
-      </main>
-    </div>
+      {% endcall %}
+    {% endcall %}
     <script src="{{ url_for('static', filename='scripts/docs.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='scripts/components.js') }}" defer></script>
     {% block extra_scripts %}{% endblock %}
   </body>
 </html>

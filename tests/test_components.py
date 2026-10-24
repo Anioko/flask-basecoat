@@ -158,10 +158,24 @@ class ComponentsTestCase(unittest.TestCase):
     def test_component_styling_present(self):
         response = self.client.get('/docs/components/button')
         self.assertEqual(response.status_code, 200)
-        # Check that component examples are rendered
-        self.assertIn(b'btn-primary', response.data)
-        self.assertIn(b'btn-secondary', response.data)
-        self.assertIn(b'btn-outline', response.data)
+        # Every example is a button macro carrying the upstream slot and variant recipe
+        self.assertIn(b'data-slot="button"', response.data)
+        self.assertIn(b'cn-button-variant-default', response.data)
+        self.assertIn(b'data-variant="secondary"', response.data)
+        self.assertIn(b'data-variant="outline"', response.data)
+        # The legacy class API is gone
+        self.assertNotIn(b'btn-primary', response.data)
+        self.assertNotIn(b'class="btn', response.data)
+
+    def test_docs_layout_uses_sidebar_macros(self):
+        response = self.client.get('/docs/components/button')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'class="style-vega"', response.data)
+        self.assertIn(b'data-slot="sidebar-wrapper"', response.data)
+        self.assertIn(b'data-slot="sidebar-menu-button"', response.data)
+        self.assertIn(b'styles/app.css', response.data)
+        self.assertNotIn(b'basecoat.cdn.min.css', response.data)
+        self.assertNotIn(b'styles/docs.css', response.data)
 
 
 if __name__ == '__main__':

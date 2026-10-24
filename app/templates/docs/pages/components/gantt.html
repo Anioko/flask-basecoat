@@ -1,44 +1,34 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 
 {% block extra_head %}
 <style>
+  /* Timeline layout; every colour comes from the design tokens so dark mode follows the page theme. */
   .gantt-wrapper {
-    margin: 2rem 0;
-    border: 1px solid rgb(226 232 240);
-    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
-    background: white;
-  }
-
-  .dark .gantt-wrapper {
-    border-color: rgb(51 65 85);
-    background: rgb(15 23 42);
+    background: var(--card);
+    color: var(--card-foreground);
   }
 
   .gantt-header {
     display: grid;
     grid-template-columns: 250px 100px 1fr;
-    border-bottom: 1px solid rgb(226 232 240);
-    background: rgb(248 250 252);
+    border-bottom: 1px solid var(--border);
+    background: var(--muted);
     position: sticky;
     top: 0;
     z-index: 10;
-  }
-
-  .dark .gantt-header {
-    border-bottom-color: rgb(51 65 85);
-    background: rgb(30 41 59);
   }
 
   .gantt-header-cell {
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: rgb(71 85 105);
-  }
-
-  .dark .gantt-header-cell {
-    color: rgb(148 163 184);
+    color: var(--muted-foreground);
   }
 
   .gantt-timeline-header {
@@ -53,19 +43,11 @@
     text-align: center;
     font-size: 0.875rem;
     font-weight: 600;
-    color: rgb(71 85 105);
-  }
-
-  .dark .gantt-month {
-    color: rgb(148 163 184);
+    color: var(--muted-foreground);
   }
 
   .gantt-section {
-    border-bottom: 1px solid rgb(226 232 240);
-  }
-
-  .dark .gantt-section {
-    border-bottom-color: rgb(51 65 85);
+    border-bottom: 1px solid var(--border);
   }
 
   .gantt-section:last-child {
@@ -74,29 +56,18 @@
 
   .gantt-section-header {
     padding: 0.75rem 1rem;
-    background: rgb(248 250 252);
+    background: var(--muted);
     font-weight: 600;
     font-size: 0.875rem;
-    color: rgb(15 23 42);
-    border-bottom: 1px solid rgb(226 232 240);
+    border-bottom: 1px solid var(--border);
     grid-column: 1 / -1;
-  }
-
-  .dark .gantt-section-header {
-    background: rgb(30 41 59);
-    color: rgb(241 245 249);
-    border-bottom-color: rgb(51 65 85);
   }
 
   .gantt-row {
     display: grid;
     grid-template-columns: 300px 120px 1fr;
-    border-bottom: 1px solid rgb(241 245 249);
+    border-bottom: 1px solid var(--border);
     min-height: 52px;
-  }
-
-  .dark .gantt-row {
-    border-bottom-color: rgb(51 65 85);
   }
 
   .gantt-task-info {
@@ -111,44 +82,25 @@
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+    background: var(--chart-1);
   }
 
-  .gantt-task-indicator.design {
-    background: #A855F7;
-  }
-
-  .gantt-task-indicator.frontend {
-    background: #5B91F5;
-  }
-
-  .gantt-task-indicator.backend {
-    background: #22C55E;
-  }
-
-  .gantt-task-indicator.qa {
-    background: #F97316;
-  }
+  .gantt-task-indicator.design { background: var(--chart-1); }
+  .gantt-task-indicator.frontend { background: var(--chart-2); }
+  .gantt-task-indicator.backend { background: var(--chart-3); }
+  .gantt-task-indicator.qa { background: var(--chart-4); }
 
   .gantt-task-name {
     font-size: 0.875rem;
     font-weight: 400;
-    color: rgb(15 23 42);
-  }
-
-  .dark .gantt-task-name {
-    color: rgb(241 245 249);
   }
 
   .gantt-task-duration {
     padding: 0.75rem 1rem;
     font-size: 0.75rem;
-    color: rgb(100 116 139);
+    color: var(--muted-foreground);
     display: flex;
     align-items: center;
-  }
-
-  .dark .gantt-task-duration {
-    color: rgb(148 163 184);
   }
 
   .gantt-timeline {
@@ -168,76 +120,75 @@
   .gantt-timeline-cell {
     flex: 0 0 120px;
     height: 100%;
-    border-right: 1px solid rgb(241 245 249);
-  }
-
-  .dark .gantt-timeline-cell {
-    border-right-color: rgb(51 65 85);
+    border-right: 1px solid var(--border);
   }
 
   .gantt-bar {
     position: absolute;
     height: 28px;
     top: 2px;
-    border-radius: 0.375rem;
+    border-radius: calc(var(--radius) - 2px);
     display: flex;
     align-items: center;
     padding: 0 0.75rem;
     font-size: 0.75rem;
     font-weight: 500;
-    color: white;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-left: 4px solid var(--chart-1);
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: opacity 0.2s, box-shadow 0.2s;
   }
 
   .gantt-bar:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
+    opacity: 0.9;
+    box-shadow: 0 4px 6px -1px color-mix(in oklch, var(--foreground) 20%, transparent);
   }
 
-  .gantt-bar.design {
-    background: #A855F7;
-  }
-
-  .gantt-bar.frontend {
-    background: #5B91F5;
-  }
-
-  .gantt-bar.backend {
-    background: #22C55E;
-  }
-
-  .gantt-bar.qa {
-    background: #F97316;
-  }
+  .gantt-bar.design { border-left-color: var(--chart-1); }
+  .gantt-bar.frontend { border-left-color: var(--chart-2); }
+  .gantt-bar.backend { border-left-color: var(--chart-3); }
+  .gantt-bar.qa { border-left-color: var(--chart-4); }
 </style>
 {% endblock %}
 
 {% block content %}
-<h2>Overview</h2>
-<p>A project timeline visualization showing when tasks occur across time. Features month-based timeline with colored bars indicating task duration and department.</p>
+{{ d.h2('Overview') }}
+{{ d.p('A project timeline visualization showing when tasks occur across time. Features a month-based timeline with bars indicating task duration and a chart-token accent per department.') }}
 
-<h2>Features</h2>
-<ul>
-  <li><strong>Timeline View:</strong> Month-by-month visualization</li>
-  <li><strong>Task Indicators:</strong> Colored dots for quick identification</li>
-  <li><strong>Duration Display:</strong> Shows task length in months</li>
-  <li><strong>Timeline Bars:</strong> Positioned bars showing when tasks occur</li>
-  <li><strong>Responsive:</strong> Horizontal scrolling for extended timelines</li>
-</ul>
+{{ d.h2('Features') }}
+{{ d.ul([
+  '<strong>Timeline View:</strong> Month-by-month visualization',
+  '<strong>Task Indicators:</strong> Chart-token dots for quick identification',
+  '<strong>Duration Display:</strong> Shows task length in months',
+  '<strong>Timeline Bars:</strong> Positioned bars showing when tasks occur',
+  '<strong>Responsive:</strong> Horizontal scrolling for extended timelines'
+]) }}
 
-<h2>Interactive Demo</h2>
-<div id="gantt-chart" class="gantt-wrapper">
-  <!-- Gantt chart will be rendered here by JavaScript -->
+{{ d.h2('Interactive Demo') }}
+<div id="gantt-chart" class="gantt-wrapper" aria-label="Project timeline">
+  {% call ui.empty(class='w-full') %}
+    {% call ui.empty_header() %}
+      {% call ui.empty_icon(variant='icon') %}{{ ui.spinner() }}{% endcall %}
+      {{ ui.empty_title(text='Loading timeline') }}
+      {{ ui.empty_description(text='Tasks and months are rendered from the sample data set.') }}
+    {% endcall %}
+  {% endcall %}
 </div>
 
-<h2>Usage</h2>
-<p>View when each task occurs on the timeline. Scroll horizontally to see the full project schedule.</p>
+{{ d.h2('Usage') }}
+{{ d.p('View when each task occurs on the timeline. Scroll horizontally to see the full project schedule.') }}
 
 <script>
 (function() {
   let ganttData = null;
   const MONTH_WIDTH = 120; // Width per month in pixels
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
 
   // Load data from JSON
   async function loadGanttData() {
@@ -252,19 +203,12 @@
 
   // Get timeline range
   function getTimelineRange() {
-    const dates = ganttData.tasks.flatMap(task => [
-      new Date(task.startDate),
-      new Date(task.endDate)
-    ]);
-
+    const dates = ganttData.tasks.flatMap(task => [new Date(task.startDate), new Date(task.endDate)]);
     const minDate = new Date(Math.min(...dates));
     const maxDate = new Date(Math.max(...dates));
-
-    // Round to month boundaries
     minDate.setDate(1);
     maxDate.setMonth(maxDate.getMonth() + 1);
     maxDate.setDate(1);
-
     return { minDate, maxDate };
   }
 
@@ -272,12 +216,10 @@
   function getMonthsBetween(startDate, endDate) {
     const months = [];
     const current = new Date(startDate);
-
     while (current < endDate) {
       months.push(new Date(current));
       current.setMonth(current.getMonth() + 1);
     }
-
     return months;
   }
 
@@ -285,20 +227,11 @@
   function getBarPosition(task, minDate) {
     const taskStart = new Date(task.startDate);
     const taskEnd = new Date(task.endDate);
-
-    // Calculate months from start
-    const startMonths = (taskStart.getFullYear() - minDate.getFullYear()) * 12 +
-                       (taskStart.getMonth() - minDate.getMonth());
-
-    const endMonths = (taskEnd.getFullYear() - minDate.getFullYear()) * 12 +
-                     (taskEnd.getMonth() - minDate.getMonth());
-
-    // Calculate day offset within start month
-    const dayOffset = (taskStart.getDate() - 1) / 30; // Approximate
-
+    const startMonths = (taskStart.getFullYear() - minDate.getFullYear()) * 12 + (taskStart.getMonth() - minDate.getMonth());
+    const endMonths = (taskEnd.getFullYear() - minDate.getFullYear()) * 12 + (taskEnd.getMonth() - minDate.getMonth());
+    const dayOffset = (taskStart.getDate() - 1) / 30;
     const left = (startMonths + dayOffset) * MONTH_WIDTH;
     const width = ((endMonths - startMonths) + (taskEnd.getDate() / 30)) * MONTH_WIDTH;
-
     return { left, width };
   }
 
@@ -306,9 +239,7 @@
   function getDuration(startDate, endDate) {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const diffTime = Math.abs(end - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+    const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
     const months = Math.round(diffDays / 30);
     return `${months} month${months !== 1 ? 's' : ''}`;
   }
@@ -332,9 +263,7 @@
         <div class="gantt-header-cell">Issues</div>
         <div class="gantt-header-cell">Duration</div>
         <div class="gantt-timeline-header" style="min-width: ${totalWidth}px;">
-          ${months.map(month => `
-            <div class="gantt-month">${formatMonth(month)}</div>
-          `).join('')}
+          ${months.map(month => `<div class="gantt-month">${formatMonth(month)}</div>`).join('')}
         </div>
       </div>
     `;
@@ -344,23 +273,23 @@
 
       html += `
         <div class="gantt-section">
-          <div class="gantt-section-header">${group.name}</div>
+          <div class="gantt-section-header">${escapeHtml(group.name)}</div>
           ${groupTasks.map(task => {
             const { left, width } = getBarPosition(task, minDate);
-            const showText = width > 100; // Only show text if bar is wide enough
+            const showText = width > 100;
 
             return `
               <div class="gantt-row">
                 <div class="gantt-task-info">
-                  <div class="gantt-task-indicator ${task.group}"></div>
-                  <div class="gantt-task-name">${task.name}</div>
+                  <div class="gantt-task-indicator ${escapeHtml(task.group)}"></div>
+                  <div class="gantt-task-name">${escapeHtml(task.name)}</div>
                 </div>
                 <div class="gantt-task-duration">${getDuration(task.startDate, task.endDate)}</div>
                 <div class="gantt-timeline" style="min-width: ${totalWidth}px;">
                   <div class="gantt-timeline-track" style="width: ${totalWidth}px;">
                     ${months.map(() => '<div class="gantt-timeline-cell"></div>').join('')}
-                    <div class="gantt-bar ${task.group}" style="left: ${left}px; width: ${width}px;" title="${task.name}">
-                      ${showText ? task.name : ''}
+                    <div class="gantt-bar ${escapeHtml(task.group)}" style="left: ${left}px; width: ${width}px;" title="${escapeHtml(task.name)}">
+                      ${showText ? escapeHtml(task.name) : ''}
                     </div>
                   </div>
                 </div>
@@ -374,7 +303,6 @@
     container.innerHTML = html;
   }
 
-  // Initialize on page load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadGanttData);
   } else {

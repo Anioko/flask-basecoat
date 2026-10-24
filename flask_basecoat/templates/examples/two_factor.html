@@ -1,182 +1,126 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two-Step Verification - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Two-Step Verification - shadcn/ui Example{% endblock %}
+{% block head %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const otp = document.getElementById('otp-code');
+    const verifyBtn = document.getElementById('verify-button');
+    if (otp && verifyBtn) {
+      const sync = () => { verifyBtn.disabled = otp.value.length < 6; };
+      otp.addEventListener('input', sync);
+      otp.addEventListener('basecoat:change', sync);
+      sync();
+    }
+    startResendTimer();
+  });
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-            initOtpInputs();
-            startResendTimer();
-        });
+  let timeLeft = 45;
+  let timerInterval = null;
+  function startResendTimer() {
+    timeLeft = 45;
+    const timerEl = document.getElementById('resend-timer-container');
+    const btnEl = document.getElementById('resend-button');
+    if (timerEl) timerEl.classList.remove('hidden');
+    if (btnEl) btnEl.classList.add('hidden');
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      const secStr = timeLeft < 10 ? '0' + timeLeft : timeLeft;
+      document.getElementById('resend-countdown').textContent = `00:${secStr}`;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        if (timerEl) timerEl.classList.add('hidden');
+        if (btnEl) btnEl.classList.remove('hidden');
+      }
+    }, 1000);
+  }
+  function resendOtp() {
+    if (window.FlaskBasecoat && FlaskBasecoat.toast) FlaskBasecoat.toast.success('A fresh verification code has been dispatched to your email.');
+    startResendTimer();
+  }
+  function verifyOtp(e) {
+    e.preventDefault();
+    const successCard = document.getElementById('otp-success');
+    const formCard = document.getElementById('otp-form-card');
+    if (successCard && formCard) {
+      formCard.classList.add('hidden');
+      successCard.classList.remove('hidden');
+    }
+  }
+</script>
+{% endblock %}
 
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+{% set otp_group_class = '*:data-[slot=input-otp-slot]:text-xl style-vega:*:data-[slot=input-otp-slot]:h-16 style-vega:*:data-[slot=input-otp-slot]:w-12 style-nova:*:data-[slot=input-otp-slot]:h-12 style-nova:*:data-[slot=input-otp-slot]:w-11 style-lyra:*:data-[slot=input-otp-slot]:h-12 style-lyra:*:data-[slot=input-otp-slot]:w-11 style-maia:*:data-[slot=input-otp-slot]:h-16 style-maia:*:data-[slot=input-otp-slot]:w-12 style-mira:*:data-[slot=input-otp-slot]:h-12 style-mira:*:data-[slot=input-otp-slot]:w-11 style-luma:*:data-[slot=input-otp-slot]:h-16 style-luma:*:data-[slot=input-otp-slot]:w-12 style-sera:*:data-[slot=input-otp-slot]:h-14 style-sera:*:data-[slot=input-otp-slot]:w-10' %}
+{% set otp_input_style = 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums' %}
 
-        function initOtpInputs() {
-            const inputs = document.querySelectorAll('.otp-box');
-            inputs.forEach((input, index) => {
-                input.addEventListener('input', (e) => {
-                    const val = e.target.value.replace(/[^0-9]/g, '');
-                    e.target.value = val ? val[0] : '';
-                    if (val && index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    }
-                    checkOtpCompletion();
-                });
-
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                        inputs[index - 1].focus();
-                    }
-                });
-
-                input.addEventListener('paste', (e) => {
-                    e.preventDefault();
-                    const text = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
-                    if (!text) return;
-                    for (let i = 0; i < inputs.length; i++) {
-                        if (i < text.length) {
-                            inputs[i].value = text[i];
-                        }
-                    }
-                    const nextFocus = Math.min(text.length, inputs.length - 1);
-                    inputs[nextFocus].focus();
-                    checkOtpCompletion();
-                });
-            });
-        }
-
-        function checkOtpCompletion() {
-            const inputs = document.querySelectorAll('.otp-box');
-            let filled = 0;
-            inputs.forEach(i => { if (i.value) filled++; });
-            const verifyBtn = document.getElementById('verify-btn');
-            if (verifyBtn) {
-                verifyBtn.disabled = filled < inputs.length;
-            }
-        }
-
-        let timeLeft = 45;
-        let timerInterval = null;
-        function startResendTimer() {
-            timeLeft = 45;
-            const timerEl = document.getElementById('resend-timer-container');
-            const btnEl = document.getElementById('resend-btn');
-            if (timerEl) timerEl.classList.remove('hidden');
-            if (btnEl) btnEl.classList.add('hidden');
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const secStr = timeLeft < 10 ? '0' + timeLeft : timeLeft;
-                document.getElementById('resend-countdown').textContent = `00:${secStr}`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    if (timerEl) timerEl.classList.add('hidden');
-                    if (btnEl) btnEl.classList.remove('hidden');
-                }
-            }, 1000);
-        }
-
-        function resendOtp() {
-            alert('A fresh verification code has been dispatched to your email.');
-            startResendTimer();
-        }
-
-        function verifyOtp(e) {
-            e.preventDefault();
-            const successCard = document.getElementById('otp-success');
-            const formCard = document.getElementById('otp-form-card');
-            if (successCard && formCard) {
-                formCard.classList.add('hidden');
-                successCard.classList.remove('hidden');
-            }
-        }
-    </script>
-</head>
-<body class="bg-background text-foreground antialiased min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Main Form Card -->
-        <div id="otp-form-card" class="group/card flex flex-col gap-6 rounded-xl border border-border bg-card p-6 sm:p-8 shadow-sm">
-            <div class="flex flex-col items-center text-center space-y-2">
-                <div class="size-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-1">
-                    <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
-                    </svg>
-                </div>
-                <h1 class="text-2xl font-semibold tracking-tight text-foreground">Two-step verification</h1>
-                <p class="text-sm text-muted-foreground leading-relaxed">
-                    We sent a 6-digit verification code to <span class="font-medium text-foreground">john.doe@example.com</span>. Enter the code below to confirm your identity.
-                </p>
-            </div>
-
-            <form onsubmit="verifyOtp(event)" class="space-y-6">
-                <!-- 6-digit OTP Inputs -->
-                <div class="flex items-center justify-center gap-2 sm:gap-3">
-                    <input type="text" maxlength="1" class="otp-box size-12 sm:size-14 text-center text-xl font-bold rounded-lg border border-input bg-transparent shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all tabular-nums" autofocus />
-                    <input type="text" maxlength="1" class="otp-box size-12 sm:size-14 text-center text-xl font-bold rounded-lg border border-input bg-transparent shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all tabular-nums" />
-                    <input type="text" maxlength="1" class="otp-box size-12 sm:size-14 text-center text-xl font-bold rounded-lg border border-input bg-transparent shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all tabular-nums" />
-                    <span class="text-muted-foreground font-semibold text-lg">-</span>
-                    <input type="text" maxlength="1" class="otp-box size-12 sm:size-14 text-center text-xl font-bold rounded-lg border border-input bg-transparent shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all tabular-nums" />
-                    <input type="text" maxlength="1" class="otp-box size-12 sm:size-14 text-center text-xl font-bold rounded-lg border border-input bg-transparent shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all tabular-nums" />
-                    <input type="text" maxlength="1" class="otp-box size-12 sm:size-14 text-center text-xl font-bold rounded-lg border border-input bg-transparent shadow-xs focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all tabular-nums" />
-                </div>
-
-                <div class="space-y-4">
-                    <button id="verify-btn" type="submit" disabled class="inline-flex w-full items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium h-10 px-4 text-sm shadow-xs transition-colors disabled:opacity-50 disabled:pointer-events-none">
-                        Verify &amp; Continue
-                    </button>
-                    
-                    <div class="text-center text-sm">
-                        <span id="resend-timer-container" class="text-muted-foreground">
-                            Didn't receive the code? Resend in <span id="resend-countdown" class="font-medium text-foreground tabular-nums">00:45</span>
-                        </span>
-                        <button id="resend-btn" type="button" onclick="resendOtp()" class="hidden text-primary hover:underline font-medium transition-colors">
-                            Resend code now
-                        </button>
-                    </div>
-                </div>
-
-                <div class="pt-4 border-t border-border flex flex-col gap-2 text-center text-sm">
-                    <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Use another verification method</a>
-                    <a href="{{ url_for('basecoat_examples.authentication') }}" class="inline-flex items-center justify-center gap-1.5 text-muted-foreground hover:text-foreground font-medium transition-colors">
-                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path></svg>
-                        Back to sign in
-                    </a>
-                </div>
-            </form>
+{% block body %}
+<div class="flex min-h-svh items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    {# Main Form Card #}
+    {% call ui.card(id='otp-form-card', class='gap-6 p-6 sm:p-8') %}
+      {% call ui.card_header(class='items-center px-0 text-center') %}
+        <div class="mx-auto mb-1 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          {{ lucide('lock', 'size-6') }}
         </div>
+        {{ ui.card_title(text='Two-step verification', class='text-2xl font-semibold tracking-tight') }}
+        {% call ui.card_description(class='leading-relaxed') %}
+          We sent a 6-digit verification code to <span class="font-medium text-foreground">john.doe@example.com</span>. Enter the code below to confirm your identity.
+        {% endcall %}
+      {% endcall %}
 
-        <!-- Success Confirmation Card -->
-        <div id="otp-success" class="group/card flex flex-col items-center text-center gap-4 rounded-xl border border-border bg-card p-8 shadow-sm hidden animate-in fade-in zoom-in-95">
-            <div class="size-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-                <svg class="size-9" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                </svg>
+      {% call ui.card_content(class='px-0') %}
+        <form onsubmit="verifyOtp(event)" class="space-y-6">
+          {# 6-digit OTP input #}
+          {% call ui.field(class='items-center') %}
+            {{ ui.field_label(text='Verification code', for_='otp-code', class='sr-only') }}
+            <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center justify-center gap-2 has-disabled:opacity-50 sm:gap-3">
+              {% call ui.input_otp_group(class=otp_group_class) %}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+              {% endcall %}
+              {% call ui.input_otp_separator() %}{{ lucide('minus') }}{% endcall %}
+              {% call ui.input_otp_group(class=otp_group_class) %}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+              {% endcall %}
+              <div style="position:absolute;inset:0;pointer-events:none">
+                {{ ui.input_otp(id='otp-code', required=true, attrs={'name': 'code', 'autofocus': true, 'data-input-otp-placeholder-shown': 'true', 'pattern': '^\\d+$', 'maxlength': '6', 'value': '', 'style': otp_input_style}) }}
+              </div>
             </div>
-            <h2 class="text-2xl font-semibold tracking-tight text-foreground">Identity Verified!</h2>
-            <p class="text-sm text-muted-foreground max-w-xs">
-                Your device has been authenticated successfully. You are now securely logged into your account.
-            </p>
-            <a href="{{ url_for('basecoat_examples.dashboard') }}" class="inline-flex w-full items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 font-medium h-10 px-4 text-sm shadow-xs transition-colors mt-2">
-                Continue to Dashboard
-            </a>
-        </div>
-    </div>
-</body>
-</html>
+          {% endcall %}
+
+          <div class="space-y-4">
+            {{ ui.button(text='Verify & Continue', id='verify-button', type='submit', size='lg', disabled=true, class='w-full') }}
+            <div class="text-center text-sm">
+              <span id="resend-timer-container" class="text-muted-foreground">
+                Didn't receive the code? Resend in <span id="resend-countdown" class="font-medium text-foreground tabular-nums">00:45</span>
+              </span>
+              {{ ui.button(text='Resend code now', id='resend-button', variant='link', size='sm', type='button', class='hidden h-auto p-0', attrs={'onclick': 'resendOtp()'}) }}
+            </div>
+          </div>
+
+          {{ ui.separator() }}
+
+          <div class="flex flex-col items-center gap-2 text-center text-sm">
+            {{ ui.button(text='Use another verification method', variant='link', size='sm', href='#', class='h-auto p-0 font-normal text-muted-foreground hover:text-foreground') }}
+            {% call ui.button(variant='link', size='sm', href=url_for('basecoat_examples.authentication'), class='h-auto p-0 text-muted-foreground hover:text-foreground') %}{{ lucide('arrow-left', 'size-4', data_icon='inline-start') }} Back to sign in{% endcall %}
+          </div>
+        </form>
+      {% endcall %}
+    {% endcall %}
+
+    {# Success Confirmation Card #}
+    {% call ui.card(id='otp-success', class='hidden items-center gap-4 p-8 text-center animate-in fade-in zoom-in-95') %}
+      <div class="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+        {{ lucide('check', 'size-9') }}
+      </div>
+      {{ ui.card_title(text='Identity Verified!', class='text-2xl font-semibold tracking-tight') }}
+      {{ ui.card_description(text='Your device has been authenticated successfully. You are now securely logged into your account.', class='max-w-xs') }}
+      {{ ui.button(text='Continue to Dashboard', size='lg', href=url_for('basecoat_examples.dashboard'), class='mt-2 w-full') }}
+    {% endcall %}
+  </div>
+</div>
+{% endblock %}

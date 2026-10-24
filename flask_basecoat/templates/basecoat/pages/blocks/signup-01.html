@@ -3,59 +3,36 @@
 {# Port of the upstream shadcn/ui block `signup-01` (pinned source in compliance/upstream). #}
 {% block title %}signup-01 · flask-basecoat{% endblock %}
 {% block body %}
-  <div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-    <div class="w-full max-w-sm">
-      {% call ui.card(size='default') %}
+<div class="flex min-h-svh w-full items-center justify-center p-6 md:p-10"><div class="w-full max-w-sm">{% call ui.card(size='default') %}
         {% call ui.card_header() %}
-          {% call ui.card_title() %}Create an account
-          {% endcall %}
-          {% call ui.card_description() %}Enter your information below to create your account
-          {% endcall %}
-        {% endcall %}
-        {% call ui.card_content() %}
-          <form>
-            {% call ui.field_group() %}
+          {% call ui.card_title() %}Create an account{% endcall %}
+{% call ui.card_description() %}Enter your information below to create your account{% endcall %}
+{% endcall %}
+{% call ui.card_content() %}
+          <form>{% call ui.field_group() %}
               {% call ui.field(orientation='vertical') %}
-                {% call ui.field_label(as_='label', for_='name') %}Full Name
-                {% endcall %}
-                {{ ui.input(required=true, type='text', id='name', attrs={'placeholder': 'John Doe'}) }}
-              {% endcall %}
-              {% call ui.field(orientation='vertical') %}
-                {% call ui.field_label(as_='label', for_='email') %}Email
-                {% endcall %}
-                {{ ui.input(required=true, type='email', id='email', attrs={'placeholder': 'm@example.com'}) }}
-                {% call ui.field_description() %}We'll use this to contact you. We will not share your email with anyone else.
-                {% endcall %}
-              {% endcall %}
-              {% call ui.field(orientation='vertical') %}
-                {% call ui.field_label(as_='label', for_='password') %}Password
-                {% endcall %}
-                {{ ui.input(required=true, type='password', id='password') }}
-                {% call ui.field_description() %}Must be at least 8 characters long.
-                {% endcall %}
-              {% endcall %}
-              {% call ui.field(orientation='vertical') %}
-                {% call ui.field_label(as_='label', for_='confirm-password') %}Confirm Password
-                {% endcall %}
-                {{ ui.input(required=true, type='password', id='confirm-password') }}
-                {% call ui.field_description() %}Please confirm your password.
-                {% endcall %}
-              {% endcall %}
-              {% call ui.field_group() %}
+                {% call ui.field_label(as_='label', for_='name') %}Full Name{% endcall %}
+{{ ui.input(required=true, type='text', id='name', attrs={'placeholder': 'John Doe'}) }}{% endcall %}
+{% call ui.field(orientation='vertical') %}
+                {% call ui.field_label(as_='label', for_='email') %}Email{% endcall %}
+{{ ui.input(required=true, type='email', id='email', attrs={'placeholder': 'm@example.com'}) }}{% call ui.field_description() %}We'll use this to contact you. We will not share your email with anyone else.{% endcall %}
+{% endcall %}
+{% call ui.field(orientation='vertical') %}
+                {% call ui.field_label(as_='label', for_='password') %}Password{% endcall %}
+{{ ui.input(required=true, type='password', id='password') }}{% call ui.field_description() %}Must be at least 8 characters long.{% endcall %}
+{% endcall %}
+{% call ui.field(orientation='vertical') %}
+                {% call ui.field_label(as_='label', for_='confirm-password') %}Confirm Password{% endcall %}
+{{ ui.input(required=true, type='password', id='confirm-password') }}{% call ui.field_description() %}Please confirm your password.{% endcall %}
+{% endcall %}
+{% call ui.field_group() %}
                 {% call ui.field(orientation='vertical') %}
-                  {% call ui.button(size='default', variant='default', type='submit') %}Create Account
-                  {% endcall %}
-                  {% call ui.button(size='default', variant='outline', type='button') %}Sign up with Google
-                  {% endcall %}
-                  {% call ui.field_description(class='px-6 text-center') %}Already have an account? 
-                    <a href="#">Sign in</a>
-                  {% endcall %}
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-          </form>
-        {% endcall %}
-      {% endcall %}
-    </div>
-  </div>
-{% endblock %}
+                  {% call ui.button(size='default', variant='default', type='submit') %}Create Account{% endcall %}
+{% call ui.button(size='default', variant='outline', type='button') %}Sign up with Google{% endcall %}
+{% call ui.field_description(class='px-6 text-center') %}Already have an account? <a href="#">Sign in</a>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+</form>{% endcall %}
+{% endcall %}
+</div></div>{% endblock %}

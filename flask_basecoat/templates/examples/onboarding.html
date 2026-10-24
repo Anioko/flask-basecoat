@@ -1,573 +1,354 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onboarding Flow - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Onboarding Flow · flask-basecoat{% endblock %}
+{% block head %}
+<script>
+  const state = {
+    currentStep: 1,
+    totalSteps: 5,
+    accountType: 'personal',
+    teamSize: '10-50',
+    teamName: 'Acme Corp',
+    accountPlan: 'developer',
+    companyName: 'Acme Inc.',
+    industry: 'technology',
+    website: 'https://acme.org',
+    nameOnCard: 'John Doe',
+    cardNumber: '4242 4242 4242 4242',
+    expirationMonth: '12',
+    expirationYear: '2027',
+    cvv: '123'
+  };
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-            updateStepperUI();
-        });
+  const steps = [
+    { id: 1, title: 'Account Type' },
+    { id: 2, title: 'Account Info' },
+    { id: 3, title: 'Business' },
+    { id: 4, title: 'Billing' },
+    { id: 5, title: 'Complete' }
+  ];
 
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
+  const SELECTED_CARD = ['border-primary', 'bg-primary/5', 'ring-2', 'ring-primary'];
+  const SELECTED_ICON = ['bg-primary/10', 'text-primary'];
+  const IDLE_ICON = ['bg-muted', 'text-muted-foreground'];
+
+  function setStep(step) {
+    if (step < 1 || step > state.totalSteps) return;
+    state.currentStep = step;
+    updateStepperUI();
+  }
+
+  function nextStep() {
+    if (state.currentStep < state.totalSteps) setStep(state.currentStep + 1);
+  }
+
+  function prevStep() {
+    if (state.currentStep > 1) setStep(state.currentStep - 1);
+  }
+
+  function selectAccountType(type) {
+    state.accountType = type;
+    ['personal', 'corporate'].forEach((t) => {
+      const card = document.getElementById(`account-${t}`);
+      const icon = document.getElementById(`icon-account-${t}`);
+      const on = t === type;
+      if (card) {
+        SELECTED_CARD.forEach((c) => card.classList.toggle(c, on));
+        card.setAttribute('aria-pressed', String(on));
+      }
+      if (icon) {
+        SELECTED_ICON.forEach((c) => icon.classList.toggle(c, on));
+        IDLE_ICON.forEach((c) => icon.classList.toggle(c, !on));
+      }
+    });
+  }
+
+  function selectPlan(plan) {
+    state.accountPlan = plan;
+  }
+
+  function updateSummary() {
+    const sumType = document.getElementById('summary-account-type');
+    const sumPlan = document.getElementById('summary-plan');
+    const sumCompany = document.getElementById('summary-company');
+    const sumTeam = document.getElementById('summary-team');
+    if (sumType) sumType.textContent = state.accountType === 'corporate' ? 'Corporate Account' : 'Personal Account';
+    if (sumPlan) sumPlan.textContent = state.accountPlan === 'company' ? 'Company' : state.accountPlan === 'developer' ? 'Developer' : 'Testing';
+    if (sumCompany) sumCompany.textContent = state.companyName || 'Acme Inc.';
+    if (sumTeam) sumTeam.textContent = state.teamName || 'Acme Corp';
+  }
+
+  function updateStepperUI() {
+    const checkIcon = document.getElementById('tpl-check');
+    for (let i = 1; i <= state.totalSteps; i++) {
+      const pane = document.getElementById(`step-pane-${i}`);
+      if (pane) pane.classList.toggle('hidden', i !== state.currentStep);
+
+      const ind = document.getElementById(`step-ind-${i}`);
+      const label = document.getElementById(`step-label-${i}`);
+      const line = document.getElementById(`step-line-${i}`);
+
+      if (ind) {
+        if (i < state.currentStep) {
+          ind.className = "relative z-10 flex size-10 cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground shadow-xs";
+          ind.replaceChildren(checkIcon.content.firstElementChild.cloneNode(true));
+        } else if (i === state.currentStep) {
+          ind.className = "relative z-10 flex size-10 cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground ring-4 ring-primary/20 shadow-xs";
+          ind.textContent = i;
+        } else {
+          ind.className = "relative z-10 flex size-10 cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground hover:bg-muted/80";
+          ind.textContent = i;
         }
+      }
+      if (label) label.className = `mt-2 text-center text-xs font-medium ${i <= state.currentStep ? 'text-foreground' : 'text-muted-foreground'}`;
+      if (line) line.className = `absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 transition-all duration-300 ${i <= state.currentStep ? 'bg-primary' : 'bg-border'}`;
 
-        const state = {
-            currentStep: 1,
-            totalSteps: 5,
-            accountType: 'personal',
-            teamSize: '10-50',
-            teamName: 'Acme Corp',
-            accountPlan: 'developer',
-            companyName: 'Acme Inc.',
-            industry: 'technology',
-            website: 'https://acme.org',
-            nameOnCard: 'John Doe',
-            cardNumber: '4242 4242 4242 4242',
-            expirationMonth: '12',
-            expirationYear: '2027',
-            cvv: '123'
-        };
+      const mobPill = document.getElementById(`mob-step-${i}`);
+      if (mobPill) mobPill.className = `h-1.5 flex-1 rounded-full transition-all duration-300 ${i <= state.currentStep ? 'bg-primary/60' : 'bg-muted'}`;
+    }
 
-        const steps = [
-            { id: 1, title: 'Account Type' },
-            { id: 2, title: 'Account Info' },
-            { id: 3, title: 'Business' },
-            { id: 4, title: 'Billing' },
-            { id: 5, title: 'Complete' }
-        ];
+    const mobTitle = document.getElementById('mob-step-title');
+    const mobCount = document.getElementById('mob-step-count');
+    if (mobTitle) mobTitle.textContent = steps[state.currentStep - 1].title;
+    if (mobCount) mobCount.textContent = `Step ${state.currentStep} of 5`;
 
-        function setStep(step) {
-            if (step < 1 || step > state.totalSteps) return;
-            state.currentStep = step;
-            updateStepperUI();
-        }
+    if (state.currentStep === 5) updateSummary();
 
-        function nextStep() {
-            if (state.currentStep < state.totalSteps) {
-                setStep(state.currentStep + 1);
-            }
-        }
+    const prev = document.getElementById('nav-prev');
+    const next = document.getElementById('nav-next');
+    const nextText = document.getElementById('nav-next-text');
+    if (prev) {
+      prev.disabled = state.currentStep === 1;
+      prev.classList.toggle('hidden', state.currentStep === 5);
+    }
+    if (next) {
+      next.classList.toggle('hidden', state.currentStep === 5);
+      if (nextText) nextText.textContent = state.currentStep === 4 ? 'Submit' : 'Continue';
+    }
+  }
 
-        function prevStep() {
-            if (state.currentStep > 1) {
-                setStep(state.currentStep - 1);
-            }
-        }
-
-        function selectAccountType(type) {
-            state.accountType = type;
-            const btnPersonal = document.getElementById('btn-account-personal');
-            const btnCorporate = document.getElementById('btn-account-corporate');
-            const iconPersonal = document.getElementById('icon-account-personal');
-            const iconCorporate = document.getElementById('icon-account-corporate');
-
-            if (type === 'personal') {
-                btnPersonal.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-primary bg-primary/5 ring-2 ring-primary cursor-pointer";
-                iconPersonal.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary";
-                
-                btnCorporate.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-border hover:border-primary/50 hover:bg-muted/50 cursor-pointer";
-                iconCorporate.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground";
-            } else {
-                btnCorporate.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-primary bg-primary/5 ring-2 ring-primary cursor-pointer";
-                iconCorporate.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary";
-                
-                btnPersonal.className = "flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-border hover:border-primary/50 hover:bg-muted/50 cursor-pointer";
-                iconPersonal.className = "flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground";
-            }
-        }
-
-        function selectTeamSize(size) {
-            state.teamSize = size;
-            ['1-1', '2-10', '10-50', '50+'].forEach(s => {
-                const pill = document.getElementById(`pill-size-${s}`);
-                if (pill) {
-                    if (s === size) {
-                        pill.className = "rounded-lg border py-3 text-sm font-medium transition-all border-primary bg-primary/5 text-primary ring-2 ring-primary cursor-pointer";
-                    } else {
-                        pill.className = "rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer";
-                    }
-                }
-            });
-        }
-
-        function selectPlan(plan) {
-            state.accountPlan = plan;
-            ['company', 'developer', 'testing'].forEach(p => {
-                const label = document.getElementById(`plan-label-${p}`);
-                const dot = document.getElementById(`plan-dot-${p}`);
-                if (label && dot) {
-                    if (p === plan) {
-                        label.className = "flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-primary bg-primary/5";
-                        dot.className = "h-4 w-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center";
-                        dot.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-white"></span>';
-                    } else {
-                        label.className = "flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-border hover:bg-muted/50";
-                        dot.className = "h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center";
-                        dot.innerHTML = '';
-                    }
-                }
-            });
-        }
-
-        function updateSummary() {
-            const sumType = document.getElementById('summary-account-type');
-            const sumPlan = document.getElementById('summary-plan');
-            const sumCompany = document.getElementById('summary-company');
-            const sumTeam = document.getElementById('summary-team');
-
-            if (sumType) sumType.textContent = state.accountType === 'corporate' ? 'Corporate Account' : 'Personal Account';
-            if (sumPlan) sumPlan.textContent = state.accountPlan === 'company' ? 'Company' : state.accountPlan === 'developer' ? 'Developer' : 'Testing';
-            if (sumCompany) sumCompany.textContent = state.companyName || 'Acme Inc.';
-            if (sumTeam) sumTeam.textContent = state.teamName || 'Acme Corp';
-        }
-
-        function updateStepperUI() {
-            // Update pane visibility
-            for (let i = 1; i <= state.totalSteps; i++) {
-                const pane = document.getElementById(`step-pane-${i}`);
-                if (pane) {
-                    if (i === state.currentStep) {
-                        pane.classList.remove('hidden');
-                    } else {
-                        pane.classList.add('hidden');
-                    }
-                }
-
-                // Desktop Stepper circles & lines
-                const ind = document.getElementById(`step-ind-${i}`);
-                const label = document.getElementById(`step-label-${i}`);
-                const line = document.getElementById(`step-line-${i}`);
-
-                if (ind) {
-                    if (i < state.currentStep) {
-                        ind.className = "relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground cursor-pointer shadow-xs";
-                        ind.innerHTML = '<i data-lucide="check" class="size-4"></i>';
-                    } else if (i === state.currentStep) {
-                        ind.className = "relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground ring-4 ring-primary/20 cursor-pointer shadow-xs";
-                        ind.innerHTML = i;
-                    } else {
-                        ind.className = "relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer hover:bg-muted/80";
-                        ind.innerHTML = i;
-                    }
-                }
-
-                if (label) {
-                    if (i <= state.currentStep) {
-                        label.className = "mt-2 text-center text-xs font-medium text-foreground";
-                    } else {
-                        label.className = "mt-2 text-center text-xs font-medium text-muted-foreground";
-                    }
-                }
-
-                if (line) {
-                    if (i <= state.currentStep) {
-                        line.className = "absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-primary transition-all duration-300";
-                    } else {
-                        line.className = "absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border transition-all duration-300";
-                    }
-                }
-
-                // Mobile Stepper segment pills
-                const mobPill = document.getElementById(`mob-step-${i}`);
-                if (mobPill) {
-                    if (i <= state.currentStep) {
-                        mobPill.className = "h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary/60";
-                    } else {
-                        mobPill.className = "h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted";
-                    }
-                }
-            }
-
-            // Mobile step text
-            const mobTitle = document.getElementById('mob-step-title');
-            const mobCount = document.getElementById('mob-step-count');
-            if (mobTitle) mobTitle.textContent = steps[state.currentStep - 1].title;
-            if (mobCount) mobCount.textContent = `Step ${state.currentStep} of 5`;
-
-            // If Step 5 reached, update summary
-            if (state.currentStep === 5) {
-                updateSummary();
-            }
-
-            // Update bottom navigation buttons
-            const btnPrev = document.getElementById('btn-prev');
-            const btnNext = document.getElementById('btn-next');
-            const nextText = document.getElementById('btn-next-text');
-
-            if (btnPrev) {
-                if (state.currentStep === 1) {
-                    btnPrev.disabled = true;
-                    btnPrev.classList.add('opacity-50', 'pointer-events-none');
-                } else if (state.currentStep === 5) {
-                    btnPrev.classList.add('hidden');
-                } else {
-                    btnPrev.disabled = false;
-                    btnPrev.classList.remove('opacity-50', 'pointer-events-none', 'hidden');
-                }
-            }
-
-            if (btnNext) {
-                if (state.currentStep === 4) {
-                    btnNext.classList.remove('hidden');
-                    if (nextText) nextText.textContent = 'Submit';
-                } else if (state.currentStep === 5) {
-                    btnNext.classList.add('hidden');
-                } else {
-                    btnNext.classList.remove('hidden');
-                    if (nextText) nextText.textContent = 'Continue';
-                }
-            }
-
-            if (window.lucide) { lucide.createIcons(); }
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 md:p-10">
-    {{ bc.toast_container() }}
-
-    <div class="max-w-4xl mx-auto space-y-6">
-        {# Top Navigation and Actions #}
-        <div class="flex items-center justify-between border-b border-border pb-4">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-base">
-                <svg class="size-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Platform</span>
-            </div>
-            <div class="flex items-center gap-2">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </div>
-
-        {# Exact 5-Step Signup Wizard Card matching shadcnexamples.com/demo/onboarding-flow #}
-        <div class="w-full max-w-2xl mx-auto overflow-hidden rounded-xl bg-card py-6 text-sm text-card-foreground ring-1 ring-foreground/10 shadow-sm">
-            
-            {# Header / Stepper #}
-            <div class="px-6 pb-2 md:px-8">
-                <div class="w-full">
-                    {# Desktop Stepper #}
-                    <div class="flex items-center">
-                        {# Step 1 #}
-                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(1)">
-                            <div id="step-ind-1" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-primary text-primary-foreground ring-4 ring-primary/20 cursor-pointer">1</div>
-                            <span id="step-label-1" class="mt-2 text-center text-xs font-medium text-foreground">Account Type</span>
-                        </div>
-                        {# Step 2 #}
-                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(2)">
-                            <div id="step-line-2" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
-                            <div id="step-ind-2" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">2</div>
-                            <span id="step-label-2" class="mt-2 text-center text-xs font-medium text-muted-foreground">Account Info</span>
-                        </div>
-                        {# Step 3 #}
-                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(3)">
-                            <div id="step-line-3" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
-                            <div id="step-ind-3" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">3</div>
-                            <span id="step-label-3" class="mt-2 text-center text-xs font-medium text-muted-foreground">Business</span>
-                        </div>
-                        {# Step 4 #}
-                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(4)">
-                            <div id="step-line-4" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
-                            <div id="step-ind-4" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">4</div>
-                            <span id="step-label-4" class="mt-2 text-center text-xs font-medium text-muted-foreground">Billing</span>
-                        </div>
-                        {# Step 5 #}
-                        <div class="relative flex flex-1 flex-col items-center" onclick="setStep(5)">
-                            <div id="step-line-5" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>
-                            <div id="step-ind-5" class="relative z-10 flex size-10 items-center justify-center rounded-full text-sm font-semibold transition-all bg-muted text-muted-foreground cursor-pointer">5</div>
-                            <span id="step-label-5" class="mt-2 text-center text-xs font-medium text-muted-foreground">Complete</span>
-                        </div>
-                    </div>
-
-                    {# Mobile Stepper #}
-                    <div class="hidden">
-                        <div class="mb-2 flex items-center justify-between">
-                            <span id="mob-step-title" class="text-sm font-semibold">Account Type</span>
-                            <span id="mob-step-count" class="text-muted-foreground text-xs">Step 1 of 5</span>
-                        </div>
-                        <div class="flex gap-1">
-                            <div id="mob-step-1" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-primary/60"></div>
-                            <div id="mob-step-2" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
-                            <div id="mob-step-3" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
-                            <div id="mob-step-4" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
-                            <div id="mob-step-5" class="h-1.5 flex-1 rounded-full transition-all duration-300 bg-muted"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {# Card Content #}
-            <div class="flex flex-col gap-3 px-6 pb-6 md:px-8 md:pb-8">
-                <div class="min-h-[320px] py-4">
-                    
-                    {# STEP 1: Choose Account Type #}
-                    <div id="step-pane-1" class="space-y-5">
-                        <div>
-                            <h2 class="text-lg font-semibold text-foreground">Choose Account Type</h2>
-                            <p class="text-muted-foreground mt-1 text-sm">Select the type that best fits your use case.</p>
-                        </div>
-                        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <button type="button" 
-                                    id="btn-account-personal"
-                                    onclick="selectAccountType('personal')"
-                                    class="flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-primary bg-primary/5 ring-2 ring-primary cursor-pointer">
-                                <div id="icon-account-personal" class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                    <i data-lucide="user" class="size-5"></i>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-foreground">Personal Account</div>
-                                    <div class="text-muted-foreground mt-0.5 text-sm">For individuals and freelancers</div>
-                                </div>
-                            </button>
-
-                            <button type="button" 
-                                    id="btn-account-corporate"
-                                    onclick="selectAccountType('corporate')"
-                                    class="flex items-start gap-4 rounded-xl border p-5 text-left transition-all border-border hover:border-primary/50 hover:bg-muted/50 cursor-pointer">
-                                <div id="icon-account-corporate" class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                                    <i data-lucide="briefcase" class="size-5"></i>
-                                </div>
-                                <div>
-                                    <div class="font-medium text-foreground">Corporate Account</div>
-                                    <div class="text-muted-foreground mt-0.5 text-sm">For teams and organizations</div>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-
-                    {# STEP 2: Account Info #}
-                    <div id="step-pane-2" class="space-y-5 hidden">
-                        <div>
-                            <h2 class="text-lg font-semibold text-foreground">Account Info</h2>
-                            <p class="text-muted-foreground mt-1 text-sm">Set up your account details.</p>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-foreground">Team Size</label>
-                            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                <button type="button" id="pill-size-1-1" onclick="selectTeamSize('1-1')" class="rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer">1-1</button>
-                                <button type="button" id="pill-size-2-10" onclick="selectTeamSize('2-10')" class="rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer">2-10</button>
-                                <button type="button" id="pill-size-10-50" onclick="selectTeamSize('10-50')" class="rounded-lg border py-3 text-sm font-medium transition-all border-primary bg-primary/5 text-primary ring-2 ring-primary cursor-pointer">10-50</button>
-                                <button type="button" id="pill-size-50+" onclick="selectTeamSize('50+')" class="rounded-lg border py-3 text-sm font-medium transition-all border-border text-muted-foreground hover:border-primary/50 hover:text-foreground cursor-pointer">50+</button>
-                            </div>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label for="teamName" class="text-sm font-medium text-foreground">
-                                Team Account Name <span class="text-destructive">*</span>
-                            </label>
-                            <input id="teamName" type="text" value="Acme Corp" oninput="state.teamName = this.value" placeholder="e.g. Acme Corp" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-foreground">Account Plan</label>
-                            <div class="space-y-2">
-                                <label id="plan-label-company" onclick="selectPlan('company')" class="flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-border hover:bg-muted/50">
-                                    <i data-lucide="factory" class="text-muted-foreground size-5 shrink-0"></i>
-                                    <div class="flex-1">
-                                        <div class="text-sm font-medium text-foreground">Company Account</div>
-                                        <div class="text-muted-foreground text-xs">Full access for teams</div>
-                                    </div>
-                                    <div id="plan-dot-company" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
-                                </label>
-
-                                <label id="plan-label-developer" onclick="selectPlan('developer')" class="flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-primary bg-primary/5">
-                                    <i data-lucide="user" class="text-primary size-5 shrink-0"></i>
-                                    <div class="flex-1">
-                                        <div class="text-sm font-medium text-foreground">Developer Account</div>
-                                        <div class="text-muted-foreground text-xs">Ideal for building and testing</div>
-                                    </div>
-                                    <div id="plan-dot-developer" class="h-4 w-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
-                                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
-                                    </div>
-                                </label>
-
-                                <label id="plan-label-testing" onclick="selectPlan('testing')" class="flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all border-border hover:bg-muted/50">
-                                    <i data-lucide="globe" class="text-muted-foreground size-5 shrink-0"></i>
-                                    <div class="flex-1">
-                                        <div class="text-sm font-medium text-foreground">Testing Account</div>
-                                        <div class="text-muted-foreground text-xs">Sandbox environment access</div>
-                                    </div>
-                                    <div id="plan-dot-testing" class="h-4 w-4 rounded-full border border-muted-foreground flex items-center justify-center"></div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# STEP 3: Business Details #}
-                    <div id="step-pane-3" class="space-y-5 hidden">
-                        <div>
-                            <h2 class="text-lg font-semibold text-foreground">Business Details</h2>
-                            <p class="text-muted-foreground mt-1 text-sm">Tell us about your business.</p>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="space-y-1.5">
-                                <label for="companyName" class="text-sm font-medium text-foreground">
-                                    Company Name <span class="text-destructive">*</span>
-                                </label>
-                                <input id="companyName" type="text" value="Acme Inc." oninput="state.companyName = this.value" placeholder="Acme Inc." class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label for="industry" class="text-sm font-medium text-foreground">
-                                    Industry <span class="text-destructive">*</span>
-                                </label>
-                                <select id="industry" onchange="state.industry = this.value" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                                    <option value="technology" selected>Technology</option>
-                                    <option value="finance">Finance</option>
-                                    <option value="healthcare">Healthcare</option>
-                                    <option value="retail">Retail & E-commerce</option>
-                                    <option value="education">Education</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label for="website" class="text-sm font-medium text-foreground">Website</label>
-                                <input id="website" type="url" value="https://acme.org" oninput="state.website = this.value" placeholder="https://yourcompany.com" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                            </div>
-                        </div>
-                    </div>
-
-                    {# STEP 4: Billing Details #}
-                    <div id="step-pane-4" class="space-y-5 hidden">
-                        <div>
-                            <h2 class="text-lg font-semibold text-foreground">Billing Details</h2>
-                            <p class="text-muted-foreground mt-1 text-sm">Your card is stored securely and never shared.</p>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="space-y-1.5">
-                                <label for="nameOnCard" class="text-sm font-medium text-foreground">
-                                    Name on Card <span class="text-destructive">*</span>
-                                </label>
-                                <input id="nameOnCard" type="text" value="John Doe" oninput="state.nameOnCard = this.value" placeholder="John Doe" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label for="cardNumber" class="text-sm font-medium text-foreground">
-                                    Card Number <span class="text-destructive">*</span>
-                                </label>
-                                <div class="relative">
-                                    <input id="cardNumber" type="text" value="4242 4242 4242 4242" placeholder="0000 0000 0000 0000" class="w-full rounded-md border border-border bg-background px-3 pr-10 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                                    <i data-lucide="credit-card" class="text-muted-foreground absolute top-1/2 right-3 size-4 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <div class="space-y-1.5">
-                                    <label class="text-sm font-medium text-foreground">
-                                        Expiry Date <span class="text-destructive">*</span>
-                                    </label>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                                            <option value="01">01</option>
-                                            <option value="02">02</option>
-                                            <option value="03">03</option>
-                                            <option value="04">04</option>
-                                            <option value="05">05</option>
-                                            <option value="06">06</option>
-                                            <option value="07">07</option>
-                                            <option value="08">08</option>
-                                            <option value="09">09</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12" selected>12</option>
-                                        </select>
-                                        <select class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                                            <option value="2025">2025</option>
-                                            <option value="2026">2026</option>
-                                            <option value="2027" selected>2027</option>
-                                            <option value="2028">2028</option>
-                                            <option value="2029">2029</option>
-                                            <option value="2030">2030</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label for="cvv" class="text-sm font-medium text-foreground">
-                                        CVV <span class="text-destructive">*</span>
-                                    </label>
-                                    <input id="cvv" type="text" value="123" placeholder="123" maxlength="4" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# STEP 5: Complete #}
-                    <div id="step-pane-5" class="flex flex-col items-center gap-6 py-4 text-center hidden">
-                        <div class="flex size-20 items-center justify-center rounded-full bg-emerald-500/10 ring-8 ring-emerald-500/10 text-emerald-500">
-                            <i data-lucide="check-circle-2" class="size-10"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-foreground">You're all set!</h2>
-                            <p class="text-muted-foreground mt-2 text-sm">Your account has been created successfully.</p>
-                        </div>
-                        <div class="w-full rounded-xl border border-border bg-muted/30 p-4 text-left">
-                            <div class="text-muted-foreground mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
-                                <i data-lucide="sparkles" class="size-3.5"></i>
-                                <span>Account Summary</span>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="flex items-center gap-3">
-                                    <i data-lucide="user" class="text-muted-foreground size-4 shrink-0"></i>
-                                    <span class="text-muted-foreground text-sm">Account Type:</span>
-                                    <span id="summary-account-type" class="ml-auto text-sm font-medium text-foreground">Personal Account</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i data-lucide="factory" class="text-muted-foreground size-4 shrink-0"></i>
-                                    <span class="text-muted-foreground text-sm">Plan:</span>
-                                    <span id="summary-plan" class="ml-auto text-sm font-medium text-foreground">Developer</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i data-lucide="building-2" class="text-muted-foreground size-4 shrink-0"></i>
-                                    <span class="text-muted-foreground text-sm">Company:</span>
-                                    <span id="summary-company" class="ml-auto text-sm font-medium text-foreground">Acme Inc.</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <i data-lucide="globe" class="text-muted-foreground size-4 shrink-0"></i>
-                                    <span class="text-muted-foreground text-sm">Team:</span>
-                                    <span id="summary-team" class="ml-auto text-sm font-medium text-foreground">Acme Corp</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pt-2">
-                            {{ bc.button('Go to Dashboard', href=url_for('basecoat_examples.dashboard'), variant='default', class='px-8 font-semibold') }}
-                        </div>
-                    </div>
-
-                </div>
-
-                {# Footer Navigation #}
-                <div class="flex items-center justify-between border-t border-border pt-5">
-                    <button
-                        id="btn-prev"
-                        type="button"
-                        class="rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors opacity-50 pointer-events-none inline-flex items-center gap-1.5"
-                        onclick="prevStep()">
-                        <i data-lucide="chevron-left" class="size-4"></i>
-                        <span>Back</span>
-                    </button>
-
-                    <button
-                        id="btn-next"
-                        type="button"
-                        class="rounded-md bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 text-sm font-medium transition-colors inline-flex items-center gap-1.5 shadow-xs"
-                        onclick="nextStep()">
-                        <span id="btn-next-text">Continue</span>
-                        <i data-lucide="chevron-right" class="size-4"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+  document.addEventListener('DOMContentLoaded', () => {
+    updateStepperUI();
+    const sizes = document.getElementById('team-size');
+    if (sizes) sizes.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-slot="toggle-group-item"]');
+      if (item) state.teamSize = item.getAttribute('data-value');
+    });
+  });
+</script>
+{% endblock %}
+{% block body %}
+<template id="tpl-check">{{ lucide('check', 'size-4') }}</template>
+<div class="mx-auto max-w-4xl space-y-6 p-4 sm:p-6 md:p-10">
+  {# Top navigation #}
+  <div class="flex items-center justify-between border-b border-border pb-4">
+    <div class="flex items-center gap-2 text-base font-bold tracking-tight">
+      {{ lucide('command', 'size-5 text-primary') }}
+      <span>Acme Platform</span>
     </div>
-</body>
-</html>
+    <div class="flex items-center gap-2">
+      {{ ui.button(text='All Examples', variant='ghost', size='sm', href=url_for('basecoat_examples.index')) }}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-theme-toggle': true}) %}{{ lucide('moon', 'dark:hidden') }}{{ lucide('sun', 'hidden dark:block') }} Toggle Theme{% endcall %}
+    </div>
+  </div>
+
+  {# Five-step signup wizard #}
+  {% call ui.card(class='mx-auto w-full max-w-2xl overflow-hidden') %}
+    {# Stepper #}
+    {% call ui.card_header(class='pb-2 md:px-8') %}
+      <div class="flex items-center">
+        {% for i, title in [(1, 'Account Type'), (2, 'Account Info'), (3, 'Business'), (4, 'Billing'), (5, 'Complete')] %}
+        <div class="relative flex flex-1 flex-col items-center" onclick="setStep({{ i }})">
+          {% if i > 1 %}<div id="step-line-{{ i }}" class="absolute top-5 right-1/2 h-0.5 w-full -translate-y-1/2 bg-border"></div>{% endif %}
+          <div id="step-ind-{{ i }}" class="relative z-10 flex size-10 cursor-pointer items-center justify-center rounded-full text-sm font-semibold transition-all {{ 'bg-primary text-primary-foreground ring-4 ring-primary/20' if i == 1 else 'bg-muted text-muted-foreground' }}">{{ i }}</div>
+          <span id="step-label-{{ i }}" class="mt-2 text-center text-xs font-medium {{ 'text-foreground' if i == 1 else 'text-muted-foreground' }}">{{ title }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {# Mobile stepper #}
+      <div class="hidden">
+        <div class="mb-2 flex items-center justify-between">
+          <span id="mob-step-title" class="text-sm font-semibold">Account Type</span>
+          <span id="mob-step-count" class="text-xs text-muted-foreground">Step 1 of 5</span>
+        </div>
+        <div class="flex gap-1">
+          {% for i in range(1, 6) %}<div id="mob-step-{{ i }}" class="h-1.5 flex-1 rounded-full transition-all duration-300 {{ 'bg-primary/60' if i == 1 else 'bg-muted' }}"></div>{% endfor %}
+        </div>
+      </div>
+    {% endcall %}
+
+    {% call ui.card_content(class='flex flex-col gap-3 md:px-8') %}
+      <div class="min-h-[320px] py-4">
+
+        {# Step 1: account type #}
+        <div id="step-pane-1" class="space-y-5">
+          <div>
+            <h2 class="text-lg font-semibold">Choose Account Type</h2>
+            <p class="mt-1 text-sm text-muted-foreground">Select the type that best fits your use case.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {% call ui.button(variant='outline', id='account-personal', class='h-auto items-start justify-start gap-4 rounded-xl p-5 text-left whitespace-normal border-primary bg-primary/5 ring-2 ring-primary', attrs={'onclick': "selectAccountType('personal')", 'aria-pressed': 'true'}) %}
+              <span id="icon-account-personal" class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">{{ lucide('user', 'size-5') }}</span>
+              <span class="flex flex-col">
+                <span class="font-medium">Personal Account</span>
+                <span class="mt-0.5 text-sm font-normal text-muted-foreground">For individuals and freelancers</span>
+              </span>
+            {% endcall %}
+            {% call ui.button(variant='outline', id='account-corporate', class='h-auto items-start justify-start gap-4 rounded-xl p-5 text-left whitespace-normal hover:border-primary/50', attrs={'onclick': "selectAccountType('corporate')", 'aria-pressed': 'false'}) %}
+              <span id="icon-account-corporate" class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">{{ lucide('building-2', 'size-5') }}</span>
+              <span class="flex flex-col">
+                <span class="font-medium">Corporate Account</span>
+                <span class="mt-0.5 text-sm font-normal text-muted-foreground">For teams and organizations</span>
+              </span>
+            {% endcall %}
+          </div>
+        </div>
+
+        {# Step 2: account info #}
+        <div id="step-pane-2" class="hidden space-y-5">
+          <div>
+            <h2 class="text-lg font-semibold">Account Info</h2>
+            <p class="mt-1 text-sm text-muted-foreground">Set up your account details.</p>
+          </div>
+          {% call ui.field() %}
+            {{ ui.field_label(text='Team Size', id='team-size-label') }}
+            {% call ui.toggle_group(variant='outline', id='team-size', class='grid w-full grid-cols-2 gap-2 sm:grid-cols-4', attrs={'aria-labelledby': 'team-size-label'}) %}
+              {% for size in ['1-1', '2-10', '10-50', '50+'] %}
+                {{ ui.toggle_group_item(text=size, variant='outline', pressed=(size == '10-50'), class='h-11 w-full rounded-lg', attrs={'data-value': size}) }}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.field() %}
+            {% call ui.field_label(as_='label', for_='teamName') %}Team Account Name <span class="text-destructive">*</span>{% endcall %}
+            {{ ui.input(id='teamName', type='text', value='Acme Corp', placeholder='e.g. Acme Corp', attrs={'oninput': 'state.teamName = this.value'}) }}
+          {% endcall %}
+          {% call ui.field() %}
+            {{ ui.field_label(text='Account Plan', id='account-plan-label') }}
+            {% call ui.radio_group(id='account-plan', class='gap-2', attrs={'aria-labelledby': 'account-plan-label'}) %}
+              {% for value, icon_name, title, desc in [('company', 'building-2', 'Company Account', 'Full access for teams'), ('developer', 'user', 'Developer Account', 'Ideal for building and testing'), ('testing', 'globe', 'Testing Account', 'Sandbox environment access')] %}
+              {% call ui.field_label(as_='label', for_='plan-' ~ value, class='flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-colors hover:bg-muted/50 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5') %}
+                {{ lucide(icon_name, 'size-5 shrink-0 text-muted-foreground') }}
+                {% call ui.field(orientation='horizontal', class='flex-1') %}
+                  {% call ui.field_content() %}
+                    <span class="text-sm font-medium">{{ title }}</span>
+                    {{ ui.field_description(text=desc, class='text-xs') }}
+                  {% endcall %}
+                  {{ ui.radio_group_item(checked=(value == 'developer'), value=value, id='plan-' ~ value, attrs={'onclick': "selectPlan('" ~ value ~ "')"}) }}
+                {% endcall %}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        {# Step 3: business details #}
+        <div id="step-pane-3" class="hidden space-y-5">
+          <div>
+            <h2 class="text-lg font-semibold">Business Details</h2>
+            <p class="mt-1 text-sm text-muted-foreground">Tell us about your business.</p>
+          </div>
+          {% call ui.field_group() %}
+            {% call ui.field() %}
+              {% call ui.field_label(as_='label', for_='companyName') %}Company Name <span class="text-destructive">*</span>{% endcall %}
+              {{ ui.input(id='companyName', type='text', value='Acme Inc.', placeholder='Acme Inc.', attrs={'oninput': 'state.companyName = this.value'}) }}
+            {% endcall %}
+            {% call ui.field() %}
+              {% call ui.field_label(as_='label', for_='industry') %}Industry <span class="text-destructive">*</span>{% endcall %}
+              {% call ui.native_select_wrapper() %}
+                {% call ui.native_select(id='industry', attrs={'onchange': 'state.industry = this.value'}) %}
+                  {% for value, label in [('technology', 'Technology'), ('finance', 'Finance'), ('healthcare', 'Healthcare'), ('retail', 'Retail & E-commerce'), ('education', 'Education'), ('other', 'Other')] %}
+                    {{ ui.native_select_option(text=label, attrs={'value': value, 'selected': value == 'technology'}) }}
+                  {% endfor %}
+                {% endcall %}
+                {{ ui.native_select_icon() }}
+              {% endcall %}
+            {% endcall %}
+            {% call ui.field() %}
+              {{ ui.field_label(as_='label', text='Website', for_='website') }}
+              {{ ui.input(id='website', type='url', value='https://acme.org', placeholder='https://yourcompany.com', attrs={'oninput': 'state.website = this.value'}) }}
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        {# Step 4: billing #}
+        <div id="step-pane-4" class="hidden space-y-5">
+          <div>
+            <h2 class="text-lg font-semibold">Billing Details</h2>
+            <p class="mt-1 text-sm text-muted-foreground">Your card is stored securely and never shared.</p>
+          </div>
+          {% call ui.field_group() %}
+            {% call ui.field() %}
+              {% call ui.field_label(as_='label', for_='nameOnCard') %}Name on Card <span class="text-destructive">*</span>{% endcall %}
+              {{ ui.input(id='nameOnCard', type='text', value='John Doe', placeholder='John Doe', attrs={'oninput': 'state.nameOnCard = this.value'}) }}
+            {% endcall %}
+            {% call ui.field() %}
+              {% call ui.field_label(as_='label', for_='cardNumber') %}Card Number <span class="text-destructive">*</span>{% endcall %}
+              <div class="relative">
+                {{ ui.input(id='cardNumber', type='text', value='4242 4242 4242 4242', placeholder='0000 0000 0000 0000', class='pr-10 font-mono') }}
+                {{ lucide('credit-card', 'pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground') }}
+              </div>
+            {% endcall %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {% call ui.field() %}
+                {% call ui.field_label(as_='label', for_='expiryMonth') %}Expiry Date <span class="text-destructive">*</span>{% endcall %}
+                <div class="grid grid-cols-2 gap-2">
+                  {% call ui.native_select_wrapper() %}
+                    {% call ui.native_select(id='expiryMonth', attrs={'aria-label': 'Expiry month', 'onchange': 'state.expirationMonth = this.value'}) %}
+                      {% for m in range(1, 13) %}{% set mm = '%02d' % m %}{{ ui.native_select_option(text=mm, attrs={'value': mm, 'selected': mm == '12'}) }}{% endfor %}
+                    {% endcall %}
+                    {{ ui.native_select_icon() }}
+                  {% endcall %}
+                  {% call ui.native_select_wrapper() %}
+                    {% call ui.native_select(id='expiryYear', attrs={'aria-label': 'Expiry year', 'onchange': 'state.expirationYear = this.value'}) %}
+                      {% for y in range(2025, 2031) %}{{ ui.native_select_option(text=y, attrs={'value': y, 'selected': y == 2027}) }}{% endfor %}
+                    {% endcall %}
+                    {{ ui.native_select_icon() }}
+                  {% endcall %}
+                </div>
+              {% endcall %}
+              {% call ui.field() %}
+                {% call ui.field_label(as_='label', for_='cvv') %}CVV <span class="text-destructive">*</span>{% endcall %}
+                {{ ui.input(id='cvv', type='text', value='123', placeholder='123', maxlength='4', class='font-mono') }}
+              {% endcall %}
+            </div>
+          {% endcall %}
+        </div>
+
+        {# Step 5: complete #}
+        <div id="step-pane-5" class="hidden flex-col items-center gap-6 py-4 text-center">
+          <div class="flex flex-col items-center gap-6">
+            <div class="flex size-20 items-center justify-center rounded-full bg-primary/10 text-primary ring-8 ring-primary/10">{{ lucide('circle-check', 'size-10') }}</div>
+            <div>
+              <h2 class="text-2xl font-bold">You're all set!</h2>
+              <p class="mt-2 text-sm text-muted-foreground">Your account has been created successfully.</p>
+            </div>
+            {% call ui.card(class='w-full gap-3 bg-muted/30 py-4 text-left shadow-none') %}
+              {% call ui.card_header(class='px-4') %}
+                {% call ui.card_description(class='flex items-center gap-2 text-xs font-semibold tracking-wider uppercase') %}{{ lucide('sparkles', 'size-3.5') }}<span>Account Summary</span>{% endcall %}
+              {% endcall %}
+              {% call ui.card_content(class='space-y-2 px-4') %}
+                {% for icon_name, label, sid, value in [('user', 'Account Type:', 'summary-account-type', 'Personal Account'), ('wallet', 'Plan:', 'summary-plan', 'Developer'), ('building-2', 'Company:', 'summary-company', 'Acme Inc.'), ('globe', 'Team:', 'summary-team', 'Acme Corp')] %}
+                <div class="flex items-center gap-3">
+                  {{ lucide(icon_name, 'size-4 shrink-0 text-muted-foreground') }}
+                  <span class="text-sm text-muted-foreground">{{ label }}</span>
+                  <span id="{{ sid }}" class="ml-auto text-sm font-medium">{{ value }}</span>
+                </div>
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+            <div class="pt-2">
+              {{ ui.button(text='Go to Dashboard', href=url_for('basecoat_examples.dashboard'), class='px-8 font-semibold') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Footer navigation #}
+      <div class="flex items-center justify-between border-t border-border pt-5">
+        {% call ui.button(variant='outline', id='nav-prev', disabled=true, attrs={'onclick': 'prevStep()'}) %}{{ lucide('chevron-left') }}<span>Back</span>{% endcall %}
+        {% call ui.button(id='nav-next', attrs={'onclick': 'nextStep()'}) %}<span id="nav-next-text">Continue</span>{{ lucide('chevron-right') }}{% endcall %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+</div>
+{% endblock %}

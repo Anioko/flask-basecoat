@@ -3,35 +3,27 @@
 {# Port of the upstream shadcn/ui example `label` (pinned source in compliance/upstream). #}
 {% block title %}label · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='With Checkbox') %}
       {% call ui.field(orientation='horizontal') %}
-        {{ ui.checkbox(checked=false, id='label-demo-terms') }}
-        <input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">
-        {% call ui.label(for_='label-demo-terms') %}Accept terms and conditions
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Input') %}
+        {{ ui.checkbox(checked=false, id='label-demo-terms') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='label-demo-terms') %}Accept terms and conditions{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Input') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.label(for_='label-demo-username') %}Username
-        {% endcall %}
-        {{ ui.input(id='label-demo-username', attrs={'placeholder': 'Username'}) }}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Disabled') %}
+        {% call ui.label(for_='label-demo-username') %}Username{% endcall %}
+{{ ui.input(id='label-demo-username', attrs={'placeholder': 'Username'}) }}{% endcall %}
+{% endcall %}
+{% call ui.example(title='Disabled') %}
       {% call ui.field(orientation='vertical', disabled=true) %}
-        {% call ui.label(for_='label-demo-disabled') %}Disabled
-        {% endcall %}
-        {{ ui.input(disabled=true, id='label-demo-disabled', attrs={'placeholder': 'Disabled'}) }}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Textarea') %}
+        {% call ui.label(for_='label-demo-disabled') %}Disabled{% endcall %}
+{{ ui.input(disabled=true, id='label-demo-disabled', attrs={'placeholder': 'Disabled'}) }}{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Textarea') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.label(for_='label-demo-message') %}Message
-        {% endcall %}
-        {{ ui.textarea(id='label-demo-message', attrs={'placeholder': 'Message'}) }}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+        {% call ui.label(for_='label-demo-message') %}Message{% endcall %}
+{% call ui.textarea(id='label-demo-message', attrs={'placeholder': 'Message'}) %}{% raw %}{% endraw %}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

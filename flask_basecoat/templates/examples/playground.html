@@ -1,175 +1,127 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playground - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Playground · flask-basecoat{% endblock %}
+{% block head %}
+<script>
+  function handlePlaygroundSubmit() {
+    const area = document.getElementById('playground-prompt');
+    const submit = document.getElementById('playground-submit');
+    if (!area.value.trim()) {
+      area.value = "We scoop happiness one cone at a time!";
+      return;
+    }
+    submit.textContent = "Generating...";
+    setTimeout(() => {
+      area.value += "\n\n1. Pure Joy in Every Scoop!\n2. Crafting Smiles, One Flavor at a Time.\n3. Artisanal Chill for Sunny Days.";
+      submit.textContent = "Submit";
+    }, 600);
+  }
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-        function updateTemperature(val) {
-            document.getElementById('temp-val').textContent = val;
-        }
-        function updateMaxLength(val) {
-            document.getElementById('maxlen-val').textContent = val;
-        }
-        function updateTopP(val) {
-            document.getElementById('topp-val').textContent = val;
-        }
-        function handlePlaygroundSubmit() {
-            const ta = document.getElementById('playground-prompt');
-            const submitBtn = document.getElementById('submit-btn');
-            if (!ta.value.trim()) {
-                ta.value = "We scoop happiness one cone at a time!";
-                return;
-            }
-            submitBtn.textContent = "Generating...";
-            setTimeout(() => {
-                ta.value += "\n\n1. Pure Joy in Every Scoop!\n2. Crafting Smiles, One Flavor at a Time.\n3. Artisanal Chill for Sunny Days.";
-                submitBtn.textContent = "Submit";
-            }, 600);
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
+  function resetPrompt() {
+    document.getElementById('playground-prompt').value = 'Write a tagline for an ice cream shop';
+  }
 
-    <div class="bg-background">
-        {# Top Action Toolbar #}
-        <div class="flex flex-col items-start justify-between gap-2 p-4 py-4 sm:flex-row sm:items-center sm:gap-0 md:h-16">
-            <h2 class="text-lg font-semibold">Playground</h2>
-            <div class="ml-auto flex w-full gap-2 sm:justify-end">
-                <button class="inline-flex items-center justify-between rounded-md border border-input bg-background shadow-xs hover:bg-muted hover:text-foreground h-9 gap-1.5 px-2.5 text-sm font-medium flex-1 md:max-w-[200px] lg:max-w-[300px]" type="button">
-                    <span>Load a preset...</span>
-                    <i data-lucide="chevrons-up-down" class="size-4 opacity-50"></i>
-                </button>
-                <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3 text-sm font-medium" type="button">
-                    Save
-                </button>
-                <div class="hidden gap-2 md:flex">
-                    <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3 text-sm font-medium" type="button">
-                        View code
-                    </button>
-                    <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3 text-sm font-medium" type="button">
-                        Share
-                    </button>
-                </div>
-                <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 size-9" type="button" aria-label="Actions">
-                    <i data-lucide="ellipsis" class="size-4"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="shrink-0 bg-border h-px w-full"></div>
-
-        {# Workbench Grid #}
-        <div class="flex h-[calc(100vh-4.5rem)] flex-1 flex-col">
-            <div class="flex flex-1 flex-col p-4">
-                <div class="grid flex-1 items-stretch gap-6 md:grid-cols-[1fr_220px]">
-                    {# Sidebar Settings #}
-                    <div class="hidden flex-col gap-6 sm:flex md:order-2">
-                        {# Mode Tabs #}
-                        <div class="grid gap-3">
-                            <span class="text-sm font-medium leading-none">Mode</span>
-                            <div class="bg-muted text-muted-foreground h-9 items-center justify-center rounded-lg p-[3px] grid w-full grid-cols-3">
-                                <button type="button" class="bg-background text-foreground inline-flex h-full flex-1 items-center justify-center rounded-md text-sm font-medium shadow-xs" title="Complete">
-                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <rect x="4" y="3" width="12" height="2" rx="1"></rect>
-                                        <rect x="4" y="7" width="12" height="2" rx="1"></rect>
-                                        <rect x="4" y="11" width="3" height="2" rx="1"></rect>
-                                        <rect x="4" y="15" width="3" height="2" rx="1"></rect>
-                                        <rect x="8.5" y="11" width="3" height="2" rx="1"></rect>
-                                        <rect x="8.5" y="15" width="3" height="2" rx="1"></rect>
-                                        <rect x="13" y="11" width="3" height="2" rx="1"></rect>
-                                    </svg>
-                                </button>
-                                <button type="button" class="text-muted-foreground hover:text-foreground inline-flex h-full flex-1 items-center justify-center rounded-md text-sm font-medium" title="Insert">
-                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.491 7.769a.888.888 0 0 1 .287.648.888.888 0 0 1-.287.648l-3.916 3.667a1.013 1.013 0 0 1-.692.268c-.26 0-.509-.097-.692-.268L5.275 9.065A.886.886 0 0 1 5 8.42a.889.889 0 0 1 .287-.64c.181-.17.427-.267.683-.269.257-.002.504.09.69.258L8.903 9.87V3.917c0-.243.103-.477.287-.649.183-.171.432-.268.692-.268.26 0 .509.097.692.268a.888.888 0 0 1 .287.649V9.87l2.245-2.102c.183-.172.432-.269.692-.269.26 0 .508.097.692.269Z"></path>
-                                    </svg>
-                                </button>
-                                <button type="button" class="text-muted-foreground hover:text-foreground inline-flex h-full flex-1 items-center justify-center rounded-md text-sm font-medium" title="Edit">
-                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <rect x="4" y="3" width="12" height="2" rx="1"></rect>
-                                        <rect x="4" y="7" width="12" height="2" rx="1"></rect>
-                                        <rect x="4" y="11" width="3" height="2" rx="1"></rect>
-                                        <rect x="4" y="15" width="4" height="2" rx="1"></rect>
-                                        <rect x="8.5" y="11" width="3" height="2" rx="1"></rect>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        {# Model Selector #}
-                        <div class="grid gap-3">
-                            <label class="text-sm font-medium leading-none">Model</label>
-                            <button class="inline-flex shrink-0 items-center justify-between rounded-md border border-input bg-background shadow-xs hover:bg-muted hover:text-foreground h-9 px-2.5 text-sm font-medium w-full" type="button">
-                                <span>text-davinci-003</span>
-                                <i data-lucide="chevrons-up-down" class="size-4 text-muted-foreground"></i>
-                            </button>
-                        </div>
-
-                        {# Temperature #}
-                        <div class="grid gap-2 pt-2">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-medium leading-none">Temperature</label>
-                                <span id="temp-val" class="text-muted-foreground w-12 text-right text-sm">0.56</span>
-                            </div>
-                            <input type="range" min="0" max="1" step="0.01" value="0.56" oninput="updateTemperature(this.value)" class="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer">
-                        </div>
-
-                        {# Maximum Length #}
-                        <div class="grid gap-2 pt-2">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-medium leading-none">Maximum Length</label>
-                                <span id="maxlen-val" class="text-muted-foreground w-12 text-right text-sm">256</span>
-                            </div>
-                            <input type="range" min="1" max="4000" step="1" value="256" oninput="updateMaxLength(this.value)" class="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer">
-                        </div>
-
-                        {# Top P #}
-                        <div class="grid gap-2 pt-2">
-                            <div class="flex items-center justify-between">
-                                <label class="text-sm font-medium leading-none">Top P</label>
-                                <span id="topp-val" class="text-muted-foreground w-12 text-right text-sm">0.9</span>
-                            </div>
-                            <input type="range" min="0" max="1" step="0.05" value="0.9" oninput="updateTopP(this.value)" class="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer">
-                        </div>
-                    </div>
-
-                    {# Workbench Editor Area #}
-                    <div class="flex flex-1 flex-col md:order-1">
-                        <div class="flex h-full flex-col gap-4">
-                            <textarea id="playground-prompt" class="flex min-h-16 w-full rounded-md border border-input bg-transparent text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring flex-1 p-4 md:text-sm font-mono leading-relaxed" placeholder="Write a tagline for an ice cream shop"></textarea>
-                            <div class="flex items-center gap-2">
-                                <button id="submit-btn" onclick="handlePlaygroundSubmit()" class="inline-flex shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/80 h-9 px-4 text-sm font-medium shadow-xs transition-colors" type="button">
-                                    Submit
-                                </button>
-                                <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-secondary text-secondary-foreground hover:bg-secondary/80 size-9" type="button" aria-label="Show history" onclick="document.getElementById('playground-prompt').value='Write a tagline for an ice cream shop'">
-                                    <i data-lucide="rotate-ccw" class="size-4"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  // Sliders report their value through the runtime's change event; mirror it into the read-out next to the label.
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-slider-output]').forEach((slider) => {
+      const out = document.getElementById(slider.getAttribute('data-slider-output'));
+      slider.addEventListener('basecoat:change', (e) => { if (out) out.textContent = e.detail.value[0]; });
+    });
+  });
+</script>
+{% endblock %}
+{% block body %}
+<div class="flex min-h-svh flex-col">
+  {# Top action toolbar #}
+  <div class="flex flex-col items-start justify-between gap-2 px-4 py-4 sm:flex-row sm:items-center sm:gap-0 md:h-16">
+    <h2 class="text-lg font-semibold">Playground</h2>
+    <div class="ml-auto flex w-full gap-2 sm:justify-end">
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(variant='outline', class='flex-1 justify-between md:max-w-[200px] lg:max-w-[300px]') %}
+          <span>Load a preset...</span>{{ lucide('chevrons-up-down', 'opacity-50') }}
+        {% endcall %}
+        {% call ui.dropdown_menu_content(align='end', class='w-[300px]') %}
+          {{ ui.dropdown_menu_label(text='Presets') }}
+          {% for preset in ['Grammatical Standard English', 'Summarize for a 2nd grader', 'Text to command', 'Q&A', 'English to other languages', 'Parse unstructured data', 'Classification', 'Natural language to Python', 'Explain code', 'Chat'] %}
+            {{ ui.dropdown_menu_item(text=preset) }}
+          {% endfor %}
+        {% endcall %}
+      {% endcall %}
+      {{ ui.button(text='Save', variant='secondary') }}
+      <div class="hidden gap-2 md:flex">
+        {{ ui.button(text='View code', variant='secondary') }}
+        {{ ui.button(text='Share', variant='secondary') }}
+      </div>
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(variant='secondary', size='icon', attrs={'aria-label': 'Actions'}) %}{{ lucide('ellipsis') }}{% endcall %}
+        {% call ui.dropdown_menu_content(align='end') %}
+          {{ ui.dropdown_menu_item(text='Content filter preferences') }}
+          {{ ui.dropdown_menu_separator() }}
+          {{ ui.dropdown_menu_item(text='Delete preset', variant='destructive') }}
+        {% endcall %}
+      {% endcall %}
     </div>
-</body>
-</html>
+  </div>
+
+  {{ ui.separator() }}
+
+  {# Workbench grid #}
+  <div class="flex flex-1 flex-col p-4">
+    <div class="grid flex-1 items-stretch gap-6 md:grid-cols-[1fr_220px]">
+      {# Settings column #}
+      <div class="hidden flex-col gap-6 sm:flex md:order-2">
+        <div class="grid gap-3">
+          <span class="text-sm font-medium leading-none">Mode</span>
+          {% call ui.tabs() %}
+            {% call ui.tabs_list(class='grid w-full grid-cols-3') %}
+              {% call ui.tabs_trigger(active=true, attrs={'data-value': 'complete', 'title': 'Complete'}) %}{{ lucide('wrap-text') }}<span class="sr-only">Complete</span>{% endcall %}
+              {% call ui.tabs_trigger(attrs={'data-value': 'insert', 'title': 'Insert'}) %}{{ lucide('clipboard-paste') }}<span class="sr-only">Insert</span>{% endcall %}
+              {% call ui.tabs_trigger(attrs={'data-value': 'edit', 'title': 'Edit'}) %}{{ lucide('pencil') }}<span class="sr-only">Edit</span>{% endcall %}
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        <div class="grid gap-3">
+          {{ ui.label(text='Model', for_='model-trigger') }}
+          {% call ui.dropdown_menu() %}
+            {% call ui.dropdown_menu_trigger(variant='outline', id='model-trigger', class='w-full justify-between') %}
+              <span>text-davinci-003</span>{{ lucide('chevrons-up-down', 'text-muted-foreground') }}
+            {% endcall %}
+            {% call ui.dropdown_menu_content(align='start', class='w-[220px]') %}
+              {{ ui.dropdown_menu_label(text='GPT-3') }}
+              {% for model in ['text-davinci-003', 'text-curie-001', 'text-babbage-001', 'text-ada-001'] %}{{ ui.dropdown_menu_item(text=model) }}{% endfor %}
+              {{ ui.dropdown_menu_separator() }}
+              {{ ui.dropdown_menu_label(text='Codex') }}
+              {% for model in ['code-davinci-002', 'code-cushman-001'] %}{{ ui.dropdown_menu_item(text=model) }}{% endfor %}
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        {% for sid, label, out, min, max, step, value in [('temperature', 'Temperature', 'temp-val', 0, 1, '0.01', '0.56'), ('max-length', 'Maximum Length', 'maxlen-val', 1, 4000, '1', '256'), ('top-p', 'Top P', 'topp-val', 0, 1, '0.05', '0.9')] %}
+        <div class="grid gap-2 pt-2">
+          <div class="flex items-center justify-between">
+            {{ ui.label(text=label, for_=sid) }}
+            <span id="{{ out }}" class="w-12 text-right text-sm text-muted-foreground">{{ value }}</span>
+          </div>
+          {% call ui.slider(attrs={'data-slider-output': out, 'data-step': step}) %}
+            {% call ui.slider_track() %}{{ ui.slider_range() }}{% endcall %}
+            {{ ui.slider_thumb(id=sid, min=min, max=max, value=value, attrs={'aria-label': label}) }}
+          {% endcall %}
+        </div>
+        {% endfor %}
+      </div>
+
+      {# Editor area #}
+      <div class="flex flex-1 flex-col md:order-1">
+        <div class="flex h-full flex-col gap-4">
+          {{ ui.textarea(id='playground-prompt', placeholder='Write a tagline for an ice cream shop', class='min-h-[400px] flex-1 p-4 font-mono leading-relaxed md:text-sm') }}
+          <div class="flex items-center gap-2">
+            {{ ui.button(text='Submit', id='playground-submit', attrs={'onclick': 'handlePlaygroundSubmit()'}) }}
+            {% call ui.button(variant='secondary', size='icon', attrs={'aria-label': 'Show history', 'onclick': 'resetPrompt()'}) %}{{ lucide('refresh-ccw') }}{% endcall %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

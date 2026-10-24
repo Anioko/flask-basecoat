@@ -1,91 +1,73 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Changelog Page - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Changelog Page - Shadcn UI Examples{% endblock %}
+{# Release categories map to the chart tokens of the theme; icons map to the lucide set shipped with the package. #}
+{% set tone = {
+  'violet': 'border-chart-1/30 bg-chart-1/10 text-chart-1',
+  'blue': 'border-chart-2/30 bg-chart-2/10 text-chart-2',
+  'emerald': 'border-chart-3/30 bg-chart-3/10 text-chart-3',
+  'rose': 'border-destructive/30 bg-destructive/10 text-destructive'
+} %}
+{% set heading_tone = {'violet': 'text-chart-1', 'blue': 'text-chart-2', 'emerald': 'text-chart-3', 'rose': 'text-destructive'} %}
+{% set icon_name = {'shield-check': 'shield', 'bug': 'triangle-alert'} %}
+{% block body %}
+  <div class="bg-background">
+    <header class="border-b border-border bg-muted/40 px-4 py-16 text-center">
+      <div class="mx-auto max-w-2xl space-y-4">
+        {% call ui.badge(variant='secondary', class='mx-auto mb-4 gap-2 bg-primary/10 px-3 py-1 text-primary') %}
+          <span class="size-1.5 rounded-full bg-primary"></span>Always up to date
+        {% endcall %}
+        <h1 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">What's new?</h1>
+        <p class="text-lg text-balance text-muted-foreground">The latest features, improvements, and fixes &mdash; shipped regularly.</p>
+      </div>
+    </header>
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
-
-    <div class="bg-background">
-        <header class="bg-muted/40 border-b px-4 py-16 text-center">
-            <div class="mx-auto max-w-2xl space-y-4">
-                <div class="bg-primary/10 text-primary mx-auto mb-4 flex w-fit items-center gap-2 rounded-full px-3 py-1 text-xs font-medium">
-                    <span class="bg-primary size-1.5 rounded-full"></span>Always up to date
-                </div>
-                <h1 class="text-foreground text-4xl font-bold tracking-tight sm:text-5xl">What's new?</h1>
-                <p class="text-muted-foreground text-lg text-balance">The latest features, improvements, and fixes — shipped regularly.</p>
-            </div>
-        </header>
-
-        <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-            <div class="relative">
-                <div class="bg-border absolute top-2 left-[7px] h-full w-px md:left-[119px]"></div>
-                <div class="space-y-16">
-                    {% for release in changelog %}
-                    <div class="relative grid gap-6 md:grid-cols-[120px_1fr]">
-                        <div class="border-primary absolute top-0.5 left-0 z-10 size-3.5 rounded-full border-2 md:left-[112px] {% if loop.first %}bg-primary{% else %}bg-background{% endif %}"></div>
-                        <span class="text-muted-foreground text-sm tabular-nums">{{ release.date }}</span>
-                        <div class="space-y-6 pb-2 pl-7 md:pl-0">
-                            <div class="space-y-3">
-                                <h2 class="text-xl font-bold tracking-tight">Version <span class="text-foreground font-mono">{{ release.version }}</span></h2>
-                                <div class="flex flex-wrap gap-2">
-                                    {% for b in release.badges %}
-                                        <span class="inline-flex h-5 w-fit items-center justify-center rounded-full border px-2 py-0.5 text-xs font-medium gap-1.5 {% if b.color == 'violet' %}bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20{% elif b.color == 'blue' %}bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20{% elif b.color == 'emerald' %}bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20{% else %}bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20{% endif %}">
-                                            <i data-lucide="{{ b.icon }}" class="size-3"></i>
-                                            {{ b.name }}
-                                        </span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="space-y-6">
-                                {% for sec in release.sections %}
-                                <div class="space-y-3">
-                                    <h3 class="flex items-center gap-2 text-sm font-semibold {% if sec.color == 'violet' %}text-violet-600 dark:text-violet-400{% elif sec.color == 'blue' %}text-blue-600 dark:text-blue-400{% elif sec.color == 'emerald' %}text-emerald-600 dark:text-emerald-400{% else %}text-rose-600 dark:text-rose-400{% endif %}">
-                                        <i data-lucide="{{ sec.icon }}" class="size-4"></i>
-                                        {{ sec.title }}
-                                    </h3>
-                                    <ul class="text-muted-foreground space-y-2">
-                                        {% for item in sec['items'] %}
-                                        <li class="flex items-start gap-2 text-sm">
-                                            <span class="bg-muted-foreground/40 mt-2 size-1 shrink-0 rounded-full"></span>
-                                            {{ item }}
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% if not loop.last %}
-                            <div class="shrink-0 bg-border h-px w-full mt-4"></div>
-                            {% endif %}
-                        </div>
-                    </div>
+    <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+      <div class="relative">
+        <div class="absolute top-2 left-[7px] h-full w-px bg-border md:left-[119px]"></div>
+        <div class="space-y-16">
+          {% for release in changelog %}
+            <div class="relative grid gap-6 md:grid-cols-[120px_1fr]">
+              <div class="absolute top-0.5 left-0 z-10 size-3.5 rounded-full border-2 border-primary md:left-[112px] {% if loop.first %}bg-primary{% else %}bg-background{% endif %}"></div>
+              <span class="text-sm tabular-nums text-muted-foreground">{{ release.date }}</span>
+              <div class="space-y-6 pb-2 pl-7 md:pl-0">
+                <div class="space-y-3">
+                  <h2 class="text-xl font-bold tracking-tight">Version <span class="font-mono text-foreground">{{ release.version }}</span></h2>
+                  <div class="flex flex-wrap gap-2">
+                    {% for b in release.badges %}
+                      {% call ui.badge(variant='outline', class='gap-1.5 ' ~ tone.get(b.color, tone['rose'])) %}
+                        {{ lucide(icon_name.get(b.icon, b.icon), 'size-3') }}
+                        {{ b.name }}
+                      {% endcall %}
                     {% endfor %}
+                  </div>
                 </div>
+                <div class="space-y-6">
+                  {% for sec in release.sections %}
+                    <div class="space-y-3">
+                      <h3 class="flex items-center gap-2 text-sm font-semibold {{ heading_tone.get(sec.color, heading_tone['rose']) }}">
+                        {{ lucide(icon_name.get(sec.icon, sec.icon), 'size-4') }}
+                        {{ sec.title }}
+                      </h3>
+                      <ul class="space-y-2 text-muted-foreground">
+                        {% for item in sec['items'] %}
+                          <li class="flex items-start gap-2 text-sm">
+                            <span class="mt-2 size-1 shrink-0 rounded-full bg-muted-foreground/40"></span>
+                            {{ item }}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endfor %}
+                </div>
+                {% if not loop.last %}
+                  {{ ui.separator(class='mt-4') }}
+                {% endif %}
+              </div>
             </div>
-        </main>
-    </div>
-</body>
-</html>
+          {% endfor %}
+        </div>
+      </div>
+    </main>
+  </div>
+{% endblock %}

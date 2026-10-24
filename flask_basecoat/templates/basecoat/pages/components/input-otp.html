@@ -3,35 +3,19 @@
 {# Port of the upstream shadcn/ui example `input-otp` (pinned source in compliance/upstream). #}
 {% block title %}input-otp · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Form') %}
       {% call ui.card(size='default', class='mx-auto max-w-md') %}
         {% call ui.card_header() %}
-          {% call ui.card_title() %}Verify your login
-          {% endcall %}
-          {% call ui.card_description() %}Enter the verification code we sent to your email address: 
-            <span class="font-medium">m@example.com</span>
-            .
-          {% endcall %}
-        {% endcall %}
-        {% call ui.card_content() %}
-          <form>
-            {% call ui.field(orientation='vertical') %}
-              <div class="flex items-center justify-between">
-                {% call ui.field_label(as_='label', for_='otp-verification') %}Verification code
-                {% endcall %}
-                {% call ui.button(size='xs', variant='outline') %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true" data-icon="inline-start">
-                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                    <path d="M21 3v5h-5"></path>
-                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                    <path d="M8 16H3v5"></path>
-                  </svg>
-                  Resend Code
-                {% endcall %}
-              </div>
-              <noscript>
-                <style>
+          {% call ui.card_title() %}Verify your login{% endcall %}
+{% call ui.card_description() %}Enter the verification code we sent to your email address: <span class="font-medium">m@example.com</span>.          {% endcall %}
+{% endcall %}
+{% call ui.card_content() %}
+          <form>{% call ui.field(orientation='vertical') %}
+              <div class="flex items-center justify-between">{% call ui.field_label(as_='label', for_='otp-verification') %}Verification code{% endcall %}
+{% call ui.button(size='xs', variant='outline') %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true" data-icon="inline-start"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>Resend Code                {% endcall %}
+</div><noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -50,49 +34,25 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-              </noscript>
-              <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-                {% call ui.input_otp_group(class='*:data-[slot=input-otp-slot]:text-xl style-vega:*:data-[slot=input-otp-slot]:h-16 style-vega:*:data-[slot=input-otp-slot]:w-12 style-nova:*:data-[slot=input-otp-slot]:h-12 style-nova:*:data-[slot=input-otp-slot]:w-11 style-lyra:*:data-[slot=input-otp-slot]:h-12 style-lyra:*:data-[slot=input-otp-slot]:w-11 style-maia:*:data-[slot=input-otp-slot]:h-16 style-maia:*:data-[slot=input-otp-slot]:w-12 style-mira:*:data-[slot=input-otp-slot]:h-12 style-mira:*:data-[slot=input-otp-slot]:w-11 style-luma:*:data-[slot=input-otp-slot]:h-16 style-luma:*:data-[slot=input-otp-slot]:w-12 style-sera:*:data-[slot=input-otp-slot]:h-14 style-sera:*:data-[slot=input-otp-slot]:w-10') %}
-                  {{ ui.input_otp_slot(active=false) }}
-                  {{ ui.input_otp_slot(active=false) }}
-                  {{ ui.input_otp_slot(active=false) }}
-                {% endcall %}
-                {% call ui.input_otp_separator() %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-                    <path d="M5 12h14"></path>
-                  </svg>
-                {% endcall %}
-                {% call ui.input_otp_group(class='*:data-[slot=input-otp-slot]:text-xl style-vega:*:data-[slot=input-otp-slot]:h-16 style-vega:*:data-[slot=input-otp-slot]:w-12 style-nova:*:data-[slot=input-otp-slot]:h-12 style-nova:*:data-[slot=input-otp-slot]:w-11 style-lyra:*:data-[slot=input-otp-slot]:h-12 style-lyra:*:data-[slot=input-otp-slot]:w-11 style-maia:*:data-[slot=input-otp-slot]:h-16 style-maia:*:data-[slot=input-otp-slot]:w-12 style-mira:*:data-[slot=input-otp-slot]:h-12 style-mira:*:data-[slot=input-otp-slot]:w-11 style-luma:*:data-[slot=input-otp-slot]:h-16 style-luma:*:data-[slot=input-otp-slot]:w-12 style-sera:*:data-[slot=input-otp-slot]:h-14 style-sera:*:data-[slot=input-otp-slot]:w-10') %}
-                  {{ ui.input_otp_slot(active=false) }}
-                  {{ ui.input_otp_slot(active=false) }}
-                  {{ ui.input_otp_slot(active=false) }}
-                {% endcall %}
-                <div style="position:absolute;inset:0;pointer-events:none">
-                  {{ ui.input_otp(required=true, id='otp-verification', attrs={'data-input-otp-placeholder-shown': 'true', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}
-                </div>
-              </div>
-              {% call ui.field_description() %}
-                <a href="#">I no longer have access to this email address.</a>
-              {% endcall %}
-            {% endcall %}
-          </form>
-        {% endcall %}
-        {% call ui.card_footer(class='flex-col gap-2') %}
-          {% call ui.button(size='default', variant='default', type='submit', class='w-full') %}Verify
-          {% endcall %}
-          <div class="text-sm text-muted-foreground">Having trouble signing in? 
-            <a href="#" class="underline underline-offset-4 transition-colors hover:text-primary">Contact support</a>
-          </div>
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Simple') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group(class='*:data-[slot=input-otp-slot]:text-xl style-vega:*:data-[slot=input-otp-slot]:h-16 style-vega:*:data-[slot=input-otp-slot]:w-12 style-nova:*:data-[slot=input-otp-slot]:h-12 style-nova:*:data-[slot=input-otp-slot]:w-11 style-lyra:*:data-[slot=input-otp-slot]:h-12 style-lyra:*:data-[slot=input-otp-slot]:w-11 style-maia:*:data-[slot=input-otp-slot]:h-16 style-maia:*:data-[slot=input-otp-slot]:w-12 style-mira:*:data-[slot=input-otp-slot]:h-12 style-mira:*:data-[slot=input-otp-slot]:w-11 style-luma:*:data-[slot=input-otp-slot]:h-16 style-luma:*:data-[slot=input-otp-slot]:w-12 style-sera:*:data-[slot=input-otp-slot]:h-14 style-sera:*:data-[slot=input-otp-slot]:w-10') %}
+                  {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+{% call ui.input_otp_separator() %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group(class='*:data-[slot=input-otp-slot]:text-xl style-vega:*:data-[slot=input-otp-slot]:h-16 style-vega:*:data-[slot=input-otp-slot]:w-12 style-nova:*:data-[slot=input-otp-slot]:h-12 style-nova:*:data-[slot=input-otp-slot]:w-11 style-lyra:*:data-[slot=input-otp-slot]:h-12 style-lyra:*:data-[slot=input-otp-slot]:w-11 style-maia:*:data-[slot=input-otp-slot]:h-16 style-maia:*:data-[slot=input-otp-slot]:w-12 style-mira:*:data-[slot=input-otp-slot]:h-12 style-mira:*:data-[slot=input-otp-slot]:w-11 style-luma:*:data-[slot=input-otp-slot]:h-16 style-luma:*:data-[slot=input-otp-slot]:w-12 style-sera:*:data-[slot=input-otp-slot]:h-14 style-sera:*:data-[slot=input-otp-slot]:w-10') %}
+                  {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(required=true, id='otp-verification', attrs={'data-input-otp-placeholder-shown': 'true', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}</div></div>{% call ui.field_description() %}
+                <a href="#">I no longer have access to this email address.</a>{% endcall %}
+{% endcall %}
+</form>{% endcall %}
+{% call ui.card_footer(class='flex-col gap-2') %}
+          {% call ui.button(size='default', variant='default', type='submit', class='w-full') %}Verify{% endcall %}
+<div class="text-sm text-muted-foreground">Having trouble signing in? <a href="#" class="underline underline-offset-4 transition-colors hover:text-primary">Contact support</a></div>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Simple') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='simple') %}Simple
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='simple') %}Simple{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -111,36 +71,18 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(id='simple', attrs={'data-input-otp-placeholder-shown': 'true', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}
-          </div>
-        </div>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Digits Only') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(id='simple', attrs={'data-input-otp-placeholder-shown': 'true', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}</div></div>{% endcall %}
+{% endcall %}
+{% call ui.example(title='Digits Only') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='digits-only') %}Digits Only
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='digits-only') %}Digits Only{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -159,29 +101,14 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(id='digits-only', attrs={'data-input-otp-placeholder-shown': 'true', 'pattern': '^\\d+$', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}
-          </div>
-        </div>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Separator') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(id='digits-only', attrs={'data-input-otp-placeholder-shown': 'true', 'pattern': '^\\d+$', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}</div></div>{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Separator') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='with-separator') %}With Separator
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='with-separator') %}With Separator{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -200,51 +127,29 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(active=false) %}1
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}2
-            {% endcall %}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(active=false) %}3
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}4
-            {% endcall %}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(active=false) %}5
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}6
-            {% endcall %}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(id='with-separator', attrs={'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': '123456'}) }}
-          </div>
-        </div>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Alphanumeric') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(active=false) %}1{% endcall %}
+{% call ui.input_otp_slot(active=false) %}2{% endcall %}
+{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(active=false) %}3{% endcall %}
+{% call ui.input_otp_slot(active=false) %}4{% endcall %}
+{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(active=false) %}5{% endcall %}
+{% call ui.input_otp_slot(active=false) %}6{% endcall %}
+{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(id='with-separator', attrs={'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': '123456'}) }}</div></div>{% endcall %}
+{% endcall %}
+{% call ui.example(title='Alphanumeric') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='alphanumeric') %}Alphanumeric
-        {% endcall %}
-        {% call ui.field_description() %}Accepts both letters and numbers.
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='alphanumeric') %}Alphanumeric{% endcall %}
+{% call ui.field_description() %}Accepts both letters and numbers.{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -263,36 +168,18 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(id='alphanumeric', attrs={'data-input-otp-placeholder-shown': 'true', 'pattern': '^[a-zA-Z0-9]+$', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}
-          </div>
-        </div>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Disabled') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(id='alphanumeric', attrs={'data-input-otp-placeholder-shown': 'true', 'pattern': '^[a-zA-Z0-9]+$', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': ''}) }}</div></div>{% endcall %}
+{% endcall %}
+{% call ui.example(title='Disabled') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='disabled') %}Disabled
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='disabled') %}Disabled{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -311,44 +198,25 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:default;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(active=false) %}1
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}2
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}3
-            {% endcall %}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(active=false) %}4
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}5
-            {% endcall %}
-            {% call ui.input_otp_slot(active=false) %}6
-            {% endcall %}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(disabled=true, id='disabled', attrs={'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': '123456'}) }}
-          </div>
-        </div>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='4 Digits') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:default;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(active=false) %}1{% endcall %}
+{% call ui.input_otp_slot(active=false) %}2{% endcall %}
+{% call ui.input_otp_slot(active=false) %}3{% endcall %}
+{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(active=false) %}4{% endcall %}
+{% call ui.input_otp_slot(active=false) %}5{% endcall %}
+{% call ui.input_otp_slot(active=false) %}6{% endcall %}
+{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(disabled=true, id='disabled', attrs={'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': '123456'}) }}</div></div>{% endcall %}
+{% endcall %}
+{% call ui.example(title='4 Digits') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='four-digits') %}4 Digits
-        {% endcall %}
-        {% call ui.field_description() %}Common pattern for PIN codes.
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='four-digits') %}4 Digits{% endcall %}
+{% call ui.field_description() %}Common pattern for PIN codes.{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -367,29 +235,15 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-            {{ ui.input_otp_slot(active=false) }}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(id='four-digits', attrs={'data-input-otp-placeholder-shown': 'true', 'pattern': '^\\d+$', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '4', 'value': ''}) }}
-          </div>
-        </div>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Invalid State') %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{{ ui.input_otp_slot(active=false) }}{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(id='four-digits', attrs={'data-input-otp-placeholder-shown': 'true', 'pattern': '^\\d+$', 'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '4', 'value': ''}) }}</div></div>{% endcall %}
+{% endcall %}
+{% call ui.example(title='Invalid State') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='invalid') %}Invalid State
-        {% endcall %}
-        {% call ui.field_description() %}Example showing the invalid error state.
-        {% endcall %}
-        <noscript>
-          <style>
+        {% call ui.field_label(as_='label', for_='invalid') %}Invalid State{% endcall %}
+{% call ui.field_description() %}Example showing the invalid error state.{% endcall %}
+<noscript><style>
 [data-input-otp] {
   --nojs-bg: white !important;
   --nojs-fg: black !important;
@@ -408,44 +262,24 @@
     --nojs-bg: black !important;
     --nojs-fg: white !important;
   }
-}</style>
-        </noscript>
-        <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(invalid=true, active=false) %}0
-            {% endcall %}
-            {% call ui.input_otp_slot(invalid=true, active=false) %}0
-            {% endcall %}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(invalid=true, active=false) %}0
-            {% endcall %}
-            {% call ui.input_otp_slot(invalid=true, active=false) %}0
-            {% endcall %}
-          {% endcall %}
-          {% call ui.input_otp_separator() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.input_otp_group() %}
-            {% call ui.input_otp_slot(invalid=true, active=false) %}0
-            {% endcall %}
-            {% call ui.input_otp_slot(invalid=true, active=false) %}0
-            {% endcall %}
-          {% endcall %}
-          <div style="position:absolute;inset:0;pointer-events:none">
-            {{ ui.input_otp(id='invalid', attrs={'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': '000000'}) }}
-          </div>
-        </div>
-        {% call ui.field_error() %}Invalid code. Please try again.
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+}</style></noscript><div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center has-disabled:opacity-50">{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(invalid=true, active=false) %}0{% endcall %}
+{% call ui.input_otp_slot(invalid=true, active=false) %}0{% endcall %}
+{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(invalid=true, active=false) %}0{% endcall %}
+{% call ui.input_otp_slot(invalid=true, active=false) %}0{% endcall %}
+{% endcall %}
+{% call ui.input_otp_separator() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
+{% call ui.input_otp_group() %}
+            {% call ui.input_otp_slot(invalid=true, active=false) %}0{% endcall %}
+{% call ui.input_otp_slot(invalid=true, active=false) %}0{% endcall %}
+{% endcall %}
+<div style="position:absolute;inset:0;pointer-events:none">{{ ui.input_otp(id='invalid', attrs={'style': 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums', 'maxlength': '6', 'value': '000000'}) }}</div></div>{% call ui.field_error() %}Invalid code. Please try again.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

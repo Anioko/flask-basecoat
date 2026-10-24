@@ -55,10 +55,6 @@
   [data-slot="radio-group-indicator"][data-state="unchecked"] {
     display: none;
   }
-  /* Grouping wrappers for parts that render no element upstream. */
-  [data-fb] {
-    display: contents;
-  }
   /* Command palettes hide filtered-out items and empty groups. */
   [data-slot="command-item"][hidden],
   [data-slot="command-group"][hidden],

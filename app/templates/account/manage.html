@@ -1,65 +1,66 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 {% import 'macros/form_macros.html' as f %}
 {% import 'macros/check_password.html' as check %}
 
 {% set endpoints = [
-    ('account.manage', 'Account information'),
-    ('account.change_email_request', 'Change email address'),
-    ('account.change_password', 'Change password'),
-    ('account.logout', 'Log out')
+    ('account.manage', 'Account information', 'user'),
+    ('account.change_email_request', 'Change email address', 'mail'),
+    ('account.change_password', 'Change password', 'lock'),
+    ('account.logout', 'Log out', 'log-out')
 ] %}
 
 {% macro navigation(items) %}
-    <nav class="flex flex-col gap-1 bg-slate-50 dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-        {% for route, name in items %}
-            {% set href = url_for(route) %}
-            <a class="block py-2 px-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors {% if request.endpoint == route %}font-semibold bg-white dark:bg-slate-950 shadow-sm{% endif %}" href="{{ href }}">
-                {{ name }}
-            </a>
+    <nav class="flex flex-col gap-1" aria-label="Account settings">
+        {% for route, name, icon in items %}
+            {% set active = request.endpoint == route %}
+            {% call ui.button(variant=('secondary' if active else 'ghost'), size='sm', class='justify-start', href=url_for(route), attrs={'aria-current': 'page' if active else none}) %}
+                {{ lucide(icon) }}{{ name }}
+            {% endcall %}
         {% endfor %}
     </nav>
 {% endmacro %}
 
 {% macro user_info(user) %}
-    <table class="table">
-        <tbody>
-            <tr>
-                <td>Full name</td>
-                <td>{{ '%s %s' % (user.first_name, user.last_name) }}</td>
-            </tr>
-            <tr>
-                <td>Email address</td>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <td>Account type</td>
-                <td>{{ user.role.name }}</td>
-            </tr>
-        </tbody>
-    </table>
+    {% call ui.table_container() %}
+        {% call ui.table() %}
+            {% call ui.table_body() %}
+                {% for label, value in [('Full name', '%s %s' % (user.first_name, user.last_name)), ('Email address', user.email), ('Account type', user.role.name)] %}
+                    {% call ui.table_row() %}
+                        {{ ui.table_cell(text=label, class='w-1/3 font-medium') }}
+                        {{ ui.table_cell(text=value) }}
+                    {% endcall %}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
 {% endmacro %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-8">
         <div class="mb-6">
-            <h2 class="text-2xl font-semibold">Account Settings</h2>
-            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Manage your account settings and change your login information.</p>
+            <h2 class="text-2xl font-semibold tracking-tight">Account Settings</h2>
+            <p class="mt-1 text-sm text-muted-foreground">Manage your account settings and change your login information.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-3">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <aside class="lg:col-span-3">
                 {{ navigation(endpoints) }}
-            </div>
+            </aside>
             <div class="lg:col-span-9">
-                <div class="card">
-                    <div class="card-content">
+                {% call ui.card() %}
+                    {% call ui.card_header() %}
+                        {% set current = (endpoints | selectattr(0, 'equalto', request.endpoint) | list) %}
+                        {{ ui.card_title(text=(current[0][1] if current else 'Account information')) }}
+                    {% endcall %}
+                    {% call ui.card_content() %}
                         {% if form %}
-                            {{ f.render_form(form, extra_classes='') }}
+                            {{ f.render_form(form) }}
                         {% else %}
                             {{ user_info(user) }}
                         {% endif %}
-                    </div>
-                </div>
+                    {% endcall %}
+                {% endcall %}
             </div>
         </div>
     </div>

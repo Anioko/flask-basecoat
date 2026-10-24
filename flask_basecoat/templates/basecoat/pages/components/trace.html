@@ -3,628 +3,340 @@
 {# Port of the upstream shadcn/ui example `trace` (pinned source in compliance/upstream). #}
 {% block title %}trace · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Chat', container_class='md:col-span-2') %}
-      <div class="flex min-h-96 w-full max-w-xl flex-col gap-6 text-sm">
-        {% call ui.button(variant='outline', size='sm', class='mt-auto self-start') %}Send message
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Rows') %}
+      <div class="flex min-h-96 w-full max-w-xl flex-col gap-6 text-sm">{% call ui.button(size='sm', variant='outline', class='mt-auto self-start') %}Send message{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Rows') %}
       {% call ui.trace(class='max-w-md') %}
         {% call ui.trace_line(attrs={'data-status': 'running'}) %}
           {% call ui.trace_icon() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true">
-              <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-              <circle cx="11.5" cy="14.5" r="2.5"></circle>
-              <path d="M13.3 16.3 15 18"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.trace_title() %}Scanning 52 files
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="M13.3 16.3 15 18"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Scanning 52 files{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible() %}
           {% call ui.trace_collapsible_trigger(tag='button') %}
             {% call ui.trace_line() %}
               {% call ui.trace_icon() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                  <path d="M12 19h8"></path>
-                  <path d="m4 17 6-6-6-6"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.trace_title() %}Ran node --version
-              {% endcall %}
-            {% endcall %}
-            {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.trace_collapsible_content(id='radix-_R_52_') }}
-        {% endcall %}
-        <a href="#rows">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Ran node --version{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_52_') }}{% endcall %}
+<a href="#rows">{% call ui.trace_line() %}
+            {% call ui.trace_icon() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Read apps/v4/lib/docs.ts{% endcall %}
+{% call ui.trace_icon() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+</a>{% call ui.sheet_trigger(as_=none) %}
           {% call ui.trace_line() %}
             {% call ui.trace_icon() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 9H8"></path>
-                <path d="M16 13H8"></path>
-                <path d="M16 17H8"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.trace_title() %}Read apps/v4/lib/docs.ts
-            {% endcall %}
-            {% call ui.trace_icon() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        </a>
-        {% call ui.sheet_trigger(as_=none) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="M13.3 16.3 15 18"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Explored 4 files{% endcall %}
+{% call ui.trace_icon() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.dialog_trigger(as_=none) %}
           {% call ui.trace_line() %}
             {% call ui.trace_icon() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <circle cx="11.5" cy="14.5" r="2.5"></circle>
-                <path d="M13.3 16.3 15 18"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.trace_title() %}Explored 4 files
-            {% endcall %}
-            {% call ui.trace_icon() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.dialog_trigger(as_=none) %}
-          {% call ui.trace_line() %}
-            {% call ui.trace_icon() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                <path d="M2 12h20"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.trace_title() %}Searched the web for cache keys
-            {% endcall %}
-            {% call ui.trace_icon() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Tool Calls') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Searched the web for cache keys{% endcall %}
+{% call ui.trace_icon() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Tool Calls') %}
       {% call ui.trace(class='max-w-md') %}
         {% call ui.trace_collapsible() %}
           {% call ui.trace_collapsible_trigger(tag='button') %}
             {% call ui.trace_line(attrs={'data-status': 'running'}) %}
               {% call ui.trace_icon() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                  <path d="M12 19h8"></path>
-                  <path d="m4 17 6-6-6-6"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.trace_title() %}Running npm --version
-              {% endcall %}
-            {% endcall %}
-            {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.trace_collapsible_content(id='radix-_R_33_') }}
-        {% endcall %}
-        {% call ui.trace_collapsible() %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Running npm --version{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_33_') }}{% endcall %}
+{% call ui.trace_collapsible() %}
           {% call ui.trace_collapsible_trigger(tag='button') %}
             {% call ui.trace_line() %}
               {% call ui.trace_icon() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                  <path d="M2 12h20"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.trace_title() %}Searched the web for app getting started installation
-              {% endcall %}
-            {% endcall %}
-            {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.trace_collapsible_content(id='radix-_R_53_') }}
-        {% endcall %}
-        {% call ui.trace_line() %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Searched the web for app getting started installation{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_53_') }}{% endcall %}
+{% call ui.trace_line() %}
           {% call ui.trace_icon() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true">
-              <path d="m21 21-4.34-4.34"></path>
-              <circle cx="11" cy="11" r="8"></circle>
-            </svg>
-          {% endcall %}
-          {% call ui.trace_title() %}Searched for minimumReleaseAge
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible(open=true) %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}
+{% call ui.trace_title() %}Searched for minimumReleaseAge{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible(open=true) %}
           {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_93_') %}
             {% call ui.trace_line() %}
               {% call ui.trace_icon() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                  <path d="M12 19h8"></path>
-                  <path d="m4 17 6-6-6-6"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.trace_title() %}Ran node --version
-              {% endcall %}
-            {% endcall %}
-            {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {% call ui.trace_collapsible_content(open=true, id='radix-_R_93_') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Ran node --version{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_93_') %}
             {% call ui.trace_collapsible_content_inner() %}
               {% call ui.code_block(variant='default', size='sm') %}
-                {% call ui.code_block_content(attrs={'data-wrap': 'true', 'style': 'counter-reset:line 0'}) %}
-                  {% call ui.code_block_code() %}$ node --version
-v24.18.0
-                  {% endcall %}
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible() %}
+                {% call ui.code_block_content(attrs={'data-wrap': 'true', 'style': 'counter-reset:line 0'}) %}{% raw %}<code data-slot="code-block-code" class="cn-code-block-code grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0">$ node --version
+v24.18.0</code>{% endraw %}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible() %}
           {% call ui.trace_collapsible_trigger(tag='button') %}
             {% call ui.trace_line(attrs={'data-status': 'error'}) %}
               {% call ui.trace_icon() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                  <path d="M12 19h8"></path>
-                  <path d="m4 17 6-6-6-6"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.trace_title() %}Failed to run pnpm --version
-              {% endcall %}
-            {% endcall %}
-            {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.trace_collapsible_content(id='radix-_R_b3_') }}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Reasoning') %}
-      <div class="flex w-full max-w-md flex-col gap-8">
-        {% call ui.trace_collapsible() %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Failed to run pnpm --version{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_b3_') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Reasoning') %}
+      <div class="flex w-full max-w-md flex-col gap-8">{% call ui.trace_collapsible() %}
           {% call ui.trace_collapsible_trigger(tag='button') %}
             {% call ui.trace_line() %}
-              {% call ui.trace_title() %}Thought for 12 seconds
-              {% endcall %}
-            {% endcall %}
-            {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.trace_collapsible_content(id='radix-_R_34_') }}
-        {% endcall %}
-        <div class="flex min-h-80 flex-col gap-4 border-t pt-8">
-          {% call ui.button(variant='outline', size='sm', class='mt-auto self-start') %}Send message
-          {% endcall %}
-        </div>
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Chain of Thought') %}
+              {% call ui.trace_title() %}Thought for 12 seconds{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_34_') }}{% endcall %}
+<div class="flex min-h-80 flex-col gap-4 border-t pt-8">{% call ui.button(size='sm', variant='outline', class='mt-auto self-start') %}Send message{% endcall %}
+</div></div>{% endcall %}
+{% call ui.example(title='Chain of Thought') %}
       {% call ui.trace_collapsible(open=true, class='max-w-md') %}
         {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_15_') %}
           {% call ui.trace_line(attrs={'data-status': 'running'}) %}
-            {% call ui.trace_title() %}Looking into the slow deploy
-            {% endcall %}
-          {% endcall %}
-          {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible_content(open=true, id='radix-_R_15_') %}
+            {% call ui.trace_title() %}Looking into the slow deploy{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_15_') %}
           {% call ui.trace_collapsible_content_inner() %}
             {% call ui.trace() %}
               {% call ui.trace_collapsible() %}
                 {% call ui.trace_collapsible_trigger(tag='button') %}
                   {% call ui.trace_line() %}
                     {% call ui.trace_icon() %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true">
-                        <path d="m21 21-4.34-4.34"></path>
-                        <circle cx="11" cy="11" r="8"></circle>
-                      </svg>
-                    {% endcall %}
-                    {% call ui.trace_title() %}Searched for the checkout build log
-                    {% endcall %}
-                  {% endcall %}
-                  {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-                {{ ui.trace_collapsible_content(id='radix-_R_r5_') }}
-              {% endcall %}
-              {% call ui.trace_collapsible(open=true) %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}
+{% call ui.trace_title() %}Searched for the checkout build log{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_r5_') }}{% endcall %}
+{% call ui.trace_collapsible(open=true) %}
                 {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_1b5_') %}
                   {% call ui.trace_line() %}
                     {% call ui.trace_icon() %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                        <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                        <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                        <path d="M10 9H8"></path>
-                        <path d="M16 13H8"></path>
-                        <path d="M16 17H8"></path>
-                      </svg>
-                    {% endcall %}
-                    {% call ui.trace_title() %}Read the last twelve deploys
-                    {% endcall %}
-                  {% endcall %}
-                  {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-                {% call ui.trace_collapsible_content(open=true, id='radix-_R_1b5_') %}
-                  {% call ui.trace_collapsible_content_inner() %}Image optimization takes almost four minutes on every deploy. The other steps finish in under a minute.
-                  {% endcall %}
-                {% endcall %}
-              {% endcall %}
-              {% call ui.trace_collapsible() %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Read the last twelve deploys{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_1b5_') %}
+                  {% call ui.trace_collapsible_content_inner() %}Image optimization takes almost four minutes on every deploy. The other steps finish in under a minute.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible() %}
                 {% call ui.trace_collapsible_trigger(tag='button') %}
                   {% call ui.trace_line(attrs={'data-status': 'running'}) %}
                     {% call ui.trace_icon() %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true">
-                        <path d="m21 21-4.34-4.34"></path>
-                        <circle cx="11" cy="11" r="8"></circle>
-                      </svg>
-                    {% endcall %}
-                    {% call ui.trace_title() %}Searching for the cache key
-                    {% endcall %}
-                  {% endcall %}
-                  {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-                {{ ui.trace_collapsible_content(id='radix-_R_1r5_') }}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Task') %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}
+{% call ui.trace_title() %}Searching for the cache key{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_1r5_') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Task') %}
       {% call ui.trace_collapsible(open=true, class='max-w-md') %}
         {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_16_') %}
           {% call ui.trace_line() %}
-            {% call ui.trace_title() %}Found the project files
-            {% endcall %}
-          {% endcall %}
-          {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible_content(open=true, id='radix-_R_16_') %}
+            {% call ui.trace_title() %}Found the project files{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_16_') %}
           {% call ui.trace_collapsible_content_inner() %}
             {% call ui.trace() %}
               {% call ui.trace_line() %}
                 {% call ui.trace_icon() %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true">
-                    <path d="m21 21-4.34-4.34"></path>
-                    <circle cx="11" cy="11" r="8"></circle>
-                  </svg>
-                {% endcall %}
-                {% call ui.trace_title() %}Searched for app/page.tsx
-                {% endcall %}
-              {% endcall %}
-              <a href="#task">
-                {% call ui.trace_line() %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}
+{% call ui.trace_title() %}Searched for app/page.tsx{% endcall %}
+{% endcall %}
+<a href="#task">{% call ui.trace_line() %}
                   {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                      <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                      <path d="M10 9H8"></path>
-                      <path d="M16 13H8"></path>
-                      <path d="M16 17H8"></path>
-                    </svg>
-                  {% endcall %}
-                  {% call ui.trace_title() %}Read app/page.tsx
-                  {% endcall %}
-                  {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-              </a>
-              {% call ui.trace_line() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Read app/page.tsx{% endcall %}
+{% call ui.trace_icon() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+</a>{% call ui.trace_line() %}
                 {% call ui.trace_icon() %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true">
-                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                    <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                    <circle cx="11.5" cy="14.5" r="2.5"></circle>
-                    <path d="M13.3 16.3 15 18"></path>
-                  </svg>
-                {% endcall %}
-                {% call ui.trace_title() %}Scanned 52 files
-                {% endcall %}
-              {% endcall %}
-              <a href="#task">
-                {% call ui.trace_line() %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="M13.3 16.3 15 18"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Scanned 52 files{% endcall %}
+{% endcall %}
+<a href="#task">{% call ui.trace_line() %}
                   {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                      <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                      <path d="M10 9H8"></path>
-                      <path d="M16 13H8"></path>
-                      <path d="M16 17H8"></path>
-                    </svg>
-                  {% endcall %}
-                  {% call ui.trace_title() %}Read app/layout.tsx
-                  {% endcall %}
-                  {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-              </a>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Sources') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Read app/layout.tsx{% endcall %}
+{% call ui.trace_icon() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+</a>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Sources') %}
       {% call ui.trace_collapsible(open=true, class='max-w-md') %}
         {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_17_') %}
           {% call ui.trace_line() %}
-            {% call ui.trace_title() %}Used 3 sources
-            {% endcall %}
-          {% endcall %}
-          {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible_content(open=true, id='radix-_R_17_') %}
+            {% call ui.trace_title() %}Used 3 sources{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_17_') %}
           {% call ui.trace_collapsible_content_inner() %}
             {% call ui.trace() %}
-              <a href="https://example.com/docs/caching" target="_blank" rel="noreferrer">
-                {% call ui.trace_line() %}
+              <a href="https://example.com/docs/caching" target="_blank" rel="noreferrer">{% call ui.trace_line() %}
                   {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                      <path d="M2 12h20"></path>
-                    </svg>
-                  {% endcall %}
-                  {% call ui.trace_title() %}Caching build outputs | example.com
-                    <span class="sr-only"> (opens in a new tab)</span>
-                  {% endcall %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Caching build outputs | example.com<span class="sr-only"> (opens in a new tab)</span>{% endcall %}
+{% call ui.trace_icon() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>{% endcall %}
+{% endcall %}
+</a><a href="https://example.com/docs/images" target="_blank" rel="noreferrer">{% call ui.trace_line() %}
                   {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true">
-                      <path d="M7 7h10v10"></path>
-                      <path d="M7 17 17 7"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-              </a>
-              <a href="https://example.com/docs/images" target="_blank" rel="noreferrer">
-                {% call ui.trace_line() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Image optimization reference | example.com<span class="sr-only"> (opens in a new tab)</span>{% endcall %}
+{% call ui.trace_icon() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>{% endcall %}
+{% endcall %}
+</a><a href="https://example.com/docs/deploy-hooks" target="_blank" rel="noreferrer">{% call ui.trace_line() %}
                   {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                      <path d="M2 12h20"></path>
-                    </svg>
-                  {% endcall %}
-                  {% call ui.trace_title() %}Image optimization reference | example.com
-                    <span class="sr-only"> (opens in a new tab)</span>
-                  {% endcall %}
-                  {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true">
-                      <path d="M7 7h10v10"></path>
-                      <path d="M7 17 17 7"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-              </a>
-              <a href="https://example.com/docs/deploy-hooks" target="_blank" rel="noreferrer">
-                {% call ui.trace_line() %}
-                  {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                      <path d="M2 12h20"></path>
-                    </svg>
-                  {% endcall %}
-                  {% call ui.trace_title() %}Deploy hooks and cache keys | example.com
-                    <span class="sr-only"> (opens in a new tab)</span>
-                  {% endcall %}
-                  {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true">
-                      <path d="M7 7h10v10"></path>
-                      <path d="M7 17 17 7"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-              </a>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Whole Turn', container_class='md:col-span-2') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Deploy hooks and cache keys | example.com<span class="sr-only"> (opens in a new tab)</span>{% endcall %}
+{% call ui.trace_icon() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>{% endcall %}
+{% endcall %}
+</a>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Whole Turn', container_class='md:col-span-2') %}
       {% call ui.trace_collapsible(open=true, class='max-w-md') %}
         {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_18_') %}
           {% call ui.trace_line(attrs={'data-status': 'error'}) %}
-            {% call ui.trace_title() %}Worked for 2m 4s, 1 command failed
-            {% endcall %}
-          {% endcall %}
-          {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.trace_collapsible_content(open=true, id='radix-_R_18_') %}
+            {% call ui.trace_title() %}Worked for 2m 4s, 1 command failed{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_18_') %}
           {% call ui.trace_collapsible_content_inner(class='flex flex-col gap-2') %}
             {% call ui.trace() %}
               {% call ui.trace_collapsible() %}
                 {% call ui.trace_collapsible_trigger(tag='button') %}
                   {% call ui.trace_line() %}
                     {% call ui.trace_icon() %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain" aria-hidden="true">
-                        <path d="M12 18V5"></path>
-                        <path d="M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4"></path>
-                        <path d="M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294"></path>
-                        <path d="M17.996 5.125a4 4 0 012.526 5.77"></path>
-                        <path d="M18 18a4 4 0 002-7.465"></path>
-                        <path d="M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517"></path>
-                        <path d="M6 18a4 4 0 01-2-7.465"></path>
-                        <path d="M6.004 5.125a4 4 0 00-2.526 5.77"></path>
-                      </svg>
-                    {% endcall %}
-                    {% call ui.trace_title() %}Thought for 12 seconds
-                    {% endcall %}
-                  {% endcall %}
-                  {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-                {{ ui.trace_collapsible_content(id='radix-_R_2r8_') }}
-              {% endcall %}
-              {% call ui.trace_collapsible(open=true) %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain" aria-hidden="true"><path d="M12 18V5"></path><path d="M15 13a4.17 4.17 0 01-3-4 4.17 4.17 0 01-3 4"></path><path d="M17.707 6.294A3 3 0 1012 5a3 3 0 10-5.707 1.294"></path><path d="M17.996 5.125a4 4 0 012.526 5.77"></path><path d="M18 18a4 4 0 002-7.465"></path><path d="M19.967 17.482a4 4 0 11-7.967.517 4 4 0 11-7.967-.517"></path><path d="M6 18a4 4 0 01-2-7.465"></path><path d="M6.004 5.125a4 4 0 00-2.526 5.77"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Thought for 12 seconds{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_2r8_') }}{% endcall %}
+{% call ui.trace_collapsible(open=true) %}
                 {% call ui.trace_collapsible_trigger(tag='button', open=true, aria_controls='radix-_R_4r8_') %}
                   {% call ui.trace_line(attrs={'data-status': 'error'}) %}
                     {% call ui.trace_icon() %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                        <path d="M12 19h8"></path>
-                        <path d="m4 17 6-6-6-6"></path>
-                      </svg>
-                    {% endcall %}
-                    {% call ui.trace_title() %}Ran 3 commands, 1 failed
-                    {% endcall %}
-                  {% endcall %}
-                  {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-                {% call ui.trace_collapsible_content(open=true, id='radix-_R_4r8_') %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Ran 3 commands, 1 failed{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible_content(open=true, id='radix-_R_4r8_') %}
                   {% call ui.trace_collapsible_content_inner() %}
                     {% call ui.trace() %}
                       {% call ui.trace_collapsible() %}
                         {% call ui.trace_collapsible_trigger(tag='button') %}
                           {% call ui.trace_line() %}
                             {% call ui.trace_icon() %}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                                <path d="M12 19h8"></path>
-                                <path d="m4 17 6-6-6-6"></path>
-                              </svg>
-                            {% endcall %}
-                            {% call ui.trace_title() %}Ran node --version
-                            {% endcall %}
-                          {% endcall %}
-                          {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                              <path d="m9 18 6-6-6-6"></path>
-                            </svg>
-                          {% endcall %}
-                        {% endcall %}
-                        {{ ui.trace_collapsible_content(id='radix-_R_3cr8_') }}
-                      {% endcall %}
-                      {% call ui.trace_line() %}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Ran node --version{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_3cr8_') }}{% endcall %}
+{% call ui.trace_line() %}
                         {% call ui.trace_icon() %}
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                            <path d="M12 19h8"></path>
-                            <path d="m4 17 6-6-6-6"></path>
-                          </svg>
-                        {% endcall %}
-                        {% call ui.trace_title() %}Ran mkdir -p dist
-                        {% endcall %}
-                      {% endcall %}
-                      {% call ui.trace_collapsible() %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Ran mkdir -p dist{% endcall %}
+{% endcall %}
+{% call ui.trace_collapsible() %}
                         {% call ui.trace_collapsible_trigger(tag='button') %}
                           {% call ui.trace_line(attrs={'data-status': 'error'}) %}
                             {% call ui.trace_icon() %}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true">
-                                <path d="M12 19h8"></path>
-                                <path d="m4 17 6-6-6-6"></path>
-                              </svg>
-                            {% endcall %}
-                            {% call ui.trace_title() %}Failed to run pnpm --version
-                            {% endcall %}
-                          {% endcall %}
-                          {% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                              <path d="m9 18 6-6-6-6"></path>
-                            </svg>
-                          {% endcall %}
-                        {% endcall %}
-                        {{ ui.trace_collapsible_content(id='radix-_R_7cr8_') }}
-                      {% endcall %}
-                    {% endcall %}
-                  {% endcall %}
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-            <p>Node is installed and pnpm is not. Reading the docs config.</p>
-            {% call ui.trace() %}
-              <a href="#whole-turn">
-                {% call ui.trace_line() %}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal" aria-hidden="true"><path d="M12 19h8"></path><path d="m4 17 6-6-6-6"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Failed to run pnpm --version{% endcall %}
+{% endcall %}
+{% call ui.trace_icon(class='transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90') %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.trace_collapsible_content(id='radix-_R_7cr8_') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+<p>Node is installed and pnpm is not. Reading the docs config.</p>{% call ui.trace() %}
+              <a href="#whole-turn">{% call ui.trace_line() %}
                   {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                      <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                      <path d="M10 9H8"></path>
-                      <path d="M16 13H8"></path>
-                      <path d="M16 17H8"></path>
-                    </svg>
-                  {% endcall %}
-                  {% call ui.trace_title() %}Read apps/v4/lib/docs.ts
-                  {% endcall %}
-                  {% call ui.trace_icon() %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true">
-                      <path d="m9 18 6-6-6-6"></path>
-                    </svg>
-                  {% endcall %}
-                {% endcall %}
-              </a>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.trace_title() %}Read apps/v4/lib/docs.ts{% endcall %}
+{% call ui.trace_icon() %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
+{% endcall %}
+</a>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

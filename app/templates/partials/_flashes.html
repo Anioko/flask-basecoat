@@ -1,28 +1,9 @@
-<div class="container mx-auto prose">
-    <div class="flashes">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="{% if category == 'error' %}alert-destructive{% else %}alert{% endif %} flash-message message relative">
-                        <div class="flex items-start justify-between">
-                            <h2 class="flex-1">{{ message }}</h2>
-                            <button class="close ml-4 text-2xl leading-none opacity-50 hover:opacity-100" aria-label="Close">&times;</button>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  document.querySelectorAll('[data-autohide]').forEach(function(el){
-    var sec = el.getAttribute('data-autohide');
-    var close = el.querySelector('.close-btn');
-    var remove = function(){ if(el && el.parentNode) el.parentNode.removeChild(el); };
-    if(close) close.addEventListener('click', remove);
-    if(sec) el._t = setTimeout(remove, Number(sec) * 1000);
-  });
-});
-</script>
+{# Flash messages are promoted to toasts by the flask-basecoat runtime (toast.js reads [data-fb-flash]).
+   Flask-Login flashes with the category "message"; the form macros of the previous API used "form-*" categories. #}
+{% set variants = {
+    'error': 'error', 'danger': 'error', 'form-error': 'error',
+    'success': 'success', 'form-success': 'success',
+    'warning': 'warning', 'form-check-email': 'warning',
+    'info': 'info', 'form-info': 'info', 'message': 'info'
+} %}
+{% for category, message in get_flashed_messages(with_categories=true) %}<template data-fb-flash data-variant="{{ variants.get(category, 'default') }}">{{ message }}</template>{% endfor %}

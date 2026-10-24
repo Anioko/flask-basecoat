@@ -3,1673 +3,1160 @@
 {# Port of the upstream shadcn/ui example `item` (pinned source in compliance/upstream). #}
 {% block title %}item · flask-basecoat{% endblock %}
 {% block body %}
-  <link rel="preload" as="image" href="https://avatar.vercel.sh/Project">
-  <link rel="preload" as="image" href="https://avatar.vercel.sh/Document">
-  <link rel="preload" as="image" href="https://avatar.vercel.sh/File">
-  {% call ui.example_wrapper() %}
+<link rel="preload" as="image" href="https://avatar.vercel.sh/Project"><link rel="preload" as="image" href="https://avatar.vercel.sh/Document"><link rel="preload" as="image" href="https://avatar.vercel.sh/File">{% call ui.example_wrapper() %}
     {% call ui.example(title='Default') %}
       {% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='default', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='default', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This is a description that provides additional context.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% call ui.item_description() %}This is a description that provides additional context.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}This item includes a title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='default', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% call ui.item_description() %}This item includes a title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='default', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This item includes media, title, and description.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% call ui.item_description() %}This item includes media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% call ui.item_description() %}Complete item with all components: media, title, description, and button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}Complete item with all components: media, title, description, and button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-          {% call ui.item_description() %}Item with multiple action buttons in the actions area.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% call ui.item_description() %}Item with multiple action buttons in the actions area.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline') %}
       {% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='default', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='default', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This is a description that provides additional context.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% call ui.item_description() %}This is a description that provides additional context.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}This item includes a title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='default', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% call ui.item_description() %}This item includes a title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='default', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This item includes media, title, and description.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% call ui.item_description() %}This item includes media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% call ui.item_description() %}Complete item with all components: media, title, description, and button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}Complete item with all components: media, title, description, and button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-          {% call ui.item_description() %}Item with multiple action buttons in the actions area.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Muted') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% call ui.item_description() %}Item with multiple action buttons in the actions area.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Muted') %}
       {% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='default', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='default', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This is a description that provides additional context.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% call ui.item_description() %}This is a description that provides additional context.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}This item includes a title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='default', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% call ui.item_description() %}This item includes a title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='default', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This item includes media, title, and description.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% call ui.item_description() %}This item includes media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% call ui.item_description() %}Complete item with all components: media, title, description, and button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}Complete item with all components: media, title, description, and button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-          {% call ui.item_description() %}Item with multiple action buttons in the actions area.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Small') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% call ui.item_description() %}Item with multiple action buttons in the actions area.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Small') %}
       {% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This is a description that provides additional context.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% call ui.item_description() %}This is a description that provides additional context.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}This item includes a title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% call ui.item_description() %}This item includes a title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This item includes media, title, and description.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% call ui.item_description() %}This item includes media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% call ui.item_description() %}Complete item with all components: media, title, description, and button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}Complete item with all components: media, title, description, and button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='default') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-          {% call ui.item_description() %}Item with multiple action buttons in the actions area.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - Small') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% call ui.item_description() %}Item with multiple action buttons in the actions area.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - Small') %}
       {% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This is a description that provides additional context.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% call ui.item_description() %}This is a description that provides additional context.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}This item includes a title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% call ui.item_description() %}This item includes a title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This item includes media, title, and description.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% call ui.item_description() %}This item includes media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% call ui.item_description() %}Complete item with all components: media, title, description, and button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}Complete item with all components: media, title, description, and button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-          {% call ui.item_description() %}Item with multiple action buttons in the actions area.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Muted - Small') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% call ui.item_description() %}Item with multiple action buttons in the actions area.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Muted - Small') %}
       {% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This is a description that provides additional context.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% call ui.item_description() %}This is a description that provides additional context.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}This item includes a title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% call ui.item_description() %}This item includes a title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-          {% call ui.item_description() %}This item includes media, title, and description.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% call ui.item_description() %}This item includes media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% call ui.item_description() %}Complete item with all components: media, title, description, and button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-          {% call ui.item_description() %}Complete item with all components: media, title, description, and button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='muted') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-          {% call ui.item_description() %}Item with multiple action buttons in the actions area.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Extra Small') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% call ui.item_description() %}Item with multiple action buttons in the actions area.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Extra Small') %}
       {% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='default') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - Extra Small') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - Extra Small') %}
       {% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Muted - Extra Small') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Muted - Extra Small') %}
       {% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title Only
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          {% call ui.item_title() %}Title Only{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          {% call ui.item_title() %}Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          {% call ui.item_title() %}Title + Description{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Title + Description + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          {% call ui.item_title() %}Title + Description + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-          </svg>
-        {% endcall %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Media + Title + Description + Button{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Media + Title + Description + Button
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Action
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='muted') %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Multiple Actions
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}Cancel
-          {% endcall %}
-          {% call ui.button(size='sm', variant='default') %}Confirm
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='asChild') %}
+          {% call ui.item_title() %}Multiple Actions{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}Cancel{% endcall %}
+{% call ui.button(size='sm', variant='default') %}Confirm{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='asChild') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='default', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Title Only (Link)
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='default', href='#') %}
+            {% call ui.item_title() %}Title Only (Link){% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Title + Description (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Clickable item with title and description.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='default', href='#') %}
+            {% call ui.item_title() %}Title + Description (Link){% endcall %}
+{% call ui.item_description() %}Clickable item with title and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default', href='#') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Media + Title (Link)
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='default', href='#') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Media + Title (Link){% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default', href='#') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Media + Title + Description (Link){% endcall %}
+{% call ui.item_description() %}Complete link item with media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Media + Title + Description (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Complete link item with media, title, and description.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='default', href='#') %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}With Actions (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Link item that also has action buttons.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.item_actions() %}
-            {% call ui.button(size='sm', variant='outline') %}Share
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - asChild') %}
+            {% call ui.item_title() %}With Actions (Link){% endcall %}
+{% call ui.item_description() %}Link item that also has action buttons.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+            {% call ui.button(size='sm', variant='outline') %}Share{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - asChild') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='outline', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Title Only (Link)
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='outline', href='#') %}
+            {% call ui.item_title() %}Title Only (Link){% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Title + Description (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Clickable item with title and description.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='outline', href='#') %}
+            {% call ui.item_title() %}Title + Description (Link){% endcall %}
+{% call ui.item_description() %}Clickable item with title and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline', href='#') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Media + Title (Link)
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='outline', href='#') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Media + Title (Link){% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline', href='#') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Media + Title + Description (Link){% endcall %}
+{% call ui.item_description() %}Complete link item with media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Media + Title + Description (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Complete link item with media, title, and description.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='outline', href='#') %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}With Actions (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Link item that also has action buttons.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.item_actions() %}
-            {% call ui.button(size='sm', variant='outline') %}Share
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Muted - asChild') %}
+            {% call ui.item_title() %}With Actions (Link){% endcall %}
+{% call ui.item_description() %}Link item that also has action buttons.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+            {% call ui.button(size='sm', variant='outline') %}Share{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Muted - asChild') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='muted', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Title Only (Link)
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='muted', href='#') %}
+            {% call ui.item_title() %}Title Only (Link){% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Title + Description (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Clickable item with title and description.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='muted', href='#') %}
+            {% call ui.item_title() %}Title + Description (Link){% endcall %}
+{% call ui.item_description() %}Clickable item with title and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted', href='#') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Media + Title (Link)
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='muted', href='#') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Media + Title (Link){% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted', href='#') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Media + Title + Description (Link){% endcall %}
+{% call ui.item_description() %}Complete link item with media, title, and description.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted', href='#') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Media + Title + Description (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Complete link item with media, title, and description.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='muted', href='#') %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}With Actions (Link)
-            {% endcall %}
-            {% call ui.item_description() %}Link item that also has action buttons.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.item_actions() %}
-            {% call ui.button(size='sm', variant='outline') %}Share
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='ItemGroup') %}
+            {% call ui.item_title() %}With Actions (Link){% endcall %}
+{% call ui.item_description() %}Link item that also has action buttons.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+            {% call ui.button(size='sm', variant='outline') %}Share{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='ItemGroup') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='default') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 1
-            {% endcall %}
-            {% call ui.item_description() %}First item in the group.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='default') %}
+            {% call ui.item_title() %}Item 1{% endcall %}
+{% call ui.item_description() %}First item in the group.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 2
-            {% endcall %}
-            {% call ui.item_description() %}Second item in the group.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='default') %}
+            {% call ui.item_title() %}Item 2{% endcall %}
+{% call ui.item_description() %}Second item in the group.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 3
-            {% endcall %}
-            {% call ui.item_description() %}Third item in the group.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - ItemGroup') %}
+            {% call ui.item_title() %}Item 3{% endcall %}
+{% call ui.item_description() %}Third item in the group.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - ItemGroup') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 1
-            {% endcall %}
-            {% call ui.item_description() %}First item with icon.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='outline') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Item 1{% endcall %}
+{% call ui.item_description() %}First item with icon.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 2
-            {% endcall %}
-            {% call ui.item_description() %}Second item with icon.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='outline') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Item 2{% endcall %}
+{% call ui.item_description() %}Second item with icon.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 3
-            {% endcall %}
-            {% call ui.item_description() %}Third item with icon.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Muted - ItemGroup') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Item 3{% endcall %}
+{% call ui.item_description() %}Third item with icon.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Muted - ItemGroup') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='muted') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 1
-            {% endcall %}
-            {% call ui.item_description() %}First item in muted group.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.item_actions() %}
-            {% call ui.button(size='sm', variant='outline') %}Action
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='muted') %}
+            {% call ui.item_title() %}Item 1{% endcall %}
+{% call ui.item_description() %}First item in muted group.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+            {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 2
-            {% endcall %}
-            {% call ui.item_description() %}Second item in muted group.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.item_actions() %}
-            {% call ui.button(size='sm', variant='outline') %}Action
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item(as_='item', size='default', variant='muted') %}
+            {% call ui.item_title() %}Item 2{% endcall %}
+{% call ui.item_description() %}Second item in muted group.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+            {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
           {% call ui.item_content() %}
-            {% call ui.item_title() %}Item 3
-            {% endcall %}
-            {% call ui.item_description() %}Third item in muted group.
-            {% endcall %}
-          {% endcall %}
-          {% call ui.item_actions() %}
-            {% call ui.button(size='sm', variant='outline') %}Action
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='ItemSeparator') %}
+            {% call ui.item_title() %}Item 3{% endcall %}
+{% call ui.item_description() %}Third item in muted group.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+            {% call ui.button(size='sm', variant='outline') %}Action{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='ItemSeparator') %}
       {% call ui.item_group() %}
         {% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Inbox
-            {% endcall %}
-            {% call ui.item_description() %}View all incoming messages.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {{ ui.item_separator(orientation='horizontal', class='shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch') }}
-        {% call ui.item(as_='item', size='default', variant='outline') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Inbox{% endcall %}
+{% call ui.item_description() %}View all incoming messages.{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.item_separator(orientation='horizontal', class='shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch') }}{% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Sent
-            {% endcall %}
-            {% call ui.item_description() %}View all sent messages.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {{ ui.item_separator(orientation='horizontal', class='shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch') }}
-        {% call ui.item(as_='item', size='default', variant='outline') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Sent{% endcall %}
+{% call ui.item_description() %}View all sent messages.{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.item_separator(orientation='horizontal', class='shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch') }}{% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Drafts
-            {% endcall %}
-            {% call ui.item_description() %}View all draft messages.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {{ ui.item_separator(orientation='horizontal', class='shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch') }}
-        {% call ui.item(as_='item', size='default', variant='outline') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Drafts{% endcall %}
+{% call ui.item_description() %}View all draft messages.{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.item_separator(orientation='horizontal', class='shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch') }}{% call ui.item(as_='item', size='default', variant='outline') %}
           {% call ui.item_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true">
-              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.item_content() %}
-            {% call ui.item_title() %}Archive
-            {% endcall %}
-            {% call ui.item_description() %}View archived messages.
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='ItemHeader') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+            {% call ui.item_title() %}Archive{% endcall %}
+{% call ui.item_description() %}View archived messages.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='ItemHeader') %}
       {% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_header() %}
-          <span class="text-sm font-medium">Design System</span>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Component Library
-          {% endcall %}
-          {% call ui.item_description() %}A comprehensive collection of reusable UI components for building consistent interfaces.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <span class="text-sm font-medium">Design System</span>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Component Library{% endcall %}
+{% call ui.item_description() %}A comprehensive collection of reusable UI components for building consistent interfaces.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_header() %}
-          <span class="text-sm font-medium">Marketing</span>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Campaign Analytics
-          {% endcall %}
-          {% call ui.item_description() %}Track performance metrics and engagement rates across all marketing channels.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <span class="text-sm font-medium">Marketing</span>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Campaign Analytics{% endcall %}
+{% call ui.item_description() %}Track performance metrics and engagement rates across all marketing channels.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_header() %}
-          <span class="text-sm font-medium">Engineering</span>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}API Documentation
-          {% endcall %}
-          {% call ui.item_description() %}Complete reference guide for all available endpoints and authentication methods.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='ItemFooter') %}
+          <span class="text-sm font-medium">Engineering</span>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}API Documentation{% endcall %}
+{% call ui.item_description() %}Complete reference guide for all available endpoints and authentication methods.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='ItemFooter') %}
       {% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Quarterly Report Q4 2024
-          {% endcall %}
-          {% call ui.item_description() %}Financial overview including revenue, expenses, and growth metrics for the fourth quarter.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_footer() %}
-          <span class="text-sm text-muted-foreground">Last updated 2 hours ago</span>
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          {% call ui.item_title() %}Quarterly Report Q4 2024{% endcall %}
+{% call ui.item_description() %}Financial overview including revenue, expenses, and growth metrics for the fourth quarter.{% endcall %}
+{% endcall %}
+{% call ui.item_footer() %}
+          <span class="text-sm text-muted-foreground">Last updated 2 hours ago</span>{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}User Research Findings
-          {% endcall %}
-          {% call ui.item_description() %}Insights from interviews and surveys conducted with 50+ users across different demographics.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_footer() %}
-          <span class="text-sm text-muted-foreground">Created by Sarah Chen</span>
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          {% call ui.item_title() %}User Research Findings{% endcall %}
+{% call ui.item_description() %}Insights from interviews and surveys conducted with 50+ users across different demographics.{% endcall %}
+{% endcall %}
+{% call ui.item_footer() %}
+          <span class="text-sm text-muted-foreground">Created by Sarah Chen</span>{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_content() %}
-          {% call ui.item_title() %}Product Roadmap
-          {% endcall %}
-          {% call ui.item_description() %}Planned features and improvements scheduled for the next three months.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_footer() %}
-          <span class="text-sm text-muted-foreground">12 comments</span>
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='ItemHeader + ItemFooter') %}
+          {% call ui.item_title() %}Product Roadmap{% endcall %}
+{% call ui.item_description() %}Planned features and improvements scheduled for the next three months.{% endcall %}
+{% endcall %}
+{% call ui.item_footer() %}
+          <span class="text-sm text-muted-foreground">12 comments</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='ItemHeader + ItemFooter') %}
       {% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_header() %}
-          <span class="text-sm font-medium">Team Project</span>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Website Redesign
-          {% endcall %}
-          {% call ui.item_description() %}Complete overhaul of the company website with modern design principles and improved user experience.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_footer() %}
-          <span class="text-sm text-muted-foreground">Updated 5 minutes ago</span>
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <span class="text-sm font-medium">Team Project</span>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Website Redesign{% endcall %}
+{% call ui.item_description() %}Complete overhaul of the company website with modern design principles and improved user experience.{% endcall %}
+{% endcall %}
+{% call ui.item_footer() %}
+          <span class="text-sm text-muted-foreground">Updated 5 minutes ago</span>{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_header() %}
-          <span class="text-sm font-medium">Client Work</span>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Mobile App Development
-          {% endcall %}
-          {% call ui.item_description() %}Building a cross-platform mobile application for iOS and Android with React Native.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_footer() %}
-          <span class="text-sm text-muted-foreground">Status: In Progress</span>
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <span class="text-sm font-medium">Client Work</span>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Mobile App Development{% endcall %}
+{% call ui.item_description() %}Building a cross-platform mobile application for iOS and Android with React Native.{% endcall %}
+{% endcall %}
+{% call ui.item_footer() %}
+          <span class="text-sm text-muted-foreground">Status: In Progress</span>{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_header() %}
-          <span class="text-sm font-medium">Documentation</span>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}API Integration Guide
-          {% endcall %}
-          {% call ui.item_description() %}Step-by-step instructions for integrating third-party APIs with authentication and error handling.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_footer() %}
-          <span class="text-sm text-muted-foreground">Category: Technical • 3 attachments</span>
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Item with Drawer') %}
+          <span class="text-sm font-medium">Documentation</span>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}API Integration Guide{% endcall %}
+{% call ui.item_description() %}Step-by-step instructions for integrating third-party APIs with authentication and error handling.{% endcall %}
+{% endcall %}
+{% call ui.item_footer() %}
+          <span class="text-sm text-muted-foreground">Category: Technical • 3 attachments</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Item with Drawer') %}
       {% call ui.item(as_='item', tag='button', size='default', variant='outline', open=false, type='button', attrs={'aria-haspopup': 'dialog'}) %}
         {% call ui.item_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true">
-            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-            <circle cx="11.5" cy="14.5" r="2.5"></circle>
-            <path d="M13.3 16.3 15 18"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Explored 4 files
-          {% endcall %}
-          {% call ui.item_description() %}Review the files that were searched for this answer.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Default - ItemMedia image') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="M13.3 16.3 15 18"></path></svg>{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Explored 4 files{% endcall %}
+{% call ui.item_description() %}Review the files that were searched for this answer.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Default - ItemMedia image') %}
       {% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Project Dashboard
-          {% endcall %}
-          {% call ui.item_description() %}Overview of project settings and configuration.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Project Dashboard{% endcall %}
+{% call ui.item_description() %}Overview of project settings and configuration.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Document
-          {% endcall %}
-          {% call ui.item_description() %}A document with metadata displayed.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}View
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='default') %}
+          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Document{% endcall %}
+{% call ui.item_description() %}A document with metadata displayed.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}View{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='default') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}File Attachment
-          {% endcall %}
-          {% call ui.item_description() %}Complete file with image, title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Download
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - ItemMedia image') %}
+          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}File Attachment{% endcall %}
+{% call ui.item_description() %}Complete file with image, title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Download{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - ItemMedia image') %}
       {% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Project Dashboard
-          {% endcall %}
-          {% call ui.item_description() %}Overview of project settings and configuration.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Project Dashboard{% endcall %}
+{% call ui.item_description() %}Overview of project settings and configuration.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Document
-          {% endcall %}
-          {% call ui.item_description() %}A document with metadata displayed.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}View
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='outline') %}
+          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Document{% endcall %}
+{% call ui.item_description() %}A document with metadata displayed.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}View{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}File Attachment
-          {% endcall %}
-          {% call ui.item_description() %}Complete file with image, title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Download
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - ItemMedia image - Small') %}
+          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}File Attachment{% endcall %}
+{% call ui.item_description() %}Complete file with image, title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Download{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - ItemMedia image - Small') %}
       {% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Project Dashboard
-          {% endcall %}
-          {% call ui.item_description() %}Overview of project settings and configuration.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Project Dashboard{% endcall %}
+{% call ui.item_description() %}Overview of project settings and configuration.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Document
-          {% endcall %}
-          {% call ui.item_description() %}A document with metadata displayed.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}View
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='sm', variant='outline') %}
+          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Document{% endcall %}
+{% call ui.item_description() %}A document with metadata displayed.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}View{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='sm', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}File Attachment
-          {% endcall %}
-          {% call ui.item_description() %}Complete file with image, title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Download
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Outline - ItemMedia image - Extra Small') %}
+          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}File Attachment{% endcall %}
+{% call ui.item_description() %}Complete file with image, title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Download{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Outline - ItemMedia image - Extra Small') %}
       {% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Project Dashboard
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Project Dashboard{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Document
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}View
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='xs', variant='outline') %}
+          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Document{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}View{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='xs', variant='outline') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}File Attachment
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Download
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Muted - ItemMedia image') %}
+          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}File Attachment{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Download{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Muted - ItemMedia image') %}
       {% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Project Dashboard
-          {% endcall %}
-          {% call ui.item_description() %}Overview of project settings and configuration.
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <img src="https://avatar.vercel.sh/Project" alt="Project" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Project Dashboard{% endcall %}
+{% call ui.item_description() %}Overview of project settings and configuration.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}Document
-          {% endcall %}
-          {% call ui.item_description() %}A document with metadata displayed.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='outline') %}View
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.item(as_='item', size='default', variant='muted') %}
+          <img src="https://avatar.vercel.sh/Document" alt="Document" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}Document{% endcall %}
+{% call ui.item_description() %}A document with metadata displayed.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='outline') %}View{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.item(as_='item', size='default', variant='muted') %}
         {% call ui.item_media(variant='image') %}
-          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">
-        {% endcall %}
-        {% call ui.item_content() %}
-          {% call ui.item_title() %}File Attachment
-          {% endcall %}
-          {% call ui.item_description() %}Complete file with image, title, description, and action button.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.item_actions() %}
-          {% call ui.button(size='sm', variant='default') %}Download
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+          <img src="https://avatar.vercel.sh/File" alt="File" width="40" height="40" class="object-cover grayscale">{% endcall %}
+{% call ui.item_content() %}
+          {% call ui.item_title() %}File Attachment{% endcall %}
+{% call ui.item_description() %}Complete file with image, title, description, and action button.{% endcall %}
+{% endcall %}
+{% call ui.item_actions() %}
+          {% call ui.button(size='sm', variant='default') %}Download{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

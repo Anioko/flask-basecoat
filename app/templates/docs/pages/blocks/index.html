@@ -1,42 +1,37 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-section">
-  <div class="docs-callout docs-callout--info">
-    <h2>Shadcn blocks inventory</h2>
-    <p>
-      Pulled <strong>{{ total_block_count }}</strong> blocks across
-      <strong>{{ block_categories|length }}</strong> categories from the upstream shadcn/ui registry.
-      Every entry below includes a Basecoat-coded preview and copy-ready markup.
-    </p>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Category coverage</h2>
-  <p>
-    Each card jumps to a detailed page with Basecoat previews and production-ready markup
-    mirroring the original shadcn block.
-  </p>
-  {% if block_categories %}
-  <div class="docs-grid">
-    {% for category in block_categories %}
-    <article class="docs-card">
-      <h3><a href="{{ category.url }}" class="docs-link">{{ category.title }}</a></h3>
-  <p>{{ category.count }} block{{ category.count != 1 and 's' or '' }}</p>
-      <p>Coverage: Basecoat previews available</p>
-      <p><a class="docs-link" href="{{ category.url }}">Browse blocks &rarr;</a></p>
-    </article>
-    {% endfor %}
-  </div>
-  {% else %}
-  <p class="docs-empty">Block registry data could not be loaded.</p>
-  {% endif %}
-</section>
-<section class="docs-section">
-  <h2>Customization playbook</h2>
-  <ul class="docs-list">
-    <li>Lift snippets into your app by copying the markup blocks from each preview.</li>
-    <li>Swap Basecoat utility classes for project tokens as needed.</li>
-    <li>Extend the catalogue with product-specific variants by following the snippet registry pattern.</li>
-  </ul>
-</section>
+{{ d.h2('Shadcn blocks inventory') }}
+{% call d.callout(icon='blocks') %}
+  Pulled <strong>{{ total_block_count }}</strong> blocks across <strong>{{ block_categories|length }}</strong> categories from the upstream shadcn/ui registry.
+  Every entry below includes a preview rendered with the component macros and copy-ready Jinja markup.
+{% endcall %}
+
+{{ d.h2('Category coverage') }}
+{{ d.p('Each card jumps to a detailed page with live previews and production-ready macros mirroring the original shadcn block.') }}
+{% if block_categories %}
+{% call d.grid(cols=3) %}
+  {% for category in block_categories %}
+    {% call d.link_card(category.title, category.url, cta='Browse blocks', badge=(category.count ~ ' block' ~ ('s' if category.count != 1 else ''))) %}
+      <p class="text-sm text-muted-foreground">Coverage: previews built with the component macros.</p>
+    {% endcall %}
+  {% endfor %}
+{% endcall %}
+{% else %}
+{% call ui.empty(class='mt-6 border') %}
+  {% call ui.empty_header() %}
+    {% call ui.empty_icon(variant='icon') %}{{ lucide('inbox') }}{% endcall %}
+    {{ ui.empty_title(text='Block registry data could not be loaded') }}
+    {{ ui.empty_description(text='Check app/docs/data/shadcn_blocks.json and reload the page.') }}
+  {% endcall %}
+{% endcall %}
+{% endif %}
+
+{{ d.h2('Customization playbook') }}
+{{ d.ul([
+  'Lift snippets into your app by copying the macro calls shown under each preview.',
+  'Compose with the design tokens (<code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">bg-muted</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">text-muted-foreground</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">border-border</code>) rather than palette colours.',
+  'Extend the catalogue with product-specific variants by following the snippet registry pattern in <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">app/docs/snippets.py</code>.'
+]) }}
 {% endblock %}

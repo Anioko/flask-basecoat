@@ -1,98 +1,82 @@
 {% extends 'docs/layout.html' %}
-{% from 'docs/macros/components.html' import component_showcase %}
-
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-section">
-  <div class="docs-callout docs-callout--info">
-    <h2>shadcn/ui Components</h2>
-    <p>
-      Beautifully designed components built using Radix UI and Tailwind CSS, adapted for Flask-Basecoat.
-      Copy and paste into your apps or use as reference for building your own component library.
-    </p>
-    <p><strong>{{ total_component_count }}</strong> components available with multiple variants each.</p>
-  </div>
-</section>
+{{ d.h2('shadcn/ui Components') }}
+{% call d.callout(icon='blocks') %}
+  Beautifully designed components built on the shadcn/ui recipes and Tailwind CSS, adapted for Flask-Basecoat as Jinja macros.
+  Import <code class="font-mono">basecoat/index.html</code> as <code class="font-mono">ui</code> and every part is one call away.
+  <span class="block pt-2"><strong>{{ total_component_count }}</strong> components available with multiple variants each.</span>
+{% endcall %}
 
-<section class="docs-section">
-  <h2>Available Components</h2>
-  <p>
-    Each component includes multiple variants, comprehensive styling, and accessibility features.
-    Click on any component to see all available variants and usage examples.
-  </p>
-  
-  {% if components %}
-  <div class="docs-grid">
-    {% for component in components %}
-    <article class="docs-card">
-      <h3><a href="{{ component.url }}" class="docs-link">{{ component.title }}</a></h3>
-      <p>{{ component.description }}</p>
-      <p class="docs-meta">{{ component.variant_count }} variant{{ component.variant_count != 1 and 's' or '' }}</p>
-      <p><a class="docs-link" href="{{ component.url }}">View component &rarr;</a></p>
-    </article>
-    {% endfor %}
-  </div>
-  {% else %}
-  <p class="docs-empty">No components are currently available.</p>
-  {% endif %}
-</section>
+{{ d.h2('Available Components') }}
+{{ d.p('Each component includes multiple variants, the upstream styling recipe and accessibility attributes. Click on any component to see all available variants and usage examples.') }}
+{% if components %}
+{% call d.grid(cols=3) %}
+  {% for component in components %}
+    {{ d.link_card(component.title, component.url, component.description, cta='View component', badge=(component.variant_count ~ ' variant' ~ ('s' if component.variant_count != 1 else ''))) }}
+  {% endfor %}
+{% endcall %}
+{% else %}
+{% call ui.empty(class='mt-6 border') %}
+  {% call ui.empty_header() %}
+    {% call ui.empty_icon(variant='icon') %}{{ lucide('inbox') }}{% endcall %}
+    {{ ui.empty_title(text='No components are currently available') }}
+  {% endcall %}
+{% endcall %}
+{% endif %}
 
-<section class="docs-section">
-  <h2>Quick Preview</h2>
-  <p>Here's a preview of some common components:</p>
-  
-  <div class="docs-preview" data-preview>
-    <div class="component-preview">
-      <!-- Button examples -->
-      <div class="component-group">
-        <h4>Buttons</h4>
-        <div class="component-row">
-          <button class="btn btn-primary" type="button">Primary</button>
-          <button class="btn btn-secondary" type="button">Secondary</button>
-          <button class="btn btn-outline" type="button">Outline</button>
-          <button class="btn btn-ghost" type="button">Ghost</button>
-        </div>
-      </div>
-      
-      <!-- Badge examples -->
-      <div class="component-group">
-        <h4>Badges</h4>
-        <div class="component-row">
-          <span class="badge">Default</span>
-          <span class="badge badge-secondary">Secondary</span>
-          <span class="badge badge-outline">Outline</span>
-          <span class="badge badge-destructive">Destructive</span>
-        </div>
-      </div>
-      
-      <!-- Alert example -->
-      <div class="component-group">
-        <h4>Alert</h4>
-        <div class="alert" role="alert">
-          <div class="alert-icon">ℹ️</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Components are ready!</h4>
-            <p class="alert-description">You can now use these components in your Flask-Basecoat application.</p>
-          </div>
-        </div>
-      </div>
+{{ d.h2('Quick Preview') }}
+{{ d.p("Here's a preview of some common components:") }}
+{% call d.preview() %}
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Buttons</h4>
+    <div class="flex flex-wrap items-center gap-2">
+      {{ ui.button(text='Primary') }}
+      {{ ui.button(text='Secondary', variant='secondary') }}
+      {{ ui.button(text='Outline', variant='outline') }}
+      {{ ui.button(text='Ghost', variant='ghost') }}
     </div>
   </div>
-</section>
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Badges</h4>
+    <div class="flex flex-wrap items-center gap-2">
+      {{ ui.badge(text='Default') }}
+      {{ ui.badge(text='Secondary', variant='secondary') }}
+      {{ ui.badge(text='Outline', variant='outline') }}
+      {{ ui.badge(text='Destructive', variant='destructive') }}
+    </div>
+  </div>
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Alert</h4>
+    {% call ui.alert() %}
+      {{ lucide('info') }}
+      {{ ui.alert_title(text='Components are ready!') }}
+      {{ ui.alert_description(text='You can now use these components in your Flask-Basecoat application.') }}
+    {% endcall %}
+  </div>
+{% endcall %}
+{% call d.code(title='quick-preview.html', icon='file-code') -%}
+{% raw %}{% import 'basecoat/index.html' as ui %}
+{{ ui.button(text='Primary') }}
+{{ ui.button(text='Secondary', variant='secondary') }}
+{{ ui.badge(text='Outline', variant='outline') }}
+{% call ui.alert() %}
+  {{ lucide('info') }}
+  {{ ui.alert_title(text='Components are ready!') }}
+  {{ ui.alert_description(text='You can now use these components in your Flask-Basecoat application.') }}
+{% endcall %}{% endraw %}
+{%- endcall %}
 
-<section class="docs-section">
-  <h2>Getting Started</h2>
-  <p>
-    These components are built to work with Basecoat CSS. To use them in your Flask application:
-  </p>
-  <ol class="docs-list docs-list--ordered">
-    <li>Include the Basecoat CSS framework in your project</li>
-    <li>Copy the component HTML structure from the examples</li>
-    <li>Customize the styling using Basecoat design tokens</li>
-    <li>Add interactive behavior with JavaScript as needed</li>
-  </ol>
-  
-  <p>
-    <a class="docs-link" href="https://basecoatui.dev" target="_blank" rel="noreferrer">Learn more about Basecoat CSS &rarr;</a>
-  </p>
-</section>
+{{ d.h2('Getting Started') }}
+{{ d.p('These components render the shadcn/ui markup and class recipes. To use them in your Flask application:') }}
+{{ d.steps([
+  'Initialise the <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">Basecoat</code> extension and load <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">app.css</code> plus <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">{% raw %}{{ basecoat.js() }}{% endraw %}</code> in a layout whose <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">&lt;html&gt;</code> carries <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">class="style-vega"</code>.',
+  'Import the barrel with <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">{% raw %}{% import \'basecoat/index.html\' as ui %}{% endraw %}</code>.',
+  'Call the macro for each part, passing <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">variant</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">size</code>, state flags and extra <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">class</code> or <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">attrs</code> as needed.',
+  'Interactive behaviour (dialogs, menus, tabs, tooltips) is wired automatically by the runtime through the <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">data-slot</code> attributes.'
+]) }}
+<div class="mt-6">
+  {% call ui.button(variant='link', href='https://basecoatui.dev', class='h-auto p-0', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}Learn more about Basecoat UI{{ lucide('external-link') }}{% endcall %}
+</div>
 {% endblock %}

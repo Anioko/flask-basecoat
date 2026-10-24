@@ -320,6 +320,22 @@ def render_node(el, depth, ctx):
     if tag is None:
         return ''
     slot_name = el.get('data-slot')
+    # Preformatted parts (pre/code or whitespace-pre* containers) keep their inner markup verbatim: template
+    # indentation would otherwise become visible whitespace.
+    preformatted = tag in PRE_TAGS or any(c.startswith('whitespace-pre') for c in classes_of(el))
+    if preformatted and slot_name:
+        full = etree.tostring(el, encoding='unicode', method='html').replace('&amp;', '&')
+        inner = full[full.index('>') + 1:full.rindex('<')]
+        kw, extra, leftover, slot_name = translate(el, slot_name)
+        if extra:
+            kw['class'] = extra
+        if leftover:
+            kw['attrs'] = leftover
+        if 'tag' not in kw and tag != S.tag_for(slot_name, el.get('href')) and tag != 'svg':
+            kw['tag'] = tag
+        report['slots'] += 1
+        macro = 'ui.' + slot_name.replace('-', '_')
+        return f"{pad}{{% call {macro}({kw_literal(kw)}) %}}{{% raw %}}{inner}{{% endraw %}}{{% endcall %}}\n"
     children = ''.join(render_children(el, depth + 1, ctx))
     text_before = text_literal(el.text)
     if slot_name:
@@ -373,15 +389,30 @@ def render_node(el, depth, ctx):
     return raw_element(el, depth, ctx, children, text_before)
 
 
+PRE_TAGS = {'pre', 'code', 'textarea', 'script', 'style'}
+
+
+def in_pre(el):
+    node = el.getparent() if el is not None else None
+    while node is not None:
+        if isinstance(node.tag, str) and node.tag in PRE_TAGS:
+            return True
+        node = node.getparent()
+    return False
+
+
 def raw_element(el, depth, ctx, children, text_before):
     pad = '  ' * depth
     tag = el.tag
+    if tag in PRE_TAGS:
+        # whitespace is content here: emit the subtree exactly as upstream rendered it
+        return pad + etree.tostring(el, encoding='unicode', method='html').replace('&amp;', '&') + '\n'
     attrs = []
     for k, v in el.attrib.items():
         if k in DROP_ATTRS:
             continue
         if k == 'class':
-            attrs.append(f' class="{html.escape(v, quote=True).replace("&amp;", "&")}"')  # Tailwind scans the raw class names
+            attrs.append(f' class="{v.replace(chr(34), "&quot;")}"')  # Tailwind scans the raw class names ([&>button]:line-through)
         else:
             attrs.append(f' {k}="{html.escape(v, quote=True)}"' if v != '' else f' {k}=""')
     open_tag = f"<{tag}{''.join(attrs)}>"
@@ -394,18 +425,43 @@ def raw_element(el, depth, ctx, children, text_before):
 
 def render_children(el, depth, ctx):
     out = []
+    if isinstance(el.tag, str) and el.tag in PRE_TAGS:
+        return out
     for ch in el:
         if isinstance(ch.tag, str):
             out.append(render_node(ch, depth, ctx))
         tail = text_literal(ch.tail)
-        if tail.strip():
-            out.append('  ' * depth + tail.strip() + '\n')
+        # React keeps explicit spaces ({" "}); whitespace-only tails that contain a newline are JSX formatting
+        if tail.strip() or (tail and '\n' not in tail):
+            out.append(tail)
     return out
 
 
 EXAMPLE_WRAPPER_CLASSES = 'mx-auto grid min-h-screen w-full max-w-5xl min-w-0 content-center items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 md:grid-cols-2 md:gap-8 lg:p-12 2xl:max-w-6xl'.split()
 EXAMPLE_CLASSES = 'mx-auto flex w-full max-w-lg min-w-0 flex-col gap-1 self-stretch lg:max-w-none'.split()
 EXAMPLE_CONTENT_CLASSES = "flex min-w-0 flex-1 flex-col items-start gap-6 rounded-xl bg-card p-12 text-foreground style-lyra:rounded-none style-sera:rounded-none *:[div:not([class*='w-'])]:w-full".split()
+
+
+PROTECT = re.compile(r'({% raw %}.*?{% endraw %}|<pre\b.*?</pre>|<textarea\b.*?</textarea>|<script\b.*?</script>|<style\b.*?</style>|<[a-z]+\b[^>]*whitespace-pre[^>]*>.*?</(?:div|span|p)>|{% call [^%]*whitespace-pre[^%]*%}.*?{% endcall %})', re.S)
+BLOCK_TAG = re.compile(r'({%-?\s*(?:endcall|endblock|endfor|endif|set|block|import|extends)\b[^%]*%}|{#[^#]*#})[ \t]*\n[ \t]*')
+WS_RUN = re.compile(r'[ \t]*\n[ \t]*')
+
+
+def compact(text):
+    """Remove template indentation between tags and text. React emits no whitespace text nodes between elements,
+    so any newline/indent the generator adds would become a visible space in inline formatting contexts."""
+    parts = PROTECT.split(text)
+    out = []
+    for i, part in enumerate(parts):
+        if i % 2 == 1:
+            out.append(part)
+            continue
+        part = BLOCK_TAG.sub(lambda m: m.group(1) + '\n', part)
+        # every other whitespace run that contains a newline is template indentation
+        # remove the newline and the indentation after it; spaces before a newline are content (JSX {" "})
+        part = re.sub(r'(?<!%}|#})\n[ \t]*', '', part)
+        out.append(part)
+    return ''.join(out)
 
 
 def convert(kind, name):
@@ -433,7 +489,7 @@ def convert(kind, name):
     out.parent.mkdir(parents=True, exist_ok=True)
     if out.exists() and not FORCE:
         return False
-    out.write_text(page, encoding='utf8')
+    out.write_text(compact(page), encoding='utf8')
     report['pages'] += 1
     return True
 

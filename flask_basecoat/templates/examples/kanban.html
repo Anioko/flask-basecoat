@@ -1,672 +1,258 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sprint Board - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Sprint Board · flask-basecoat{% endblock %}
+{% block head %}
+<script>
+  let draggedCardId = null;
+  let taskCounter = 20;
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-            updateColumnCounts();
-        });
+  const columnMeta = {
+    'col-backlog': 'Backlog',
+    'col-todo': 'Todo',
+    'col-inprogress': 'In Progress',
+    'col-inreview': 'In Review',
+    'col-done': 'Done'
+  };
 
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+  function dragStart(e) {
+    draggedCardId = e.currentTarget.id;
+    e.dataTransfer.setData('text/plain', draggedCardId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.classList.add('opacity-40', 'scale-[0.98]');
+  }
 
-        let draggedCardId = null;
+  function dragEnd(e) {
+    e.currentTarget.classList.remove('opacity-40', 'scale-[0.98]');
+    document.querySelectorAll('.kanban-column-dropzone').forEach((zone) => {
+      zone.classList.remove('ring-2', 'ring-primary/40', 'bg-primary/5');
+    });
+  }
 
-        function dragStart(e) {
-            draggedCardId = e.currentTarget.id;
-            e.dataTransfer.setData('text/plain', draggedCardId);
-            e.dataTransfer.effectAllowed = 'move';
-            e.currentTarget.classList.add('opacity-40', 'scale-[0.98]');
-        }
+  function dragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('ring-2', 'ring-primary/40', 'bg-primary/5');
+  }
 
-        function dragEnd(e) {
-            e.currentTarget.classList.remove('opacity-40', 'scale-[0.98]');
-            document.querySelectorAll('.kanban-column-dropzone').forEach(zone => {
-                zone.classList.remove('ring-2', 'ring-primary/40', 'bg-primary/5');
-            });
-        }
+  function dragLeave(e) {
+    e.currentTarget.classList.remove('ring-2', 'ring-primary/40', 'bg-primary/5');
+  }
 
-        function dragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            const dropzone = e.currentTarget;
-            dropzone.classList.add('ring-2', 'ring-primary/40', 'bg-primary/5');
-        }
+  function dropCard(e, colId) {
+    e.preventDefault();
+    const dropzone = document.getElementById(colId);
+    dropzone.classList.remove('ring-2', 'ring-primary/40', 'bg-primary/5');
+    const cardId = e.dataTransfer.getData('text/plain') || draggedCardId;
+    const card = document.getElementById(cardId);
+    if (card && dropzone) {
+      dropzone.appendChild(card);
+      updateColumnCounts();
+      notify(`Moved to ${columnMeta[colId] || 'Column'}`);
+    }
+  }
 
-        function dragLeave(e) {
-            const dropzone = e.currentTarget;
-            dropzone.classList.remove('ring-2', 'ring-primary/40', 'bg-primary/5');
-        }
+  function updateColumnCounts() {
+    Object.keys(columnMeta).forEach((colId) => {
+      const zone = document.getElementById(colId);
+      const count = document.getElementById(`count-${colId}`);
+      if (zone && count) count.textContent = zone.querySelectorAll('[data-task-card]').length;
+    });
+  }
 
-        function dropCard(e, colId) {
-            e.preventDefault();
-            const dropzone = document.getElementById(colId);
-            dropzone.classList.remove('ring-2', 'ring-primary/40', 'bg-primary/5');
-            
-            const cardId = e.dataTransfer.getData('text/plain') || draggedCardId;
-            const card = document.getElementById(cardId);
-            
-            if (card && dropzone) {
-                dropzone.appendChild(card);
-                updateColumnCounts();
-                showNotification(`Moved to ${getColumnName(colId)}`);
-            }
-        }
+  function presetColumn(colId) {
+    const select = document.getElementById('new-task-column');
+    if (select) select.value = colId;
+  }
 
-        const columnMeta = {
-            'col-backlog': 'Backlog',
-            'col-todo': 'Todo',
-            'col-inprogress': 'In Progress',
-            'col-inreview': 'In Review',
-            'col-done': 'Done'
-        };
+  function submitNewTask(e) {
+    e.preventDefault();
+    const title = document.getElementById('new-task-title').value.trim();
+    const colId = document.getElementById('new-task-column').value;
+    const label = document.getElementById('new-task-label').value;
+    const priority = document.getElementById('new-task-priority').value;
+    const assignee = document.getElementById('new-task-assignee').value.trim() || 'Alex Kim';
+    const initials = assignee.split(' ').map((w) => w[0]).join('').toUpperCase() || 'AK';
+    const dueDate = document.getElementById('new-task-due').value || 'May 1';
+    if (!title) return;
 
-        function getColumnName(colId) {
-            return columnMeta[colId] || 'Column';
-        }
+    taskCounter++;
+    // The card and its badges are cloned from server-rendered macro output so classes stay recipe-exact.
+    const card = document.getElementById('task-template').content.firstElementChild.cloneNode(true);
+    card.id = `card-t${taskCounter}`;
+    card.querySelector('[data-field="title"]').textContent = title;
+    card.querySelector('[data-field="label"]').textContent = label;
+    card.querySelector('[data-field="initials"]').textContent = initials;
+    card.querySelector('[data-field="due"]').textContent = dueDate;
+    const badge = document.getElementById('priority-badges').content.querySelector(`[data-priority="${priority}"]`).cloneNode(true);
+    card.querySelector('[data-field="priority"]').replaceWith(badge);
+    card.addEventListener('dragstart', dragStart);
+    card.addEventListener('dragend', dragEnd);
 
-        function updateColumnCounts() {
-            Object.keys(columnMeta).forEach(colId => {
-                const zone = document.getElementById(colId);
-                const countBadge = document.getElementById(`count-${colId}`);
-                if (zone && countBadge) {
-                    const count = zone.querySelectorAll('[data-task-card]').length;
-                    countBadge.textContent = count;
-                }
-            });
-        }
+    const targetCol = document.getElementById(colId);
+    if (targetCol) {
+      targetCol.insertBefore(card, targetCol.firstChild);
+      updateColumnCounts();
+      notify(`Created "${title}"`);
+    }
+    document.getElementById('new-task-title').value = '';
+    const dialog = document.getElementById('add-task-dialog');
+    if (dialog && dialog.fbClose) dialog.fbClose();
+  }
 
-        function openAddTaskModal(defaultCol = 'col-backlog') {
-            const modal = document.getElementById('modal-add-task');
-            const colSelect = document.getElementById('new-task-column');
-            if (colSelect) colSelect.value = defaultCol;
-            if (modal) modal.showModal();
-        }
+  function notify(message) {
+    if (window.FlaskBasecoat && window.FlaskBasecoat.toast) window.FlaskBasecoat.toast({ title: message });
+  }
 
-        function closeAddTaskModal() {
-            const modal = document.getElementById('modal-add-task');
-            if (modal) modal.close();
-        }
+  document.addEventListener('DOMContentLoaded', updateColumnCounts);
+</script>
+{% endblock %}
+{% block body %}
+{% set priority_variant = {'Urgent': 'destructive', 'High': 'default', 'Medium': 'secondary', 'Low': 'outline'} %}
+{% set columns = [
+  {'id': 'col-backlog', 'name': 'Backlog', 'dot': 'bg-muted-foreground', 'tasks': [
+    ('card-t1', 'Implement OAuth 2.0 SSO integration', 'Feature', 'High', 'AK', 'Apr 20'),
+    ('card-t2', 'Add CSV export for reports dashboard', 'Enhancement', 'Medium', 'SL', 'Apr 28'),
+    ('card-t3', 'Migrate legacy REST endpoints to GraphQL', 'Refactor', 'Low', 'JW', 'May 10'),
+    ('card-t4', 'Set up Datadog APM traces for API layer', 'DevOps', 'Medium', 'RC', 'May 5')]},
+  {'id': 'col-todo', 'name': 'Todo', 'dot': 'bg-chart-1', 'tasks': [
+    ('card-t5', 'Redesign onboarding flow (3-step wizard)', 'Design', 'High', 'MT', 'Apr 18'),
+    ('card-t6', 'Write unit tests for payment service', 'Testing', 'High', 'AK', 'Apr 16'),
+    ('card-t7', 'Localize app strings for EU markets', 'i18n', 'Medium', 'SL', 'Apr 25')]},
+  {'id': 'col-inprogress', 'name': 'In Progress', 'dot': 'bg-chart-2', 'tasks': [
+    ('card-t8', 'Fix memory leak in WebSocket handler', 'Bug', 'Urgent', 'JW', 'Apr 12'),
+    ('card-t9', 'Build real-time notifications with SSE', 'Feature', 'High', 'RC', 'Apr 15'),
+    ('card-t10', 'Optimize Lighthouse score to 95+', 'Performance', 'Medium', 'MT', 'Apr 22')]},
+  {'id': 'col-inreview', 'name': 'In Review', 'dot': 'bg-chart-4', 'tasks': [
+    ('card-t11', 'Dark mode support across all components', 'Enhancement', 'Medium', 'AK', 'Apr 13'),
+    ('card-t12', 'Rate limiting middleware for public API', 'Security', 'High', 'SL', 'Apr 11')]},
+  {'id': 'col-done', 'name': 'Done', 'dot': 'bg-chart-3', 'tasks': [
+    ('card-t13', 'Set up CI/CD pipeline with GitHub Actions', 'DevOps', 'High', 'JW', 'Apr 5'),
+    ('card-t14', 'Implement row-level security in Postgres', 'Security', 'Urgent', 'RC', 'Apr 4'),
+    ('card-t15', 'Add Stripe webhook signature validation', 'Bug', 'High', 'MT', 'Apr 3')]}
+] %}
 
-        let taskCounter = 20;
-
-        function submitNewTask(e) {
-            e.preventDefault();
-            const title = document.getElementById('new-task-title').value.trim();
-            const colId = document.getElementById('new-task-column').value;
-            const label = document.getElementById('new-task-label').value;
-            const priority = document.getElementById('new-task-priority').value;
-            const assignee = document.getElementById('new-task-assignee').value.trim() || 'Alex Kim';
-            const initials = assignee.split(' ').map(w => w[0]).join('').toUpperCase() || 'AK';
-            const dueDate = document.getElementById('new-task-due').value || 'May 1';
-
-            if (!title) return;
-
-            taskCounter++;
-            const taskId = `task-t${taskCounter}`;
-
-            let prioBadge = '';
-            if (priority === 'urgent') {
-                prioBadge = '<span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400">Urgent</span>';
-            } else if (priority === 'high') {
-                prioBadge = '<span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>';
-            } else if (priority === 'medium') {
-                prioBadge = '<span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-400">Medium</span>';
-            } else {
-                prioBadge = '<span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400">Low</span>';
-            }
-
-            const card = document.createElement('div');
-            card.id = taskId;
-            card.setAttribute('data-task-card', 'true');
-            card.setAttribute('draggable', 'true');
-            card.ondragstart = dragStart;
-            card.ondragend = dragEnd;
-            card.className = "bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all";
-
-            card.innerHTML = `
-                <div class="flex items-start justify-between gap-2">
-                    <span class="text-sm font-medium leading-snug">${title}</span>
-                    <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                </div>
-                <div class="flex flex-wrap gap-1.5">
-                    <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">${label}</span>
-                    ${prioBadge}
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">${initials}</span>
-                    <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                        <i data-lucide="calendar-days" class="size-3"></i>
-                        <span>${dueDate}</span>
-                    </div>
-                </div>
-            `;
-
-            const targetCol = document.getElementById(colId);
-            if (targetCol) {
-                targetCol.insertBefore(card, targetCol.firstChild);
-                updateColumnCounts();
-                showNotification(`Created "${title}"`);
-            }
-
-            if (window.lucide) { lucide.createIcons(); }
-            document.getElementById('new-task-title').value = '';
-            closeAddTaskModal();
-        }
-
-        function showNotification(msg) {
-            const container = document.getElementById('kanban-toast');
-            if (container) {
-                container.textContent = msg;
-                container.classList.remove('hidden', 'opacity-0');
-                container.classList.add('opacity-100');
-                setTimeout(() => {
-                    container.classList.remove('opacity-100');
-                    container.classList.add('opacity-0');
-                    setTimeout(() => container.classList.add('hidden'), 300);
-                }, 2200);
-            }
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6">
-    {{ bc.toast_container() }}
-
-    {# Live Notification Bubble #}
-    <div id="kanban-toast" class="fixed bottom-6 right-6 z-50 hidden rounded-lg border border-border bg-card px-4 py-2.5 text-xs font-semibold text-foreground shadow-lg transition-all duration-300 opacity-0">
-        Action completed
+{% macro task_card(id, title, label, priority, initials, due, template=false) %}
+  {% call ui.card(id=id, size='sm', class='kanban-card cursor-grab gap-3 py-3 transition-all hover:border-primary/50 active:cursor-grabbing', attrs={'data-task-card': 'true', 'draggable': 'true', 'ondragstart': none if template else 'dragStart(event)', 'ondragend': none if template else 'dragEnd(event)'}) %}
+    <div class="flex items-start justify-between gap-2 px-3">
+      <span class="text-sm font-medium leading-snug" data-field="title">{{ title }}</span>
+      {{ lucide('grip-vertical', 'mt-0.5 size-4 shrink-0 text-muted-foreground/40') }}
     </div>
-
-    <div class="space-y-6">
-        {# Top Navigation and Actions #}
-        <div class="flex items-center justify-between border-b border-border pb-4">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-base">
-                <svg class="size-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Platform</span>
-            </div>
-            <div class="flex items-center gap-2">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </div>
-
-        {# Header Section matching shadcnexamples.com/demo/kanban-board #}
-        <div class="flex items-center justify-between">
-            <div class="space-y-1">
-                <h1 class="text-lg font-semibold text-foreground">Sprint Board</h1>
-                <p class="text-sm text-muted-foreground">Q2 2025 • Web Platform</p>
-            </div>
-            <div>
-                {{ bc.button('Add Task', variant='default', size='sm', icon='plus', on_click="openAddTaskModal('col-backlog')") }}
-            </div>
-        </div>
-
-        {# Horizontal Scrolling 5-Column Kanban Board #}
-        <div class="overflow-x-auto pb-4">
-            <div class="flex min-w-max gap-3">
-                
-                {# Column 1: Backlog (4 Tasks) #}
-                <div class="w-[272px] shrink-0 rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-muted/20 space-y-2">
-                    <div class="flex items-center gap-2 px-0.5 py-1">
-                        <span class="size-2 rounded-full bg-slate-400"></span>
-                        <span class="text-sm font-semibold text-foreground">Backlog</span>
-                        <span id="count-col-backlog" class="ml-auto h-5 min-w-[20px] rounded-sm px-1.5 text-xs font-semibold bg-secondary text-secondary-foreground inline-flex items-center justify-center">4</span>
-                    </div>
-
-                    <div id="col-backlog" 
-                         class="kanban-column-dropzone mt-1 flex flex-col gap-2 min-h-[450px] rounded-lg transition-all"
-                         ondragover="dragOver(event)" 
-                         ondragleave="dragLeave(event)"
-                         ondrop="dropCard(event, 'col-backlog')">
-                        
-                        {# Task t1 #}
-                        <div id="card-t1" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Implement OAuth 2.0 SSO integration</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Feature</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">AK</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 20</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t2 #}
-                        <div id="card-t2" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Add CSV export for reports dashboard</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Enhancement</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-400">Medium</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">SL</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 28</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t3 #}
-                        <div id="card-t3" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Migrate legacy REST endpoints to GraphQL</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Refactor</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400">Low</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">JW</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>May 10</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t4 #}
-                        <div id="card-t4" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Set up Datadog APM traces for API layer</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">DevOps</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-400">Medium</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">RC</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>May 5</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                {# Column 2: Todo (3 Tasks) #}
-                <div class="w-[272px] shrink-0 rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-muted/20 space-y-2">
-                    <div class="flex items-center gap-2 px-0.5 py-1">
-                        <span class="size-2 rounded-full bg-violet-400"></span>
-                        <span class="text-sm font-semibold text-foreground">Todo</span>
-                        <span id="count-col-todo" class="ml-auto h-5 min-w-[20px] rounded-sm px-1.5 text-xs font-semibold bg-secondary text-secondary-foreground inline-flex items-center justify-center">3</span>
-                    </div>
-
-                    <div id="col-todo" 
-                         class="kanban-column-dropzone mt-1 flex flex-col gap-2 min-h-[450px] rounded-lg transition-all"
-                         ondragover="dragOver(event)" 
-                         ondragleave="dragLeave(event)"
-                         ondrop="dropCard(event, 'col-todo')">
-                        
-                        {# Task t5 #}
-                        <div id="card-t5" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Redesign onboarding flow (3-step wizard)</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Design</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">MT</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 18</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t6 #}
-                        <div id="card-t6" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Write unit tests for payment service</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Testing</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">AK</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 16</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t7 #}
-                        <div id="card-t7" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Localize app strings for EU markets</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">i18n</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-400">Medium</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">SL</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 25</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                {# Column 3: In Progress (3 Tasks) #}
-                <div class="w-[272px] shrink-0 rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-muted/20 space-y-2">
-                    <div class="flex items-center gap-2 px-0.5 py-1">
-                        <span class="size-2 rounded-full bg-blue-400"></span>
-                        <span class="text-sm font-semibold text-foreground">In Progress</span>
-                        <span id="count-col-inprogress" class="ml-auto h-5 min-w-[20px] rounded-sm px-1.5 text-xs font-semibold bg-secondary text-secondary-foreground inline-flex items-center justify-center">3</span>
-                    </div>
-
-                    <div id="col-inprogress" 
-                         class="kanban-column-dropzone mt-1 flex flex-col gap-2 min-h-[450px] rounded-lg transition-all"
-                         ondragover="dragOver(event)" 
-                         ondragleave="dragLeave(event)"
-                         ondrop="dropCard(event, 'col-inprogress')">
-                        
-                        {# Task t8 #}
-                        <div id="card-t8" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Fix memory leak in WebSocket handler</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Bug</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400">Urgent</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">JW</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 12</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t9 #}
-                        <div id="card-t9" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Build real-time notifications with SSE</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Feature</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">RC</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 15</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t10 #}
-                        <div id="card-t10" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Optimize Lighthouse score to 95+</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Performance</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-400">Medium</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">MT</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 22</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                {# Column 4: In Review (2 Tasks) #}
-                <div class="w-[272px] shrink-0 rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-muted/20 space-y-2">
-                    <div class="flex items-center gap-2 px-0.5 py-1">
-                        <span class="size-2 rounded-full bg-amber-400"></span>
-                        <span class="text-sm font-semibold text-foreground">In Review</span>
-                        <span id="count-col-inreview" class="ml-auto h-5 min-w-[20px] rounded-sm px-1.5 text-xs font-semibold bg-secondary text-secondary-foreground inline-flex items-center justify-center">2</span>
-                    </div>
-
-                    <div id="col-inreview" 
-                         class="kanban-column-dropzone mt-1 flex flex-col gap-2 min-h-[450px] rounded-lg transition-all"
-                         ondragover="dragOver(event)" 
-                         ondragleave="dragLeave(event)"
-                         ondrop="dropCard(event, 'col-inreview')">
-                        
-                        {# Task t11 #}
-                        <div id="card-t11" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Dark mode support across all components</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Enhancement</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-400">Medium</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">AK</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 13</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t12 #}
-                        <div id="card-t12" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Rate limiting middleware for public API</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Security</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">SL</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 11</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                {# Column 5: Done (3 Tasks) #}
-                <div class="w-[272px] shrink-0 rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-muted/20 space-y-2">
-                    <div class="flex items-center gap-2 px-0.5 py-1">
-                        <span class="size-2 rounded-full bg-emerald-400"></span>
-                        <span class="text-sm font-semibold text-foreground">Done</span>
-                        <span id="count-col-done" class="ml-auto h-5 min-w-[20px] rounded-sm px-1.5 text-xs font-semibold bg-secondary text-secondary-foreground inline-flex items-center justify-center">3</span>
-                    </div>
-
-                    <div id="col-done" 
-                         class="kanban-column-dropzone mt-1 flex flex-col gap-2 min-h-[450px] rounded-lg transition-all"
-                         ondragover="dragOver(event)" 
-                         ondragleave="dragLeave(event)"
-                         ondrop="dropCard(event, 'col-done')">
-                        
-                        {# Task t13 #}
-                        <div id="card-t13" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Set up CI/CD pipeline with GitHub Actions</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">DevOps</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">JW</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 5</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t14 #}
-                        <div id="card-t14" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Implement row-level security in Postgres</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Security</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-400">Urgent</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">RC</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 4</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {# Task t15 #}
-                        <div id="card-t15" data-task-card="true" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" class="bg-card flex flex-col gap-3 rounded-lg border p-3 shadow-xs cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-sm font-medium leading-snug">Add Stripe webhook signature validation</span>
-                                <i data-lucide="grip-vertical" class="mt-0.5 size-4 shrink-0 text-muted-foreground/40"></i>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl border py-0.5 font-medium whitespace-nowrap border-border text-foreground h-5 px-1.5 text-[11px]">Bug</span>
-                                <span class="group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-4xl py-0.5 font-medium whitespace-nowrap h-5 border px-1.5 text-[11px] border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-400">High</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="size-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-[10px] font-semibold">MT</span>
-                                <div class="flex items-center gap-1 text-xs text-muted-foreground">
-                                    <i data-lucide="calendar-days" class="size-3"></i>
-                                    <span>Apr 3</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
+    <div class="flex flex-wrap gap-1.5 px-3">
+      {{ ui.badge(text=label, variant='outline', attrs={'data-field': 'label'}) }}
+      {% if template %}<span data-field="priority"></span>{% else %}{{ ui.badge(text=priority, variant=priority_variant[priority]) }}{% endif %}
     </div>
+    <div class="flex items-center justify-between px-3">
+      {% call ui.avatar(size='sm') %}{{ ui.avatar_fallback(text=initials, class='text-[10px] font-semibold', attrs={'data-field': 'initials'}) }}{% endcall %}
+      <div class="flex items-center gap-1 text-xs text-muted-foreground">
+        {{ lucide('calendar', 'size-3') }}
+        <span data-field="due">{{ due }}</span>
+      </div>
+    </div>
+  {% endcall %}
+{% endmacro %}
 
-    {# Add Task Modal Dialog #}
-    <dialog id="modal-add-task" class="rounded-xl border border-border bg-card text-foreground shadow-2xl p-6 w-full max-w-md backdrop:bg-black/50">
-        <div class="space-y-4">
-            <div class="flex items-center justify-between border-b border-border pb-3">
-                <h3 class="text-lg font-bold tracking-tight">Add New Task</h3>
-                <button type="button" onclick="closeAddTaskModal()" class="text-muted-foreground hover:text-foreground">
-                    <i data-lucide="x" class="h-5 w-5"></i>
-                </button>
-            </div>
+<template id="task-template">{{ task_card('', '', '', 'Medium', '', '', template=true) }}</template>
+<template id="priority-badges">
+  {% for name, variant in priority_variant.items() %}{{ ui.badge(text=name, variant=variant, attrs={'data-priority': name|lower}) }}{% endfor %}
+</template>
 
-            <form onsubmit="submitNewTask(event)" class="space-y-4">
-                <div class="space-y-1.5">
-                    <label for="new-task-title" class="text-xs font-semibold text-foreground">Task Title</label>
-                    <input id="new-task-title" required placeholder="e.g. Implement Webhooks" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                </div>
+<div class="space-y-6 p-4 sm:p-6">
+  {# Top navigation #}
+  <div class="flex items-center justify-between border-b border-border pb-4">
+    <div class="flex items-center gap-2 text-base font-bold tracking-tight">
+      {{ lucide('command', 'size-5 text-primary') }}
+      <span>Acme Platform</span>
+    </div>
+    <div class="flex items-center gap-2">
+      {{ ui.button(text='All Examples', variant='ghost', size='sm', href=url_for('basecoat_examples.index')) }}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-theme-toggle': true}) %}{{ lucide('moon', 'dark:hidden') }}{{ lucide('sun', 'hidden dark:block') }} Toggle Theme{% endcall %}
+    </div>
+  </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="space-y-1.5">
-                        <label for="new-task-column" class="text-xs font-semibold text-foreground">Column</label>
-                        <select id="new-task-column" class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="col-backlog">Backlog</option>
-                            <option value="col-todo">Todo</option>
-                            <option value="col-inprogress">In Progress</option>
-                            <option value="col-inreview">In Review</option>
-                            <option value="col-done">Done</option>
-                        </select>
-                    </div>
+  {# Board header #}
+  <div class="flex items-center justify-between">
+    <div class="space-y-1">
+      <h1 class="text-lg font-semibold">Sprint Board</h1>
+      <p class="text-sm text-muted-foreground">Q2 2025 • Web Platform</p>
+    </div>
+    {% call ui.dialog(id='add-task-dialog') %}
+      {% call ui.dialog_trigger(size='sm', attrs={'onclick': "presetColumn('col-backlog')"}) %}{{ lucide('plus') }} Add Task{% endcall %}
+      {{ ui.dialog_overlay() }}
+      {% call ui.dialog_content(class='sm:max-w-md') %}
+        {% call ui.dialog_header() %}
+          {{ ui.dialog_title(text='Add New Task') }}
+          {{ ui.dialog_description(text='Create a task and place it in a column of the board.') }}
+        {% endcall %}
+        <form class="space-y-4" onsubmit="submitNewTask(event)">
+          {% call ui.field() %}
+            {{ ui.field_label(as_='label', text='Task Title', for_='new-task-title') }}
+            {{ ui.input(id='new-task-title', required=true, placeholder='e.g. Implement Webhooks') }}
+          {% endcall %}
+          <div class="grid grid-cols-2 gap-3">
+            {% call ui.field() %}
+              {{ ui.field_label(as_='label', text='Column', for_='new-task-column') }}
+              {% call ui.native_select_wrapper() %}
+                {% call ui.native_select(id='new-task-column') %}
+                  {% for col in columns %}{{ ui.native_select_option(text=col.name, attrs={'value': col.id}) }}{% endfor %}
+                {% endcall %}
+                {{ ui.native_select_icon() }}
+              {% endcall %}
+            {% endcall %}
+            {% call ui.field() %}
+              {{ ui.field_label(as_='label', text='Priority', for_='new-task-priority') }}
+              {% call ui.native_select_wrapper() %}
+                {% call ui.native_select(id='new-task-priority') %}
+                  {% for name in priority_variant %}{{ ui.native_select_option(text=name, attrs={'value': name|lower, 'selected': name == 'Medium'}) }}{% endfor %}
+                {% endcall %}
+                {{ ui.native_select_icon() }}
+              {% endcall %}
+            {% endcall %}
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            {% call ui.field() %}
+              {{ ui.field_label(as_='label', text='Label', for_='new-task-label') }}
+              {% call ui.native_select_wrapper() %}
+                {% call ui.native_select(id='new-task-label') %}
+                  {% for name in ['Feature', 'Bug', 'Enhancement', 'Refactor', 'DevOps', 'Security', 'Testing'] %}{{ ui.native_select_option(text=name, attrs={'value': name, 'selected': name == 'Feature'}) }}{% endfor %}
+                {% endcall %}
+                {{ ui.native_select_icon() }}
+              {% endcall %}
+            {% endcall %}
+            {% call ui.field() %}
+              {{ ui.field_label(as_='label', text='Assignee', for_='new-task-assignee') }}
+              {{ ui.input(id='new-task-assignee', value='Alex Kim') }}
+            {% endcall %}
+          </div>
+          {% call ui.field() %}
+            {{ ui.field_label(as_='label', text='Due Date', for_='new-task-due') }}
+            {{ ui.input(id='new-task-due', type='text', value='May 1', placeholder='e.g. May 1') }}
+          {% endcall %}
+          {% call ui.dialog_footer() %}
+            {{ ui.dialog_close(text='Cancel', variant='outline', type='button') }}
+            {{ ui.button(text='Add Task', type='submit') }}
+          {% endcall %}
+        </form>
+        {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+      {% endcall %}
+    {% endcall %}
+  </div>
 
-                    <div class="space-y-1.5">
-                        <label for="new-task-priority" class="text-xs font-semibold text-foreground">Priority</label>
-                        <select id="new-task-priority" class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="urgent">Urgent</option>
-                            <option value="high">High</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="space-y-1.5">
-                        <label for="new-task-label" class="text-xs font-semibold text-foreground">Label</label>
-                        <select id="new-task-label" class="w-full rounded-md border border-border bg-background px-2.5 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="Feature" selected>Feature</option>
-                            <option value="Bug">Bug</option>
-                            <option value="Enhancement">Enhancement</option>
-                            <option value="Refactor">Refactor</option>
-                            <option value="DevOps">DevOps</option>
-                            <option value="Security">Security</option>
-                            <option value="Testing">Testing</option>
-                        </select>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label for="new-task-assignee" class="text-xs font-semibold text-foreground">Assignee</label>
-                        <input id="new-task-assignee" value="Alex Kim" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label for="new-task-due" class="text-xs font-semibold text-foreground">Due Date</label>
-                    <input id="new-task-due" type="text" value="May 1" placeholder="e.g. May 1" class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
-                </div>
-
-                <div class="flex items-center justify-end gap-2 pt-3 border-t border-border">
-                    <button type="button" onclick="closeAddTaskModal()" class="rounded-md border border-border px-3.5 py-2 text-xs font-medium hover:bg-muted">Cancel</button>
-                    <button type="submit" class="rounded-md bg-primary text-primary-foreground px-4 py-2 text-xs font-semibold shadow-xs hover:bg-primary/90">Add Task</button>
-                </div>
-            </form>
+  {# Horizontally scrolling five-column board #}
+  <div class="overflow-x-auto pb-4">
+    <div class="flex min-w-max gap-3">
+      {% for col in columns %}
+      <div class="w-[272px] shrink-0 space-y-2 rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-muted/20">
+        <div class="flex items-center gap-2 px-0.5 py-1">
+          <span class="size-2 rounded-full {{ col.dot }}"></span>
+          <span class="text-sm font-semibold">{{ col.name }}</span>
+          {{ ui.badge(text=col.tasks|length, variant='secondary', id='count-' ~ col.id, class='ml-auto min-w-5 rounded-sm px-1.5 tabular-nums') }}
         </div>
-    </dialog>
-</body>
-</html>
+        <div id="{{ col.id }}" class="kanban-column-dropzone mt-1 flex min-h-[450px] flex-col gap-2 rounded-lg transition-all" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropCard(event, '{{ col.id }}')">
+          {% for task in col.tasks %}{{ task_card(*task) }}{% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

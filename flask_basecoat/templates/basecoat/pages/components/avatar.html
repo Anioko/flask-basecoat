@@ -3,332 +3,219 @@
 {# Port of the upstream shadcn/ui example `avatar` (pinned source in compliance/upstream). #}
 {% block title %}avatar · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Sizes') %}
-      <div class="flex flex-wrap items-center gap-2">
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Badge') %}
-      <div class="flex flex-wrap items-center gap-2">
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}JZ
-          {% endcall %}
-          {{ ui.avatar_badge() }}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}JZ
-          {% endcall %}
-          {{ ui.avatar_badge() }}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}JZ
-          {% endcall %}
-          {{ ui.avatar_badge() }}
-        {% endcall %}
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}JZ
-          {% endcall %}
-          {{ ui.avatar_badge() }}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}JZ
-          {% endcall %}
-          {{ ui.avatar_badge() }}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}JZ
-          {% endcall %}
-          {{ ui.avatar_badge() }}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Badge with Icon') %}
-      <div class="flex flex-wrap items-center gap-2">
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}PP
-          {% endcall %}
-          {% call ui.avatar_badge() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M12 5v14"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}PP
-          {% endcall %}
-          {% call ui.avatar_badge() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M12 5v14"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}PP
-          {% endcall %}
-          {% call ui.avatar_badge() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M12 5v14"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}PP
-          {% endcall %}
-          {% call ui.avatar_badge() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-              <path d="M20 6 9 17l-5-5"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}PP
-          {% endcall %}
-          {% call ui.avatar_badge() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-              <path d="M20 6 9 17l-5-5"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}PP
-          {% endcall %}
-          {% call ui.avatar_badge() %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-              <path d="M20 6 9 17l-5-5"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Group') %}
+      <div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+</div><div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Badge') %}
+      <div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}JZ{% endcall %}
+{{ ui.avatar_badge() }}{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}JZ{% endcall %}
+{{ ui.avatar_badge() }}{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}JZ{% endcall %}
+{{ ui.avatar_badge() }}{% endcall %}
+</div><div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}JZ{% endcall %}
+{{ ui.avatar_badge() }}{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}JZ{% endcall %}
+{{ ui.avatar_badge() }}{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}JZ{% endcall %}
+{{ ui.avatar_badge() }}{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Badge with Icon') %}
+      <div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}PP{% endcall %}
+{% call ui.avatar_badge() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}PP{% endcall %}
+{% call ui.avatar_badge() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}PP{% endcall %}
+{% call ui.avatar_badge() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+</div><div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}PP{% endcall %}
+{% call ui.avatar_badge() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}PP{% endcall %}
+{% call ui.avatar_badge() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}PP{% endcall %}
+{% call ui.avatar_badge() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Group') %}
       {% call ui.avatar_group() %}
         {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.avatar_group() %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.avatar_group() %}
         {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.avatar_group() %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.avatar_group() %}
         {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Group with Count') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Group with Count') %}
       {% call ui.avatar_group() %}
         {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar_group_count() %}+3
-        {% endcall %}
-      {% endcall %}
-      {% call ui.avatar_group() %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}+3{% endcall %}
+{% endcall %}
+{% call ui.avatar_group() %}
         {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar_group_count() %}+3
-        {% endcall %}
-      {% endcall %}
-      {% call ui.avatar_group() %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}+3{% endcall %}
+{% endcall %}
+{% call ui.avatar_group() %}
         {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar_group_count() %}+3
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Group with Icon Count') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}+3{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Group with Icon Count') %}
       {% call ui.avatar_group() %}
         {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='sm') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar_group_count() %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M12 5v14"></path>
-          </svg>
-        {% endcall %}
-      {% endcall %}
-      {% call ui.avatar_group() %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='sm') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.avatar_group() %}
         {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='default') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar_group_count() %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M12 5v14"></path>
-          </svg>
-        {% endcall %}
-      {% endcall %}
-      {% call ui.avatar_group() %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='default') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.avatar_group() %}
         {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}CN
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}LR
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar(size='lg') %}
-          {% call ui.avatar_fallback() %}ER
-          {% endcall %}
-        {% endcall %}
-        {% call ui.avatar_group_count() %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M12 5v14"></path>
-          </svg>
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='In Empty') %}
+          {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+          {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='In Empty') %}
       {% call ui.empty(class='flex-none border') %}
         {% call ui.empty_header() %}
           {% call ui.empty_icon(variant='default') %}
             {% call ui.avatar_group() %}
               {% call ui.avatar(size='lg') %}
-                {% call ui.avatar_fallback() %}CN
-                {% endcall %}
-              {% endcall %}
-              {% call ui.avatar(size='lg') %}
-                {% call ui.avatar_fallback() %}LR
-                {% endcall %}
-              {% endcall %}
-              {% call ui.avatar(size='lg') %}
-                {% call ui.avatar_fallback() %}ER
-                {% endcall %}
-              {% endcall %}
-              {% call ui.avatar_group_count() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-                  <path d="M5 12h14"></path>
-                  <path d="M12 5v14"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.empty_title() %}No Team Members
-          {% endcall %}
-          {% call ui.empty_description() %}Invite your team to collaborate on this project.
-          {% endcall %}
-        {% endcall %}
-        {% call ui.empty_content() %}
+                {% call ui.avatar_fallback() %}CN{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+                {% call ui.avatar_fallback() %}LR{% endcall %}
+{% endcall %}
+{% call ui.avatar(size='lg') %}
+                {% call ui.avatar_fallback() %}ER{% endcall %}
+{% endcall %}
+{% call ui.avatar_group_count() %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.empty_title() %}No Team Members{% endcall %}
+{% call ui.empty_description() %}Invite your team to collaborate on this project.{% endcall %}
+{% endcall %}
+{% call ui.empty_content() %}
           {% call ui.button(size='default', variant='default') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M12 5v14"></path>
-            </svg>
-            Invite Members
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Invite Members          {% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

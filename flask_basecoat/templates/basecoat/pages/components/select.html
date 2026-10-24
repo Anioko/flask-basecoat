@@ -3,455 +3,242 @@
 {# Port of the upstream shadcn/ui example `select` (pinned source in compliance/upstream). #}
 {% block title %}select · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
       {% call ui.select() %}
         {% call ui.select_trigger(as_='select-trigger', size='default') %}
-          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-          {% endcall %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-          <option value="" selected=""></option>
-        </select>
-        {% call ui.select_content() %}
+          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
           {% call ui.select_group() %}
-            {{ ui.select_item(text='Apple', value='apple') }}
-            {{ ui.select_item(text='Banana', value='banana') }}
-            {{ ui.select_item(text='Blueberry', value='blueberry') }}
-            {{ ui.select_item(text='Grapes', value='grapes', disabled=true) }}
-            {{ ui.select_item(text='Pineapple', value='pineapple') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Icons') %}
-      <div class="flex flex-col gap-4">
-        {% call ui.select() %}
+            {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes', disabled=true) }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Icons') %}
+      <div class="flex flex-col gap-4">{% call ui.select() %}
           {% call ui.select_trigger(as_='select-trigger', size='sm') %}
             {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-line lucide-line-chart" aria-hidden="true">
-                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
-                <path d="m19 9-5 5-4-4-3 3"></path>
-              </svg>
-              Chart Type
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-line lucide-line-chart" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>Chart Type{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
               {% call ui.select_item(value='line') %}{{ lucide('chart-line') }}Line{% endcall %}
-              {% call ui.select_item(value='bar') %}{{ lucide('chart-bar') }}Bar{% endcall %}
-              {% call ui.select_item(value='pie') %}{{ lucide('chart-pie') }}Pie{% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.select() %}
+{% call ui.select_item(value='bar') %}{{ lucide('chart-bar') }}Bar{% endcall %}
+{% call ui.select_item(value='pie') %}{{ lucide('chart-pie') }}Pie{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.select() %}
           {% call ui.select_trigger(as_='select-trigger', size='default') %}
             {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-line lucide-line-chart" aria-hidden="true">
-                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
-                <path d="m19 9-5 5-4-4-3 3"></path>
-              </svg>
-              Chart Type
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-line lucide-line-chart" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>Chart Type{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
               {% call ui.select_item(value='line') %}{{ lucide('chart-line') }}Line{% endcall %}
-              {% call ui.select_item(value='bar') %}{{ lucide('chart-bar') }}Bar{% endcall %}
-              {% call ui.select_item(value='pie') %}{{ lucide('chart-pie') }}Pie{% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='With Groups & Labels') %}
+{% call ui.select_item(value='bar') %}{{ lucide('chart-bar') }}Bar{% endcall %}
+{% call ui.select_item(value='pie') %}{{ lucide('chart-pie') }}Pie{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='With Groups & Labels') %}
       {% call ui.select() %}
         {% call ui.select_trigger(as_='select-trigger', size='default') %}
-          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-          {% endcall %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-          <option value="" selected=""></option>
-        </select>
-        {% call ui.select_content() %}
+          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
           {% call ui.select_group() %}
-            {{ ui.select_label(text='Fruits') }}
-            {{ ui.select_item(text='Apple', value='apple') }}
-            {{ ui.select_item(text='Banana', value='banana') }}
-            {{ ui.select_item(text='Blueberry', value='blueberry') }}
-          {% endcall %}
-          {{ ui.select_separator() }}
-          {% call ui.select_group() %}
-            {{ ui.select_label(text='Vegetables') }}
-            {{ ui.select_item(text='Carrot', value='carrot') }}
-            {{ ui.select_item(text='Broccoli', value='broccoli') }}
-            {{ ui.select_item(text='Spinach', value='spinach') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Large List') %}
+            {{ ui.select_label(text='Fruits') }}{{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{% endcall %}
+{{ ui.select_separator() }}{% call ui.select_group() %}
+            {{ ui.select_label(text='Vegetables') }}{{ ui.select_item(text='Carrot', value='carrot') }}{{ ui.select_item(text='Broccoli', value='broccoli') }}{{ ui.select_item(text='Spinach', value='spinach') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Large List') %}
       {% call ui.select() %}
         {% call ui.select_trigger(as_='select-trigger', size='default') %}
-          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select an item
-          {% endcall %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-          <option value="" selected=""></option>
-        </select>
-        {% call ui.select_content() %}
+          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select an item{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
           {% call ui.select_scroll_up_button() %}{{ lucide('chevron-up') }}{% endcall %}
-          {% call ui.select_group() %}
+{% call ui.select_group() %}
             {% for i in range(100) %}
-            {{ ui.select_item(text='Item ' ~ i, value='item-' ~ i) }}
-            {% endfor %}
-          {% endcall %}
-          {% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Sizes') %}
-      <div class="flex flex-col gap-4">
-        {% call ui.select() %}
+            {{ ui.select_item(text='Item ' ~ i, value='item-' ~ i) }}{% endfor %}
+{% endcall %}
+{% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Sizes') %}
+      <div class="flex flex-col gap-4">{% call ui.select() %}
           {% call ui.select_trigger(as_='select-trigger', size='sm') %}
-            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Small size
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Small size{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
-              {{ ui.select_item(text='Apple', value='apple') }}
-              {{ ui.select_item(text='Banana', value='banana') }}
-              {{ ui.select_item(text='Blueberry', value='blueberry') }}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.select() %}
+              {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.select() %}
           {% call ui.select_trigger(as_='select-trigger', size='default') %}
-            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Default size
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Default size{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
-              {{ ui.select_item(text='Apple', value='apple') }}
-              {{ ui.select_item(text='Banana', value='banana') }}
-              {{ ui.select_item(text='Blueberry', value='blueberry') }}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Subscription Plan') %}
+              {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Subscription Plan') %}
       {% call ui.select() %}
         {% call ui.select_trigger(size='default', placeholder_shown=false, class='h-auto! w-72') %}
           {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}
             {% call ui.item(as_='item', size='xs', variant='default', class='p-0') %}
               {% call ui.item_content(class='gap-0 normal-case') %}
-                {% call ui.item_title(class='font-sans') %}Starter
-                {% endcall %}
-                {% call ui.item_description(class='text-xs tracking-normal') %}Perfect for individuals getting started.
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>
-        {% call ui.select_content() %}
+                {% call ui.item_title(class='font-sans') %}Starter{% endcall %}
+{% call ui.item_description(class='text-xs tracking-normal') %}Perfect for individuals getting started.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{% call ui.select_content() %}
           {% call ui.select_group() %}
             {% for plan in [('Starter', 'Perfect for individuals getting started.'), ('Professional', 'Ideal for growing teams and businesses.'), ('Enterprise', 'Advanced features for large organizations.')] %}
             {% call ui.select_item(value=plan[0], checked=(plan[0] == 'Starter')) %}
               {% call ui.item(size='xs', class='w-full p-0') %}
                 {% call ui.item_content(class='gap-0 normal-case') %}
-                  {{ ui.item_title(class='font-sans', text=plan[0]) }}
-                  {{ ui.item_description(class='text-xs font-normal tracking-normal', text=plan[1]) }}
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Button') %}
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-2">
-          {% call ui.select() %}
+                  {{ ui.item_title(class='font-sans', text=plan[0]) }}{{ ui.item_description(class='text-xs font-normal tracking-normal', text=plan[1]) }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endfor %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Button') %}
+      <div class="flex flex-col gap-4"><div class="flex items-center gap-2">{% call ui.select() %}
             {% call ui.select_trigger(as_='select-trigger', size='sm') %}
-              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Small
-              {% endcall %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-            <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-              <option value="" selected=""></option>
-            </select>
-            {% call ui.select_content() %}
+              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Small{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
               {% call ui.select_group() %}
-                {{ ui.select_item(text='Apple', value='apple') }}
-                {{ ui.select_item(text='Banana', value='banana') }}
-                {{ ui.select_item(text='Blueberry', value='blueberry') }}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.button(size='sm', variant='outline') %}Submit
-          {% endcall %}
-        </div>
-        <div class="flex items-center gap-2">
-          {% call ui.select() %}
+                {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.button(size='sm', variant='outline') %}Submit{% endcall %}
+</div><div class="flex items-center gap-2">{% call ui.select() %}
             {% call ui.select_trigger(as_='select-trigger', size='default') %}
-              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Default
-              {% endcall %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-            <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-              <option value="" selected=""></option>
-            </select>
-            {% call ui.select_content() %}
+              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Default{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
               {% call ui.select_group() %}
-                {{ ui.select_item(text='Apple', value='apple') }}
-                {{ ui.select_item(text='Banana', value='banana') }}
-                {{ ui.select_item(text='Blueberry', value='blueberry') }}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.button(size='default', variant='outline') %}Submit
-          {% endcall %}
-        </div>
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Popper') %}
+                {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.button(size='default', variant='outline') %}Submit{% endcall %}
+</div></div>{% endcall %}
+{% call ui.example(title='Popper') %}
       {% call ui.select() %}
         {% call ui.select_trigger(as_='select-trigger', size='default') %}
-          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-          {% endcall %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-          <option value="" selected=""></option>
-        </select>
-        {% call ui.select_content() %}
+          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
           {% call ui.select_group() %}
-            {{ ui.select_item(text='Apple', value='apple') }}
-            {{ ui.select_item(text='Banana', value='banana') }}
-            {{ ui.select_item(text='Blueberry', value='blueberry') }}
-            {{ ui.select_item(text='Grapes', value='grapes', disabled=true) }}
-            {{ ui.select_item(text='Pineapple', value='pineapple') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Field') %}
+            {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes', disabled=true) }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Field') %}
       {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='select-fruit') %}Favorite Fruit
-        {% endcall %}
-        {% call ui.select() %}
+        {% call ui.field_label(as_='label', for_='select-fruit') %}Favorite Fruit{% endcall %}
+{% call ui.select() %}
           {% call ui.select_trigger(as_='select-trigger', size='default', id='select-fruit') %}
-            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
-              {{ ui.select_item(text='Apple', value='apple') }}
-              {{ ui.select_item(text='Banana', value='banana') }}
-              {{ ui.select_item(text='Blueberry', value='blueberry') }}
-              {{ ui.select_item(text='Grapes', value='grapes') }}
-              {{ ui.select_item(text='Pineapple', value='pineapple') }}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.field_description() %}Choose your favorite fruit from the list.
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Invalid') %}
-      <div class="flex flex-col gap-4">
-        {% call ui.select() %}
+              {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes') }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_description() %}Choose your favorite fruit from the list.{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Invalid') %}
+      <div class="flex flex-col gap-4">{% call ui.select() %}
           {% call ui.select_trigger(as_='select-trigger', size='default', invalid=true) %}
-            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
-              {{ ui.select_item(text='Apple', value='apple') }}
-              {{ ui.select_item(text='Banana', value='banana') }}
-              {{ ui.select_item(text='Blueberry', value='blueberry') }}
-              {{ ui.select_item(text='Grapes', value='grapes') }}
-              {{ ui.select_item(text='Pineapple', value='pineapple') }}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.field(orientation='vertical', invalid=true) %}
-          {% call ui.field_label(as_='label', for_='select-fruit-invalid') %}Favorite Fruit
-          {% endcall %}
-          {% call ui.select() %}
+              {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes') }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field(orientation='vertical', invalid=true) %}
+          {% call ui.field_label(as_='label', for_='select-fruit-invalid') %}Favorite Fruit{% endcall %}
+{% call ui.select() %}
             {% call ui.select_trigger(as_='select-trigger', size='default', invalid=true, id='select-fruit-invalid') %}
-              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-              {% endcall %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-            <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-              <option value="" selected=""></option>
-            </select>
-            {% call ui.select_content() %}
+              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
               {% call ui.select_group() %}
-                {{ ui.select_item(text='Apple', value='apple') }}
-                {{ ui.select_item(text='Banana', value='banana') }}
-                {{ ui.select_item(text='Blueberry', value='blueberry') }}
-                {{ ui.select_item(text='Grapes', value='grapes') }}
-                {{ ui.select_item(text='Pineapple', value='pineapple') }}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.field_error() %}Please select a valid fruit.
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Inline with Input & NativeSelect') %}
-      <div class="flex items-center gap-2">
-        {{ ui.input(class='flex-1', attrs={'placeholder': 'Search...'}) }}
-        {% call ui.select() %}
+                {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes') }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_error() %}Please select a valid fruit.{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Inline with Input & NativeSelect') %}
+      <div class="flex items-center gap-2">{{ ui.input(class='flex-1', attrs={'placeholder': 'Search...'}) }}{% call ui.select() %}
           {% call ui.select_trigger(size='default', class='w-[140px]') %}
-            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Filter
-            {% endcall %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          {% endcall %}
-          <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-            <option value="" selected=""></option>
-          </select>
-          {% call ui.select_content() %}
+            {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Filter{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
             {% call ui.select_group() %}
-              {{ ui.select_item(text='All', value='all') }}
-              {{ ui.select_item(text='Active', value='active') }}
-              {{ ui.select_item(text='Inactive', value='inactive') }}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.native_select_wrapper(size='default', class='w-[140px]') %}
+              {{ ui.select_item(text='All', value='all') }}{{ ui.select_item(text='Active', value='active') }}{{ ui.select_item(text='Inactive', value='inactive') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.native_select_wrapper(size='default', class='w-[140px]') %}
           {% call ui.native_select(size='default') %}
-            {% call ui.native_select_option(attrs={'value': ''}) %}Sort by
-            {% endcall %}
-            {% call ui.native_select_option(attrs={'value': 'name'}) %}Name
-            {% endcall %}
-            {% call ui.native_select_option(attrs={'value': 'date'}) %}Date
-            {% endcall %}
-            {% call ui.native_select_option(attrs={'value': 'status'}) %}Status
-            {% endcall %}
-          {% endcall %}
-          {% call ui.native_select_icon() %}
-            <path d="m6 9 6 6 6-6"></path>
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Disabled') %}
+            {% call ui.native_select_option(attrs={'value': ''}) %}Sort by{% endcall %}
+{% call ui.native_select_option(attrs={'value': 'name'}) %}Name{% endcall %}
+{% call ui.native_select_option(attrs={'value': 'date'}) %}Date{% endcall %}
+{% call ui.native_select_option(attrs={'value': 'status'}) %}Status{% endcall %}
+{% endcall %}
+{% call ui.native_select_icon() %}
+            <path d="m6 9 6 6 6-6"></path>{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Disabled') %}
       {% call ui.select() %}
         {% call ui.select_trigger(as_='select-trigger', size='default', disabled=true) %}
-          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Disabled
-          {% endcall %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        <select aria-hidden="true" tabindex="-1" disabled="" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-          <option value="" selected=""></option>
-        </select>
-        {% call ui.select_content() %}
+          {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Disabled{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" disabled="" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.select_content() %}
           {% call ui.select_group() %}
-            {{ ui.select_item(text='Apple', value='apple') }}
-            {{ ui.select_item(text='Banana', value='banana') }}
-            {{ ui.select_item(text='Blueberry', value='blueberry') }}
-            {{ ui.select_item(text='Grapes', value='grapes', disabled=true) }}
-            {{ ui.select_item(text='Pineapple', value='pineapple') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='In Dialog') %}
+            {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes', disabled=true) }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='In Dialog') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Select Example') }}
-            {{ ui.dialog_description(text='Use the select below to choose a fruit.') }}
-          {% endcall %}
-          {% call ui.select() %}
+            {{ ui.dialog_title(text='Select Example') }}{{ ui.dialog_description(text='Use the select below to choose a fruit.') }}{% endcall %}
+{% call ui.select() %}
             {% call ui.select_trigger(as_='select-trigger', size='default') %}
-              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit
-              {% endcall %}
-              {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
-            {% endcall %}
-            {% call ui.select_content() %}
+              {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a fruit{% endcall %}
+{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+{% call ui.select_content() %}
               {% call ui.select_group() %}
-                {{ ui.select_item(text='Apple', value='apple') }}
-                {{ ui.select_item(text='Banana', value='banana') }}
-                {{ ui.select_item(text='Blueberry', value='blueberry') }}
-                {{ ui.select_item(text='Grapes', value='grapes') }}
-                {{ ui.select_item(text='Pineapple', value='pineapple') }}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+                {{ ui.select_item(text='Apple', value='apple') }}{{ ui.select_item(text='Banana', value='banana') }}{{ ui.select_item(text='Blueberry', value='blueberry') }}{{ ui.select_item(text='Grapes', value='grapes') }}{{ ui.select_item(text='Pineapple', value='pineapple') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

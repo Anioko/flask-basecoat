@@ -1,748 +1,267 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Manager - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# File manager built from the sidebar family and resizable panels, the way the upstream blocks compose them. #}
+{% block title %}File Manager · flask-basecoat{% endblock %}
+{% block head %}
+<script>
+  function filterFiles() {
+    const query = document.getElementById('fm-search-input').value.toLowerCase();
+    document.querySelectorAll('.fm-item').forEach((el) => {
+      el.style.display = el.textContent.toLowerCase().includes(query) ? '' : 'none';
+    });
+  }
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+  function selectFile(el) {
+    document.querySelectorAll('.fm-item').forEach((row) => row.classList.toggle('bg-muted', row === el));
+    const name = el.getAttribute('data-name');
+    const details = document.getElementById('fm-details');
+    if (!details) return;
+    details.querySelector('[data-field="name"]').textContent = name;
+    details.querySelector('[data-field="kind"]').textContent = el.getAttribute('data-kind');
+    details.querySelector('[data-field="size"]').textContent = el.getAttribute('data-size');
+    details.querySelector('[data-field="date"]').textContent = el.getAttribute('data-date');
+    const tile = details.querySelector('[data-field="tile"]');
+    tile.replaceChildren(el.querySelector('[data-tile]').cloneNode(true));
+  }
 
-        function filterFiles() {
-            const query = document.getElementById('fm-search-input').value.toLowerCase();
-            document.querySelectorAll('.fm-item').forEach(el => {
-                const text = el.textContent.toLowerCase();
-                el.style.display = text.includes(query) ? '' : 'none';
-            });
-        }
+  function toggleStar(control) {
+    const svg = control.querySelector('svg');
+    const starred = svg.getAttribute('fill') === 'currentColor';
+    svg.setAttribute('fill', starred ? 'none' : 'currentColor');
+    control.classList.toggle('text-chart-4', !starred);
+    control.classList.toggle('text-muted-foreground', starred);
+    control.setAttribute('aria-pressed', String(!starred));
+  }
 
-        function toggleStar(btn) {
-            const svg = btn.querySelector('svg');
-            if (svg) {
-                if (svg.getAttribute('fill') === 'currentColor') {
-                    svg.setAttribute('fill', 'none');
-                    btn.classList.remove('text-amber-500');
-                    btn.classList.add('text-muted-foreground');
-                } else {
-                    svg.setAttribute('fill', 'currentColor');
-                    btn.classList.remove('text-muted-foreground');
-                    btn.classList.add('text-amber-500');
-                }
-            }
-        }
+  function triggerUpload() {
+    document.getElementById('hidden-file-upload').click();
+  }
 
-        function triggerUpload() {
-            document.getElementById('hidden-file-upload').click();
-        }
+  function handleUploadedFiles(e) {
+    const files = e.target.files;
+    if (!files || !files.length) return;
+    if (window.FlaskBasecoat && window.FlaskBasecoat.toast) window.FlaskBasecoat.toast.success(`Uploaded ${files.length} file(s) successfully`);
+  }
+</script>
+{% endblock %}
+{% block body %}
+{% set files = [
+  {'name': 'Arion – Admin Dashboard & UI Kit', 'kind': 'Sketch file', 'tile': 'S', 'tone': 'bg-chart-4/15 text-chart-4', 'date': '12.09.20', 'size': '1.2 MB'},
+  {'name': 'Brand Styles Guide', 'kind': 'PDF document', 'icon': 'file-text', 'tone': 'bg-destructive/10 text-destructive', 'date': '12.09.20', 'size': '4.5 MB'},
+  {'name': 'Brand Styles Guide', 'kind': 'PDF document', 'icon': 'file-text', 'tone': 'bg-destructive/10 text-destructive', 'date': '12.09.20', 'size': '4.5 MB'},
+  {'name': 'Design', 'kind': 'Folder', 'folder': true, 'date': '12.09.20', 'size': '5.8 GB'},
+  {'name': 'Design', 'kind': 'Illustrator file', 'tile': 'Ai', 'tone': 'bg-chart-5/15 text-chart-5', 'date': '12.09.20', 'size': '1.9 GB'},
+  {'name': 'Documents', 'kind': 'Folder', 'folder': true, 'date': '12.09.20', 'size': '440 MB'},
+  {'name': 'Downloads', 'kind': 'Folder', 'folder': true, 'date': '12.09.20', 'size': '10.1 GB'},
+  {'name': 'Music', 'kind': 'Folder', 'folder': true, 'date': '12.09.20', 'size': '1.5 GB'},
+  {'name': 'Pictures', 'kind': 'Folder', 'folder': true, 'date': '12.09.20', 'size': '1.7 GB'},
+  {'name': 'Project Brief', 'kind': 'Figma file', 'tile': 'F', 'tone': 'bg-chart-3/15 text-chart-3', 'date': '12.09.20', 'size': '1.4 MB'},
+  {'name': 'Project Brief', 'kind': 'Word document', 'tile': 'W', 'tone': 'bg-chart-1/15 text-chart-1', 'date': '12.09.20', 'size': '1.2 MB'},
+  {'name': 'Projects', 'kind': 'Folder', 'folder': true, 'date': '12.09.20', 'size': '3.2 GB'},
+  {'name': 'Rocket – Admin Dashboard & UI Kit', 'kind': 'Figma file', 'tile': 'F', 'tone': 'bg-chart-3/15 text-chart-3', 'date': '12.09.20', 'size': '1.8 MB'},
+  {'name': 'Rocket – Admin Dashboard & UI Kit', 'kind': 'Sketch file', 'tile': 'S', 'tone': 'bg-chart-4/15 text-chart-4', 'date': '12.09.20', 'size': '1.5 MB'},
+  {'name': 'vCard – Resume', 'kind': 'Photoshop file', 'tile': 'Ps', 'tone': 'bg-chart-2/15 text-chart-2', 'date': '12.09.20', 'size': '2.5 MB'}
+] %}
 
-        function handleUploadedFiles(e) {
-            const files = e.target.files;
-            if (!files || !files.length) return;
-            alert(`Uploaded ${files.length} file(s) successfully!`);
-        }
-    </script>
-</head>
-<body class="bg-background text-foreground antialiased min-h-screen">
-<input type="file" id="hidden-file-upload" class="hidden" multiple onchange="handleUploadedFiles(event)" />
-<div class="flex p-4">
-<div class="min-w-0 flex-1 space-y-4">
-<div class="flex items-center justify-between gap-3">
-<div class="flex min-w-0 items-center gap-2">
-<h1 class="shrink-0 text-xl font-bold tracking-tight sm:text-2xl">
-     File Manager
-    </h1>
-</div>
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-size="default" data-slot="button" data-variant="default" onclick="triggerUpload()">
-<svg aria-hidden="true" class="lucide lucide-upload" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 3v12">
-</path>
-<path d="m17 8-5-5-5 5">
-</path>
-<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4">
-</path>
-</svg>
-    Upload
-   </button>
-</div>
-<div class="border-t">
-<div class="flex">
-<div class="min-w-0 flex-1">
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-yellow-500 text-xs font-bold text-white">
-         S
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Arion – Admin Dashboard &amp; UI Kit
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.2 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_i2mj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-red-600 text-xs font-bold text-white">
-<svg aria-hidden="true" class="lucide lucide-file-text size-3" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
-</path>
-<path d="M14 2v5a1 1 0 0 0 1 1h5">
-</path>
-<path d="M10 9H8">
-</path>
-<path d="M16 13H8">
-</path>
-<path d="M16 17H8">
-</path>
-</svg>
-</div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Brand Styles Guide
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        4.5 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_i4mj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-red-600 text-xs font-bold text-white">
-<svg aria-hidden="true" class="lucide lucide-file-text size-3" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
-</path>
-<path d="M14 2v5a1 1 0 0 0 1 1h5">
-</path>
-<path d="M10 9H8">
-</path>
-<path d="M16 13H8">
-</path>
-<path d="M16 17H8">
-</path>
-</svg>
-</div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Brand Styles Guide
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        4.5 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_i6mj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<svg aria-hidden="true" class="lucide lucide-folder h-5 w-5 text-yellow-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
-</path>
-</svg>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Design
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        5.8 GB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_i8mj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-orange-600 text-xs font-bold text-white">
-         Ai
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Design
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.9 GB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_iamj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<svg aria-hidden="true" class="lucide lucide-folder h-5 w-5 text-yellow-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
-</path>
-</svg>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Documents
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        440 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_icmj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<svg aria-hidden="true" class="lucide lucide-folder h-5 w-5 text-yellow-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
-</path>
-</svg>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Downloads
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        10.1 GB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_iemj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<svg aria-hidden="true" class="lucide lucide-folder h-5 w-5 text-yellow-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
-</path>
-</svg>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Music
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.5 GB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_igmj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<svg aria-hidden="true" class="lucide lucide-folder h-5 w-5 text-yellow-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
-</path>
-</svg>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Pictures
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.7 GB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_iimj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-purple-500 text-xs font-bold text-white">
-         F
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Project Brief
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.4 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_ikmj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-blue-600 text-xs font-bold text-white">
-         W
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Project Brief
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.2 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_immj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<svg aria-hidden="true" class="lucide lucide-folder h-5 w-5 text-yellow-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
-</path>
-</svg>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Projects
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        3.2 GB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_iomj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-purple-500 text-xs font-bold text-white">
-         F
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Rocket – Admin Dashboard &amp; UI Kit
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.8 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_iqmj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-yellow-500 text-xs font-bold text-white">
-         S
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        Rocket – Admin Dashboard &amp; UI Kit
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        1.5 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_ismj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="hover:bg-muted/60 flex cursor-pointer items-center justify-between border-b p-2 transition-colors lg:p-4">
-<div class="flex min-w-0 items-center space-x-3">
-<button aria-checked="false" class="peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary" data-slot="checkbox" data-state="unchecked" role="checkbox" type="button" value="on">
-</button>
-<div class="shrink-0">
-<div class="flex h-5 w-5 items-center justify-center rounded bg-blue-800 text-xs font-bold text-white">
-         Ps
-        </div>
-</div>
-<span class="min-w-0 truncate text-sm">
-        vCard – Resume
-       </span>
-</div>
-<div class="text-muted-foreground flex shrink-0 items-center space-x-3 text-sm">
-<span class="hidden w-16 text-right lg:inline">
-        12.09.20
-       </span>
-<span class="hidden w-16 text-right lg:inline">
-        2.5 MB
-       </span>
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-6 w-6" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground group-data-[size=sm]/avatar:text-xs text-xs" data-slot="avatar-fallback">
-         U
-        </span>
-</span>
-<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-size="icon" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="ghost" id="radix-_R_iumj9bsnpfjb_" type="button">
-<svg aria-hidden="true" class="lucide lucide-ellipsis size-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="1">
-</circle>
-<circle cx="19" cy="12" r="1">
-</circle>
-<circle cx="5" cy="12" r="1">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-<div class="mt-4">
-<div class="flex items-center justify-between gap-4 lg:gap-8">
-<div class="flex items-center gap-3">
-<label class="items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 hidden lg:block" data-slot="label" for="_R_1mj9bsnpfjb_">
-         Rows per page
-        </label>
-<button aria-autocomplete="none" aria-expanded="false" class="flex items-center justify-between gap-1.5 rounded-md border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 w-fit whitespace-nowrap" data-size="default" data-slot="select-trigger" data-state="closed" dir="ltr" id="_R_1mj9bsnpfjb_" role="combobox" type="button">
-<span data-slot="select-value" style="pointer-events:none">
-          25
-         </span>
-<svg aria-hidden="true" class="lucide lucide-chevron-down pointer-events-none size-4 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="m6 9 6 6 6-6">
-</path>
-</svg>
-</button>
-</div>
-<div class="text-muted-foreground flex grow justify-end text-sm whitespace-nowrap">
-<p aria-live="polite" class="text-muted-foreground text-sm whitespace-nowrap">
-<span class="text-foreground">
-          1-25
-         </span>
-         of
-         <!-- -->
-<span class="text-foreground">
-          100
-         </span>
-</p>
-</div>
-<div>
-<nav aria-label="pagination" class="mx-auto flex w-full justify-center" data-slot="pagination" role="navigation">
-<ul class="flex items-center gap-1" data-slot="pagination-content">
-<li data-slot="pagination-item">
-<a aria-disabled="true" aria-label="Go to first page" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9 aria-disabled:pointer-events-none aria-disabled:opacity-50" data-size="icon" data-slot="pagination-link" data-variant="ghost" role="link">
-<svg aria-hidden="true" class="lucide lucide-chevron-first" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-<path d="m17 18-6-6 6-6">
-</path>
-<path d="M7 6v12">
-</path>
-</svg>
-</a>
-</li>
-<li data-slot="pagination-item">
-<a aria-disabled="true" aria-label="Go to previous page" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9 aria-disabled:pointer-events-none aria-disabled:opacity-50" data-size="icon" data-slot="pagination-link" data-variant="ghost" role="link">
-<svg aria-hidden="true" class="lucide lucide-chevron-left" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-<path d="m15 18-6-6 6-6">
-</path>
-</svg>
-</a>
-</li>
-<li data-slot="pagination-item">
-<a aria-disabled="true" aria-label="Go to next page" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9 aria-disabled:pointer-events-none aria-disabled:opacity-50" data-size="icon" data-slot="pagination-link" data-variant="ghost" role="link">
-<svg aria-hidden="true" class="lucide lucide-chevron-right" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-<path d="m9 18 6-6-6-6">
-</path>
-</svg>
-</a>
-</li>
-<li data-slot="pagination-item">
-<a aria-disabled="true" aria-label="Go to last page" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9 aria-disabled:pointer-events-none aria-disabled:opacity-50" data-size="icon" data-slot="pagination-link" data-variant="ghost" role="link">
-<svg aria-hidden="true" class="lucide lucide-chevron-last" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-<path d="m7 18 6-6-6-6">
-</path>
-<path d="M17 6v12">
-</path>
-</svg>
-</a>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+{% macro file_tile(f, cls='') %}
+  {% if f.folder %}
+    <span data-tile class="flex size-5 items-center justify-center {{ cls }}">{{ lucide('folder', 'size-5 text-chart-4') }}</span>
+  {% elif f.icon %}
+    <span data-tile class="flex size-5 items-center justify-center rounded {{ f.tone }} {{ cls }}">{{ lucide(f.icon, 'size-3') }}</span>
+  {% else %}
+    <span data-tile class="flex size-5 items-center justify-center rounded text-xs font-bold {{ f.tone }} {{ cls }}">{{ f.tile }}</span>
+  {% endif %}
+{% endmacro %}
 
-</body>
-</html>
+{{ ui.input(type='file', id='hidden-file-upload', class='hidden', multiple=true, attrs={'onchange': 'handleUploadedFiles(event)', 'aria-hidden': 'true', 'tabindex': '-1'}) }}
+
+{% call ui.sidebar_wrapper(attrs={'style': '--sidebar-width:16rem;--sidebar-width-icon:3rem;--header-height:calc(var(--spacing) * 12)'}) %}
+  {% call ui.sidebar(variant='inset') %}
+    {{ ui.sidebar_gap(variant='inset') }}
+    {% call ui.sidebar_container(variant='inset') %}
+      {% call ui.sidebar_inner() %}
+        {% call ui.sidebar_header() %}
+          {% call ui.sidebar_menu() %}
+            {% call ui.sidebar_menu_item() %}
+              {% call ui.sidebar_menu_button(size='lg', active=false, href='#') %}
+                <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">{{ lucide('folder', 'size-4') }}</div>
+                <div class="grid flex-1 text-left text-sm leading-tight">
+                  <span class="truncate font-medium">Acme Drive</span>
+                  <span class="truncate text-xs">Team workspace</span>
+                </div>
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.sidebar_content() %}
+          {% call ui.sidebar_group() %}
+            {{ ui.sidebar_group_label(text='Files') }}
+            {% call ui.sidebar_menu() %}
+              {% for name, icon_name, active in [('My Files', 'folder', true), ('Shared with me', 'users', false), ('Recent', 'clock', false), ('Starred', 'star', false), ('Trash', 'trash-2', false)] %}
+              {% call ui.sidebar_menu_item() %}
+                {% call ui.sidebar_menu_button(size='default', active=active, href='#') %}{{ lucide(icon_name) }}<span>{{ name }}</span>{% endcall %}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.sidebar_group(class='mt-auto group-data-[collapsible=icon]:hidden') %}
+            {{ ui.sidebar_group_label(text='Storage') }}
+            {% call ui.sidebar_group_content() %}
+              {% call ui.card(size='sm', class='gap-3 py-4 shadow-none') %}
+                {% call ui.card_header(class='px-4') %}
+                  {{ ui.card_title(text='34 GB of 50 GB used') }}
+                  {{ ui.card_description(text='Upgrade for more room') }}
+                {% endcall %}
+                {% call ui.card_content(class='px-4') %}
+                  {{ ui.progress(value=68, attrs={'aria-label': 'Storage used'}) }}
+                {% endcall %}
+                {% call ui.card_footer(class='px-4') %}
+                  {{ ui.button(text='Upgrade plan', variant='outline', size='sm', class='w-full') }}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.sidebar_footer() %}
+          {% call ui.sidebar_menu() %}
+            {% call ui.sidebar_menu_item() %}
+              {% call ui.dropdown_menu() %}
+                {% call ui.dropdown_menu_trigger(as_='sidebar-menu-button', size='lg', active=false, class='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground') %}
+                  {% call ui.avatar(class='h-8 w-8 rounded-lg') %}{{ ui.avatar_fallback(text='U', class='rounded-lg') }}{% endcall %}
+                  <div class="grid flex-1 text-left text-sm leading-tight">
+                    <span class="truncate font-medium">Uma Patel</span>
+                    <span class="truncate text-xs text-muted-foreground">uma@example.com</span>
+                  </div>
+                  {{ lucide('chevrons-up-down', 'ml-auto size-4') }}
+                {% endcall %}
+                {% call ui.dropdown_menu_content(side='right', align='end', class='w-56') %}
+                  {{ ui.dropdown_menu_item(text='Account') }}
+                  {{ ui.dropdown_menu_item(text='Settings') }}
+                  {{ ui.dropdown_menu_separator() }}
+                  {% call ui.dropdown_menu_item() %}{{ lucide('log-out') }} Log out{% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.sidebar_inset(class='max-h-svh overflow-hidden') %}
+    <header class="flex h-(--header-height) shrink-0 items-center gap-2 border-b">
+      <div class="flex w-full items-center gap-1 px-4 lg:gap-2">
+        {% call ui.sidebar_trigger(size='icon-sm', variant='ghost', class='-ml-1') %}{{ lucide('panel-left', 'cn-rtl-flip') }}<span class="sr-only">Toggle Sidebar</span>{% endcall %}
+        {{ ui.separator(orientation='vertical', class='mx-2 data-[orientation=vertical]:h-4') }}
+        <h1 class="shrink-0 text-xl font-bold tracking-tight">File Manager</h1>
+        <div class="ml-auto flex items-center gap-2">
+          <div class="relative hidden md:block">
+            {{ lucide('search', 'absolute top-2.5 left-2 size-4 text-muted-foreground') }}
+            {{ ui.input(id='fm-search-input', placeholder='Search files', class='w-56 pl-8', attrs={'onkeyup': 'filterFiles()', 'aria-label': 'Search files'}) }}
+          </div>
+          {% call ui.button(attrs={'onclick': 'triggerUpload()'}) %}{{ lucide('upload-cloud') }} Upload{% endcall %}
+        </div>
+      </div>
+    </header>
+
+    {% call ui.resizable_panel_group(id='fm-panels', class='min-h-0 flex-1', attrs={'style': 'height:100%;width:100%;overflow:hidden;display:flex;flex-direction:row;flex-wrap:nowrap;touch-action:pan-y'}) %}
+      {# File list #}
+      {% call ui.resizable_panel(id='fm-list-panel', attrs={'data-default-size': '68', 'style': 'min-height:0;max-height:100%;height:auto;min-width:0;max-width:100%;width:auto;border:none;border-width:0;padding:0;margin:0;display:flex;overflow:visible'}) %}
+        <div class="flex min-h-0 w-full flex-col" style="max-height:100%;max-width:100%;flex-grow:1;overflow:auto">
+          <div class="flex items-center gap-3 border-b px-4 py-2 text-xs font-medium text-muted-foreground">
+            {{ ui.checkbox(id='select-all-files', attrs={'aria-label': 'Select all files'}) }}
+            <span class="flex-1">Name</span>
+            <span class="hidden w-16 text-right lg:inline">Modified</span>
+            <span class="hidden w-16 text-right lg:inline">Size</span>
+            <span class="w-6 text-center">Owner</span>
+            <span class="w-8"></span>
+          </div>
+          {% call ui.item_group() %}
+            {% for f in files %}
+            {% call ui.item(class='fm-item cursor-pointer rounded-none border-0 border-b px-4 py-2 transition-colors hover:bg-muted/60 lg:py-4' ~ (' bg-muted' if loop.first else ''), attrs={'data-name': f.name, 'data-kind': f.kind, 'data-size': f.size, 'data-date': f.date, 'onclick': 'selectFile(this)'}) %}
+              {% call ui.item_media(class='flex-row items-center gap-3') %}
+                {{ ui.checkbox(id='file-' ~ loop.index, attrs={'aria-label': 'Select ' ~ f.name, 'onclick': 'event.stopPropagation()'}) }}
+                {{ file_tile(f) }}
+              {% endcall %}
+              {% call ui.item_content() %}
+                {{ ui.item_title(text=f.name, class='truncate text-sm font-normal') }}
+              {% endcall %}
+              {% call ui.item_actions(class='gap-3 text-sm text-muted-foreground') %}
+                <span class="hidden w-16 text-right lg:inline">{{ f.date }}</span>
+                <span class="hidden w-16 text-right lg:inline">{{ f.size }}</span>
+                {% call ui.avatar(size='sm') %}{{ ui.avatar_fallback(text='U') }}{% endcall %}
+                {% call ui.dropdown_menu() %}
+                  {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='size-8', attrs={'onclick': 'event.stopPropagation()', 'aria-label': 'Actions for ' ~ f.name}) %}{{ lucide('ellipsis', 'size-4') }}{% endcall %}
+                  {% call ui.dropdown_menu_content(align='end', class='w-40') %}
+                    {% for label in ['Open', 'Share', 'Rename', 'Move to'] %}{{ ui.dropdown_menu_item(text=label) }}{% endfor %}
+                    {{ ui.dropdown_menu_separator() }}
+                    {{ ui.dropdown_menu_item(text='Delete', variant='destructive') }}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+            {% endfor %}
+          {% endcall %}
+
+          {# Table footer: rows per page and pagination #}
+          <div class="mt-auto flex items-center justify-between gap-4 px-4 py-4 lg:gap-8">
+            <div class="flex items-center gap-3">
+              {{ ui.label(text='Rows per page', for_='rows-per-page', class='hidden lg:block') }}
+              {% call ui.native_select_wrapper(size='sm') %}
+                {% call ui.native_select(id='rows-per-page', size='sm') %}
+                  {% for n in [10, 25, 50, 100] %}{{ ui.native_select_option(text=n, attrs={'value': n, 'selected': n == 25}) }}{% endfor %}
+                {% endcall %}
+                {{ ui.native_select_icon() }}
+              {% endcall %}
+            </div>
+            <p class="flex grow justify-end text-sm whitespace-nowrap text-muted-foreground" aria-live="polite"><span class="text-foreground">1-25</span>&nbsp;of&nbsp;<span class="text-foreground">100</span></p>
+            {% call ui.pagination() %}
+              {% call ui.pagination_content() %}
+                {% for icon_name, label, disabled in [('chevrons-left', 'Go to first page', true), ('chevron-left', 'Go to previous page', true), ('chevron-right', 'Go to next page', false), ('chevrons-right', 'Go to last page', false)] %}
+                {% call ui.pagination_item() %}
+                  {% call ui.pagination_link(size='icon', href='#', class='aria-disabled:pointer-events-none aria-disabled:opacity-50', attrs={'aria-label': label, 'aria-disabled': 'true' if disabled else none}) %}{{ lucide(icon_name) }}{% endcall %}
+                {% endcall %}
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+          </div>
+        </div>
+      {% endcall %}
+
+      {% call ui.resizable_handle(class='hidden lg:flex', attrs={'aria-orientation': 'vertical', 'style': 'flex-basis:auto;flex-grow:0;flex-shrink:0;touch-action:none'}) %}
+        <div class="cn-resizable-handle-icon z-10 flex shrink-0"></div>
+      {% endcall %}
+
+      {# Details pane #}
+      {% call ui.resizable_panel(id='fm-details-panel', class='hidden lg:flex', attrs={'data-default-size': '32', 'style': 'min-height:0;max-height:100%;height:auto;min-width:0;max-width:100%;width:auto;border:none;border-width:0;padding:0;margin:0;overflow:visible'}) %}
+        <div id="fm-details" class="flex w-full flex-col gap-6 p-6" style="max-height:100%;max-width:100%;flex-grow:1;overflow:auto">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span data-field="tile" class="flex size-12 items-center justify-center rounded-lg bg-muted [&>span]:size-8 [&>span]:text-base [&_svg]:size-6">{{ file_tile(files[0]) }}</span>
+              <div class="min-w-0">
+                <div class="truncate text-sm font-semibold" data-field="name">{{ files[0].name }}</div>
+                <div class="text-xs text-muted-foreground" data-field="kind">{{ files[0].kind }}</div>
+              </div>
+            </div>
+            {% call ui.button(variant='ghost', size='icon-sm', class='text-muted-foreground', attrs={'onclick': 'toggleStar(this)', 'aria-label': 'Star file', 'aria-pressed': 'false'}) %}{{ lucide('star') }}{% endcall %}
+          </div>
+          {{ ui.separator() }}
+          <dl class="grid gap-3 text-sm">
+            <div class="flex justify-between gap-4"><dt class="text-muted-foreground">Size</dt><dd class="font-medium" data-field="size">{{ files[0].size }}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-muted-foreground">Modified</dt><dd class="font-medium" data-field="date">{{ files[0].date }}</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-muted-foreground">Owner</dt><dd class="flex items-center gap-2 font-medium">{% call ui.avatar(size='sm') %}{{ ui.avatar_fallback(text='U') }}{% endcall %}Uma Patel</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-muted-foreground">Shared with</dt><dd>{{ ui.badge(text='3 people', variant='secondary') }}</dd></div>
+          </dl>
+          {{ ui.separator() }}
+          <div class="flex gap-2">
+            {% call ui.button(variant='outline', size='sm', class='flex-1') %}{{ lucide('download') }} Download{% endcall %}
+            {% call ui.button(variant='outline', size='sm', class='flex-1') %}{{ lucide('share') }} Share{% endcall %}
+          </div>
+        </div>
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+{% endcall %}
+{% endblock %}

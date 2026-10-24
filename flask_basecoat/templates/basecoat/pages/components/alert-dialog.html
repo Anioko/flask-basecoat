@@ -3,124 +3,85 @@
 {# Port of the upstream shadcn/ui example `alert-dialog` (pinned source in compliance/upstream). #}
 {% block title %}alert-dialog · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Basic', class='items-center') %}
       {% call ui.alert_dialog() %}
-        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Default
-        {% endcall %}
-        {{ ui.alert_dialog_overlay() }}
-        {% call ui.alert_dialog_content(size='default') %}
+        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Default{% endcall %}
+{{ ui.alert_dialog_overlay() }}{% call ui.alert_dialog_content(size='default') %}
           {% call ui.alert_dialog_header() %}
-            {{ ui.alert_dialog_title(text='Are you absolutely sure?') }}
-            {{ ui.alert_dialog_description(text='This action cannot be undone. This will permanently delete your account and remove your data from our servers.') }}
-          {% endcall %}
-          {% call ui.alert_dialog_footer() %}
-            {{ ui.alert_dialog_cancel(text='Cancel') }}
-            {{ ui.alert_dialog_action(text='Continue') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Small', class='items-center') %}
+            {{ ui.alert_dialog_title(text='Are you absolutely sure?') }}{{ ui.alert_dialog_description(text='This action cannot be undone. This will permanently delete your account and remove your data from our servers.') }}{% endcall %}
+{% call ui.alert_dialog_footer() %}
+            {{ ui.alert_dialog_cancel(text='Cancel') }}{{ ui.alert_dialog_action(text='Continue') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Small', class='items-center') %}
       {% call ui.alert_dialog() %}
-        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Small
-        {% endcall %}
-        {{ ui.alert_dialog_overlay() }}
-        {% call ui.alert_dialog_content(size='sm') %}
+        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Small{% endcall %}
+{{ ui.alert_dialog_overlay() }}{% call ui.alert_dialog_content(size='sm') %}
           {% call ui.alert_dialog_header() %}
-            {{ ui.alert_dialog_title(text='Allow accessory to connect?') }}
-            {{ ui.alert_dialog_description(text='Do you want to allow the USB accessory to connect to this device?') }}
-          {% endcall %}
-          {% call ui.alert_dialog_footer() %}
-            {{ ui.alert_dialog_cancel(text="Don't allow") }}
-            {{ ui.alert_dialog_action(text='Allow') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Media', class='items-center') %}
+            {{ ui.alert_dialog_title(text='Allow accessory to connect?') }}{{ ui.alert_dialog_description(text='Do you want to allow the USB accessory to connect to this device?') }}{% endcall %}
+{% call ui.alert_dialog_footer() %}
+            {{ ui.alert_dialog_cancel(text="Don't allow") }}{{ ui.alert_dialog_action(text='Allow') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Media', class='items-center') %}
       {% call ui.alert_dialog() %}
-        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Default (Media)
-        {% endcall %}
-        {{ ui.alert_dialog_overlay() }}
-        {% call ui.alert_dialog_content(size='default') %}
+        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Default (Media){% endcall %}
+{{ ui.alert_dialog_overlay() }}{% call ui.alert_dialog_content(size='default') %}
           {% call ui.alert_dialog_header() %}
             {% call ui.alert_dialog_media() %}{{ lucide('bluetooth') }}{% endcall %}
-            {{ ui.alert_dialog_title(text='Are you absolutely sure?') }}
-            {{ ui.alert_dialog_description(text='This will permanently delete your account and remove your data from our servers.') }}
-          {% endcall %}
-          {% call ui.alert_dialog_footer() %}
-            {{ ui.alert_dialog_cancel(text='Cancel') }}
-            {{ ui.alert_dialog_action(text='Continue') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Small With Media', class='items-center') %}
+{{ ui.alert_dialog_title(text='Are you absolutely sure?') }}{{ ui.alert_dialog_description(text='This will permanently delete your account and remove your data from our servers.') }}{% endcall %}
+{% call ui.alert_dialog_footer() %}
+            {{ ui.alert_dialog_cancel(text='Cancel') }}{{ ui.alert_dialog_action(text='Continue') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Small With Media', class='items-center') %}
       {% call ui.alert_dialog() %}
-        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Small (Media)
-        {% endcall %}
-        {{ ui.alert_dialog_overlay() }}
-        {% call ui.alert_dialog_content(size='sm') %}
+        {% call ui.alert_dialog_trigger(size='default', variant='outline') %}Small (Media){% endcall %}
+{{ ui.alert_dialog_overlay() }}{% call ui.alert_dialog_content(size='sm') %}
           {% call ui.alert_dialog_header() %}
             {% call ui.alert_dialog_media() %}{{ lucide('bluetooth') }}{% endcall %}
-            {{ ui.alert_dialog_title(text='Allow accessory to connect?') }}
-            {{ ui.alert_dialog_description(text='Do you want to allow the USB accessory to connect to this device?') }}
-          {% endcall %}
-          {% call ui.alert_dialog_footer() %}
-            {{ ui.alert_dialog_cancel(text="Don't allow") }}
-            {{ ui.alert_dialog_action(text='Allow') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Destructive', class='items-center') %}
+{{ ui.alert_dialog_title(text='Allow accessory to connect?') }}{{ ui.alert_dialog_description(text='Do you want to allow the USB accessory to connect to this device?') }}{% endcall %}
+{% call ui.alert_dialog_footer() %}
+            {{ ui.alert_dialog_cancel(text="Don't allow") }}{{ ui.alert_dialog_action(text='Allow') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Destructive', class='items-center') %}
       {% call ui.alert_dialog() %}
-        {% call ui.alert_dialog_trigger(size='default', variant='destructive') %}Delete Chat
-        {% endcall %}
-        {{ ui.alert_dialog_overlay() }}
-        {% call ui.alert_dialog_content(size='sm') %}
+        {% call ui.alert_dialog_trigger(size='default', variant='destructive') %}Delete Chat{% endcall %}
+{{ ui.alert_dialog_overlay() }}{% call ui.alert_dialog_content(size='sm') %}
           {% call ui.alert_dialog_header() %}
             {% call ui.alert_dialog_media(class='bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive') %}{{ lucide('trash-2') }}{% endcall %}
-            {{ ui.alert_dialog_title(text='Delete chat?') }}
-            {% call ui.alert_dialog_description() %}This will permanently delete this chat conversation. View <a href="#">Settings</a> delete any memories saved during this chat.{% endcall %}
-          {% endcall %}
-          {% call ui.alert_dialog_footer() %}
-            {{ ui.alert_dialog_cancel(text='Cancel', variant='ghost') }}
-            {{ ui.alert_dialog_action(text='Delete', variant='destructive') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='In Dialog', class='items-center') %}
+{{ ui.alert_dialog_title(text='Delete chat?') }}{% call ui.alert_dialog_description() %}This will permanently delete this chat conversation. View <a href="#">Settings</a> delete any memories saved during this chat.{% endcall %}
+{% endcall %}
+{% call ui.alert_dialog_footer() %}
+            {{ ui.alert_dialog_cancel(text='Cancel', variant='ghost') }}{{ ui.alert_dialog_action(text='Delete', variant='destructive') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='In Dialog', class='items-center') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Alert Dialog Example') }}
-            {{ ui.dialog_description(text='Click the button below to open an alert dialog.') }}
-          {% endcall %}
-          {% call ui.dialog_footer() %}
+            {{ ui.dialog_title(text='Alert Dialog Example') }}{{ ui.dialog_description(text='Click the button below to open an alert dialog.') }}{% endcall %}
+{% call ui.dialog_footer() %}
             {% call ui.alert_dialog() %}
-              {{ ui.alert_dialog_trigger(text='Open Alert Dialog') }}
-              {{ ui.alert_dialog_overlay() }}
-              {% call ui.alert_dialog_content(size='sm') %}
+              {{ ui.alert_dialog_trigger(text='Open Alert Dialog') }}{{ ui.alert_dialog_overlay() }}{% call ui.alert_dialog_content(size='sm') %}
                 {% call ui.alert_dialog_header() %}
-                  {{ ui.alert_dialog_title(text='Are you absolutely sure?') }}
-                  {{ ui.alert_dialog_description(text='This action cannot be undone. This will permanently delete your account and remove your data from our servers.') }}
-                {% endcall %}
-                {% call ui.alert_dialog_footer() %}
-                  {{ ui.alert_dialog_cancel(text='Cancel') }}
-                  {{ ui.alert_dialog_action(text='Continue') }}
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+                  {{ ui.alert_dialog_title(text='Are you absolutely sure?') }}{{ ui.alert_dialog_description(text='This action cannot be undone. This will permanently delete your account and remove your data from our servers.') }}{% endcall %}
+{% call ui.alert_dialog_footer() %}
+                  {{ ui.alert_dialog_cancel(text='Cancel') }}{{ ui.alert_dialog_action(text='Continue') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

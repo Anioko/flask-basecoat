@@ -4,840 +4,422 @@
 {# Option lists from the upstream example, kept verbatim. countries rows are (code, value, continent, label). #}
 {% set frameworks = ['Next.js', 'SvelteKit', 'Nuxt.js', 'Remix', 'Astro'] %}
 {% set disabled_frameworks = ['Nuxt.js', 'Remix'] %}
-{% set timezones = [
-  ('Americas', ['(GMT-5) New York', '(GMT-8) Los Angeles', '(GMT-6) Chicago', '(GMT-5) Toronto', '(GMT-8) Vancouver', '(GMT-3) São Paulo']),
-  ('Europe', ['(GMT+0) London', '(GMT+1) Paris', '(GMT+1) Berlin', '(GMT+1) Rome', '(GMT+1) Madrid', '(GMT+1) Amsterdam']),
-  ('Asia/Pacific', ['(GMT+9) Tokyo', '(GMT+8) Shanghai', '(GMT+8) Singapore', '(GMT+4) Dubai', '(GMT+11) Sydney', '(GMT+9) Seoul']),
-] %}
-{% set countries = [
-  ('', '', '', 'Select country'),
-  ('af', 'afghanistan', 'Asia', 'Afghanistan'),
-  ('al', 'albania', 'Europe', 'Albania'),
-  ('dz', 'algeria', 'Africa', 'Algeria'),
-  ('ad', 'andorra', 'Europe', 'Andorra'),
-  ('ao', 'angola', 'Africa', 'Angola'),
-  ('ar', 'argentina', 'South America', 'Argentina'),
-  ('am', 'armenia', 'Asia', 'Armenia'),
-  ('au', 'australia', 'Oceania', 'Australia'),
-  ('at', 'austria', 'Europe', 'Austria'),
-  ('az', 'azerbaijan', 'Asia', 'Azerbaijan'),
-  ('bs', 'bahamas', 'North America', 'Bahamas'),
-  ('bh', 'bahrain', 'Asia', 'Bahrain'),
-  ('bd', 'bangladesh', 'Asia', 'Bangladesh'),
-  ('bb', 'barbados', 'North America', 'Barbados'),
-  ('by', 'belarus', 'Europe', 'Belarus'),
-  ('be', 'belgium', 'Europe', 'Belgium'),
-  ('bz', 'belize', 'North America', 'Belize'),
-  ('bj', 'benin', 'Africa', 'Benin'),
-  ('bt', 'bhutan', 'Asia', 'Bhutan'),
-  ('bo', 'bolivia', 'South America', 'Bolivia'),
-  ('ba', 'bosnia-and-herzegovina', 'Europe', 'Bosnia and Herzegovina'),
-  ('bw', 'botswana', 'Africa', 'Botswana'),
-  ('br', 'brazil', 'South America', 'Brazil'),
-  ('bn', 'brunei', 'Asia', 'Brunei'),
-  ('bg', 'bulgaria', 'Europe', 'Bulgaria'),
-  ('bf', 'burkina-faso', 'Africa', 'Burkina Faso'),
-  ('bi', 'burundi', 'Africa', 'Burundi'),
-  ('kh', 'cambodia', 'Asia', 'Cambodia'),
-  ('cm', 'cameroon', 'Africa', 'Cameroon'),
-  ('ca', 'canada', 'North America', 'Canada'),
-  ('cv', 'cape-verde', 'Africa', 'Cape Verde'),
-  ('cf', 'central-african-republic', 'Africa', 'Central African Republic'),
-  ('td', 'chad', 'Africa', 'Chad'),
-  ('cl', 'chile', 'South America', 'Chile'),
-  ('cn', 'china', 'Asia', 'China'),
-  ('co', 'colombia', 'South America', 'Colombia'),
-  ('km', 'comoros', 'Africa', 'Comoros'),
-  ('cg', 'congo', 'Africa', 'Congo'),
-  ('cr', 'costa-rica', 'North America', 'Costa Rica'),
-  ('hr', 'croatia', 'Europe', 'Croatia'),
-  ('cu', 'cuba', 'North America', 'Cuba'),
-  ('cy', 'cyprus', 'Asia', 'Cyprus'),
-  ('cz', 'czech-republic', 'Europe', 'Czech Republic'),
-  ('dk', 'denmark', 'Europe', 'Denmark'),
-  ('dj', 'djibouti', 'Africa', 'Djibouti'),
-  ('dm', 'dominica', 'North America', 'Dominica'),
-  ('do', 'dominican-republic', 'North America', 'Dominican Republic'),
-  ('ec', 'ecuador', 'South America', 'Ecuador'),
-  ('eg', 'egypt', 'Africa', 'Egypt'),
-  ('sv', 'el-salvador', 'North America', 'El Salvador'),
-  ('gq', 'equatorial-guinea', 'Africa', 'Equatorial Guinea'),
-  ('er', 'eritrea', 'Africa', 'Eritrea'),
-  ('ee', 'estonia', 'Europe', 'Estonia'),
-  ('et', 'ethiopia', 'Africa', 'Ethiopia'),
-  ('fj', 'fiji', 'Oceania', 'Fiji'),
-  ('fi', 'finland', 'Europe', 'Finland'),
-  ('fr', 'france', 'Europe', 'France'),
-  ('ga', 'gabon', 'Africa', 'Gabon'),
-  ('gm', 'gambia', 'Africa', 'Gambia'),
-  ('ge', 'georgia', 'Asia', 'Georgia'),
-  ('de', 'germany', 'Europe', 'Germany'),
-  ('gh', 'ghana', 'Africa', 'Ghana'),
-  ('gr', 'greece', 'Europe', 'Greece'),
-  ('gd', 'grenada', 'North America', 'Grenada'),
-  ('gt', 'guatemala', 'North America', 'Guatemala'),
-  ('gn', 'guinea', 'Africa', 'Guinea'),
-  ('gw', 'guinea-bissau', 'Africa', 'Guinea-Bissau'),
-  ('gy', 'guyana', 'South America', 'Guyana'),
-  ('ht', 'haiti', 'North America', 'Haiti'),
-  ('hn', 'honduras', 'North America', 'Honduras'),
-  ('hu', 'hungary', 'Europe', 'Hungary'),
-  ('is', 'iceland', 'Europe', 'Iceland'),
-  ('in', 'india', 'Asia', 'India'),
-  ('id', 'indonesia', 'Asia', 'Indonesia'),
-  ('ir', 'iran', 'Asia', 'Iran'),
-  ('iq', 'iraq', 'Asia', 'Iraq'),
-  ('ie', 'ireland', 'Europe', 'Ireland'),
-  ('il', 'israel', 'Asia', 'Israel'),
-  ('it', 'italy', 'Europe', 'Italy'),
-  ('jm', 'jamaica', 'North America', 'Jamaica'),
-  ('jp', 'japan', 'Asia', 'Japan'),
-  ('jo', 'jordan', 'Asia', 'Jordan'),
-  ('kz', 'kazakhstan', 'Asia', 'Kazakhstan'),
-  ('ke', 'kenya', 'Africa', 'Kenya'),
-  ('kw', 'kuwait', 'Asia', 'Kuwait'),
-  ('kg', 'kyrgyzstan', 'Asia', 'Kyrgyzstan'),
-  ('la', 'laos', 'Asia', 'Laos'),
-  ('lv', 'latvia', 'Europe', 'Latvia'),
-  ('lb', 'lebanon', 'Asia', 'Lebanon'),
-  ('ls', 'lesotho', 'Africa', 'Lesotho'),
-  ('lr', 'liberia', 'Africa', 'Liberia'),
-  ('ly', 'libya', 'Africa', 'Libya'),
-  ('li', 'liechtenstein', 'Europe', 'Liechtenstein'),
-  ('lt', 'lithuania', 'Europe', 'Lithuania'),
-  ('lu', 'luxembourg', 'Europe', 'Luxembourg'),
-  ('mg', 'madagascar', 'Africa', 'Madagascar'),
-  ('mw', 'malawi', 'Africa', 'Malawi'),
-  ('my', 'malaysia', 'Asia', 'Malaysia'),
-  ('mv', 'maldives', 'Asia', 'Maldives'),
-  ('ml', 'mali', 'Africa', 'Mali'),
-  ('mt', 'malta', 'Europe', 'Malta'),
-  ('mh', 'marshall-islands', 'Oceania', 'Marshall Islands'),
-  ('mr', 'mauritania', 'Africa', 'Mauritania'),
-  ('mu', 'mauritius', 'Africa', 'Mauritius'),
-  ('mx', 'mexico', 'North America', 'Mexico'),
-  ('fm', 'micronesia', 'Oceania', 'Micronesia'),
-  ('md', 'moldova', 'Europe', 'Moldova'),
-  ('mc', 'monaco', 'Europe', 'Monaco'),
-  ('mn', 'mongolia', 'Asia', 'Mongolia'),
-  ('me', 'montenegro', 'Europe', 'Montenegro'),
-  ('ma', 'morocco', 'Africa', 'Morocco'),
-  ('mz', 'mozambique', 'Africa', 'Mozambique'),
-  ('mm', 'myanmar', 'Asia', 'Myanmar'),
-  ('na', 'namibia', 'Africa', 'Namibia'),
-  ('nr', 'nauru', 'Oceania', 'Nauru'),
-  ('np', 'nepal', 'Asia', 'Nepal'),
-  ('nl', 'netherlands', 'Europe', 'Netherlands'),
-  ('nz', 'new-zealand', 'Oceania', 'New Zealand'),
-  ('ni', 'nicaragua', 'North America', 'Nicaragua'),
-  ('ne', 'niger', 'Africa', 'Niger'),
-  ('ng', 'nigeria', 'Africa', 'Nigeria'),
-  ('kp', 'north-korea', 'Asia', 'North Korea'),
-  ('mk', 'north-macedonia', 'Europe', 'North Macedonia'),
-  ('no', 'norway', 'Europe', 'Norway'),
-  ('om', 'oman', 'Asia', 'Oman'),
-  ('pk', 'pakistan', 'Asia', 'Pakistan'),
-  ('pw', 'palau', 'Oceania', 'Palau'),
-  ('ps', 'palestine', 'Asia', 'Palestine'),
-  ('pa', 'panama', 'North America', 'Panama'),
-  ('pg', 'papua-new-guinea', 'Oceania', 'Papua New Guinea'),
-  ('py', 'paraguay', 'South America', 'Paraguay'),
-  ('pe', 'peru', 'South America', 'Peru'),
-  ('ph', 'philippines', 'Asia', 'Philippines'),
-  ('pl', 'poland', 'Europe', 'Poland'),
-  ('pt', 'portugal', 'Europe', 'Portugal'),
-  ('qa', 'qatar', 'Asia', 'Qatar'),
-  ('ro', 'romania', 'Europe', 'Romania'),
-  ('ru', 'russia', 'Europe', 'Russia'),
-  ('rw', 'rwanda', 'Africa', 'Rwanda'),
-  ('ws', 'samoa', 'Oceania', 'Samoa'),
-  ('sm', 'san-marino', 'Europe', 'San Marino'),
-  ('sa', 'saudi-arabia', 'Asia', 'Saudi Arabia'),
-  ('sn', 'senegal', 'Africa', 'Senegal'),
-  ('rs', 'serbia', 'Europe', 'Serbia'),
-  ('sc', 'seychelles', 'Africa', 'Seychelles'),
-  ('sl', 'sierra-leone', 'Africa', 'Sierra Leone'),
-  ('sg', 'singapore', 'Asia', 'Singapore'),
-  ('sk', 'slovakia', 'Europe', 'Slovakia'),
-  ('si', 'slovenia', 'Europe', 'Slovenia'),
-  ('sb', 'solomon-islands', 'Oceania', 'Solomon Islands'),
-  ('so', 'somalia', 'Africa', 'Somalia'),
-  ('za', 'south-africa', 'Africa', 'South Africa'),
-  ('kr', 'south-korea', 'Asia', 'South Korea'),
-  ('ss', 'south-sudan', 'Africa', 'South Sudan'),
-  ('es', 'spain', 'Europe', 'Spain'),
-  ('lk', 'sri-lanka', 'Asia', 'Sri Lanka'),
-  ('sd', 'sudan', 'Africa', 'Sudan'),
-  ('sr', 'suriname', 'South America', 'Suriname'),
-  ('se', 'sweden', 'Europe', 'Sweden'),
-  ('ch', 'switzerland', 'Europe', 'Switzerland'),
-  ('sy', 'syria', 'Asia', 'Syria'),
-  ('tw', 'taiwan', 'Asia', 'Taiwan'),
-  ('tj', 'tajikistan', 'Asia', 'Tajikistan'),
-  ('tz', 'tanzania', 'Africa', 'Tanzania'),
-  ('th', 'thailand', 'Asia', 'Thailand'),
-  ('tl', 'timor-leste', 'Asia', 'Timor-Leste'),
-  ('tg', 'togo', 'Africa', 'Togo'),
-  ('to', 'tonga', 'Oceania', 'Tonga'),
-  ('tt', 'trinidad-and-tobago', 'North America', 'Trinidad and Tobago'),
-  ('tn', 'tunisia', 'Africa', 'Tunisia'),
-  ('tr', 'turkey', 'Asia', 'Turkey'),
-  ('tm', 'turkmenistan', 'Asia', 'Turkmenistan'),
-  ('tv', 'tuvalu', 'Oceania', 'Tuvalu'),
-  ('ug', 'uganda', 'Africa', 'Uganda'),
-  ('ua', 'ukraine', 'Europe', 'Ukraine'),
-  ('ae', 'united-arab-emirates', 'Asia', 'United Arab Emirates'),
-  ('gb', 'united-kingdom', 'Europe', 'United Kingdom'),
-  ('us', 'united-states', 'North America', 'United States'),
-  ('uy', 'uruguay', 'South America', 'Uruguay'),
-  ('uz', 'uzbekistan', 'Asia', 'Uzbekistan'),
-  ('vu', 'vanuatu', 'Oceania', 'Vanuatu'),
-  ('va', 'vatican-city', 'Europe', 'Vatican City'),
-  ('ve', 'venezuela', 'South America', 'Venezuela'),
-  ('vn', 'vietnam', 'Asia', 'Vietnam'),
-  ('ye', 'yemen', 'Asia', 'Yemen'),
-  ('zm', 'zambia', 'Africa', 'Zambia'),
-  ('zw', 'zimbabwe', 'Africa', 'Zimbabwe'),
-] %}
-{#- Combobox root (upstream `Combobox` renders no element). basecoat/combobox.html exports no `combobox` wrapper yet, so this
-    page-local macro renders the same display:contents wrapper (slot 'combobox') the other popup families use; `combobox`
-    resolves to ui.combobox as soon as the barrel exports it. -#}
+{% set timezones = [('Americas', ['(GMT-5) New York', '(GMT-8) Los Angeles', '(GMT-6) Chicago', '(GMT-5) Toronto', '(GMT-8) Vancouver', '(GMT-3) São Paulo']),('Europe', ['(GMT+0) London', '(GMT+1) Paris', '(GMT+1) Berlin', '(GMT+1) Rome', '(GMT+1) Madrid', '(GMT+1) Amsterdam']),('Asia/Pacific', ['(GMT+9) Tokyo', '(GMT+8) Shanghai', '(GMT+8) Singapore', '(GMT+4) Dubai', '(GMT+11) Sydney', '(GMT+9) Seoul']),] %}
+{% set countries = [('', '', '', 'Select country'),('af', 'afghanistan', 'Asia', 'Afghanistan'),('al', 'albania', 'Europe', 'Albania'),('dz', 'algeria', 'Africa', 'Algeria'),('ad', 'andorra', 'Europe', 'Andorra'),('ao', 'angola', 'Africa', 'Angola'),('ar', 'argentina', 'South America', 'Argentina'),('am', 'armenia', 'Asia', 'Armenia'),('au', 'australia', 'Oceania', 'Australia'),('at', 'austria', 'Europe', 'Austria'),('az', 'azerbaijan', 'Asia', 'Azerbaijan'),('bs', 'bahamas', 'North America', 'Bahamas'),('bh', 'bahrain', 'Asia', 'Bahrain'),('bd', 'bangladesh', 'Asia', 'Bangladesh'),('bb', 'barbados', 'North America', 'Barbados'),('by', 'belarus', 'Europe', 'Belarus'),('be', 'belgium', 'Europe', 'Belgium'),('bz', 'belize', 'North America', 'Belize'),('bj', 'benin', 'Africa', 'Benin'),('bt', 'bhutan', 'Asia', 'Bhutan'),('bo', 'bolivia', 'South America', 'Bolivia'),('ba', 'bosnia-and-herzegovina', 'Europe', 'Bosnia and Herzegovina'),('bw', 'botswana', 'Africa', 'Botswana'),('br', 'brazil', 'South America', 'Brazil'),('bn', 'brunei', 'Asia', 'Brunei'),('bg', 'bulgaria', 'Europe', 'Bulgaria'),('bf', 'burkina-faso', 'Africa', 'Burkina Faso'),('bi', 'burundi', 'Africa', 'Burundi'),('kh', 'cambodia', 'Asia', 'Cambodia'),('cm', 'cameroon', 'Africa', 'Cameroon'),('ca', 'canada', 'North America', 'Canada'),('cv', 'cape-verde', 'Africa', 'Cape Verde'),('cf', 'central-african-republic', 'Africa', 'Central African Republic'),('td', 'chad', 'Africa', 'Chad'),('cl', 'chile', 'South America', 'Chile'),('cn', 'china', 'Asia', 'China'),('co', 'colombia', 'South America', 'Colombia'),('km', 'comoros', 'Africa', 'Comoros'),('cg', 'congo', 'Africa', 'Congo'),('cr', 'costa-rica', 'North America', 'Costa Rica'),('hr', 'croatia', 'Europe', 'Croatia'),('cu', 'cuba', 'North America', 'Cuba'),('cy', 'cyprus', 'Asia', 'Cyprus'),('cz', 'czech-republic', 'Europe', 'Czech Republic'),('dk', 'denmark', 'Europe', 'Denmark'),('dj', 'djibouti', 'Africa', 'Djibouti'),('dm', 'dominica', 'North America', 'Dominica'),('do', 'dominican-republic', 'North America', 'Dominican Republic'),('ec', 'ecuador', 'South America', 'Ecuador'),('eg', 'egypt', 'Africa', 'Egypt'),('sv', 'el-salvador', 'North America', 'El Salvador'),('gq', 'equatorial-guinea', 'Africa', 'Equatorial Guinea'),('er', 'eritrea', 'Africa', 'Eritrea'),('ee', 'estonia', 'Europe', 'Estonia'),('et', 'ethiopia', 'Africa', 'Ethiopia'),('fj', 'fiji', 'Oceania', 'Fiji'),('fi', 'finland', 'Europe', 'Finland'),('fr', 'france', 'Europe', 'France'),('ga', 'gabon', 'Africa', 'Gabon'),('gm', 'gambia', 'Africa', 'Gambia'),('ge', 'georgia', 'Asia', 'Georgia'),('de', 'germany', 'Europe', 'Germany'),('gh', 'ghana', 'Africa', 'Ghana'),('gr', 'greece', 'Europe', 'Greece'),('gd', 'grenada', 'North America', 'Grenada'),('gt', 'guatemala', 'North America', 'Guatemala'),('gn', 'guinea', 'Africa', 'Guinea'),('gw', 'guinea-bissau', 'Africa', 'Guinea-Bissau'),('gy', 'guyana', 'South America', 'Guyana'),('ht', 'haiti', 'North America', 'Haiti'),('hn', 'honduras', 'North America', 'Honduras'),('hu', 'hungary', 'Europe', 'Hungary'),('is', 'iceland', 'Europe', 'Iceland'),('in', 'india', 'Asia', 'India'),('id', 'indonesia', 'Asia', 'Indonesia'),('ir', 'iran', 'Asia', 'Iran'),('iq', 'iraq', 'Asia', 'Iraq'),('ie', 'ireland', 'Europe', 'Ireland'),('il', 'israel', 'Asia', 'Israel'),('it', 'italy', 'Europe', 'Italy'),('jm', 'jamaica', 'North America', 'Jamaica'),('jp', 'japan', 'Asia', 'Japan'),('jo', 'jordan', 'Asia', 'Jordan'),('kz', 'kazakhstan', 'Asia', 'Kazakhstan'),('ke', 'kenya', 'Africa', 'Kenya'),('kw', 'kuwait', 'Asia', 'Kuwait'),('kg', 'kyrgyzstan', 'Asia', 'Kyrgyzstan'),('la', 'laos', 'Asia', 'Laos'),('lv', 'latvia', 'Europe', 'Latvia'),('lb', 'lebanon', 'Asia', 'Lebanon'),('ls', 'lesotho', 'Africa', 'Lesotho'),('lr', 'liberia', 'Africa', 'Liberia'),('ly', 'libya', 'Africa', 'Libya'),('li', 'liechtenstein', 'Europe', 'Liechtenstein'),('lt', 'lithuania', 'Europe', 'Lithuania'),('lu', 'luxembourg', 'Europe', 'Luxembourg'),('mg', 'madagascar', 'Africa', 'Madagascar'),('mw', 'malawi', 'Africa', 'Malawi'),('my', 'malaysia', 'Asia', 'Malaysia'),('mv', 'maldives', 'Asia', 'Maldives'),('ml', 'mali', 'Africa', 'Mali'),('mt', 'malta', 'Europe', 'Malta'),('mh', 'marshall-islands', 'Oceania', 'Marshall Islands'),('mr', 'mauritania', 'Africa', 'Mauritania'),('mu', 'mauritius', 'Africa', 'Mauritius'),('mx', 'mexico', 'North America', 'Mexico'),('fm', 'micronesia', 'Oceania', 'Micronesia'),('md', 'moldova', 'Europe', 'Moldova'),('mc', 'monaco', 'Europe', 'Monaco'),('mn', 'mongolia', 'Asia', 'Mongolia'),('me', 'montenegro', 'Europe', 'Montenegro'),('ma', 'morocco', 'Africa', 'Morocco'),('mz', 'mozambique', 'Africa', 'Mozambique'),('mm', 'myanmar', 'Asia', 'Myanmar'),('na', 'namibia', 'Africa', 'Namibia'),('nr', 'nauru', 'Oceania', 'Nauru'),('np', 'nepal', 'Asia', 'Nepal'),('nl', 'netherlands', 'Europe', 'Netherlands'),('nz', 'new-zealand', 'Oceania', 'New Zealand'),('ni', 'nicaragua', 'North America', 'Nicaragua'),('ne', 'niger', 'Africa', 'Niger'),('ng', 'nigeria', 'Africa', 'Nigeria'),('kp', 'north-korea', 'Asia', 'North Korea'),('mk', 'north-macedonia', 'Europe', 'North Macedonia'),('no', 'norway', 'Europe', 'Norway'),('om', 'oman', 'Asia', 'Oman'),('pk', 'pakistan', 'Asia', 'Pakistan'),('pw', 'palau', 'Oceania', 'Palau'),('ps', 'palestine', 'Asia', 'Palestine'),('pa', 'panama', 'North America', 'Panama'),('pg', 'papua-new-guinea', 'Oceania', 'Papua New Guinea'),('py', 'paraguay', 'South America', 'Paraguay'),('pe', 'peru', 'South America', 'Peru'),('ph', 'philippines', 'Asia', 'Philippines'),('pl', 'poland', 'Europe', 'Poland'),('pt', 'portugal', 'Europe', 'Portugal'),('qa', 'qatar', 'Asia', 'Qatar'),('ro', 'romania', 'Europe', 'Romania'),('ru', 'russia', 'Europe', 'Russia'),('rw', 'rwanda', 'Africa', 'Rwanda'),('ws', 'samoa', 'Oceania', 'Samoa'),('sm', 'san-marino', 'Europe', 'San Marino'),('sa', 'saudi-arabia', 'Asia', 'Saudi Arabia'),('sn', 'senegal', 'Africa', 'Senegal'),('rs', 'serbia', 'Europe', 'Serbia'),('sc', 'seychelles', 'Africa', 'Seychelles'),('sl', 'sierra-leone', 'Africa', 'Sierra Leone'),('sg', 'singapore', 'Asia', 'Singapore'),('sk', 'slovakia', 'Europe', 'Slovakia'),('si', 'slovenia', 'Europe', 'Slovenia'),('sb', 'solomon-islands', 'Oceania', 'Solomon Islands'),('so', 'somalia', 'Africa', 'Somalia'),('za', 'south-africa', 'Africa', 'South Africa'),('kr', 'south-korea', 'Asia', 'South Korea'),('ss', 'south-sudan', 'Africa', 'South Sudan'),('es', 'spain', 'Europe', 'Spain'),('lk', 'sri-lanka', 'Asia', 'Sri Lanka'),('sd', 'sudan', 'Africa', 'Sudan'),('sr', 'suriname', 'South America', 'Suriname'),('se', 'sweden', 'Europe', 'Sweden'),('ch', 'switzerland', 'Europe', 'Switzerland'),('sy', 'syria', 'Asia', 'Syria'),('tw', 'taiwan', 'Asia', 'Taiwan'),('tj', 'tajikistan', 'Asia', 'Tajikistan'),('tz', 'tanzania', 'Africa', 'Tanzania'),('th', 'thailand', 'Asia', 'Thailand'),('tl', 'timor-leste', 'Asia', 'Timor-Leste'),('tg', 'togo', 'Africa', 'Togo'),('to', 'tonga', 'Oceania', 'Tonga'),('tt', 'trinidad-and-tobago', 'North America', 'Trinidad and Tobago'),('tn', 'tunisia', 'Africa', 'Tunisia'),('tr', 'turkey', 'Asia', 'Turkey'),('tm', 'turkmenistan', 'Asia', 'Turkmenistan'),('tv', 'tuvalu', 'Oceania', 'Tuvalu'),('ug', 'uganda', 'Africa', 'Uganda'),('ua', 'ukraine', 'Europe', 'Ukraine'),('ae', 'united-arab-emirates', 'Asia', 'United Arab Emirates'),('gb', 'united-kingdom', 'Europe', 'United Kingdom'),('us', 'united-states', 'North America', 'United States'),('uy', 'uruguay', 'South America', 'Uruguay'),('uz', 'uzbekistan', 'Asia', 'Uzbekistan'),('vu', 'vanuatu', 'Oceania', 'Vanuatu'),('va', 'vatican-city', 'Europe', 'Vatican City'),('ve', 'venezuela', 'South America', 'Venezuela'),('vn', 'vietnam', 'Asia', 'Vietnam'),('ye', 'yemen', 'Asia', 'Yemen'),('zm', 'zambia', 'Africa', 'Zambia'),('zw', 'zimbabwe', 'Africa', 'Zimbabwe'),] %}
+{#- Combobox root (upstream `Combobox` renders no element). basecoat/combobox.html exports no `combobox` wrapper yet, so thispage-local macro renders the same display:contents wrapper (slot 'combobox') the other popup families use; `combobox`resolves to ui.combobox as soon as the barrel exports it. -#}
 {% macro _combobox_root(class='', id=none, attrs={}) -%}
 {%- set s = slot('combobox', kwargs, class, id, attrs) -%}
-<div{{ s.attributes }}>{{ caller() if caller }}</div>
-{%- endmacro %}
+<div{{ s.attributes }}>{{ caller() if caller }}</div>{%- endmacro %}
 {% set combobox = ui.combobox if ui.combobox is defined else _combobox_root %}
 {% block title %}combobox · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_21_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_21_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_21_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_21_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Disabled') %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_21_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Disabled') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(disabled=true, id='base-ui-_R_22_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(disabled=true, id='base-ui-_R_22_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', disabled=true, type='button', id='base-ui-_R_22_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_22_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Invalid') %}
-      <div class="flex flex-col gap-4">
-        {% call combobox() %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_22_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Invalid') %}
+      <div class="flex flex-col gap-4">{% call combobox() %}
           {% call ui.input_group(class='cn-combobox-input w-auto') %}
-            {{ ui.input_group_control(invalid=true, id='base-ui-_R_63_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-            {% call ui.input_group_addon(align='inline-end') %}
+            {{ ui.input_group_control(invalid=true, id='base-ui-_R_63_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
               {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_63_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                  <path d="m6 9 6 6 6-6"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.combobox_content() %}
-            {{ ui.combobox_empty(text='No items found.') }}
-            {% call ui.combobox_list() %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+            {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
               {% for item in frameworks %}
-                {{ ui.combobox_item(value=item, text=item) }}
-              {% endfor %}
-            {% endcall %}
-          {% endcall %}
-          <input id="base-ui-_R_63_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-        {% endcall %}
-        {% call ui.field(orientation='vertical', invalid=true) %}
-          {% call ui.field_label(as_='label', for_='combobox-framework-invalid') %}Framework
-          {% endcall %}
-          {% call combobox() %}
+                {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_63_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% call ui.field(orientation='vertical', invalid=true) %}
+          {% call ui.field_label(as_='label', for_='combobox-framework-invalid') %}Framework{% endcall %}
+{% call combobox() %}
             {% call ui.input_group(class='cn-combobox-input w-auto') %}
-              {{ ui.input_group_control(invalid=true, id='combobox-framework-invalid', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-              {% call ui.input_group_addon(align='inline-end') %}
+              {{ ui.input_group_control(invalid=true, id='combobox-framework-invalid', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
                 {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_1a3_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                    <path d="m6 9 6 6 6-6"></path>
-                  </svg>
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-            {% call ui.combobox_content() %}
-              {{ ui.combobox_empty(text='No items found.') }}
-              {% call ui.combobox_list() %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+              {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
                 {% for item in frameworks %}
-                  {{ ui.combobox_item(value=item, text=item) }}
-                {% endfor %}
-              {% endcall %}
-            {% endcall %}
-            <input id="base-ui-_R_1a3_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-          {% endcall %}
-          {% call ui.field_description() %}Please select a valid framework.
-          {% endcall %}
-          {% call ui.field_error() %}This field is required.
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='With Clear Button') %}
+                  {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_1a3_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% call ui.field_description() %}Please select a valid framework.{% endcall %}
+{% call ui.field_error() %}This field is required.{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='With Clear Button') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_24_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': 'Next.js'}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_24_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': 'Next.js'}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_24_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.combobox_clear(as_='input-group-button', size='icon-xs', variant='ghost', class='cn-button group/button shrink-0 justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-ghost cn-button-size-default', attrs={'data-visible': ''}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-clear-icon pointer-events-none" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% call ui.combobox_clear(as_='input-group-button', size='icon-xs', variant='ghost', class='cn-button group/button shrink-0 justify-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-ghost cn-button-size-default', attrs={'data-visible': ''}) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-clear-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_24_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="Next.js">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Auto Highlight') %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_24_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="Next.js">{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Auto Highlight') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_25_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_25_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_25_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_25_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Groups') %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_25_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Groups') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_26_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a timezone', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_26_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a timezone', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_26_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No timezones found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No timezones found.') }}{% call ui.combobox_list() %}
             {% for group, items in timezones %}
               {% call ui.combobox_group() %}
-                {{ ui.combobox_label(text=group) }}
-                {% call ui.combobox_collection() %}
+                {{ ui.combobox_label(text=group) }}{% call ui.combobox_collection() %}
                   {% for item in items %}
-                    {{ ui.combobox_item(value=item, text=item) }}
-                  {% endfor %}
-                {% endcall %}
-              {% endcall %}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_26_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Groups and Separator') %}
+                    {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_26_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Groups and Separator') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_27_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a timezone', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_27_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a timezone', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_27_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No timezones found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No timezones found.') }}{% call ui.combobox_list() %}
             {% for group, items in timezones %}
               {% call ui.combobox_group() %}
-                {{ ui.combobox_label(text=group) }}
-                {% call ui.combobox_collection() %}
+                {{ ui.combobox_label(text=group) }}{% call ui.combobox_collection() %}
                   {% for item in items %}
-                    {{ ui.combobox_item(value=item, text=item) }}
-                  {% endfor %}
-                {% endcall %}
-                {{ ui.combobox_separator() }}
-              {% endcall %}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_27_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Large List (100 items)') %}
+                    {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{{ ui.combobox_separator() }}{% endcall %}
+{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_27_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Large List (100 items)') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_28_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Search from 100 items', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_28_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Search from 100 items', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_28_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for i in range(1, 101) %}
-              {{ ui.combobox_item(value='Item ' ~ i, text='Item ' ~ i) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_28_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Icon Addon') %}
+              {{ ui.combobox_item(value='Item ' ~ i, text='Item ' ~ i) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_28_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Icon Addon') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_29_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a timezone', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_29_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a timezone', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_29_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {% call ui.input_group_addon(align='inline-start') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-              <path d="M2 12h20"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content(class='w-60', attrs={'data-align-offset': '-28'}) %}
-          {{ ui.combobox_empty(text='No timezones found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.input_group_addon(align='inline-start') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.combobox_content(class='w-60', attrs={'data-align-offset': '-28'}) %}
+          {{ ui.combobox_empty(text='No timezones found.') }}{% call ui.combobox_list() %}
             {% for group, items in timezones %}
               {% call ui.combobox_group() %}
-                {{ ui.combobox_label(text=group) }}
-                {% call ui.combobox_collection() %}
+                {{ ui.combobox_label(text=group) }}{% call ui.combobox_collection() %}
                   {% for item in items %}
-                    {{ ui.combobox_item(value=item, text=item) }}
-                  {% endfor %}
-                {% endcall %}
-              {% endcall %}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_29_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Combobox in Popup') %}
+                    {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_29_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Combobox in Popup') %}
       {% call combobox() %}
-        {% call ui.combobox_trigger(as_=none, variant='outline', size='default', id='base-ui-_R_2a_', class='cn-button group/button inline-flex shrink-0 items-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-outline cn-button-size-default w-64 justify-between font-normal', attrs={'aria-expanded': 'false'}) %}Select country
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.combobox_content() %}
+        {% call ui.combobox_trigger(as_=none, variant='outline', size='default', id='base-ui-_R_2a_', class='cn-button group/button inline-flex shrink-0 items-center whitespace-nowrap transition-all outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-outline cn-button-size-default w-64 justify-between font-normal', attrs={'aria-expanded': 'false'}) %}Select country<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% call ui.combobox_content() %}
           {% call ui.input_group(class='cn-combobox-input w-auto') %}
-            {{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Search', 'value': ''}) }}
-            {% call ui.input_group_addon(align='inline-end') %}{% endcall %}
-          {% endcall %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+            {{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Search', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}{% endcall %}
+{% endcall %}
+{{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for code, value, continent, label in countries %}
-              {{ ui.combobox_item(value=value, text=label) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_2a_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Form with Combobox') %}
+              {{ ui.combobox_item(value=value, text=label) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_2a_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Form with Combobox') %}
       {% call ui.card(size='sm', class='w-full max-w-sm') %}
         {% call ui.card_content() %}
-          <form id="form-with-combobox" class="w-full">
-            {% call ui.field_group() %}
+          <form id="form-with-combobox" class="w-full">{% call ui.field_group() %}
               {% call ui.field(orientation='vertical') %}
-                {% call ui.field_label(as_='label', for_='framework') %}Framework
-                {% endcall %}
-                {% call combobox(attrs={'data-name': 'framework'}) %}
+                {% call ui.field_label(as_='label', for_='framework') %}Framework{% endcall %}
+{% call combobox(attrs={'data-name': 'framework'}) %}
                   {% call ui.input_group(class='cn-combobox-input w-auto') %}
-                    {{ ui.input_group_control(required=true, id='framework', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'name': 'framework', 'value': ''}) }}
-                    {% call ui.input_group_addon(align='inline-end') %}
+                    {{ ui.input_group_control(required=true, id='framework', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'name': 'framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
                       {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_16b_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                          <path d="m6 9 6 6 6-6"></path>
-                        </svg>
-                      {% endcall %}
-                    {% endcall %}
-                  {% endcall %}
-                  {% call ui.combobox_content() %}
-                    {{ ui.combobox_empty(text='No items found.') }}
-                    {% call ui.combobox_list() %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+                    {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
                       {% for item in frameworks %}
-                        {{ ui.combobox_item(value=item, text=item) }}
-                      {% endfor %}
-                    {% endcall %}
-                  {% endcall %}
-                  <input id="base-ui-_R_16b_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-          </form>
-        {% endcall %}
-        {% call ui.card_footer() %}
-          {% call ui.button(size='default', variant='default', type='submit', form='form-with-combobox') %}Submit
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Combobox Multiple') %}
+                        {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_16b_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% endcall %}
+</form>{% endcall %}
+{% call ui.card_footer() %}
+          {% call ui.button(size='default', variant='default', type='submit', form='form-with-combobox') %}Submit{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Combobox Multiple') %}
       {% call combobox() %}
         {% call ui.combobox_chips() %}
-          {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js
-            {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.combobox_chip_input(id='base-ui-_R_2c_', attrs={'aria-expanded': 'false', 'value': ''}) }}
-        {% endcall %}
-        {% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+          {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.combobox_chip_input(id='base-ui-_R_2c_', attrs={'aria-expanded': 'false', 'value': ''}) }}{% endcall %}
+{% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_2c_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Combobox Multiple Disabled') %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_2c_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Combobox Multiple Disabled') %}
       {% call combobox() %}
         {% call ui.combobox_chips() %}
-          {% call ui.combobox_chip(disabled=true, attrs={'tabindex': '-1', 'aria-disabled': 'true'}) %}Next.js
-            {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', disabled=true, attrs={'aria-disabled': 'true'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {% call ui.combobox_chip(disabled=true, attrs={'tabindex': '-1', 'aria-disabled': 'true'}) %}SvelteKit
-            {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', disabled=true, attrs={'aria-disabled': 'true'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-          {{ ui.combobox_chip_input(disabled=true, id='base-ui-_R_2d_', attrs={'aria-expanded': 'false', 'value': ''}) }}
-        {% endcall %}
-        {% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+          {% call ui.combobox_chip(disabled=true, attrs={'tabindex': '-1', 'aria-disabled': 'true'}) %}Next.js{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', disabled=true, attrs={'aria-disabled': 'true'}) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.combobox_chip(disabled=true, attrs={'tabindex': '-1', 'aria-disabled': 'true'}) %}SvelteKit{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', disabled=true, attrs={'aria-disabled': 'true'}) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.combobox_chip_input(disabled=true, id='base-ui-_R_2d_', attrs={'aria-expanded': 'false', 'value': ''}) }}{% endcall %}
+{% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_2d_-hidden-input" disabled="" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Combobox Multiple Invalid') %}
-      <div class="flex flex-col gap-4">
-        {% call combobox() %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_2d_-hidden-input" disabled="" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Combobox Multiple Invalid') %}
+      <div class="flex flex-col gap-4">{% call combobox() %}
           {% call ui.combobox_chips() %}
-            {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js
-              {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}SvelteKit
-              {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.combobox_chip_input(invalid=true, id='base-ui-_R_6e_', attrs={'aria-expanded': 'false', 'value': ''}) }}
-          {% endcall %}
-          {% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
-            {{ ui.combobox_empty(text='No items found.') }}
-            {% call ui.combobox_list() %}
+            {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}SvelteKit{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.combobox_chip_input(invalid=true, id='base-ui-_R_6e_', attrs={'aria-expanded': 'false', 'value': ''}) }}{% endcall %}
+{% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
+            {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
               {% for item in frameworks %}
-                {{ ui.combobox_item(value=item, text=item) }}
-              {% endfor %}
-            {% endcall %}
-          {% endcall %}
-          <input id="base-ui-_R_6e_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-        {% endcall %}
-        {% call ui.field(orientation='vertical', invalid=true) %}
-          {% call ui.field_label(as_='label', for_='combobox-multiple-invalid') %}Frameworks
-          {% endcall %}
-          {% call combobox() %}
+                {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_6e_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% call ui.field(orientation='vertical', invalid=true) %}
+          {% call ui.field_label(as_='label', for_='combobox-multiple-invalid') %}Frameworks{% endcall %}
+{% call combobox() %}
             {% call ui.combobox_chips() %}
-              {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js
-                {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                    <path d="M18 6 6 18"></path>
-                    <path d="m6 6 12 12"></path>
-                  </svg>
-                {% endcall %}
-              {% endcall %}
-              {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}SvelteKit
-                {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                    <path d="M18 6 6 18"></path>
-                    <path d="m6 6 12 12"></path>
-                  </svg>
-                {% endcall %}
-              {% endcall %}
-              {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Nuxt.js
-                {% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true">
-                    <path d="M18 6 6 18"></path>
-                    <path d="m6 6 12 12"></path>
-                  </svg>
-                {% endcall %}
-              {% endcall %}
-              {{ ui.combobox_chip_input(invalid=true, id='combobox-multiple-invalid', attrs={'aria-expanded': 'false', 'value': ''}) }}
-            {% endcall %}
-            {% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
-              {{ ui.combobox_empty(text='No items found.') }}
-              {% call ui.combobox_list() %}
+              {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}SvelteKit{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Nuxt.js{% call ui.combobox_chip_remove(size='icon-xs', variant='ghost', attrs={'aria-disabled': 'false'}) %}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x cn-combobox-chip-indicator-icon pointer-events-none" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.combobox_chip_input(invalid=true, id='combobox-multiple-invalid', attrs={'aria-expanded': 'false', 'value': ''}) }}{% endcall %}
+{% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
+              {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
                 {% for item in frameworks %}
-                  {{ ui.combobox_item(value=item, text=item) }}
-                {% endfor %}
-              {% endcall %}
-            {% endcall %}
-            <input id="base-ui-_R_1ae_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-          {% endcall %}
-          {% call ui.field_description() %}Please select at least one framework.
-          {% endcall %}
-          {% call ui.field_error() %}This field is required.
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Combobox Multiple (No Remove)') %}
+                  {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_1ae_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% call ui.field_description() %}Please select at least one framework.{% endcall %}
+{% call ui.field_error() %}This field is required.{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Combobox Multiple (No Remove)') %}
       {% call combobox() %}
         {% call ui.combobox_chips() %}
-          {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js
-          {% endcall %}
-          {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}SvelteKit
-          {% endcall %}
-          {{ ui.combobox_chip_input(id='base-ui-_R_2f_', attrs={'aria-expanded': 'false', 'value': ''}) }}
-        {% endcall %}
-        {% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+          {% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}Next.js{% endcall %}
+{% call ui.combobox_chip(attrs={'tabindex': '-1'}) %}SvelteKit{% endcall %}
+{{ ui.combobox_chip_input(id='base-ui-_R_2f_', attrs={'aria-expanded': 'false', 'value': ''}) }}{% endcall %}
+{% call ui.combobox_content(attrs={'data-chips': 'true'}) %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_2f_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Custom Item Rendering') %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_2f_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Custom Item Rendering') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_2g_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Search countries...', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_2g_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Search countries...', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_2g_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No countries found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No countries found.') }}{% call ui.combobox_list() %}
             {% for code, value, continent, label in countries if code %}
               {% call ui.combobox_item(value=value) %}
                 {% call ui.item(size='xs', class='p-0') %}
                   {% call ui.item_content() %}
-                    {{ ui.item_title(text=label, class='whitespace-nowrap') }}
-                    {{ ui.item_description(text=continent ~ ' (' ~ code ~ ')') }}
-                  {% endcall %}
-                {% endcall %}
-              {% endcall %}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_2g_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Combobox in Dialog') %}
+                    {{ ui.item_title(text=label, class='whitespace-nowrap') }}{{ ui.item_description(text=continent ~ ' (' ~ code ~ ')') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_2g_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% call ui.example(title='Combobox in Dialog') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog
-        {% endcall %}
-        {% call ui.dialog_content(class='sm:max-w-[425px]') %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog{% endcall %}
+{% call ui.dialog_content(class='sm:max-w-[425px]') %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Select Framework') }}
-            {{ ui.dialog_description(text='Choose your preferred framework from the list below.') }}
-          {% endcall %}
-          {% call ui.field(orientation='vertical') %}
-            {% call ui.field_label(as_='label', for_='framework-dialog', class='sr-only') %}Framework
-            {% endcall %}
-            {% call combobox() %}
+            {{ ui.dialog_title(text='Select Framework') }}{{ ui.dialog_description(text='Choose your preferred framework from the list below.') }}{% endcall %}
+{% call ui.field(orientation='vertical') %}
+            {% call ui.field_label(as_='label', for_='framework-dialog', class='sr-only') %}Framework{% endcall %}
+{% call combobox() %}
               {% call ui.input_group(class='cn-combobox-input w-auto') %}
-                {{ ui.input_group_control(id='framework-dialog', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-                {% call ui.input_group_addon(align='inline-end') %}
+                {{ ui.input_group_control(id='framework-dialog', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
                   {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-                    {{ lucide('chevron-down', 'cn-combobox-trigger-icon pointer-events-none') }}
-                  {% endcall %}
-                {% endcall %}
-              {% endcall %}
-              {% call ui.combobox_content() %}
-                {{ ui.combobox_empty(text='No items found.') }}
-                {% call ui.combobox_list() %}
+                    {{ lucide('chevron-down', 'cn-combobox-trigger-icon pointer-events-none') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+                {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
                   {% for item in frameworks %}
-                    {{ ui.combobox_item(value=item, text=item) }}
-                  {% endfor %}
-                {% endcall %}
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.dialog_footer() %}
-            {{ ui.button(text='Cancel', variant='outline', size='default', type='button') }}
-            {{ ui.button(text='Confirm', variant='default', size='default', type='button', attrs={'data-fb-toast': 'Framework selected.'}) }}
-          {% endcall %}
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Other Inputs') %}
+                    {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.dialog_footer() %}
+            {{ ui.button(text='Cancel', variant='outline', size='default', type='button') }}{{ ui.button(text='Confirm', variant='default', size='default', type='button', attrs={'data-fb-toast': 'Framework selected.'}) }}{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Other Inputs') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-52') %}
-          {{ ui.input_group_control(id='base-ui-_R_6i_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_6i_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_6i_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_6i_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-      {% call ui.select_trigger(size='default', class='w-52') %}
-        {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a framework
-        {% endcall %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true">
-          <path d="m6 9 6 6 6-6"></path>
-        </svg>
-      {% endcall %}
-      <select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal">
-        <option value="" selected=""></option>
-      </select>
-      {% call ui.button(size='default', variant='outline', class='w-52 justify-between font-normal text-muted-foreground style-sera:hidden') %}Select a framework
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true">
-          <path d="m6 9 6 6 6-6"></path>
-        </svg>
-      {% endcall %}
-      {{ ui.input(class='w-52', attrs={'placeholder': 'Select a framework'}) }}
-      {% call ui.input_group(class='w-52') %}
-        {{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Select a framework'}) }}
-        {% call ui.input_group_addon(align='inline-end') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true">
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Disabled Items') %}
+              {{ ui.combobox_item(value=item, text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_6i_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% call ui.select_trigger(size='default', class='w-52') %}
+        {% call ui.select_value(attrs={'style': 'pointer-events:none'}) %}Select a framework{% endcall %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"><option value="" selected=""></option></select>{% call ui.button(size='default', variant='outline', class='w-52 justify-between font-normal text-muted-foreground style-sera:hidden') %}Select a framework<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{{ ui.input(class='w-52', attrs={'placeholder': 'Select a framework'}) }}{% call ui.input_group(class='w-52') %}
+        {{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Select a framework'}) }}{% call ui.input_group_addon(align='inline-end') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Disabled Items') %}
       {% call combobox() %}
         {% call ui.input_group(class='cn-combobox-input w-auto') %}
-          {{ ui.input_group_control(id='base-ui-_R_2j_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}
-          {% call ui.input_group_addon(align='inline-end') %}
+          {{ ui.input_group_control(id='base-ui-_R_2j_', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'autocomplete': 'off', 'spellcheck': 'false', 'autocorrect': 'off', 'autocapitalize': 'none', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'listbox', 'aria-autocomplete': 'list', 'placeholder': 'Select a framework', 'value': ''}) }}{% call ui.input_group_addon(align='inline-end') %}
             {% call ui.input_group_button(data_slot='input-group-button', as_='input-group-button', size='icon-xs', variant='ghost', type='button', id='base-ui-_R_2j_', class='cn-combobox-trigger group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent', attrs={'data-placeholder': '', 'tabindex': '0', 'role': 'combobox', 'aria-expanded': 'false', 'aria-haspopup': 'dialog'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.combobox_content() %}
-          {{ ui.combobox_empty(text='No items found.') }}
-          {% call ui.combobox_list() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-combobox-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.combobox_content() %}
+          {{ ui.combobox_empty(text='No items found.') }}{% call ui.combobox_list() %}
             {% for item in frameworks %}
-              {{ ui.combobox_item(value=item, disabled=(item in disabled_frameworks), text=item) }}
-            {% endfor %}
-          {% endcall %}
-        {% endcall %}
-        <input id="base-ui-_R_2j_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+              {{ ui.combobox_item(value=item, disabled=(item in disabled_frameworks), text=item) }}{% endfor %}
+{% endcall %}
+{% endcall %}
+<input id="base-ui-_R_2j_-hidden-input" style="clip-path:inset(50%);overflow:hidden;white-space:nowrap;border:0;padding:0;width:1px;height:1px;margin:0;position:fixed;top:0;left:0" tabindex="-1" aria-hidden="true" value="">{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

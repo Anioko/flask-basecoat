@@ -1,105 +1,77 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Page - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
-
-    <div class="bg-background">
-        <section class="py-10 lg:py-16">
-            <div class="mx-auto max-w-7xl px-4">
-                {# Hero & Featured Posts Grid #}
-                <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    {# Main Hero Post (2 cols) #}
-                    <div class="relative overflow-hidden rounded-lg lg:col-span-2">
-                        <img alt="{{ hero_post.title }}" loading="lazy" width="800" height="450" class="aspect-video w-full object-cover" src="{{ hero_post.image }}">
-                        <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-                            <span class="inline-flex h-5 shrink-0 items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium mb-2 w-fit bg-white/20 text-white backdrop-blur-sm">
-                                {{ hero_post.badge }}
-                            </span>
-                            <h2 class="text-2xl leading-tight font-bold md:text-2xl">
-                                {{ hero_post.title }}
-                            </h2>
-                        </div>
-                    </div>
-
-                    {# Other Featured Posts List (1 col) #}
-                    <div class="rounded-xl border border-border bg-card p-6 shadow-none lg:col-span-1">
-                        <h3 class="font-medium text-base leading-normal mb-4">Other Featured Posts</h3>
-                        <div class="space-y-4">
-                            {% for post in featured_posts %}
-                            <a class="flex items-center gap-4 transition-opacity hover:opacity-80" href="#">
-                                <img alt="{{ post.title }}" loading="lazy" class="aspect-square w-14 h-14 rounded-md object-cover shrink-0" src="{{ post.image }}">
-                                <div class="space-y-1">
-                                    <h4 class="line-clamp-2 text-sm leading-snug font-medium text-foreground">{{ post.title }}</h4>
-                                    <p class="text-muted-foreground flex items-center gap-1 text-xs">
-                                        <i data-lucide="clock" class="size-3"></i>
-                                        {{ post.read_time }}
-                                    </p>
-                                </div>
-                            </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                {# Recent Posts Section #}
-                <div class="mt-12">
-                    <div class="mb-6 flex items-center justify-between">
-                        <h2 class="text-2xl font-bold">Recent Posts</h2>
-                        <a class="inline-flex shrink-0 items-center justify-center border border-border bg-background shadow-xs hover:bg-muted hover:text-foreground h-8 gap-1 rounded-md px-2.5 text-sm font-medium transition-colors" href="#">
-                            All Posts
-                            <i data-lucide="arrow-right" class="size-4"></i>
-                        </a>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {% for post in recent_posts %}
-                        <a class="block transition-opacity hover:opacity-80" href="#">
-                            <div class="overflow-hidden rounded-xl border border-border bg-card shadow-none">
-                                <img alt="{{ post.title }}" loading="lazy" class="aspect-video w-full object-cover" src="{{ post.image }}">
-                                <div class="grid gap-2 p-4">
-                                    <h3 class="text-lg leading-relaxed font-semibold line-clamp-2 text-foreground">{{ post.title }}</h3>
-                                    <p class="text-muted-foreground line-clamp-2 text-sm">{{ post.snippet }}</p>
-                                    <div class="text-muted-foreground flex items-center gap-2 text-xs pt-1">
-                                        <span class="relative flex size-6 shrink-0 rounded-full overflow-hidden">
-                                            <img class="aspect-square size-full object-cover" src="{{ post.avatar }}" alt="{{ post.author }}">
-                                        </span>
-                                        <span>{{ post.author }}</span>
-                                        <span>•</span>
-                                        <span>{{ post.read_time }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Blog Page - Shadcn UI Examples{% endblock %}
+{% block body %}
+  <div class="bg-background">
+    <section class="py-10 lg:py-16">
+      <div class="mx-auto max-w-7xl px-4">
+        {# Hero and featured posts #}
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          {# Main hero post (two columns) #}
+          <div class="relative overflow-hidden rounded-lg lg:col-span-2">
+            <img alt="{{ hero_post.title }}" loading="lazy" width="800" height="450" class="aspect-video w-full object-cover" src="{{ hero_post.image }}">
+            <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-background/95 via-background/60 to-transparent p-6 text-foreground">
+              {{ ui.badge(text=hero_post.badge, variant='secondary', class='mb-2 w-fit backdrop-blur-sm') }}
+              <h2 class="text-2xl leading-tight font-bold md:text-2xl">{{ hero_post.title }}</h2>
             </div>
-        </section>
-    </div>
-</body>
-</html>
+          </div>
+
+          {# Other featured posts (one column) #}
+          {% call ui.card(class='lg:col-span-1') %}
+            {% call ui.card_header() %}
+              {{ ui.card_title(text='Other Featured Posts') }}
+            {% endcall %}
+            {% call ui.card_content(class='space-y-4') %}
+              {% for post in featured_posts %}
+                <a class="flex items-center gap-4 transition-opacity hover:opacity-80" href="#">
+                  <img alt="{{ post.title }}" loading="lazy" class="aspect-square size-14 shrink-0 rounded-md object-cover" src="{{ post.image }}">
+                  <div class="space-y-1">
+                    <h4 class="line-clamp-2 text-sm leading-snug font-medium text-foreground">{{ post.title }}</h4>
+                    <p class="flex items-center gap-1 text-xs text-muted-foreground">
+                      {{ lucide('clock', 'size-3') }}
+                      {{ post.read_time }}
+                    </p>
+                  </div>
+                </a>
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        {# Recent posts #}
+        <div class="mt-12">
+          <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-2xl font-bold">Recent Posts</h2>
+            {% call ui.button(variant='outline', size='sm', href='#') %}
+              All Posts
+              {{ lucide('arrow-right', 'size-4') }}
+            {% endcall %}
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {% for post in recent_posts %}
+              <a class="block transition-opacity hover:opacity-80" href="#">
+                {% call ui.card(class='h-full overflow-hidden pt-0') %}
+                  <img alt="{{ post.title }}" loading="lazy" class="aspect-video w-full object-cover" src="{{ post.image }}">
+                  {% call ui.card_content(class='grid gap-2') %}
+                    <h3 class="line-clamp-2 text-lg leading-relaxed font-semibold text-foreground">{{ post.title }}</h3>
+                    <p class="line-clamp-2 text-sm text-muted-foreground">{{ post.snippet }}</p>
+                    <div class="flex items-center gap-2 pt-1 text-xs text-muted-foreground">
+                      {% call ui.avatar(size='sm') %}
+                        {{ ui.avatar_image(src=post.avatar, alt=post.author) }}
+                        {{ ui.avatar_fallback(text=post.author[:1]) }}
+                      {% endcall %}
+                      <span>{{ post.author }}</span>
+                      <span>&bull;</span>
+                      <span>{{ post.read_time }}</span>
+                    </div>
+                  {% endcall %}
+                {% endcall %}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}

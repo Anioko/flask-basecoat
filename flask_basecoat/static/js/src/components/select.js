@@ -5,19 +5,19 @@
   'use strict';
 
   FB.register('select', {
-    selector: '[data-fb="select"]',
-    init(wrapper) {
-      const trigger = FB.qs(wrapper, '[data-slot="select-trigger"]');
-      const content = FB.qs(wrapper, '[data-slot="select-content"]');
-      const valueEl = trigger && FB.qs(trigger, '[data-slot="select-value"]');
-      if (!trigger || !content) return;
+    selector: '[data-slot="select-content"]',
+    init(content) {
+      const trigger = FB.pairWith(content, '[data-slot="select-trigger"]');
+      if (!trigger) return;
+      const wrapper = trigger; // data-name and data-value live on the trigger
+      const valueEl = FB.qs(trigger, '[data-slot="select-value"]');
       const id = FB.ensureId(content, 'select');
       trigger.setAttribute('aria-controls', id);
       content.setAttribute('data-floating', '');
       content.setAttribute('data-popper-var', 'select');
-      const name = wrapper.getAttribute('data-name') || wrapper.getAttribute('name');
+      const name = trigger.getAttribute('data-name') || content.getAttribute('data-name') || trigger.getAttribute('name');
       let input = null;
-      if (name) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; wrapper.appendChild(input); }
+      if (name) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; trigger.insertAdjacentElement('afterend', input); }
       const placeholder = valueEl ? valueEl.textContent : '';
       const items = () => FB.qsa(content, '[data-slot="select-item"]');
       const nav = FB.roving(items, { orientation: 'vertical', loop: false });
@@ -65,7 +65,7 @@
       });
       content.addEventListener('click', (e) => { const it = e.target.closest('[data-slot="select-item"]'); if (it) select(it); });
       content.addEventListener('pointermove', (e) => { const it = e.target.closest('[data-slot="select-item"]'); if (it && document.activeElement !== it) it.focus(); });
-      wrapper.fbOpen = open; wrapper.fbClose = close; wrapper.fbSelect = select;
+      content.fbOpen = open; content.fbClose = close; trigger.fbOpen = open; trigger.fbClose = close; trigger.fbSelect = select;
     },
   });
 })(window.FlaskBasecoat);

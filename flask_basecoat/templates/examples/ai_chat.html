@@ -1,300 +1,206 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# AI prompt interface built on the sidebar family (see the sidebar-07 block for the canonical structure). #}
+{% block title %}AI Chat - Shadcn UI Examples{% endblock %}
+{% block head %}
+  <script>
+    function pickPrompt(text) {
+      const input = document.getElementById('ai-textarea');
+      if (input) {
+        input.value = text;
+        submitPrompt();
+      }
+    }
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+    function submitPrompt(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('ai-textarea');
+      const q = input.value.trim();
+      if (!q) return;
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('ai-sidebar');
-            sidebar.classList.toggle('hidden');
-        }
+      const heroPane = document.getElementById('ai-hero-pane');
+      const chatThread = document.getElementById('ai-chat-thread');
+      if (heroPane) heroPane.classList.add('hidden');
+      if (chatThread) chatThread.classList.remove('hidden');
 
-        function pickPrompt(text) {
-            const input = document.getElementById('ai-textarea');
-            if (input) {
-                input.value = text;
-                submitPrompt();
-            }
-        }
+      const container = document.getElementById('ai-messages-container');
+      const userNode = document.getElementById('ai-user-message-template').content.firstElementChild.cloneNode(true);
+      userNode.querySelector('[data-message-body]').textContent = q;
+      container.appendChild(userNode);
+      input.value = '';
 
-        function submitPrompt(e) {
-            if (e) e.preventDefault();
-            const input = document.getElementById('ai-textarea');
-            const q = input.value.trim();
-            if (!q) return;
+      setTimeout(() => {
+        const aiNode = document.getElementById('ai-assistant-message-template').content.firstElementChild.cloneNode(true);
+        aiNode.querySelector('[data-prompt-echo]').textContent = q;
+        container.appendChild(aiNode);
+        container.scrollTop = container.scrollHeight;
+      }, 600);
+    }
+  </script>
+{% endblock %}
+{% block body %}
+  {% set pinned = [('brain', 'Research & Analysis', 'Research & Analysis prompt'), ('globe', 'Web Search', 'Web Search prompt'), ('database', 'Knowledge Base', 'Knowledge Base prompt')] %}
+  {% set recents = ['Onboarding flow review', 'Activation metrics breakdown', 'User pain points summary'] %}
+  {% set yesterday = ['Product roadmap audit', 'Bug reports triage', 'Competitive analysis', 'Feature prioritization'] %}
+  {% set suggestions = ['Summarize this product update', 'Write a short creative paragraph', 'Draft a fun story hook', 'Suggest a quick stretch routine'] %}
 
-            const heroPane = document.getElementById('ai-hero-pane');
-            const chatThread = document.getElementById('ai-chat-thread');
-            if (heroPane) heroPane.classList.add('hidden');
-            if (chatThread) chatThread.classList.remove('hidden');
-
-            const container = document.getElementById('ai-messages-container');
-            const userMsg = document.createElement('div');
-            userMsg.className = "flex items-start justify-end gap-3";
-            userMsg.innerHTML = `
-                <div class="max-w-[75%] rounded-2xl rounded-br-none bg-primary text-primary-foreground p-4 text-sm shadow-xs">
-                    ${q}
-                </div>
-            `;
-            container.appendChild(userMsg);
-
-            input.value = '';
-
-            setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = "flex items-start gap-3";
-                aiMsg.innerHTML = `
-                    <div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary shrink-0">
-                        <i data-lucide="sparkles" class="size-4"></i>
-                    </div>
-                    <div class="max-w-[80%] rounded-2xl rounded-bl-none border border-border bg-card p-4 text-sm text-foreground space-y-2 shadow-2xs">
-                        <p>I processed your prompt: <strong>"${q}"</strong>. Here is the analysis and reference architecture based on your query.</p>
-                        <div class="rounded-md bg-muted/60 p-3 font-mono text-xs text-muted-foreground border border-border">
-                            // Response generated successfully.<br>
-                            Tokens: 384 | Latency: 112ms | Model: GPT-4o
-                        </div>
-                    </div>
-                `;
-                container.appendChild(aiMsg);
-                if (window.lucide) { lucide.createIcons(); }
-                container.scrollTop = container.scrollHeight;
-            }, 600);
-        }
-    </script>
-</head>
-<body class="h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
-
-    <div class="bg-background flex h-screen w-full overflow-hidden">
-        {# Left Sidebar #}
-        <aside id="ai-sidebar" class="hidden md:flex w-64 flex-col border-r border-border bg-sidebar text-sidebar-foreground shrink-0 transition-all duration-200">
-            {# Sidebar Header #}
-            <div class="flex flex-col gap-2 p-2 border-b border-border/50">
-                <div class="flex items-center gap-2 p-1.5 font-semibold text-base">
-                    <i data-lucide="sparkles" class="size-4 text-primary"></i>
-                    <span>Acme Inc.</span>
-                </div>
-                <div class="relative">
-                    <i data-lucide="search" class="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 opacity-50"></i>
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        class="h-8 w-full rounded-md border border-input bg-background pl-8 pr-2.5 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                    >
-                </div>
+  {% call ui.sidebar_wrapper(class='h-svh overflow-hidden', attrs={'style': '--sidebar-width:16rem;--sidebar-width-icon:3rem'}) %}
+    {% call ui.sidebar(variant='sidebar') %}
+      {{ ui.sidebar_gap() }}
+      {% call ui.sidebar_container() %}
+        {% call ui.sidebar_inner() %}
+          {% call ui.sidebar_header(class='gap-2 border-b border-sidebar-border') %}
+            <div class="flex items-center gap-2 p-1.5 text-base font-semibold">
+              {{ lucide('sparkles', 'size-4 text-primary') }}
+              <span>Acme Inc.</span>
             </div>
+            {{ ui.sidebar_input(name='q', placeholder='Search...', aria_label='Search chats') }}
+          {% endcall %}
+          {% call ui.sidebar_content() %}
+            {% call ui.sidebar_group() %}
+              {% call ui.sidebar_group_content() %}
+                {% call ui.sidebar_menu() %}
+                  {% call ui.sidebar_menu_item() %}
+                    {% call ui.button(size='sm', type='button', class='w-full justify-start', attrs={'onclick': 'location.reload()'}) %}
+                      {{ lucide('plus', 'size-4') }}
+                      <span>New chat</span>
+                    {% endcall %}
+                  {% endcall %}
+                  {% call ui.sidebar_menu_item() %}
+                    {% call ui.sidebar_menu_button(href='#') %}
+                      {{ lucide('folder') }}
+                      <span>Projects</span>
+                    {% endcall %}
+                  {% endcall %}
+                  {% call ui.sidebar_menu_item() %}
+                    {% call ui.sidebar_menu_button(href='#') %}
+                      {{ lucide('book-open') }}
+                      <span>Library</span>
+                    {% endcall %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
 
-            {# Sidebar Menu Content #}
-            <div class="flex-1 overflow-y-auto p-2 space-y-4 text-sm">
-                <ul class="flex flex-col gap-1">
-                    <li>
-                        <button type="button" onclick="location.reload()" class="flex w-full items-center gap-2 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
-                            <i data-lucide="plus" class="size-4"></i>
-                            <span>New chat</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button type="button" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
-                            <i data-lucide="folder-closed" class="size-4"></i>
-                            <span>Projects</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button type="button" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
-                            <i data-lucide="book-open" class="size-4"></i>
-                            <span>Library</span>
-                        </button>
-                    </li>
-                </ul>
+            {% call ui.sidebar_group() %}
+              {{ ui.sidebar_group_label(text='Pinned') }}
+              {% call ui.sidebar_group_content() %}
+                {% call ui.sidebar_menu() %}
+                  {% for icon, label, prompt in pinned %}
+                    {% call ui.sidebar_menu_item() %}
+                      {% call ui.sidebar_menu_button(tag='button', type='button', attrs={'onclick': "pickPrompt('" ~ prompt ~ "')"}) %}
+                        {{ lucide(icon) }}
+                        <span>{{ label }}</span>
+                      {% endcall %}
+                    {% endcall %}
+                  {% endfor %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
 
-                {# Pinned #}
-                <div class="space-y-1">
-                    <div class="px-2 text-[11px] font-semibold text-sidebar-foreground/70">Pinned</div>
-                    <ul class="flex flex-col gap-0.5">
-                        <li>
-                            <button type="button" onclick="pickPrompt('Research & Analysis prompt')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
-                                <i data-lucide="flask-conical" class="size-4"></i>
-                                <span>Research &amp; Analysis</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('Web Search prompt')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
-                                <i data-lucide="earth" class="size-4"></i>
-                                <span>Web Search</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('Knowledge Base prompt')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
-                                <i data-lucide="library" class="size-4"></i>
-                                <span>Knowledge Base</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+            {% for title, entries in [('Recents', recents), ('Yesterday', yesterday)] %}
+              {% call ui.sidebar_group() %}
+                {{ ui.sidebar_group_label(text=title) }}
+                {% call ui.sidebar_group_content() %}
+                  {% call ui.sidebar_menu() %}
+                    {% for prompt in entries %}
+                      {% call ui.sidebar_menu_item() %}
+                        {% call ui.sidebar_menu_button(tag='button', type='button', attrs={'onclick': "pickPrompt('" ~ prompt ~ "')"}) %}
+                          <span>{{ prompt }}</span>
+                        {% endcall %}
+                      {% endcall %}
+                    {% endfor %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endfor %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
 
-                {# Recents #}
-                <div class="space-y-1">
-                    <div class="px-2 text-[11px] font-semibold text-sidebar-foreground/70">Recents</div>
-                    <ul class="flex flex-col gap-0.5">
-                        <li>
-                            <button type="button" onclick="pickPrompt('Onboarding flow review')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">Onboarding flow review</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('Activation metrics breakdown')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">Activation metrics breakdown</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('User pain points summary')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">User pain points summary</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+    {% call ui.sidebar_inset(class='h-svh overflow-hidden') %}
+      <header class="flex h-12 shrink-0 items-center justify-between border-b border-border px-4 py-2 text-xs">
+        {% call ui.sidebar_trigger(size='icon-sm', variant='ghost', class='-ml-1', aria_label='Toggle Sidebar') %}
+          {{ lucide('panel-left', 'cn-rtl-flip') }}
+          <span class="sr-only">Toggle Sidebar</span>
+        {% endcall %}
+        <div class="flex items-center gap-2">
+          {{ ui.badge(text='Plus', variant='outline', class='px-3 text-[10px] font-semibold uppercase') }}
+          {% call ui.button(variant='ghost', size='icon', type='button', class='rounded-full', aria_label='Account') %}
+            {% call ui.avatar(class='size-8') %}
+              {{ ui.avatar_image(src='https://i.pravatar.cc/40?img=12', alt='John Doe') }}
+              {{ ui.avatar_fallback(text='JD') }}
+            {% endcall %}
+          {% endcall %}
+        </div>
+      </header>
 
-                {# Yesterday #}
-                <div class="space-y-1">
-                    <div class="px-2 text-[11px] font-semibold text-sidebar-foreground/70">Yesterday</div>
-                    <ul class="flex flex-col gap-0.5">
-                        <li>
-                            <button type="button" onclick="pickPrompt('Product roadmap audit')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">Product roadmap audit</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('Bug reports triage')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">Bug reports triage</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('Competitive analysis')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">Competitive analysis</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="pickPrompt('Feature prioritization')" class="flex w-full items-center gap-2 rounded-md p-2 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors text-left truncate">
-                                <span class="truncate">Feature prioritization</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </aside>
+      <div class="flex flex-1 flex-col overflow-y-auto">
+        {# Welcome state #}
+        <div id="ai-hero-pane" class="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center p-8">
+          <div class="mb-12 space-y-3">
+            <h1 class="text-4xl font-bold tracking-tight">Welcome, John Doe</h1>
+            <p class="text-lg text-muted-foreground">May I be of assistance today?</p>
+          </div>
 
-        {# Main Inset Area #}
-        <main class="flex flex-1 flex-col h-screen overflow-hidden bg-background">
-            {# Inset Header #}
-            <header class="flex h-12 items-center justify-between border-b border-border px-4 py-2 text-xs shrink-0 bg-background">
-                <button type="button" onclick="toggleSidebar()" class="inline-flex size-8 items-center justify-center rounded-md border border-border hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" aria-label="Toggle Sidebar">
-                    <i data-lucide="panel-left" class="size-4"></i>
-                </button>
+          {# Prompt composer #}
+          <div class="mb-6 w-full max-w-4xl">
+            <div class="overflow-hidden rounded-xl border border-border bg-background shadow-xs">
+              <div class="flex items-center">
+                {{ ui.textarea(id='ai-textarea', name='prompt', rows=2, placeholder='Best icons library', class='min-h-12 resize-none rounded-none border-0 bg-transparent p-4 text-base shadow-none focus-visible:ring-0 dark:bg-transparent', attrs={'onkeydown': "if(event.key==='Enter' && !event.shiftKey){event.preventDefault();submitPrompt();}"}) }}
+              </div>
+              <div class="flex items-center justify-between border-t border-border bg-muted/40 p-3">
                 <div class="flex items-center gap-2">
-                    <span class="inline-flex h-5 items-center justify-center rounded-full border border-border px-3 py-1 text-[10px] font-semibold uppercase text-foreground">
-                        Plus
-                    </span>
-                    <button type="button" class="relative size-8 rounded-full overflow-hidden border border-border">
-                        <img class="aspect-square size-full object-cover" src="https://i.pravatar.cc/40?img=12" alt="John Doe">
-                    </button>
+                  {% call ui.button(variant='outline', size='icon-sm', type='button', aria_label='Attach') %}{{ lucide('plus', 'size-4') }}{% endcall %}
+                  {% call ui.button(variant='outline', size='sm', type='button') %}{{ lucide('settings-2', 'size-3.5') }}<span>Tools</span>{% endcall %}
+                  {% call ui.button(variant='outline', size='sm', type='button') %}{{ lucide('pencil', 'size-3.5') }}<span>Normal</span>{% endcall %}
                 </div>
-            </header>
-
-            {# Interactive Chat / Hero Pane #}
-            <div class="flex flex-1 flex-col overflow-y-auto">
-                {# Hero Welcome State #}
-                <div id="ai-hero-pane" class="mx-auto flex max-w-3xl flex-1 flex-col justify-center p-8 w-full">
-                    <div class="mb-12 space-y-3">
-                        <h1 class="text-4xl font-bold tracking-tight">Welcome, John Doe</h1>
-                        <p class="text-muted-foreground text-lg">May I be of assistance today?</p>
-                    </div>
-
-                    {# Prompt Input Box Card #}
-                    <div class="mb-6 w-full max-w-4xl">
-                        <div class="bg-background overflow-hidden rounded-xl border border-border shadow-xs">
-                            <div class="flex items-center">
-                                <textarea
-                                    id="ai-textarea"
-                                    class="flex w-full rounded-md border-0 bg-transparent p-4 text-base placeholder:text-muted-foreground focus:outline-none resize-none min-h-12 shadow-none"
-                                    placeholder="Best icons library"
-                                    rows="2"
-                                    onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();submitPrompt();}"
-                                ></textarea>
-                            </div>
-                            <div class="bg-muted/40 flex items-center justify-between border-t border-border p-3">
-                                <div class="flex items-center gap-2">
-                                    <button type="button" class="inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-sm font-medium hover:bg-muted transition-colors">
-                                        <i data-lucide="plus" class="size-4"></i>
-                                    </button>
-                                    <button type="button" class="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-2.5 text-xs font-medium hover:bg-muted transition-colors">
-                                        <i data-lucide="sliders-horizontal" class="size-3.5"></i>
-                                        <span>Tools</span>
-                                    </button>
-                                    <button type="button" class="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-2.5 text-xs font-medium hover:bg-muted transition-colors">
-                                        <i data-lucide="pen-line" class="size-3.5"></i>
-                                        <span>Normal</span>
-                                    </button>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <button type="button" class="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-background px-2.5 text-xs font-medium hover:bg-muted transition-colors">
-                                        <i data-lucide="mic" class="size-3.5"></i>
-                                        <span>Voice</span>
-                                    </button>
-                                    <button type="button" onclick="submitPrompt()" class="inline-flex size-8 items-center justify-center rounded-full bg-foreground text-background hover:bg-foreground/80 transition-colors shadow-none" aria-label="Send">
-                                        <i data-lucide="arrow-up" class="size-4"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# Suggestion Cards (4 canonical prompts) #}
-                    <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
-                        <button type="button" onclick="pickPrompt('Summarize this product update')" class="inline-flex items-center justify-between rounded-md border border-border bg-background p-3 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
-                            <span>Summarize this product update</span>
-                            <i data-lucide="arrow-up-right" class="size-4 text-muted-foreground shrink-0"></i>
-                        </button>
-                        <button type="button" onclick="pickPrompt('Write a short creative paragraph')" class="inline-flex items-center justify-between rounded-md border border-border bg-background p-3 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
-                            <span>Write a short creative paragraph</span>
-                            <i data-lucide="arrow-up-right" class="size-4 text-muted-foreground shrink-0"></i>
-                        </button>
-                        <button type="button" onclick="pickPrompt('Draft a fun story hook')" class="inline-flex items-center justify-between rounded-md border border-border bg-background p-3 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
-                            <span>Draft a fun story hook</span>
-                            <i data-lucide="arrow-up-right" class="size-4 text-muted-foreground shrink-0"></i>
-                        </button>
-                        <button type="button" onclick="pickPrompt('Suggest a quick stretch routine')" class="inline-flex items-center justify-between rounded-md border border-border bg-background p-3 text-sm font-medium text-foreground hover:bg-muted transition-colors text-left">
-                            <span>Suggest a quick stretch routine</span>
-                            <i data-lucide="arrow-up-right" class="size-4 text-muted-foreground shrink-0"></i>
-                        </button>
-                    </div>
+                <div class="flex items-center gap-2">
+                  {% call ui.button(variant='outline', size='sm', type='button') %}{{ lucide('mic', 'size-3.5') }}<span>Voice</span>{% endcall %}
+                  {% call ui.button(size='icon-sm', type='button', class='rounded-full', aria_label='Send', attrs={'onclick': 'submitPrompt()'}) %}{{ lucide('arrow-up', 'size-4') }}{% endcall %}
                 </div>
-
-                {# Active Chat Thread (Shown when user prompts) #}
-                <div id="ai-chat-thread" class="hidden flex-1 overflow-y-auto p-6 space-y-4">
-                    <div id="ai-messages-container" class="space-y-4 max-w-3xl mx-auto"></div>
-                </div>
+              </div>
             </div>
-        </main>
+          </div>
+
+          {# Suggestion cards #}
+          <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {% for s in suggestions %}
+              {% call ui.button(variant='outline', type='button', class='h-auto justify-between p-3 text-left whitespace-normal', attrs={'onclick': "pickPrompt('" ~ s ~ "')"}) %}
+                <span>{{ s }}</span>
+                {{ lucide('arrow-up-right', 'size-4 shrink-0 text-muted-foreground') }}
+              {% endcall %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {# Conversation thread (shown once a prompt is sent) #}
+        <div id="ai-chat-thread" class="hidden flex-1 space-y-4 overflow-y-auto p-6">
+          <div id="ai-messages-container" class="mx-auto max-w-3xl space-y-4"></div>
+        </div>
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  {# Cloned by submitPrompt() #}
+  <template id="ai-user-message-template">
+    <div class="flex items-start justify-end gap-3">
+      <div class="max-w-[75%] rounded-2xl rounded-br-none bg-primary p-4 text-sm text-primary-foreground shadow-xs" data-message-body></div>
     </div>
-</body>
-</html>
+  </template>
+  <template id="ai-assistant-message-template">
+    <div class="flex items-start gap-3">
+      {% call ui.avatar(class='size-8') %}
+        {% call ui.avatar_fallback(class='bg-primary/20 text-primary') %}{{ lucide('sparkles', 'size-4') }}{% endcall %}
+      {% endcall %}
+      <div class="max-w-[80%] space-y-2 rounded-2xl rounded-bl-none border border-border bg-card p-4 text-sm text-foreground shadow-2xs">
+        <p>I processed your prompt: <strong>"<span data-prompt-echo></span>"</strong>. Here is the analysis and reference architecture based on your query.</p>
+        <div class="rounded-md border border-border bg-muted/60 p-3 font-mono text-xs text-muted-foreground">
+          // Response generated successfully.<br>
+          Tokens: 384 | Latency: 112ms | Model: GPT-4o
+        </div>
+      </div>
+    </div>
+  </template>
+{% endblock %}

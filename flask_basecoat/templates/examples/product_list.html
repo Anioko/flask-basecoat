@@ -1,298 +1,183 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product List - Shadcn UI Examples</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Product List - Shadcn UI Examples{% endblock %}
+{% block head %}
+<script>
+  let selectedCategory = 'all';
+  function filterByCategory(cat) {
+    selectedCategory = cat;
+    applyFilters();
+  }
+  function applyFilters() {
+    const query = (document.getElementById('search-products')?.value || '').toLowerCase();
+    const cards = document.querySelectorAll('.product-card');
+    let visibleCount = 0;
+    cards.forEach(c => {
+      const cat = c.getAttribute('data-category');
+      const title = (c.getAttribute('data-title') || '').toLowerCase();
+      const matchesCat = selectedCategory === 'all' || cat === selectedCategory;
+      const matchesQuery = !query || title.includes(query);
+      if (matchesCat && matchesQuery) { c.classList.remove('hidden'); visibleCount++; }
+      else { c.classList.add('hidden'); }
+    });
+    const counter = document.getElementById('products-counter');
+    if (counter) counter.textContent = `${visibleCount} products`;
+  }
+  function setView(isGrid) {
+    const container = document.getElementById('products-grid');
+    container.className = isGrid ? "grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4" : "grid grid-cols-1 gap-4";
+  }
+</script>
+{% endblock %}
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        let selectedCategory = 'all';
-        function filterByCategory(cat) {
-            selectedCategory = cat;
-            applyFilters();
-        }
-
-        function applyFilters() {
-            const query = (document.getElementById('search-products')?.value || '').toLowerCase();
-            const cards = document.querySelectorAll('.product-card');
-            let visibleCount = 0;
-            cards.forEach(c => {
-                const cat = c.getAttribute('data-category');
-                const title = (c.getAttribute('data-title') || '').toLowerCase();
-                const matchesCat = selectedCategory === 'all' || cat === selectedCategory;
-                const matchesQuery = !query || title.includes(query);
-                if (matchesCat && matchesQuery) {
-                    c.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    c.classList.add('hidden');
-                }
-            });
-            const counter = document.getElementById('products-counter');
-            if (counter) counter.textContent = `${visibleCount} products`;
-        }
-
-        function setView(isGrid) {
-            const container = document.getElementById('products-grid');
-            const gridBtn = document.getElementById('btn-grid-view');
-            const listBtn = document.getElementById('btn-list-view');
-            if (isGrid) {
-                container.className = "grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4";
-                gridBtn.classList.add('bg-muted');
-                listBtn.classList.remove('bg-muted');
-            } else {
-                container.className = "grid grid-cols-1 gap-4";
-                listBtn.classList.add('bg-muted');
-                gridBtn.classList.remove('bg-muted');
-            }
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
-
-    <div class="bg-background">
-        <div class="p-4 sm:p-6">
-            <div class="flex gap-6">
-                {# Faceted Filter Sidebar #}
-                <aside class="hidden w-52 shrink-0 lg:block">
-                    <div class="sticky top-6">
-                        <div class="space-y-5 px-4">
-                            {# Category Filter #}
-                            <div class="space-y-2">
-                                <h3 class="text-sm font-semibold">Category</h3>
-                                <div class="grid w-full gap-2.5 text-sm">
-                                    {% set categories = [
-                                        ('all', 'All'),
-                                        ('phones', 'Phones'),
-                                        ('headsets', 'Headsets'),
-                                        ('laptops', 'Laptops'),
-                                        ('tv', 'TV Sets'),
-                                        ('sound', 'Sound'),
-                                        ('watches', 'Watches')
-                                    ] %}
-                                    {% for key, label in categories %}
-                                    <label class="flex items-center gap-2 cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors">
-                                        <input
-                                            type="radio"
-                                            name="filter_category"
-                                            value="{{ key }}"
-                                            {% if loop.first %}checked{% endif %}
-                                            class="size-4 text-primary border-border focus:ring-ring"
-                                            onchange="filterByCategory('{{ key }}')"
-                                        >
-                                        <span>{{ label }}</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <hr class="border-border">
-
-                            {# Brand Filter #}
-                            <div class="space-y-2">
-                                <h3 class="text-sm font-semibold">Brand</h3>
-                                <div class="space-y-2 text-sm">
-                                    {% for b in ['Apple', 'Samsung', 'Huawei', 'Microsoft', 'Sony', 'Bose', 'Dell', 'LG', 'JBL'] %}
-                                    <label class="flex items-center gap-2 cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors">
-                                        <input type="checkbox" class="size-4 rounded border-border text-primary focus:ring-ring">
-                                        <span>{{ b }}</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <hr class="border-border">
-
-                            {# Color Filter #}
-                            <div class="space-y-2">
-                                <h3 class="text-sm font-semibold">Color</h3>
-                                <div class="space-y-2 text-sm">
-                                    {% set colors = [
-                                        ('Red', 'bg-red-500'),
-                                        ('Orange', 'bg-orange-500'),
-                                        ('Blue', 'bg-blue-500'),
-                                        ('Black', 'bg-zinc-900'),
-                                        ('White', 'bg-white border border-border'),
-                                        ('Purple', 'bg-purple-500'),
-                                        ('Gray', 'bg-gray-500')
-                                    ] %}
-                                    {% for cname, cclass in colors %}
-                                    <label class="flex items-center gap-2 cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors">
-                                        <input type="checkbox" class="size-4 rounded border-border text-primary focus:ring-ring">
-                                        <span class="size-3.5 rounded-full {{ cclass }}"></span>
-                                        <span>{{ cname }}</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <hr class="border-border">
-
-                            {# Delivery Filter #}
-                            <div class="space-y-2">
-                                <h3 class="text-sm font-semibold">Delivery</h3>
-                                <div class="space-y-2 text-sm">
-                                    {% for d, dlabel in [('any', 'Any day'), ('today', 'Today'), ('tomorrow', 'Tomorrow'), ('week', 'Within 7 days')] %}
-                                    <label class="flex items-center gap-2 cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors">
-                                        <input type="radio" name="filter_delivery" value="{{ d }}" {% if loop.first %}checked{% endif %} class="size-4 text-primary border-border focus:ring-ring">
-                                        <span>{{ dlabel }}</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <hr class="border-border">
-
-                            {# Price Filter #}
-                            <div class="space-y-3">
-                                <h3 class="text-sm font-semibold">Price</h3>
-                                <div class="w-full bg-muted h-1.5 rounded-full relative">
-                                    <div class="bg-primary h-1.5 rounded-full w-full"></div>
-                                </div>
-                                <div class="flex gap-2">
-                                    <div class="flex-1">
-                                        <span class="text-muted-foreground mb-1 block text-xs">From</span>
-                                        <input type="number" class="w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="0">
-                                    </div>
-                                    <div class="flex-1">
-                                        <span class="text-muted-foreground mb-1 block text-xs">To</span>
-                                        <input type="number" class="w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring" value="3000">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
-                {# Main Catalog Content #}
-                <main class="min-w-0 flex-1">
-                    {# Top Toolbar #}
-                    <div class="mb-5 flex flex-wrap items-center gap-3">
-                        <button type="button" class="inline-flex h-8 items-center gap-1 rounded-md border border-border px-2.5 text-sm font-medium hover:bg-muted lg:hidden text-foreground">
-                            <i data-lucide="funnel" class="size-4"></i>
-                            <span>Filters</span>
-                        </button>
-                        <div class="relative flex-1 sm:max-w-xs">
-                            <i data-lucide="search" class="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"></i>
-                            <input
-                                id="search-products"
-                                type="text"
-                                placeholder="Search products..."
-                                class="h-9 w-full rounded-md border border-input bg-transparent pl-9 pr-2.5 text-sm shadow-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                                oninput="applyFilters()"
-                            >
-                        </div>
-                        <div class="ml-auto flex items-center gap-2">
-                            <span id="products-counter" class="text-muted-foreground hidden text-sm sm:block">{{ products|length }} products</span>
-                            <div class="flex rounded-md border border-border">
-                                <button
-                                    id="btn-grid-view"
-                                    type="button"
-                                    onclick="setView(true)"
-                                    class="inline-flex size-8 items-center justify-center rounded-l-md bg-muted text-foreground hover:bg-muted/80 transition-colors border-r border-border"
-                                    aria-label="Grid view">
-                                    <i data-lucide="grid-3x3" class="size-4"></i>
-                                </button>
-                                <button
-                                    id="btn-list-view"
-                                    type="button"
-                                    onclick="setView(false)"
-                                    class="inline-flex size-8 items-center justify-center rounded-r-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                                    aria-label="List view">
-                                    <i data-lucide="list" class="size-4"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# Product Cards Grid #}
-                    <div id="products-grid" class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-                        {% for prod in products %}
-                        <div
-                            class="product-card group flex flex-col overflow-hidden rounded-xl bg-card border border-border ring-1 ring-foreground/10 hover:border-primary/50 shadow-none transition-all duration-200"
-                            data-category="{{ prod.category }}"
-                            data-title="{{ prod.title }}">
-                            {# Image with Badges #}
-                            <div class="relative overflow-hidden rounded-t-xl bg-muted/20">
-                                <img
-                                    src="{{ prod.image }}"
-                                    alt="{{ prod.title }}"
-                                    class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                    loading="lazy"
-                                >
-                                {% if prod.is_new %}
-                                <span class="absolute top-2 left-2 rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-semibold text-white">
-                                    New
-                                </span>
-                                {% endif %}
-                                <button
-                                    type="button"
-                                    class="absolute top-2 right-2 inline-flex size-8 items-center justify-center rounded-md bg-background/80 text-foreground backdrop-blur-sm opacity-0 group-hover:opacity-100 hover:bg-muted transition-opacity"
-                                    aria-label="Save to wishlist">
-                                    <i data-lucide="heart" class="size-4"></i>
-                                </button>
-                            </div>
-
-                            {# Product Content #}
-                            <div class="flex flex-1 flex-col justify-between p-4 space-y-3">
-                                <div class="space-y-2">
-                                    <h3 class="line-clamp-2 text-sm leading-snug font-medium text-foreground min-h-[2.5rem]">
-                                        {{ prod.title }}
-                                    </h3>
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <span class="text-lg font-bold text-foreground">{{ prod.price }}</span>
-                                        {% if prod.old_price %}
-                                        <span class="text-muted-foreground text-sm line-through">{{ prod.old_price }}</span>
-                                        {% endif %}
-                                        {% if prod.discount %}
-                                        <span class="rounded-full bg-destructive/10 text-destructive dark:bg-destructive/20 px-2 py-0.5 text-xs font-medium">
-                                            {{ prod.discount }}
-                                        </span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                        <div class="flex text-amber-400">
-                                            <i data-lucide="star" class="size-3 fill-amber-400"></i>
-                                            <i data-lucide="star" class="size-3 fill-amber-400"></i>
-                                            <i data-lucide="star" class="size-3 fill-amber-400"></i>
-                                            <i data-lucide="star" class="size-3 fill-amber-400"></i>
-                                            <i data-lucide="star" class="size-3 fill-amber-400"></i>
-                                        </div>
-                                        <span>{{ prod.rating }}</span>
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs text-muted-foreground pt-1">
-                                        <span>{{ prod.orders }} orders</span>
-                                        <span>Delivery: {{ prod.delivery }}</span>
-                                    </div>
-                                </div>
-
-                                {{ bc.button('Add to cart', variant='default', size='sm', class='w-full justify-center h-8 text-xs', icon='shopping-cart') }}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </main>
+{% block body %}
+<div class="bg-background">
+  <div class="p-4 sm:p-6">
+    <div class="flex gap-6">
+      {# Faceted Filter Sidebar #}
+      <aside class="hidden w-52 shrink-0 lg:block">
+        <div class="sticky top-6">
+          <div class="space-y-5 px-4">
+            {# Category Filter #}
+            <div class="space-y-2">
+              <h3 class="text-sm font-semibold">Category</h3>
+              {% set categories = [('all', 'All'), ('phones', 'Phones'), ('headsets', 'Headsets'), ('laptops', 'Laptops'), ('tv', 'TV Sets'), ('sound', 'Sound'), ('watches', 'Watches')] %}
+              {% call ui.radio_group(class='grid w-full gap-2.5 text-sm', attrs={'data-name': 'filter_category'}) %}
+                {% for key, label in categories %}
+                <div class="flex items-center gap-2">
+                  {% call ui.radio_group_item(id='cat-' ~ key, value=key, checked=loop.first, attrs={'onclick': "filterByCategory('" ~ key ~ "')"}) %}{% if loop.first %}{% call ui.radio_group_indicator() %}{{ lucide('circle', 'absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 fill-primary') }}{% endcall %}{% endif %}{% endcall %}
+                  {{ ui.label(text=label, for_='cat-' ~ key, class='cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors') }}
+                </div>
+                {% endfor %}
+              {% endcall %}
             </div>
+
+            {{ ui.separator() }}
+
+            {# Brand Filter #}
+            <div class="space-y-2">
+              <h3 class="text-sm font-semibold">Brand</h3>
+              <div class="space-y-2 text-sm">
+                {% for b in ['Apple', 'Samsung', 'Huawei', 'Microsoft', 'Sony', 'Bose', 'Dell', 'LG', 'JBL'] %}
+                <div class="flex items-center gap-2">
+                  {{ ui.checkbox(id='brand-' ~ b|lower, checked=false, attrs={'data-name': 'brand_' ~ b|lower}) }}
+                  {{ ui.label(text=b, for_='brand-' ~ b|lower, class='cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors') }}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            {{ ui.separator() }}
+
+            {# Color Filter #}
+            <div class="space-y-2">
+              <h3 class="text-sm font-semibold">Color</h3>
+              <div class="space-y-2 text-sm">
+                {% set colors = [('Red', 'bg-chart-1'), ('Orange', 'bg-chart-5'), ('Blue', 'bg-chart-2'), ('Black', 'bg-foreground'), ('White', 'bg-background border border-border'), ('Purple', 'bg-chart-4'), ('Gray', 'bg-muted-foreground')] %}
+                {% for cname, cclass in colors %}
+                <div class="flex items-center gap-2">
+                  {{ ui.checkbox(id='color-' ~ cname|lower, checked=false, attrs={'data-name': 'color_' ~ cname|lower}) }}
+                  {% call ui.label(for_='color-' ~ cname|lower, class='cursor-pointer gap-2 font-normal text-muted-foreground hover:text-foreground transition-colors') %}
+                    <span class="size-3.5 rounded-full {{ cclass }}"></span>
+                    <span>{{ cname }}</span>
+                  {% endcall %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            {{ ui.separator() }}
+
+            {# Delivery Filter #}
+            <div class="space-y-2">
+              <h3 class="text-sm font-semibold">Delivery</h3>
+              {% call ui.radio_group(class='space-y-2 text-sm', attrs={'data-name': 'filter_delivery'}) %}
+                {% for d, dlabel in [('any', 'Any day'), ('today', 'Today'), ('tomorrow', 'Tomorrow'), ('week', 'Within 7 days')] %}
+                <div class="flex items-center gap-2">
+                  {% call ui.radio_group_item(id='delivery-' ~ d, value=d, checked=loop.first) %}{% if loop.first %}{% call ui.radio_group_indicator() %}{{ lucide('circle', 'absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 fill-primary') }}{% endcall %}{% endif %}{% endcall %}
+                  {{ ui.label(text=dlabel, for_='delivery-' ~ d, class='cursor-pointer font-normal text-muted-foreground hover:text-foreground transition-colors') }}
+                </div>
+                {% endfor %}
+              {% endcall %}
+            </div>
+
+            {{ ui.separator() }}
+
+            {# Price Filter #}
+            <div class="space-y-3">
+              <h3 class="text-sm font-semibold">Price</h3>
+              {% call ui.progress(value=100, class='h-1.5', attrs={'aria-label': 'Price range'}) %}{{ ui.progress_indicator(value=100) }}{% endcall %}
+              <div class="flex gap-2">
+                {% call ui.field(class='flex-1 gap-1') %}
+                  {{ ui.field_label(text='From', for_='price-from', class='text-xs text-muted-foreground') }}
+                  {{ ui.input(id='price-from', type='number', value='0', class='h-8') }}
+                {% endcall %}
+                {% call ui.field(class='flex-1 gap-1') %}
+                  {{ ui.field_label(text='To', for_='price-to', class='text-xs text-muted-foreground') }}
+                  {{ ui.input(id='price-to', type='number', value='3000', class='h-8') }}
+                {% endcall %}
+              </div>
+            </div>
+          </div>
         </div>
+      </aside>
+
+      {# Main Catalog Content #}
+      <main class="min-w-0 flex-1">
+        {# Top Toolbar #}
+        <div class="mb-5 flex flex-wrap items-center gap-3">
+          {% call ui.button(variant='outline', size='sm', type='button', class='lg:hidden') %}{{ lucide('settings-2', 'size-4', data_icon='inline-start') }} Filters{% endcall %}
+          <div class="relative flex-1 sm:max-w-xs">
+            {{ lucide('search', 'text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2') }}
+            {{ ui.input(id='search-products', type='text', placeholder='Search products...', class='pl-9', attrs={'oninput': 'applyFilters()'}) }}
+          </div>
+          <div class="ml-auto flex items-center gap-2">
+            <span id="products-counter" class="text-muted-foreground hidden text-sm sm:block">{{ products|length }} products</span>
+            {% call ui.toggle_group(spacing=0, class='rounded-md border border-border', attrs={'aria-label': 'View'}) %}
+              {% call ui.toggle_group_item(variant='default', size='sm', pressed=true, id='btn-grid-view', class='size-8 rounded-l-md rounded-r-none border-r border-border', attrs={'onclick': 'setView(true)', 'aria-label': 'Grid view'}) %}{{ lucide('layout-grid', 'size-4') }}{% endcall %}
+              {% call ui.toggle_group_item(variant='default', size='sm', id='btn-list-view', class='size-8 rounded-r-md rounded-l-none', attrs={'onclick': 'setView(false)', 'aria-label': 'List view'}) %}{{ lucide('list', 'size-4') }}{% endcall %}
+            {% endcall %}
+          </div>
+        </div>
+
+        {# Product Cards Grid #}
+        <div id="products-grid" class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+          {% for prod in products %}
+          {% call ui.card(class='product-card group flex flex-col gap-0 py-0 border border-border hover:border-primary/50 shadow-none transition-all duration-200', attrs={'data-category': prod.category, 'data-title': prod.title}) %}
+            {# Image with Badges #}
+            <div class="relative overflow-hidden rounded-t-xl bg-muted/20">
+              <img src="{{ prod.image }}" alt="{{ prod.title }}" class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+              {% if prod.is_new %}{{ ui.badge(text='New', variant='default', class='absolute top-2 left-2') }}{% endif %}
+              {% call ui.button(variant='secondary', size='icon-sm', type='button', class='absolute top-2 right-2 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity', attrs={'aria-label': 'Save to wishlist'}) %}{{ lucide('heart', 'size-4') }}{% endcall %}
+            </div>
+
+            {# Product Content #}
+            {% call ui.card_content(class='flex flex-1 flex-col justify-between gap-3 p-4') %}
+              <div class="space-y-2">
+                <h3 class="line-clamp-2 text-sm leading-snug font-medium text-foreground min-h-[2.5rem]">{{ prod.title }}</h3>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-lg font-bold text-foreground">{{ prod.price }}</span>
+                  {% if prod.old_price %}<span class="text-muted-foreground text-sm line-through">{{ prod.old_price }}</span>{% endif %}
+                  {% if prod.discount %}{{ ui.badge(text=prod.discount, variant='secondary', class='bg-destructive/10 text-destructive') }}{% endif %}
+                </div>
+                <div class="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <div class="flex text-chart-4">
+                    {% for _ in range(5) %}{{ lucide('star', 'size-3 fill-chart-4') }}{% endfor %}
+                  </div>
+                  <span>{{ prod.rating }}</span>
+                </div>
+                <div class="flex items-center justify-between text-xs text-muted-foreground pt-1">
+                  <span>{{ prod.orders }} orders</span>
+                  <span>Delivery: {{ prod.delivery }}</span>
+                </div>
+              </div>
+              {% call ui.button(size='sm', type='button', class='w-full text-xs') %}{{ lucide('shopping-cart', 'size-3.5', data_icon='inline-start') }} Add to cart{% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% endfor %}
+        </div>
+      </main>
     </div>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

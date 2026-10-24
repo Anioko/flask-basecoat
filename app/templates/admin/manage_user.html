@@ -1,98 +1,108 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 {% import 'macros/form_macros.html' as f %}
 
 {% set deletion_endpoint = 'admin.delete_user_request' %}
 
 {% set endpoints = [
-    ('admin.user_info', 'User information'),
-    ('admin.change_user_email', 'Change email address'),
-    ('admin.change_account_type', 'Change account type'),
-    (deletion_endpoint, 'Delete user')
+    ('admin.user_info', 'User information', 'user'),
+    ('admin.change_user_email', 'Change email address', 'mail'),
+    ('admin.change_account_type', 'Change account type', 'shield'),
+    (deletion_endpoint, 'Delete user', 'trash-2')
 ] %}
 
 {% macro navigation(items) %}
-    <nav class="flex flex-col gap-1 bg-slate-50 p-2 rounded-lg border border-slate-200 dark:bg-slate-950 dark:border-slate-800">
-        {% for route, name in items %}
-            {% set href = url_for(route, user_id=user.id) %}
-            <a class="block py-2 px-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors {% if request.endpoint == route %}font-semibold bg-white dark:bg-slate-900 shadow-sm{% endif %}" href="{{ href }}">
-                {{ name }}
-            </a>
+    <nav class="flex flex-col gap-1" aria-label="User management">
+        {% for route, name, icon in items %}
+            {% set active = request.endpoint == route %}
+            {% call ui.button(variant=('secondary' if active else 'ghost'), size='sm', class=('justify-start' ~ (' text-destructive' if route == deletion_endpoint and not active else '')), href=url_for(route, user_id=user.id), attrs={'aria-current': 'page' if active else none}) %}
+                {{ lucide(icon) }}{{ name }}
+            {% endcall %}
         {% endfor %}
     </nav>
 {% endmacro %}
 
 {% macro user_info(user) %}
-    <table class="table">
-        <tbody>
-            <tr>
-                <td>Full name</td>
-                <td>{{ '%s %s' % (user.first_name, user.last_name) }}</td>
-            </tr>
-            <tr>
-                <td>Email address</td>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <td>Account type</td>
-                <td>{{ user.role.name }}</td>
-            </tr>
-        </tbody>
-    </table>
+    {% call ui.table_container() %}
+        {% call ui.table() %}
+            {% call ui.table_body() %}
+                {% for label, value in [('Full name', '%s %s' % (user.first_name, user.last_name)), ('Email address', user.email), ('Account type', user.role.name)] %}
+                    {% call ui.table_row() %}
+                        {{ ui.table_cell(text=label, class='w-1/3 font-medium') }}
+                        {{ ui.table_cell(text=value) }}
+                    {% endcall %}
+                {% endfor %}
+            {% endcall %}
+        {% endcall %}
+    {% endcall %}
 {% endmacro %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-6">
-        <div class="mb-4">
-            <a class="btn btn--ghost inline-flex items-center" href="{{ url_for('admin.registered_users') }}">
-                ← Back to all users
-            </a>
-            <h2 class="text-2xl font-semibold mt-4">
-                {{ user.full_name() }}
-                <div class="text-sm text-slate-600 dark:text-slate-400">View and manage {{ user.first_name }}'s account.</div>
-            </h2>
-        </div>
-        <div class="grid grid-cols-12 gap-6">
-            <div class="col-span-3">
-                {{ navigation(endpoints) }}
+        <div class="mb-6">
+            {% call ui.button(variant='ghost', size='sm', href=url_for('admin.registered_users')) %}{{ lucide('arrow-left') }}Back to all users{% endcall %}
+            <div class="mt-4 flex items-center gap-3">
+                {% call ui.avatar(class='size-10') %}
+                    {{ ui.avatar_fallback(text=(user.first_name[:1] ~ user.last_name[:1]) | upper) }}
+                {% endcall %}
+                <div>
+                    <h2 class="text-2xl font-semibold tracking-tight">{{ user.full_name() }}</h2>
+                    <p class="text-sm text-muted-foreground">View and manage {{ user.first_name }}'s account.</p>
+                </div>
+                {{ ui.badge(text=user.role.name, variant=('default' if user.is_admin() else 'secondary'), class='ml-2') }}
             </div>
-            <div class="col-span-6">
-                {% if request.endpoint == deletion_endpoint %}
-                    <div class="alert-destructive">
-                        <h2>This action is permanent</h2>
-                        <section>
-                            <p>Deleting a user account is not a reversible change. Any information associated with this account will be removed, and cannot be recovered.</p>
-                        </section>
-                    </div>
+        </div>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <aside class="lg:col-span-3">
+                {{ navigation(endpoints) }}
+            </aside>
+            <div class="lg:col-span-9">
+                {% set current = (endpoints | selectattr(0, 'equalto', request.endpoint) | list) %}
+                {% call ui.card() %}
+                    {% call ui.card_header() %}
+                        {{ ui.card_title(text=(current[0][1] if current else 'User information')) }}
+                    {% endcall %}
+                    {% call ui.card_content(class='flex flex-col gap-6') %}
+                        {% if request.endpoint == deletion_endpoint %}
+                            {% call ui.alert(variant='destructive') %}
+                                {{ lucide('triangle-alert') }}
+                                {{ ui.alert_title(text='This action is permanent') }}
+                                {{ ui.alert_description(text='Deleting a user account is not a reversible change. Any information associated with this account will be removed, and cannot be recovered.') }}
+                            {% endcall %}
 
-                    <div role="group" class="mb-4">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="confirm-delete" class="rounded border-slate-300 dark:border-slate-700">
-                            <span>I understand that this action cannot be undone.</span>
-                        </label>
-                    </div>
-                    <a id="delete-user-btn" class="btn-destructive opacity-50 pointer-events-none">Delete this user</a>
-                    </div>
-                    </div>
-                {% elif form %}
-                    {{ f.render_form(form) }}
-                {% else %}
-                    {{ user_info(user) }}
-                {% endif %}
+                            {% call ui.field(orientation='horizontal') %}
+                                {{ ui.checkbox(id='confirm-delete') }}
+                                {{ ui.field_label(text='I understand that this action cannot be undone.', for_='confirm-delete') }}
+                            {% endcall %}
+
+                            <div>
+                                {% call ui.button(variant='destructive', type='button', id='delete-user-button', disabled=true, attrs={'data-href': url_for('admin.delete_user', user_id=user.id)}) %}
+                                    {{ lucide('trash-2') }}Delete this user
+                                {% endcall %}
+                            </div>
+                        {% elif form %}
+                            {{ f.render_form(form) }}
+                        {% else %}
+                            {{ user_info(user) }}
+                        {% endif %}
+                    {% endcall %}
+                {% endcall %}
             </div>
         </div>
     </div>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function(){
             var cb = document.getElementById('confirm-delete');
-            var btn = document.getElementById('delete-user-btn');
-            cb && cb.addEventListener('change', function(){
-                if(cb.checked){
-                    btn.classList.remove('opacity-50','pointer-events-none');
-                    btn.setAttribute("href","{{ url_for('admin.delete_user', user_id=user.id) }}");
-                } else {
-                    btn.classList.add('opacity-50','pointer-events-none');
-                    btn.removeAttribute("href");
-                }
+            var deleteButton = document.getElementById('delete-user-button');
+            if(!cb || !deleteButton) return;
+            // The checkbox macro keeps aria-checked in sync and emits a "change" event through the runtime.
+            function sync(){
+                deleteButton.disabled = cb.getAttribute('aria-checked') !== 'true';
+            }
+            cb.addEventListener('click', function(){ setTimeout(sync, 0); });
+            cb.addEventListener('basecoat:change', sync);
+            deleteButton.addEventListener('click', function(){
+                if(!deleteButton.disabled){ window.location.href = deleteButton.getAttribute('data-href'); }
             });
         });
     </script>

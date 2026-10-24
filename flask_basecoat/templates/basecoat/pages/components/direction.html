@@ -3,14 +3,12 @@
 {# Port of the upstream shadcn/ui example `direction` (pinned source in compliance/upstream). #}
 {% block title %}direction · flask-basecoat{% endblock %}
 {% block body %}
-  {% call ui.example_wrapper() %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='Right to left') %}
       {% call ui.direction(dir='rtl', class='flex gap-2') %}
-        {% call ui.button(size='default', variant='default') %}الأول
-        {% endcall %}
-        {% call ui.button(size='default', variant='outline') %}الثاني
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+        {% call ui.button(size='default', variant='default') %}الأول{% endcall %}
+{% call ui.button(size='default', variant='outline') %}الثاني{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

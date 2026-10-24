@@ -1,0 +1,69 @@
+[
+  {
+    "name": "alert-dialog",
+    "kind": "components",
+    "modes": {
+      "light": {
+        "golden": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "count": 7,
+            "nodes": [
+              ".max-w-lg.gap-1.self-stretch:nth-child(1) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(2) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(3) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(4) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(5) > .px-1\\.5.py-2.text-xs",
+              ".cn-button-variant-destructive",
+              ".max-w-lg.gap-1.self-stretch:nth-child(6) > .px-1\\.5.py-2.text-xs"
+            ]
+          }
+        ],
+        "ours": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "count": 8,
+            "nodes": [
+              ".max-w-lg.gap-1.self-stretch:nth-child(1) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(2) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(3) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(4) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(5) > .px-1\\.5.py-2.text-xs",
+              "button[aria-controls=\"alert-dialog-g\"]",
+              ".cn-button-variant-destructive.cn-alert-dialog-action[data-variant=\"destructive\"]",
+              ".max-w-lg.gap-1.self-stretch:nth-child(6) > .px-1\\.5.py-2.text-xs"
+            ]
+          }
+        ],
+        "regressions": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "count": 8,
+            "nodes": [
+              ".max-w-lg.gap-1.self-stretch:nth-child(1) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(2) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(3) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(4) > .px-1\\.5.py-2.text-xs",
+              ".max-w-lg.gap-1.self-stretch:nth-child(5) > .px-1\\.5.py-2.text-xs",
+              "button[aria-controls=\"alert-dialog-g\"]",
+              ".cn-button-variant-destructive.cn-alert-dialog-action[data-variant=\"destructive\"]",
+              ".max-w-lg.gap-1.self-stretch:nth-child(6) > .px-1\\.5.py-2.text-xs"
+            ]
+          }
+        ]
+      },
+      "dark": {
+        "golden": [],
+        "ours": [],
+        "regressions": []
+      }
+    },
+    "status": "fail"
+  }
+]

@@ -3,319 +3,226 @@
 {# Port of the upstream shadcn/ui example `dialog` (pinned source in compliance/upstream). #}
 {% block title %}dialog · flask-basecoat{% endblock %}
 {% block body %}
-  {% set lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' %}
-  {% set scroll_body = 'no-scrollbar max-h-[70vh] overflow-y-auto style-vega:-mx-6 style-vega:px-6 style-nova:-mx-4 style-nova:px-4 style-lyra:-mx-4 style-lyra:px-4 style-maia:-mx-6 style-maia:px-6 style-mira:-mx-4 style-mira:px-4 style-luma:-mx-6 style-luma:px-6 style-rhea:-mx-6 style-rhea:px-6' %}
-  {% set spoken_languages = [('English', 'en'), ('Spanish', 'es'), ('French', 'fr'), ('German', 'de'), ('Italian', 'it'), ('Portuguese', 'pt'), ('Russian', 'ru'), ('Chinese', 'zh'), ('Japanese', 'ja'), ('Korean', 'ko'), ('Arabic', 'ar'), ('Hindi', 'hi'), ('Bengali', 'bn'), ('Telugu', 'te'), ('Marathi', 'mr'), ('Kannada', 'kn'), ('Malayalam', 'ml')] %}
-  {% set voices = [('Samantha', 'samantha'), ('Alex', 'alex'), ('Fred', 'fred'), ('Victoria', 'victoria'), ('Tom', 'tom'), ('Karen', 'karen'), ('Sam', 'sam'), ('Daniel', 'daniel')] %}
-  {% set accent_colors = [('Default', 'default'), ('Red', 'red'), ('Blue', 'blue'), ('Green', 'green'), ('Purple', 'purple'), ('Pink', 'pink')] %}
-  {% call ui.example_wrapper() %}
+{% set lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' %}
+{% set scroll_body = 'no-scrollbar max-h-[70vh] overflow-y-auto style-vega:-mx-6 style-vega:px-6 style-nova:-mx-4 style-nova:px-4 style-lyra:-mx-4 style-lyra:px-4 style-maia:-mx-6 style-maia:px-6 style-mira:-mx-4 style-mira:px-4 style-luma:-mx-6 style-luma:px-6 style-rhea:-mx-6 style-rhea:px-6' %}
+{% set spoken_languages = [('English', 'en'), ('Spanish', 'es'), ('French', 'fr'), ('German', 'de'), ('Italian', 'it'), ('Portuguese', 'pt'), ('Russian', 'ru'), ('Chinese', 'zh'), ('Japanese', 'ja'), ('Korean', 'ko'), ('Arabic', 'ar'), ('Hindi', 'hi'), ('Bengali', 'bn'), ('Telugu', 'te'), ('Marathi', 'mr'), ('Kannada', 'kn'), ('Malayalam', 'ml')] %}
+{% set voices = [('Samantha', 'samantha'), ('Alex', 'alex'), ('Fred', 'fred'), ('Victoria', 'victoria'), ('Tom', 'tom'), ('Karen', 'karen'), ('Sam', 'sam'), ('Daniel', 'daniel')] %}
+{% set accent_colors = [('Default', 'default'), ('Red', 'red'), ('Blue', 'blue'), ('Green', 'green'), ('Purple', 'purple'), ('Pink', 'pink')] %}
+{% call ui.example_wrapper() %}
     {% call ui.example(title='With Form', class='items-center justify-center') %}
       {% call ui.dialog() %}
-        <form>
-          {% call ui.dialog_trigger(size='default', variant='outline') %}Edit Profile
-          {% endcall %}
-          {{ ui.dialog_overlay() }}
-          {% call ui.dialog_content() %}
+        <form>{% call ui.dialog_trigger(size='default', variant='outline') %}Edit Profile{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
             {% call ui.dialog_header() %}
-              {{ ui.dialog_title(text='Edit profile') }}
-              {{ ui.dialog_description(text="Make changes to your profile here. Click save when you're done. Your profile will be updated immediately.") }}
-            {% endcall %}
-            {% call ui.field_group() %}
+              {{ ui.dialog_title(text='Edit profile') }}{{ ui.dialog_description(text="Make changes to your profile here. Click save when you're done. Your profile will be updated immediately.") }}{% endcall %}
+{% call ui.field_group() %}
               {% call ui.field() %}
-                {{ ui.field_label(as_='label', for_='name-1', text='Name') }}
-                {{ ui.input(id='name-1', name='name', value='Pedro Duarte') }}
-              {% endcall %}
-              {% call ui.field() %}
-                {{ ui.field_label(as_='label', for_='username-1', text='Username') }}
-                {{ ui.input(id='username-1', name='username', value='@peduarte') }}
-              {% endcall %}
-            {% endcall %}
-            {% call ui.dialog_footer() %}
-              {{ ui.dialog_close(text='Cancel', variant='outline', size='default') }}
-              {{ ui.button(text='Save changes', type='submit') }}
-            {% endcall %}
-            {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-          {% endcall %}
-        </form>
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Scrollable Content', class='items-center justify-center') %}
+                {{ ui.field_label(as_='label', for_='name-1', text='Name') }}{{ ui.input(id='name-1', name='name', value='Pedro Duarte') }}{% endcall %}
+{% call ui.field() %}
+                {{ ui.field_label(as_='label', for_='username-1', text='Username') }}{{ ui.input(id='username-1', name='username', value='@peduarte') }}{% endcall %}
+{% endcall %}
+{% call ui.dialog_footer() %}
+              {{ ui.dialog_close(text='Cancel', variant='outline', size='default') }}{{ ui.button(text='Save changes', type='submit') }}{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+</form>{% endcall %}
+{% endcall %}
+{% call ui.example(title='Scrollable Content', class='items-center justify-center') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Scrollable Content
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Scrollable Content{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Scrollable Content') }}
-            {{ ui.dialog_description(text='This is a dialog with scrollable content.') }}
-          {% endcall %}
-          <div class="{{ scroll_body }}">
-            {% for _ in range(10) %}
-            <p class="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed">{{ lorem }}</p>
-            {% endfor %}
-          </div>
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='With Sticky Footer', class='items-center justify-center') %}
+            {{ ui.dialog_title(text='Scrollable Content') }}{{ ui.dialog_description(text='This is a dialog with scrollable content.') }}{% endcall %}
+<div class="{{ scroll_body }}">{% for _ in range(10) %}
+            <p class="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed">{{ lorem }}</p>{% endfor %}
+</div>{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Sticky Footer', class='items-center justify-center') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Sticky Footer
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Sticky Footer{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Scrollable Content') }}
-            {{ ui.dialog_description(text='This is a dialog with scrollable content.') }}
-          {% endcall %}
-          <div class="{{ scroll_body }}">
-            {% for _ in range(10) %}
-            <p class="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed">{{ lorem }}</p>
-            {% endfor %}
-          </div>
-          {% call ui.dialog_footer() %}
-            {{ ui.dialog_close(text='Close', variant='outline', size='default') }}
-          {% endcall %}
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='No Close Button', class='items-center justify-center') %}
+            {{ ui.dialog_title(text='Scrollable Content') }}{{ ui.dialog_description(text='This is a dialog with scrollable content.') }}{% endcall %}
+<div class="{{ scroll_body }}">{% for _ in range(10) %}
+            <p class="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed">{{ lorem }}</p>{% endfor %}
+</div>{% call ui.dialog_footer() %}
+            {{ ui.dialog_close(text='Close', variant='outline', size='default') }}{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='No Close Button', class='items-center justify-center') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}No Close Button
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}No Close Button{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='No Close Button') }}
-            {{ ui.dialog_description(text="This dialog doesn't have a close button in the top-right corner.") }}
-          {% endcall %}
-          {% call ui.dialog_footer() %}
-            {{ ui.dialog_close(text='Close', variant='outline', size='default') }}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Chat Settings', class='items-center justify-center') %}
+            {{ ui.dialog_title(text='No Close Button') }}{{ ui.dialog_description(text="This dialog doesn't have a close button in the top-right corner.") }}{% endcall %}
+{% call ui.dialog_footer() %}
+            {{ ui.dialog_close(text='Close', variant='outline', size='default') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Chat Settings', class='items-center justify-center') %}
       {% call ui.dialog() %}
-        {% call ui.dialog_trigger(size='default', variant='outline') %}Chat Settings
-        {% endcall %}
-        {{ ui.dialog_overlay() }}
-        {% call ui.dialog_content(class='min-w-md') %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Chat Settings{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content(class='min-w-md') %}
           {% call ui.dialog_header() %}
-            {{ ui.dialog_title(text='Chat Settings') }}
-            {{ ui.dialog_description(text='Customize your chat settings: theme, accent color, spoken language, voice, personality, and custom instructions.') }}
-          {% endcall %}
-          <div class="flex flex-col gap-4">
-            {% call ui.native_select_wrapper(size='default', class='w-full md:hidden') %}
+            {{ ui.dialog_title(text='Chat Settings') }}{{ ui.dialog_description(text='Customize your chat settings: theme, accent color, spoken language, voice, personality, and custom instructions.') }}{% endcall %}
+<div class="flex flex-col gap-4">{% call ui.native_select_wrapper(size='default', class='w-full md:hidden') %}
               {% call ui.native_select(size='default') %}
-                {{ ui.native_select_option(value='general', text='General') }}
-                {{ ui.native_select_option(value='notifications', text='Notifications') }}
-                {{ ui.native_select_option(value='personalization', text='Personalization') }}
-                {{ ui.native_select_option(value='security', text='Security') }}
-              {% endcall %}
-              {{ ui.native_select_icon() }}
-            {% endcall %}
-            {% call ui.tabs() %}
+                {{ ui.native_select_option(value='general', text='General') }}{{ ui.native_select_option(value='notifications', text='Notifications') }}{{ ui.native_select_option(value='personalization', text='Personalization') }}{{ ui.native_select_option(value='security', text='Security') }}{% endcall %}
+{{ ui.native_select_icon() }}{% endcall %}
+{% call ui.tabs() %}
               {% call ui.tabs_list(class='hidden w-full md:flex') %}
-                {{ ui.tabs_trigger(active=true, data_value='general', text='General') }}
-                {{ ui.tabs_trigger(data_value='notifications', text='Notifications') }}
-                {{ ui.tabs_trigger(data_value='personalization', text='Personalization') }}
-                {{ ui.tabs_trigger(data_value='security', text='Security') }}
-              {% endcall %}
-              <div class="border **:data-[slot=select-trigger]:min-w-[125px] style-vega:min-h-[550px] style-vega:rounded-lg style-vega:p-6 style-nova:min-h-[460px] style-nova:rounded-lg style-nova:p-4 style-lyra:min-h-[450px] style-lyra:rounded-none style-lyra:p-4 style-maia:min-h-[550px] style-maia:rounded-xl style-maia:p-6 style-mira:min-h-[450px] style-mira:rounded-md style-mira:p-4 style-luma:min-h-[550px] style-luma:rounded-xl style-luma:p-6 style-rhea:min-h-[480px] style-rhea:rounded-2xl style-rhea:p-6">
-                {% call ui.tabs_content(active=true, data_value='general') %}
+                {{ ui.tabs_trigger(active=true, data_value='general', text='General') }}{{ ui.tabs_trigger(data_value='notifications', text='Notifications') }}{{ ui.tabs_trigger(data_value='personalization', text='Personalization') }}{{ ui.tabs_trigger(data_value='security', text='Security') }}{% endcall %}
+<div class="border **:data-[slot=select-trigger]:min-w-[125px] style-vega:min-h-[550px] style-vega:rounded-lg style-vega:p-6 style-nova:min-h-[460px] style-nova:rounded-lg style-nova:p-4 style-lyra:min-h-[450px] style-lyra:rounded-none style-lyra:p-4 style-maia:min-h-[550px] style-maia:rounded-xl style-maia:p-6 style-mira:min-h-[450px] style-mira:rounded-md style-mira:p-4 style-luma:min-h-[550px] style-luma:rounded-xl style-luma:p-6 style-rhea:min-h-[480px] style-rhea:rounded-2xl style-rhea:p-6">{% call ui.tabs_content(active=true, data_value='general') %}
                   {% call ui.field_set() %}
                     {% call ui.field_group() %}
                       {% call ui.field(orientation='horizontal') %}
-                        {{ ui.field_label(as_='label', for_='theme', text='Theme') }}
-                        {% call ui.select() %}
+                        {{ ui.field_label(as_='label', for_='theme', text='Theme') }}{% call ui.select() %}
                           {% call ui.select_trigger(id='theme', size='default', placeholder_shown=false) %}
-                            {{ ui.select_value(text='System') }}
-                            {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
-                          {% endcall %}
-                          {% call ui.select_content(align='end', data_align_trigger='true') %}
+                            {{ ui.select_value(text='System') }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+{% call ui.select_content(align='end', data_align_trigger='true') %}
                             {% call ui.select_scroll_up_button() %}{{ lucide('chevron-up') }}{% endcall %}
-                            <div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">
-                              {% call ui.select_group() %}
+<div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">{% call ui.select_group() %}
                                 {% call ui.select_item(data_value='light') %}<span class="cn-select-item-indicator"></span>Light{% endcall %}
-                                {% call ui.select_item(data_value='dark') %}<span class="cn-select-item-indicator"></span>Dark{% endcall %}
-                                {% call ui.select_item(data_value='system', aria_selected='true') %}<span class="cn-select-item-indicator">{{ lucide('check', 'cn-select-item-indicator-icon pointer-events-none') }}</span>System{% endcall %}
-                              {% endcall %}
-                            </div>
-                            {% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
-                          {% endcall %}
-                        {% endcall %}
-                      {% endcall %}
-                      {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                      {% call ui.field(orientation='horizontal') %}
-                        {{ ui.field_label(as_='label', for_='accent-color', text='Accent Color') }}
-                        {% call ui.select() %}
+{% call ui.select_item(data_value='dark') %}<span class="cn-select-item-indicator"></span>Dark{% endcall %}
+{% call ui.select_item(data_value='system', aria_selected='true') %}<span class="cn-select-item-indicator">{{ lucide('check', 'cn-select-item-indicator-icon pointer-events-none') }}</span>System{% endcall %}
+{% endcall %}
+</div>{% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+                        {{ ui.field_label(as_='label', for_='accent-color', text='Accent Color') }}{% call ui.select() %}
                           {% call ui.select_trigger(id='accent-color', size='default', placeholder_shown=false) %}
                             {% call ui.select_value() %}<div class="size-3 rounded-full"></div>Default{% endcall %}
-                            {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
-                          {% endcall %}
-                          {% call ui.select_content(align='end', data_align_trigger='true') %}
+{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+{% call ui.select_content(align='end', data_align_trigger='true') %}
                             {% call ui.select_scroll_up_button() %}{{ lucide('chevron-up') }}{% endcall %}
-                            <div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">
-                              {% call ui.select_group() %}
+<div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">{% call ui.select_group() %}
                                 {% for label, value in accent_colors %}
                                 {% call ui.select_item(data_value=value, aria_selected=('true' if value == 'default' else none)) %}<span class="cn-select-item-indicator">{% if value == 'default' %}{{ lucide('check', 'cn-select-item-indicator-icon pointer-events-none') }}{% endif %}</span><div class="size-3 rounded-full"></div>{{ label }}{% endcall %}
-                                {% endfor %}
-                              {% endcall %}
-                            </div>
-                            {% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
-                          {% endcall %}
-                        {% endcall %}
-                      {% endcall %}
-                      {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                      {% call ui.field(orientation='responsive') %}
+{% endfor %}
+{% endcall %}
+</div>{% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field(orientation='responsive') %}
                         {% call ui.field_content() %}
-                          {{ ui.field_label(as_='label', for_='spoken-language', text='Spoken Language') }}
-                          {{ ui.field_description(text="For best results, select the language you mainly speak. If it's not listed, it may still be supported via auto-detection.") }}
-                        {% endcall %}
-                        {% call ui.select() %}
+                          {{ ui.field_label(as_='label', for_='spoken-language', text='Spoken Language') }}{{ ui.field_description(text="For best results, select the language you mainly speak. If it's not listed, it may still be supported via auto-detection.") }}{% endcall %}
+{% call ui.select() %}
                           {% call ui.select_trigger(id='spoken-language', size='default', placeholder_shown=false) %}
-                            {{ ui.select_value(text='English') }}
-                            {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
-                          {% endcall %}
-                          {% call ui.select_content(align='end', data_align_trigger='true') %}
+                            {{ ui.select_value(text='English') }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+{% call ui.select_content(align='end', data_align_trigger='true') %}
                             {% call ui.select_scroll_up_button() %}{{ lucide('chevron-up') }}{% endcall %}
-                            <div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">
-                              {% call ui.select_group() %}
+<div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">{% call ui.select_group() %}
                                 {% call ui.select_item(data_value='auto') %}<span class="cn-select-item-indicator"></span>Auto{% endcall %}
-                              {% endcall %}
-                              {{ ui.select_separator() }}
-                              {% call ui.select_group() %}
+{% endcall %}
+{{ ui.select_separator() }}{% call ui.select_group() %}
                                 {% for label, value in spoken_languages %}
                                 {% call ui.select_item(data_value=value, aria_selected=('true' if value == 'en' else none)) %}<span class="cn-select-item-indicator">{% if value == 'en' %}{{ lucide('check', 'cn-select-item-indicator-icon pointer-events-none') }}{% endif %}</span>{{ label }}{% endcall %}
-                                {% endfor %}
-                              {% endcall %}
-                            </div>
-                            {% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
-                          {% endcall %}
-                        {% endcall %}
-                      {% endcall %}
-                      {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                      {% call ui.field(orientation='horizontal') %}
-                        {{ ui.field_label(as_='label', for_='voice', text='Voice') }}
-                        {% call ui.select() %}
+{% endfor %}
+{% endcall %}
+</div>{% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+                        {{ ui.field_label(as_='label', for_='voice', text='Voice') }}{% call ui.select() %}
                           {% call ui.select_trigger(id='voice', size='default', placeholder_shown=false) %}
-                            {{ ui.select_value(text='Samantha') }}
-                            {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
-                          {% endcall %}
-                          {% call ui.select_content(align='end', data_align_trigger='true') %}
+                            {{ ui.select_value(text='Samantha') }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+{% call ui.select_content(align='end', data_align_trigger='true') %}
                             {% call ui.select_scroll_up_button() %}{{ lucide('chevron-up') }}{% endcall %}
-                            <div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">
-                              {% call ui.select_group() %}
+<div class="cn-select-viewport data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)" data-position="item-aligned">{% call ui.select_group() %}
                                 {% for label, value in voices %}
                                 {% call ui.select_item(data_value=value, aria_selected=('true' if value == 'samantha' else none)) %}<span class="cn-select-item-indicator">{% if value == 'samantha' %}{{ lucide('check', 'cn-select-item-indicator-icon pointer-events-none') }}{% endif %}</span>{{ label }}{% endcall %}
-                                {% endfor %}
-                              {% endcall %}
-                            </div>
-                            {% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
-                          {% endcall %}
-                        {% endcall %}
-                      {% endcall %}
-                    {% endcall %}
-                  {% endcall %}
-                {% endcall %}
-                {% call ui.tabs_content(data_value='notifications') %}
+{% endfor %}
+{% endcall %}
+</div>{% call ui.select_scroll_down_button() %}{{ lucide('chevron-down') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.tabs_content(data_value='notifications') %}
                   {% call ui.field_group() %}
                     {% call ui.field_set() %}
-                      {{ ui.field_label(as_='label', text='Responses') }}
-                      {{ ui.field_description(text='Get notified when ChatGPT responds to requests that take time, like research or image generation.') }}
-                      {% call ui.field_group() %}
+                      {{ ui.field_label(as_='label', text='Responses') }}{{ ui.field_description(text='Get notified when ChatGPT responds to requests that take time, like research or image generation.') }}{% call ui.field_group() %}
                         {% call ui.field(orientation='horizontal') %}
                           {% call ui.checkbox(checked=true, disabled=true, id='push') %}{% call ui.checkbox_indicator(checked=true) %}{{ lucide('check') }}{% endcall %}{% endcall %}
-                          {{ ui.field_label(as_='label', for_='push', class='font-normal', text='Push notifications') }}
-                        {% endcall %}
-                      {% endcall %}
-                    {% endcall %}
-                    {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                    {% call ui.field_set() %}
-                      {{ ui.field_label(as_='label', text='Tasks') }}
-                      {% call ui.field_description() %}Get notified when tasks you've created have updates. <a href="#">Manage tasks</a>{% endcall %}
-                      {% call ui.field_group() %}
+{{ ui.field_label(as_='label', for_='push', class='font-normal', text='Push notifications') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field_set() %}
+                      {{ ui.field_label(as_='label', text='Tasks') }}{% call ui.field_description() %}Get notified when tasks you've created have updates. <a href="#">Manage tasks</a>{% endcall %}
+{% call ui.field_group() %}
                         {% call ui.field(orientation='horizontal') %}
-                          {{ ui.checkbox(checked=false, id='push-tasks') }}
-                          {{ ui.field_label(as_='label', for_='push-tasks', class='font-normal', text='Push notifications') }}
-                        {% endcall %}
-                        {% call ui.field(orientation='horizontal') %}
-                          {{ ui.checkbox(checked=false, id='email-tasks') }}
-                          {{ ui.field_label(as_='label', for_='email-tasks', class='font-normal', text='Email notifications') }}
-                        {% endcall %}
-                      {% endcall %}
-                    {% endcall %}
-                  {% endcall %}
-                {% endcall %}
-                {% call ui.tabs_content(data_value='personalization') %}
+                          {{ ui.checkbox(checked=false, id='push-tasks') }}{{ ui.field_label(as_='label', for_='push-tasks', class='font-normal', text='Push notifications') }}{% endcall %}
+{% call ui.field(orientation='horizontal') %}
+                          {{ ui.checkbox(checked=false, id='email-tasks') }}{{ ui.field_label(as_='label', for_='email-tasks', class='font-normal', text='Email notifications') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.tabs_content(data_value='personalization') %}
                   {% call ui.field_group() %}
                     {% call ui.field(orientation='responsive') %}
-                      {{ ui.field_label(as_='label', for_='nickname', text='Nickname') }}
-                      {% call ui.input_group() %}
-                        {{ ui.input_group_control(as_='input', id='nickname', placeholder='Broski', class='@md/field-group:max-w-[200px]') }}
-                        {% call ui.input_group_addon(align='inline-end') %}
+                      {{ ui.field_label(as_='label', for_='nickname', text='Nickname') }}{% call ui.input_group() %}
+                        {{ ui.input_group_control(as_='input', id='nickname', placeholder='Broski', class='@md/field-group:max-w-[200px]') }}{% call ui.input_group_addon(align='inline-end') %}
                           {% call ui.tooltip() %}
                             {% call ui.input_group_button(size='icon-xs', type='button', attrs={'data-slot': 'tooltip-trigger'}) %}{{ lucide('info') }}{% endcall %}
-                            {% call ui.tooltip_content(class='flex items-center gap-2') %}Used to identify you in the chat. {{ ui.kbd(text='N') }}{% endcall %}
-                          {% endcall %}
-                        {% endcall %}
-                      {% endcall %}
-                    {% endcall %}
-                    {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                    {% call ui.field(orientation='responsive', class='@md/field-group:flex-col @2xl/field-group:flex-row') %}
+{% call ui.tooltip_content(class='flex items-center gap-2') %}Used to identify you in the chat. {{ ui.kbd(text='N') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field(orientation='responsive', class='@md/field-group:flex-col @2xl/field-group:flex-row') %}
                       {% call ui.field_content() %}
-                        {{ ui.field_label(as_='label', for_='about', text='More about you') }}
-                        {{ ui.field_description(text='Tell us more about yourself. This will be used to help us personalize your experience.') }}
-                      {% endcall %}
-                      {{ ui.textarea(id='about', placeholder="I'm a software engineer...", class='min-h-[120px] @md/field-group:min-w-full @2xl/field-group:min-w-[300px]') }}
-                    {% endcall %}
-                    {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                    {% call ui.field_label(as_='label') %}
+                        {{ ui.field_label(as_='label', for_='about', text='More about you') }}{{ ui.field_description(text='Tell us more about yourself. This will be used to help us personalize your experience.') }}{% endcall %}
+{{ ui.textarea(id='about', placeholder="I'm a software engineer...", class='min-h-[120px] @md/field-group:min-w-full @2xl/field-group:min-w-[300px]') }}{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field_label(as_='label') %}
                       {% call ui.field(orientation='horizontal') %}
                         {% call ui.field_content() %}
-                          {{ ui.field_label(as_='label', for_='customization', text='Enable customizations') }}
-                          {{ ui.field_description(text='Enable customizations to make ChatGPT more personalized.') }}
-                        {% endcall %}
-                        {% call ui.switch(size='default', checked=true, id='customization') %}{{ ui.switch_thumb(checked=true) }}{% endcall %}
-                      {% endcall %}
-                    {% endcall %}
-                  {% endcall %}
-                {% endcall %}
-                {% call ui.tabs_content(data_value='security') %}
+                          {{ ui.field_label(as_='label', for_='customization', text='Enable customizations') }}{{ ui.field_description(text='Enable customizations to make ChatGPT more personalized.') }}{% endcall %}
+{% call ui.switch(size='default', checked=true, id='customization') %}{{ ui.switch_thumb(checked=true) }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.tabs_content(data_value='security') %}
                   {% call ui.field_group() %}
                     {% call ui.field(orientation='horizontal') %}
                       {% call ui.field_content() %}
-                        {{ ui.field_label(as_='label', for_='2fa', text='Multi-factor authentication') }}
-                        {{ ui.field_description(text='Enable multi-factor authentication to secure your account. If you do not have a two-factor authentication device, you can use a one-time code sent to your email.') }}
-                      {% endcall %}
-                      {% call ui.switch(size='default', checked=false, id='2fa') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}
-                    {% endcall %}
-                    {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                    {% call ui.field(orientation='horizontal') %}
+                        {{ ui.field_label(as_='label', for_='2fa', text='Multi-factor authentication') }}{{ ui.field_description(text='Enable multi-factor authentication to secure your account. If you do not have a two-factor authentication device, you can use a one-time code sent to your email.') }}{% endcall %}
+{% call ui.switch(size='default', checked=false, id='2fa') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}
+{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field(orientation='horizontal') %}
                       {% call ui.field_content() %}
-                        {{ ui.field_label(tag='div', text='Log out') }}
-                        {{ ui.field_description(text='Log out of your account on this device.') }}
-                      {% endcall %}
-                      {{ ui.button(text='Log Out', variant='outline', size='sm') }}
-                    {% endcall %}
-                    {% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
-                    {% call ui.field(orientation='horizontal') %}
+                        {{ ui.field_label(tag='div', text='Log out') }}{{ ui.field_description(text='Log out of your account on this device.') }}{% endcall %}
+{{ ui.button(text='Log Out', variant='outline', size='sm') }}{% endcall %}
+{% call ui.field_separator(attrs={'data-content': 'false'}) %}{{ ui.separator(class='absolute inset-0 top-1/2') }}{% endcall %}
+{% call ui.field(orientation='horizontal') %}
                       {% call ui.field_content() %}
-                        {{ ui.field_label(tag='div', text='Log out of all devices') }}
-                        {{ ui.field_description(text='This will log you out of all devices, including the current session. It may take up to 30 minutes for the changes to take effect.') }}
-                      {% endcall %}
-                      {{ ui.button(text='Log Out All', variant='outline', size='sm') }}
-                    {% endcall %}
-                  {% endcall %}
-                {% endcall %}
-              </div>
-            {% endcall %}
-          </div>
-          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+                        {{ ui.field_label(tag='div', text='Log out of all devices') }}{{ ui.field_description(text='This will log you out of all devices, including the current session. It may take up to 30 minutes for the changes to take effect.') }}{% endcall %}
+{{ ui.button(text='Log Out All', variant='outline', size='sm') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+</div>{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

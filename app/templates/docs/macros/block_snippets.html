@@ -1,391 +1,343 @@
+{# Generic block previews (sidebar, auth, dashboard and calendar families) built from the component macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
 {% macro tag(label) -%}
-<span class="docs-tag">{{ label }}</span>
+{{ ui.badge(text=label, variant='secondary') }}
 {%- endmacro %}
 
 {% macro feature_list(features) -%}
-<ul class="docs-feature-list">
+<ul class="grid gap-2 text-sm">
   {% for item in features %}
-    <li>{{ item }}</li>
+  <li class="flex items-center gap-2">{{ lucide('check', 'size-4 text-primary') }}<span>{{ item }}</span></li>
   {% endfor %}
 </ul>
 {%- endmacro %}
 
+{# Metric card shared by the sidebar and dashboard previews. #}
+{% macro metric_card(label, value, delta, tone='muted') -%}
+{% call ui.card(size='sm') %}
+  {% call ui.card_header() %}
+    {{ ui.card_description(text=label) }}
+    {{ ui.card_title(text=value, class='text-2xl font-semibold tabular-nums') }}
+  {% endcall %}
+  {% call ui.card_footer() %}
+    <span class="flex items-center gap-1 text-xs {{ 'text-destructive' if tone == 'negative' else ('text-foreground' if tone == 'positive' else 'text-muted-foreground') }}">
+      {% if tone == 'positive' %}{{ lucide('trending-up', 'size-3.5') }}{% elif tone == 'negative' %}{{ lucide('trending-down', 'size-3.5') }}{% endif %}{{ delta }}
+    </span>
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
 {% macro sidebar_preview(block, variant) -%}
-<section class="docs-section">
-  <div class="docs-preview" data-preview data-variant="{{ variant.variant }}">
-    <aside class="preview-sidebar preview-sidebar--{{ variant.variant }}">
-      <header class="preview-sidebar__header">
-        <span class="preview-logo">🌗</span>
-        <div>
-          <p class="preview-title">Nebula UI</p>
-          <p class="preview-subtitle">{{ block.description }}</p>
+{% set kind = variant.variant %}
+{% set with_icons = kind in ['icon', 'collapsible', 'dropdown', 'basic', 'floating', 'inset', 'sticky', 'dual', 'right', 'nested'] %}
+{% call d.preview(class='p-0 overflow-hidden sm:p-0', attrs={'data-variant': kind}) %}
+  <div class="flex min-h-[32rem] w-full bg-background text-foreground {{ 'flex-row-reverse' if kind == 'right' else '' }}" style="--sidebar-width: 15rem">
+    {% call ui.sidebar(collapsible='none', class=tw('h-auto', 'border-l' if kind == 'right' else 'border-r', 'm-2 rounded-xl border shadow-sm' if kind == 'floating' else '')) %}
+      {% call ui.sidebar_header() %}
+        {% call ui.sidebar_menu() %}
+          {% call ui.sidebar_menu_item() %}
+            {% call ui.sidebar_menu_button(size='lg', href='#') %}
+              <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">{{ lucide('gallery-vertical-end') }}</div>
+              <div class="grid flex-1 text-left text-sm leading-tight">
+                <span class="truncate font-medium">Nebula UI</span>
+                <span class="truncate text-xs text-sidebar-foreground/70">{{ block.description or 'Documentation platform' }}</span>
+              </div>
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% if kind == 'popover' %}
+        <div class="relative">
+          {{ ui.label(text='Jump to', for_='sidebar-preview-search-' ~ block.name, class='sr-only') }}
+          {{ ui.sidebar_input(id='sidebar-preview-search-' ~ block.name, type='search', class='pl-8', attrs={'placeholder': 'Jump to...'}) }}
+          {{ lucide('search', 'pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50') }}
         </div>
-      </header>
-      <nav class="preview-nav">
-        <a class="preview-nav__item is-active" href="#">
-          {% if variant.variant in ['icon', 'collapsible', 'dropdown'] %}
-          <span class="preview-nav__icon">🏠</span>
-          {% endif %}
-          Overview
-          {% if variant.variant in ['collapsible', 'collapsible-submenu'] %}
-          <span class="preview-nav__chevron">▾</span>
-          {% endif %}
-        </a>
-        <a class="preview-nav__item" href="#">
-          {% if variant.variant in ['icon', 'collapsible', 'dropdown'] %}
-          <span class="preview-nav__icon">📊</span>
-          {% endif %}
-          Analytics
-          {% if variant.variant in ['submenu', 'nested', 'dropdown'] %}
-          <span class="preview-nav__chevron">›</span>
-          {% endif %}
-        </a>
-        <a class="preview-nav__item" href="#">
-          {% if variant.variant in ['icon', 'collapsible', 'dropdown'] %}
-          <span class="preview-nav__icon">🧾</span>
-          {% endif %}
-          Reports
-        </a>
-        <a class="preview-nav__item" href="#">
-          {% if variant.variant in ['icon', 'collapsible', 'dropdown'] %}
-          <span class="preview-nav__icon">⚙️</span>
-          {% endif %}
-          Settings
-        </a>
-      </nav>
-      {% if variant.variant in ['collapsible', 'collapsible-submenu', 'dropdown', 'nested'] %}
-      <div class="preview-accordion">
-        <button type="button">Projects</button>
-        <div class="preview-accordion__panel">
-          <a href="#">Revenue dashboard</a>
-          <a href="#">Support desk</a>
-          <a href="#">Feedback board</a>
-        </div>
-      </div>
-      {% endif %}
-      {% if variant.variant == 'popover' %}
-      <div class="preview-command">
-        <input type="search" placeholder="Jump to..." />
-        <div class="preview-command__meta">⏱ Recent boards</div>
-      </div>
-      {% endif %}
-      {% if variant.variant == 'files' %}
-      <div class="preview-tree">
-        <p class="preview-tree__label">Documents</p>
-        <a href="#">Contracts</a>
-        <a href="#">Invoices</a>
-        <a href="#">Presentations</a>
-      </div>
-      {% endif %}
-      {% if variant.variant == 'calendar' %}
-      <div class="preview-mini-calendar">
-        <p class="preview-mini-calendar__header">October 2025</p>
-        <div class="preview-mini-calendar__grid">
-          {% for day in range(1, 8) %}<span>{{ day }}</span>{% endfor %}
-          {% for day in range(8, 15) %}<span{% if day == 12 %} class="is-today"{% endif %}>{{ day }}</span>{% endfor %}
-          {% for day in range(15, 22) %}<span>{{ day }}</span>{% endfor %}
-        </div>
-      </div>
-      {% endif %}
-      <footer class="preview-sidebar__footer">
-        <button class="btn btn-secondary w-full" type="button">New project</button>
-        {% if variant.variant in ['sticky', 'dual'] %}
-        <button class="btn btn-ghost w-full" type="button">Invite teammates</button>
+        <p class="flex items-center gap-1.5 px-2 text-xs text-sidebar-foreground/70">{{ lucide('clock', 'size-3.5') }}Recent boards</p>
         {% endif %}
-      </footer>
-    </aside>
-  <section class="preview-main preview-main--sidebar" data-sidebar-variant="{{ variant.variant }}">
-      <header class="preview-main__header">
-        <div>
-          <h2 class="preview-main__title">{{ variant.badge }} workspace</h2>
-          <div>{{ tag('Sidebar ' ~ variant.badge) }}</div>
-          <p class="preview-main__subtitle">Consistent navigation for complex apps.</p>
+      {% endcall %}
+      {% call ui.sidebar_content() %}
+        {% call ui.sidebar_group() %}
+          {{ ui.sidebar_group_label(text='Workspace') }}
+          {% call ui.sidebar_group_content() %}
+            {% call ui.sidebar_menu() %}
+              {% for icon, label, active in [('home', 'Overview', true), ('chart-bar', 'Analytics', false), ('file-text', 'Reports', false), ('settings', 'Settings', false)] %}
+              {% call ui.sidebar_menu_item() %}
+                {% call ui.sidebar_menu_button(href='#', active=active) %}
+                  {% if with_icons %}{{ lucide(icon) }}{% endif %}<span>{{ label }}</span>
+                  {% if kind in ['submenu', 'nested', 'dropdown'] and label == 'Analytics' %}{{ lucide('chevron-right', 'ml-auto') }}{% endif %}
+                {% endcall %}
+              {% endcall %}
+              {% endfor %}
+              {% if kind in ['collapsible', 'collapsible-submenu', 'dropdown', 'nested', 'submenu'] %}
+              {% call ui.collapsible(tag='li', open=true, class='group/menu-item relative group/collapsible', attrs={'data-sidebar': 'menu-item'}) %}
+                {% call ui.collapsible_trigger(as_='sidebar-menu-button', open=true) %}
+                  {{ lucide('folder') }}<span>Projects</span>{{ lucide('chevron-right', 'ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90') }}
+                {% endcall %}
+                {% call ui.collapsible_content(open=true) %}
+                  {% call ui.sidebar_menu_sub() %}
+                    {% for item in ['Revenue dashboard', 'Support desk', 'Feedback board'] %}
+                    {% call ui.sidebar_menu_sub_item() %}{{ ui.sidebar_menu_sub_button(text=item, href='#') }}{% endcall %}
+                    {% endfor %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+              {% endif %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% if kind == 'files' %}
+        {% call ui.sidebar_group() %}
+          {{ ui.sidebar_group_label(text='Documents') }}
+          {% call ui.sidebar_group_content() %}
+            {% call ui.sidebar_menu() %}
+              {% for item in ['Contracts', 'Invoices', 'Presentations'] %}
+              {% call ui.sidebar_menu_item() %}
+                {% call ui.sidebar_menu_button(href='#') %}{{ lucide('file') }}<span>{{ item }}</span>{% endcall %}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% endif %}
+        {% if kind == 'calendar' %}
+        {% call ui.sidebar_group() %}
+          {{ ui.sidebar_group_label(text='October 2025') }}
+          {% call ui.sidebar_group_content(class='px-2') %}
+            <div class="grid grid-cols-7 gap-1 text-center text-xs">
+              {% for day in range(1, 22) %}
+              {% call ui.button(variant=('default' if day == 12 else 'ghost'), size='icon-xs', class='size-7 font-normal') %}{{ day }}{% endcall %}
+              {% endfor %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+        {% endif %}
+      {% endcall %}
+      {% call ui.sidebar_footer(class='gap-2') %}
+        {{ ui.button(text='New project', variant='secondary', class='w-full') }}
+        {% if kind in ['sticky', 'dual'] %}{{ ui.button(text='Invite teammates', variant='ghost', class='w-full') }}{% endif %}
+      {% endcall %}
+    {% endcall %}
+    {% if kind == 'dual' %}
+    <div class="hidden w-40 shrink-0 flex-col gap-2 border-r bg-sidebar p-3 text-sidebar-foreground lg:flex">
+      <p class="px-2 text-xs font-medium text-sidebar-foreground/70">Pinned filters</p>
+      {% for label in ['Active', 'Archived', 'Mine'] %}{{ ui.button(text=label, variant='ghost', size='sm', class='justify-start') }}{% endfor %}
+    </div>
+    {% endif %}
+    <div class="flex min-w-0 flex-1 flex-col" data-sidebar-variant="{{ kind }}">
+      <header class="flex flex-wrap items-start justify-between gap-4 border-b px-6 py-5 {{ 'sticky top-0 bg-background' if kind == 'sticky' else '' }}">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-semibold tracking-tight">{{ variant.badge }} workspace</h2>
+            {{ tag('Sidebar ' ~ variant.badge) }}
+          </div>
+          <p class="text-sm text-muted-foreground">Consistent navigation for complex apps.</p>
         </div>
-        <div class="preview-actions">
-          <button class="btn btn-ghost">Share</button>
-          <button class="btn btn-primary">Create</button>
+        <div class="flex gap-2">
+          {% call ui.button(variant='ghost') %}{{ lucide('share') }}Share{% endcall %}
+          {% call ui.button() %}{{ lucide('plus') }}Create{% endcall %}
         </div>
       </header>
-      <div class="preview-grid">
-        <div class="preview-card">
-          <p class="preview-card__label">Active boards</p>
-          <p class="preview-card__value">24</p>
-          <p class="preview-card__delta is-positive">+12% vs last week</p>
+      <div class="flex flex-1 flex-col gap-6 p-6">
+        <div class="grid gap-4 md:grid-cols-3">
+          {{ metric_card('Active boards', '24', '+12% vs last week', 'positive') }}
+          {{ metric_card('Team members', '86', '+4 invited') }}
+          {{ metric_card('Automation saves', '214h', '-8h churn', 'negative') }}
         </div>
-        <div class="preview-card">
-          <p class="preview-card__label">Team members</p>
-          <p class="preview-card__value">86</p>
-          <p class="preview-card__delta">+4 invited</p>
-        </div>
-        <div class="preview-card">
-          <p class="preview-card__label">Automation saves</p>
-          <p class="preview-card__value">214h</p>
-          <p class="preview-card__delta is-negative">-8h churn</p>
-        </div>
+        {% if variant.features %}
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Highlights') }}{% endcall %}
+          {% call ui.card_content() %}{{ feature_list(variant.features) }}{% endcall %}
+        {% endcall %}
+        {% endif %}
       </div>
-      {% if variant.features %}
-      <div class="preview-feature-panel">
-        <h3>Highlights</h3>
-        {{ feature_list(variant.features) }}
-      </div>
-      {% endif %}
-    </section>
+    </div>
   </div>
-</section>
+{% endcall %}
 {%- endmacro %}
 
 {% macro auth_preview(block, variant, mode) -%}
-<section class="docs-section">
-  <div class="docs-preview" data-preview data-auth="{{ mode }}" data-layout="{{ variant.layout }}">
-    {% if variant.layout in ['split', 'media'] %}
-    <aside class="preview-auth__aside preview-auth__aside--{{ variant.cover or 'abstract' }}">
-      <div class="preview-auth__tag">{{ mode|title }} flow</div>
-      <h3>{{ variant.headline }}</h3>
-      <p>{{ block.description }}</p>
+{% set split = variant.layout in ['split', 'media'] %}
+{% set uid = block.name %}
+{% call d.preview(class='p-0 overflow-hidden sm:p-0', attrs={'data-auth': mode, 'data-layout': variant.layout}) %}
+  <div class="grid min-h-[32rem] w-full {{ 'lg:grid-cols-2' if split else '' }}">
+    {% if split %}
+    <aside class="relative hidden flex-col justify-between bg-muted p-10 text-foreground lg:flex" data-cover="{{ variant.cover or 'abstract' }}">
+      {{ ui.badge(text=(mode|title) ~ ' flow', variant='outline', class='w-fit') }}
+      <div class="flex flex-col gap-3">
+        <h3 class="text-2xl font-semibold tracking-tight">{{ variant.headline }}</h3>
+        <p class="text-muted-foreground">{{ block.description }}</p>
+      </div>
+      <div class="aspect-video rounded-xl border bg-background/60"></div>
     </aside>
     {% endif %}
-    <section class="preview-auth__main">
-      <header class="preview-auth__header">
-        <h2>{{ variant.headline }}</h2>
-        <p>{{ variant.subtitle }}</p>
-      </header>
-      {% if mode == 'login' and variant.layout == 'email' %}
-      <form class="preview-form">
-        <label>Email address</label>
-        <input type="email" placeholder="you@company.com" />
-        <button class="btn btn-primary" type="submit">Send magic link</button>
-        <button class="btn btn-ghost" type="button">Sign in with Google</button>
-      </form>
-      {% elif mode == 'otp' %}
-      <form class="preview-form preview-form--otp">
-        <label>One-time code</label>
-        <div class="preview-otp">
-          {% for _ in range(6) %}
-          <input type="text" maxlength="1" value="8" />
-          {% endfor %}
-        </div>
-        <div class="preview-otp__meta">
-          <span>Code expires in 04:56</span>
-          <a href="#">Resend</a>
-        </div>
-        <button class="btn btn-primary" type="submit">Verify device</button>
-      </form>
-      {% else %}
-      <form class="preview-form">
-        <label>Email address</label>
-        <input type="email" placeholder="you@company.com" />
-        {% if mode != 'otp' %}
-        <label>Password</label>
-        <input type="password" placeholder="••••••••" />
-        {% endif %}
-        <div class="preview-form__actions">
-          <label class="preview-checkbox"><input type="checkbox" checked /> Remember me</label>
-          <a href="#">Forgot password?</a>
-        </div>
-        <button class="btn btn-primary" type="submit">Continue</button>
-        {% if mode in ['login', 'signup'] and variant.layout in ['social', 'card'] %}
-        <div class="preview-divider"><span>Or continue with</span></div>
-        <div class="preview-social">
-          <button type="button">Google</button>
-          <button type="button">GitHub</button>
-          <button type="button">Slack</button>
-        </div>
-        {% endif %}
-      </form>
-      {% endif %}
-      <footer class="preview-auth__footer">
-        {% if mode == 'login' %}
-        <span>Need an account? <a href="#">Sign up</a></span>
-        {% elif mode == 'signup' %}
-        <span>Have an account? <a href="#">Sign in</a></span>
-        {% else %}
-        <span>Having trouble? <a href="#">Contact support</a></span>
-        {% endif %}
-      </footer>
-    </section>
+    <div class="flex items-center justify-center p-6 sm:p-10 {{ 'bg-muted/40' if variant.layout == 'muted' else '' }}">
+      {% call ui.card(class='w-full max-w-sm') %}
+        {% call ui.card_header() %}
+          {{ ui.card_title(text=variant.headline) }}
+          {{ ui.card_description(text=variant.subtitle) }}
+        {% endcall %}
+        {% call ui.card_content() %}
+          {% if mode == 'login' and variant.layout == 'email' %}
+          <form class="flex flex-col gap-6">
+            {% call ui.field() %}
+              {{ ui.field_label(text='Email address', for_=uid ~ '-email') }}
+              {{ ui.input(id=uid ~ '-email', type='email', attrs={'placeholder': 'you@company.com', 'autocomplete': 'email'}) }}
+            {% endcall %}
+            <div class="flex flex-col gap-2">
+              {{ ui.button(text='Send magic link', type='submit', class='w-full') }}
+              {{ ui.button(text='Sign in with Google', variant='ghost', class='w-full') }}
+            </div>
+          </form>
+          {% elif mode == 'otp' %}
+          <form class="flex flex-col gap-6">
+            {% call ui.field() %}
+              {{ ui.field_label(text='One-time code') }}
+              {% call ui.input_otp_group() %}
+                {% for digit in range(6) %}
+                {{ ui.input_otp_slot(text='8', active=(digit == 0)) }}
+                {% if digit == 2 %}{% endif %}
+                {% endfor %}
+              {% endcall %}
+              {{ ui.field_description(text='Enter the 6-digit code from your authenticator or message.') }}
+            {% endcall %}
+            <div class="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Code expires in 04:56</span>
+              {{ ui.button(text='Resend', variant='link', size='sm', class='h-auto p-0') }}
+            </div>
+            {{ ui.button(text='Verify device', type='submit', class='w-full') }}
+          </form>
+          {% else %}
+          <form class="flex flex-col gap-6">
+            {% call ui.field() %}
+              {{ ui.field_label(text='Email address', for_=uid ~ '-email') }}
+              {{ ui.input(id=uid ~ '-email', type='email', attrs={'placeholder': 'you@company.com', 'autocomplete': 'email'}) }}
+            {% endcall %}
+            {% call ui.field() %}
+              <div class="flex items-center justify-between">
+                {{ ui.field_label(text='Password', for_=uid ~ '-password') }}
+                {{ ui.button(text='Forgot password?', variant='link', size='sm', href='#', class='h-auto p-0 text-xs') }}
+              </div>
+              {{ ui.input(id=uid ~ '-password', type='password', attrs={'placeholder': '••••••••', 'autocomplete': 'current-password'}) }}
+            {% endcall %}
+            {% call ui.field(orientation='horizontal') %}
+              {{ ui.checkbox(id=uid ~ '-remember', checked=true) }}
+              {{ ui.field_label(text='Remember me', for_=uid ~ '-remember') }}
+            {% endcall %}
+            {{ ui.button(text='Continue', type='submit', class='w-full') }}
+            {% if mode in ['login', 'signup'] and variant.layout in ['social', 'card'] %}
+            {{ ui.field_separator(text='Or continue with') }}
+            <div class="grid grid-cols-3 gap-2">
+              {% for provider in ['Google', 'GitHub', 'Slack'] %}{{ ui.button(text=provider, variant='outline') }}{% endfor %}
+            </div>
+            {% endif %}
+          </form>
+          {% endif %}
+        {% endcall %}
+        {% call ui.card_footer(class='justify-center text-sm text-muted-foreground') %}
+          {% if mode == 'login' %}
+          <span>Need an account? {{ d.link('Sign up', '#') }}</span>
+          {% elif mode == 'signup' %}
+          <span>Have an account? {{ d.link('Sign in', '#') }}</span>
+          {% else %}
+          <span>Having trouble? {{ d.link('Contact support', '#') }}</span>
+          {% endif %}
+        {% endcall %}
+      {% endcall %}
+    </div>
   </div>
-</section>
+{% endcall %}
 {%- endmacro %}
 
 {% macro dashboard_preview(block, variant) -%}
-<section class="docs-section">
-  <div class="docs-preview" data-preview data-dashboard>
-    <header class="preview-main__header">
-      <div>
-        <h2 class="preview-main__title">{{ variant.headline }}</h2>
-        <p class="preview-main__subtitle">Key metrics to stay ahead.</p>
-      </div>
-      <div class="preview-actions">
-        <button class="btn btn-ghost">Download</button>
-        <button class="btn btn-primary">Share</button>
-      </div>
-    </header>
-    <div class="preview-grid preview-grid--dashboard">
-      {% for kpi in variant.kpis %}
-      <article class="preview-card">
-        <p class="preview-card__label">{{ kpi.label }}</p>
-        <p class="preview-card__value">{{ kpi.value }}</p>
-        <p class="preview-card__delta">{{ kpi.delta }} vs last month</p>
-      </article>
-      {% endfor %}
+{% call d.preview(attrs={'data-dashboard': ''}) %}
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h2 class="text-xl font-semibold tracking-tight">{{ variant.headline }}</h2>
+      <p class="text-sm text-muted-foreground">Key metrics to stay ahead.</p>
     </div>
-    <section class="preview-dashboard__body">
-      <div class="preview-chart">
-        <div class="preview-chart__line"></div>
-        <div class="preview-chart__legend">
-          <span>New users</span>
-          <span>Returning</span>
-        </div>
-      </div>
-      <div class="preview-table preview-table--inline">
-        <div class="preview-table__row preview-table__row--header">
-          <span>Segment</span>
-          <span>Users</span>
-          <span>Trend</span>
-        </div>
-        <div class="preview-table__row">
-          <span>Self-serve</span>
-          <span>8,943</span>
-          <span class="preview-status is-success">+12%</span>
-        </div>
-        <div class="preview-table__row">
-          <span>Enterprise</span>
-          <span>6,380</span>
-          <span class="preview-status is-warning">+4%</span>
-        </div>
-      </div>
-    </section>
+    <div class="flex gap-2">
+      {% call ui.button(variant='ghost') %}{{ lucide('download') }}Download{% endcall %}
+      {% call ui.button() %}{{ lucide('share') }}Share{% endcall %}
+    </div>
+  </header>
+  <div class="grid gap-4 md:grid-cols-3">
+    {% for kpi in variant.kpis %}
+    {{ metric_card(kpi.label, kpi.value, kpi.delta ~ ' vs last month', 'negative' if kpi.delta.startswith('-') and kpi.label != 'Churn' else 'positive') }}
+    {% endfor %}
   </div>
-</section>
+  <div class="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+    {% call ui.card() %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text='Visitors this quarter') }}
+        {{ ui.card_description(text='New versus returning users per week.') }}
+      {% endcall %}
+      {% call ui.card_content() %}
+        <div class="flex h-40 items-end gap-2" role="img" aria-label="Bar chart of weekly visitors">
+          {% for new, returning in [(45, 30), (60, 35), (52, 40), (75, 42), (68, 50), (82, 55), (90, 58), (78, 62)] %}
+          <div class="flex flex-1 items-end gap-1">
+            <div class="flex-1 rounded-t-sm bg-primary" style="height: {{ new }}%"></div>
+            <div class="flex-1 rounded-t-sm bg-chart-2" style="height: {{ returning }}%"></div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="mt-4 flex gap-4 text-xs text-muted-foreground">
+          <span class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-primary"></span>New users</span>
+          <span class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-chart-2"></span>Returning</span>
+        </div>
+      {% endcall %}
+    {% endcall %}
+    {% call ui.card(class='p-0') %}
+      {% call ui.table_container() %}
+        {% call ui.table() %}
+          {% call ui.table_header() %}
+            {% call ui.table_row() %}{{ ui.table_head(text='Segment') }}{{ ui.table_head(text='Users') }}{{ ui.table_head(text='Trend', class='text-right') }}{% endcall %}
+          {% endcall %}
+          {% call ui.table_body() %}
+            {% for segment, users, trend, variant_name in [('Self-serve', '8,943', '+12%', 'default'), ('Enterprise', '6,380', '+4%', 'secondary'), ('Partners', '2,881', '-2%', 'outline')] %}
+            {% call ui.table_row() %}
+              {{ ui.table_cell(text=segment, class='font-medium') }}
+              {{ ui.table_cell(text=users, class='tabular-nums') }}
+              {% call ui.table_cell(class='text-right') %}{{ ui.badge(text=trend, variant=variant_name) }}{% endcall %}
+            {% endcall %}
+            {% endfor %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  </div>
+{% endcall %}
 {%- endmacro %}
 
+{# Lightweight calendar preview used when a variant has no structured data. #}
 {% macro calendar_preview(block, variant) -%}
 {% set months = variant.months or 1 %}
-<section class="docs-section">
-  <div class="docs-preview" data-preview data-calendar-mode="{{ variant.mode }}">
-    <header class="preview-calendar__header">
-      <div>
-        <h2>{{ block.title }}</h2>
-        <p>{{ block.description }}</p>
-        {{ tag(variant.mode|replace('-', ' ')|title) }}
-        {% if variant.label %}
-        <p class="preview-calendar__meta">{{ variant.label }}</p>
-        {% endif %}
+{% call d.preview(attrs={'data-calendar-mode': variant.mode}) %}
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex flex-col gap-2">
+      <h2 class="text-xl font-semibold tracking-tight">{{ block.title }}</h2>
+      <p class="text-sm text-muted-foreground">{{ block.description }}</p>
+      <div class="flex items-center gap-2">{{ tag(variant.mode|replace('-', ' ')|title) }}{% if variant.label %}<span class="text-xs text-muted-foreground">{{ variant.label }}</span>{% endif %}</div>
+    </div>
+    <div class="flex gap-2">{{ ui.button(text='Today', variant='ghost') }}{{ ui.button(text='Apply') }}</div>
+  </header>
+  <div class="grid gap-6 {{ 'md:grid-cols-2' if months > 1 else '' }}">
+    {% for month in range(months) %}
+    {% call ui.calendar(class='w-fit rounded-lg border p-3') %}
+      <div class="flex items-center justify-between px-1 pb-2 text-sm font-medium">
+        {% call ui.button(variant='ghost', size='icon-sm', attrs={'aria-label': 'Previous month'}) %}{{ lucide('chevron-left') }}{% endcall %}
+        <span>October {{ 2025 + month }}</span>
+        {% call ui.button(variant='ghost', size='icon-sm', attrs={'aria-label': 'Next month'}) %}{{ lucide('chevron-right') }}{% endcall %}
       </div>
-      <div class="preview-calendar__actions">
-        <button class="btn btn-ghost">Today</button>
-        <button class="btn btn-primary">Apply</button>
+      <div class="grid grid-cols-7 gap-1 text-center">
+        {% for day in ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'] %}<span class="text-[0.8rem] font-normal text-muted-foreground">{{ day }}</span>{% endfor %}
+        {% for day in range(1, 31) %}
+          {% set selected = (variant.mode in ['range', 'range-picker'] and day in [11, 12, 13, 14]) or (variant.mode == 'multi' and day in [4, 11, 18, 25]) or (variant.mode in ['single', 'picker', 'filter', 'input', 'natural'] and day == 12) %}
+          {% call ui.button(variant=('default' if selected else 'ghost'), size='icon-sm', class='size-8 font-normal') %}{{ day }}{% endcall %}
+        {% endfor %}
       </div>
-    </header>
-    <div class="preview-calendar__grid preview-calendar__grid--{{ months }}m">
-      {% for month in range(months) %}
-      <section class="preview-calendar__month">
-        <header>
-          <span>October {{ 2025 + month }}</span>
-          {% if variant.dropdowns %}<button type="button">Pick month</button>{% endif %}
-        </header>
-        <ol class="preview-calendar__weekdays">
-          {% for day in ['S','M','T','W','T','F','S'] %}
-          <li>{{ day }}</li>
-          {% endfor %}
-        </ol>
-        <ol class="preview-calendar__days">
-          {% for day in range(1, 31) %}
-          {% set classes = [] %}
-          {% if variant.mode in ['range', 'range-picker', 'range-picker'] and day in [11,12,13,14] %}
-            {% set _ = classes.append('is-selected') %}
-          {% elif variant.mode in ['multi'] and day in [4,11,18,25] %}
-            {% set _ = classes.append('is-selected') %}
-          {% elif variant.mode in ['single','picker','filter','input','natural'] and day == 12 %}
-            {% set _ = classes.append('is-selected') %}
-          {% endif %}
-          {% if variant.disabled == 'days' and day in [5,19] %}
-            {% set _ = classes.append('is-disabled') %}
-          {% elif variant.disabled == 'weekend' and day in [6,7,13,14,20,21,27,28] %}
-            {% set _ = classes.append('is-disabled') %}
-          {% endif %}
-          <li class="{{ ' '.join(classes) }}">{{ day }}</li>
-          {% endfor %}
-        </ol>
-        {% if variant.time_inline %}
-        <div class="preview-calendar__time">
-          <label>Time</label>
-          <input type="time" value="09:30" />
-        </div>
-        {% endif %}
-      </section>
-      {% endfor %}
-    </div>
-    {% if variant.time and not variant.time_inline %}
-    <div class="preview-calendar__time">
-      <label>Time</label>
-      <input type="time" value="14:00" />
-    </div>
-    {% endif %}
-    {% if variant.presets %}
-    <div class="preview-calendar__presets">
-      <button type="button">Last 7 days</button>
-      <button type="button">Last 30 days</button>
-      <button type="button">This quarter</button>
-    </div>
-    {% endif %}
-    {% if variant.actions %}
-    <div class="preview-calendar__actions-inline">
-      {% for action in variant.actions %}
-      <button type="button">{{ action }}</button>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if variant.week_numbers %}
-    <div class="preview-calendar__meta">Week numbers shown left.</div>
-    {% endif %}
-    {% if variant.locale %}
-    <div class="preview-calendar__meta">Locale: {{ variant.locale|upper }}</div>
-    {% endif %}
-    {% if variant.constraint == 'min' %}
-    <div class="preview-calendar__meta">Minimum stay: 2 nights.</div>
-    {% elif variant.constraint == 'minmax' %}
-    <div class="preview-calendar__meta">Stay between 2 and 10 nights.</div>
-    {% endif %}
-    {% if variant.badges %}
-    <div class="preview-calendar__meta">Booked: 6, 17</div>
-    {% endif %}
-    {% if variant.brand %}
-    <div class="preview-calendar__meta">Powered by {{ variant.brand }}</div>
-    {% endif %}
-    {% if variant.mode in ['picker','range-picker','input','natural','drawer'] %}
-    <div class="preview-calendar__input">
-      <label>Selected dates</label>
-      <input type="text" value="Oct 11 – Oct 15" />
-    </div>
-    {% endif %}
-    {% if variant.mode == 'drawer' %}
-    <div class="preview-calendar__drawer">
-      <p>Calendar rendered in a drawer component.</p>
-      <button class="btn btn-primary" type="button">Confirm</button>
-    </div>
-    {% endif %}
-    {% if variant.mode == 'events' %}
-    <div class="preview-calendar__events">
-      <article>
-        <h4>Product release</h4>
-        <p>09:00 • Engineering</p>
-      </article>
-      <article>
-        <h4>Customer briefing</h4>
-        <p>13:30 • Sales</p>
-      </article>
-    </div>
-    {% endif %}
-    {% if variant.mode == 'filter' %}
-    <div class="preview-calendar__filters">
-      <label>Breakdown</label>
-      <select>
-        <option>Revenue</option>
-        <option>Sessions</option>
-      </select>
-    </div>
-    {% endif %}
+    {% endcall %}
+    {% endfor %}
   </div>
-</section>
+{% endcall %}
 {%- endmacro %}

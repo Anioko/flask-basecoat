@@ -1,20 +1,25 @@
 {% extends 'layouts/base.html' %}
-{% import 'macros/form_macros.html' as f %}
+{% import 'basecoat/index.html' as ui %}
 
 {% block content %}
-    <div class="container mx-auto prose">
-
-        <div class="p-6 bg-white shadow rounded">
-            <h3 class="text-lg font-semibold">You need to confirm your account before continuing.</h3>
-
-            <p>When you created an account, you should have received an email from us at {{ current_user.email }} with a link to confirm your email address.</p>
-
-            <hr class="my-4" />
-
-            <h3 class="text-lg font-semibold">I didn't receive an email!</h3>
-
-            <p>No problem! Just click the button below and we'll send you another one.</p>
-            <a class="btn btn--sm mt-2 inline-block" href="{{ url_for('account.confirm_request') }}">Resend confirmation email</a>
+    <div class="container mx-auto px-4 py-8">
+        <div class="mx-auto max-w-xl">
+            {% call ui.card() %}
+                {% call ui.card_header() %}
+                    {{ ui.card_title(text='You need to confirm your account before continuing.') }}
+                    {{ ui.card_description(text='When you created an account, you should have received an email from us at ' ~ current_user.email ~ ' with a link to confirm your email address.') }}
+                {% endcall %}
+                {% call ui.card_content(class='flex flex-col gap-4') %}
+                    {{ ui.separator() }}
+                    <div>
+                        <h3 class="text-lg font-semibold">I didn't receive an email!</h3>
+                        <p class="text-sm text-muted-foreground">No problem! Just click the button below and we'll send you another one.</p>
+                    </div>
+                {% endcall %}
+                {% call ui.card_footer() %}
+                    {% call ui.button(variant='outline', href=url_for('account.confirm_request')) %}{{ lucide('mail') }}Resend confirmation email{% endcall %}
+                {% endcall %}
+            {% endcall %}
         </div>
     </div>
 {% endblock %}

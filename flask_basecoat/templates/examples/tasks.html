@@ -1,243 +1,219 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasks & Issues - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Tasks & Issues - shadcn/ui Example{% endblock %}
+{% block head %}
+<script>
+  function filterTasks() {
+    const query = document.getElementById('task-filter-input').value.toLowerCase();
+    document.querySelectorAll('.task-row').forEach(r => {
+      const text = r.getAttribute('data-search').toLowerCase();
+      r.classList.toggle('hidden', !text.includes(query));
+    });
+  }
+  function setFilter(value) {
+    document.getElementById('task-filter-input').value = value;
+    filterTasks();
+  }
+  function rowBoxes() { return Array.from(document.querySelectorAll('.task-checkbox')); }
+  function isChecked(cb) { return cb.getAttribute('aria-checked') === 'true'; }
+  function updateSelectedCount() {
+    const boxes = rowBoxes();
+    const checked = boxes.filter(isChecked).length;
+    document.getElementById('selected-count').textContent = `${checked} of ${boxes.length} row(s) selected.`;
+    boxes.forEach(cb => {
+      const row = cb.closest('tr');
+      if (row) row.setAttribute('data-state', isChecked(cb) ? 'selected' : 'false');
+    });
+    const master = document.getElementById('select-all');
+    if (master && !master.dataset.syncing) {
+      master.dataset.syncing = '1';
+      const state = checked === 0 ? false : (checked === boxes.length ? true : 'mixed');
+      master.setAttribute('aria-checked', state === 'mixed' ? 'mixed' : String(state));
+      master.setAttribute('data-state', state === 'mixed' ? 'indeterminate' : (state ? 'checked' : 'unchecked'));
+      delete master.dataset.syncing;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    updateSelectedCount();
+    document.addEventListener('basecoat:change', (e) => {
+      const el = e.target;
+      if (!el.classList) return;
+      if (el.id === 'select-all') {
+        const on = isChecked(el);
+        rowBoxes().forEach(cb => { if (isChecked(cb) !== on) cb.click(); });
+        updateSelectedCount();
+      } else if (el.classList.contains('task-checkbox')) {
+        updateSelectedCount();
+      }
+    });
+  });
+</script>
+{% endblock %}
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-            updateSelectedCount();
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+{% set status_icons = {'done': 'circle-check', 'in-progress': 'timer', 'canceled': 'octagon-x', 'backlog': 'circle-help', 'todo': 'circle'} %}
+{% set priority_icons = {'high': 'arrow-up', 'medium': 'arrow-right', 'low': 'arrow-down'} %}
 
-        function filterTasks() {
-            const query = document.getElementById('task-filter-input').value.toLowerCase();
-            const rows = document.querySelectorAll('.task-row');
-            rows.forEach(r => {
-                const text = r.getAttribute('data-search').toLowerCase();
-                if (text.includes(query)) {
-                    r.classList.remove('hidden');
-                } else {
-                    r.classList.add('hidden');
-                }
-            });
-        }
+{% macro facet_filter(label, options) %}
+{% call ui.dropdown_menu() %}
+  {% call ui.dropdown_menu_trigger(variant='outline', size='sm', class='h-8 border-dashed') %}{{ lucide('circle-plus', 'size-3.5', data_icon='inline-start') }} {{ label }}{% endcall %}
+  {% call ui.dropdown_menu_content(align='start', class='w-44') %}
+    {{ ui.dropdown_menu_label(text=label) }}
+    {{ ui.dropdown_menu_separator() }}
+    {% for text, count in options %}
+    {% call ui.dropdown_menu_item(attrs={'onclick': "setFilter('" ~ text ~ "')"}) %}<span>{{ text }}</span>{{ ui.dropdown_menu_shortcut(text=count) }}{% endcall %}
+    {% endfor %}
+    {{ ui.dropdown_menu_separator() }}
+    {{ ui.dropdown_menu_item(text='Clear filters', class='justify-center text-muted-foreground', attrs={'onclick': "setFilter('')"}) }}
+  {% endcall %}
+{% endcall %}
+{% endmacro %}
 
-        function toggleSelectAll(master) {
-            const checkboxes = document.querySelectorAll('.task-checkbox');
-            checkboxes.forEach(cb => cb.checked = master.checked);
-            updateSelectedCount();
-        }
-
-        function updateSelectedCount() {
-            const checked = document.querySelectorAll('.task-checkbox:checked').length;
-            const total = document.querySelectorAll('.task-checkbox').length;
-            document.getElementById('selected-count').textContent = `${checked} of ${total} row(s) selected.`;
-        }
-    </script>
-</head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans">
-    {{ bc.toast_container() }}
-
-    <div class="bg-background">
-        <div class="h-full flex-1 flex-col gap-8 p-8 md:flex">
-            {# Header Section #}
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex flex-col gap-1">
-                    <h2 class="text-2xl font-semibold tracking-tight">Welcome back!</h2>
-                    <p class="text-muted-foreground text-sm">Here's a list of your tasks for this month.</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button class="relative h-8 w-8 rounded-full border border-border bg-muted flex items-center justify-center text-xs font-semibold hover:bg-muted/80 transition-colors" type="button" aria-label="User profile">
-                        <span>SC</span>
-                    </button>
-                </div>
-            </div>
-
-            {# Toolbar Filters #}
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex flex-1 items-center gap-2">
-                        <input
-                            id="task-filter-input"
-                            type="text"
-                            placeholder="Filter tasks..."
-                            class="h-8 w-[150px] lg:w-[250px] rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                            oninput="filterTasks()"
-                        >
-                        <div class="popover relative">
-                            <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button" aria-expanded="false">
-                                <i data-lucide="circle-plus" class="size-3.5"></i>Status
-                            </button>
-                            <div data-popover aria-hidden="true" class="absolute left-0 top-full mt-1.5 z-50 w-44 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all aria-hidden:hidden">
-                                <div class="space-y-0.5 text-xs">
-                                    <button onclick="document.getElementById('task-filter-input').value='Todo'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
-                                        <span>Todo</span>
-                                        <span class="text-muted-foreground font-mono">1</span>
-                                    </button>
-                                    <button onclick="document.getElementById('task-filter-input').value='In Progress'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
-                                        <span>In Progress</span>
-                                        <span class="text-muted-foreground font-mono">2</span>
-                                    </button>
-                                    <button onclick="document.getElementById('task-filter-input').value='Done'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
-                                        <span>Done</span>
-                                        <span class="text-muted-foreground font-mono">1</span>
-                                    </button>
-                                    <button onclick="document.getElementById('task-filter-input').value=''; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors text-muted-foreground border-t border-border mt-1">
-                                        Reset Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="popover relative">
-                            <button class="h-8 border-dashed inline-flex items-center gap-1 rounded-md border px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button" aria-expanded="false">
-                                <i data-lucide="circle-plus" class="size-3.5"></i>Priority
-                            </button>
-                            <div data-popover aria-hidden="true" class="absolute left-0 top-full mt-1.5 z-50 w-44 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md transition-all aria-hidden:hidden">
-                                <div class="space-y-0.5 text-xs">
-                                    <button onclick="document.getElementById('task-filter-input').value='High'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
-                                        <span>High</span>
-                                        <span class="text-muted-foreground font-mono">1</span>
-                                    </button>
-                                    <button onclick="document.getElementById('task-filter-input').value='Medium'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
-                                        <span>Medium</span>
-                                        <span class="text-muted-foreground font-mono">2</span>
-                                    </button>
-                                    <button onclick="document.getElementById('task-filter-input').value='Low'; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors flex items-center justify-between">
-                                        <span>Low</span>
-                                        <span class="text-muted-foreground font-mono">1</span>
-                                    </button>
-                                    <button onclick="document.getElementById('task-filter-input').value=''; filterTasks();" class="w-full text-left px-2 py-1.5 rounded hover:bg-muted transition-colors text-muted-foreground border-t border-border mt-1">
-                                        Reset Filter
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="ml-auto hidden h-8 lg:flex items-center gap-1 border rounded-md px-2.5 text-xs font-medium hover:bg-muted text-foreground transition-colors" type="button">
-                            <i data-lucide="sliders-horizontal" class="size-3.5"></i>View
-                        </button>
-                        {{ bc.button('Add Task', variant='default', size='sm', class='h-8 text-xs font-medium') }}
-                    </div>
-                </div>
-
-        {# Tasks Data Table #}
-        <div class="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
-            {% call bc.table() %}
-                <thead>
-                    <tr class="border-b border-border bg-muted/40">
-                        <th class="h-10 w-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                            <input type="checkbox" class="h-4 w-4 rounded border-border text-primary focus:ring-ring cursor-pointer" onchange="toggleSelectAll(this)">
-                        </th>
-                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Task</th>
-                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Title</th>
-                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Status</th>
-                        <th class="h-10 px-4 text-left align-middle font-medium text-xs text-muted-foreground">Priority</th>
-                        <th class="h-10 w-12 px-4 text-right align-middle font-medium text-xs text-muted-foreground">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                    {% for task in tasks %}
-                        <tr class="task-row hover:bg-muted/30 transition-colors" data-search="{{ task.code }} {{ task.title }} {{ task.status_label }} {{ task.priority }}">
-                            <td class="p-4 align-middle">
-                                <input type="checkbox" class="task-checkbox h-4 w-4 rounded border-border text-primary focus:ring-ring cursor-pointer" onchange="updateSelectedCount()">
-                            </td>
-                            <td class="p-4 align-middle font-mono text-xs font-semibold text-muted-foreground">
-                                {{ task.code }}
-                            </td>
-                            <td class="p-4 align-middle text-sm text-foreground">
-                                <div class="flex items-center gap-2 max-w-lg">
-                                    <span class="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
-                                        {{ task.label }}
-                                    </span>
-                                    <span class="truncate font-medium">{{ task.title }}</span>
-                                </div>
-                            </td>
-                            <td class="p-4 align-middle text-xs">
-                                {% if task.status == 'done' %}
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-medium text-emerald-600 dark:text-emerald-400">
-                                        <i data-lucide="check-circle-2" class="h-3 w-3"></i>
-                                        Done
-                                    </span>
-                                {% elif task.status == 'in-progress' %}
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-500/10 px-2.5 py-0.5 font-medium text-blue-600 dark:text-blue-400">
-                                        <i data-lucide="timer" class="h-3 w-3"></i>
-                                        In Progress
-                                    </span>
-                                {% elif task.status == 'canceled' %}
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-500/10 px-2.5 py-0.5 font-medium text-rose-600 dark:text-rose-400">
-                                        <i data-lucide="x-circle" class="h-3 w-3"></i>
-                                        Canceled
-                                    </span>
-                                {% else %}
-                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-0.5 font-medium text-muted-foreground">
-                                        <i data-lucide="circle" class="h-3 w-3"></i>
-                                        {{ task.status_label }}
-                                    </span>
-                                {% endif %}
-                            </td>
-                            <td class="p-4 align-middle text-xs text-muted-foreground">
-                                <div class="flex items-center gap-1.5 capitalize">
-                                    {% if task.priority == 'high' %}
-                                        <i data-lucide="arrow-up" class="h-4 w-4 text-rose-500"></i>
-                                    {% elif task.priority == 'medium' %}
-                                        <i data-lucide="arrow-right" class="h-4 w-4 text-amber-500"></i>
-                                    {% else %}
-                                        <i data-lucide="arrow-down" class="h-4 w-4 text-blue-500"></i>
-                                    {% endif %}
-                                    <span>{{ task.priority }}</span>
-                                </div>
-                            </td>
-                            <td class="p-4 align-middle text-right">
-                                {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground hover:text-foreground', icon='more-horizontal') }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+{% block body %}
+<div class="bg-background">
+  <div class="h-full flex-1 flex-col gap-8 p-8 md:flex">
+    {# Header Section #}
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex flex-col gap-1">
+        <h2 class="text-2xl font-semibold tracking-tight">Welcome back!</h2>
+        <p class="text-muted-foreground text-sm">Here's a list of your tasks for this month.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        {% call ui.dropdown_menu() %}
+          {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='rounded-full', attrs={'aria-label': 'User profile'}) %}
+            {% call ui.avatar(size='default') %}{{ ui.avatar_fallback(text='SC') }}{% endcall %}
+          {% endcall %}
+          {% call ui.dropdown_menu_content(align='end', class='w-56') %}
+            {% call ui.dropdown_menu_label(class='font-normal') %}
+              <div class="flex flex-col space-y-1">
+                <p class="text-sm font-medium leading-none">shadcn</p>
+                <p class="text-xs leading-none text-muted-foreground">m@example.com</p>
+              </div>
             {% endcall %}
-
-            {# Bottom Pagination & Selection Summary Bar #}
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4 border-t border-border text-xs text-muted-foreground">
-                <div id="selected-count" class="font-medium">
-                    0 of {{ tasks|length }} row(s) selected.
-                </div>
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-2">
-                        <span>Rows per page</span>
-                        <select class="rounded-md border border-border bg-background px-2 py-1 text-xs font-medium text-foreground">
-                            <option>10</option>
-                            <option>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                        </select>
-                    </div>
-                    <span>Page 1 of 10</span>
-                    <div class="flex items-center gap-1">
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevrons-left') }}
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevron-left') }}
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevron-right') }}
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevrons-right') }}
-                    </div>
-                </div>
-            </div>
-        </div>
+            {{ ui.dropdown_menu_separator() }}
+            {% call ui.dropdown_menu_group() %}
+              {% call ui.dropdown_menu_item() %}Profile{{ ui.dropdown_menu_shortcut(text='⇧⌘P') }}{% endcall %}
+              {% call ui.dropdown_menu_item() %}Billing{{ ui.dropdown_menu_shortcut(text='⌘B') }}{% endcall %}
+              {% call ui.dropdown_menu_item() %}Settings{{ ui.dropdown_menu_shortcut(text='⌘S') }}{% endcall %}
+              {{ ui.dropdown_menu_item(text='New Team') }}
+            {% endcall %}
+            {{ ui.dropdown_menu_separator() }}
+            {% call ui.dropdown_menu_item() %}Log out{{ ui.dropdown_menu_shortcut(text='⇧⌘Q') }}{% endcall %}
+          {% endcall %}
+        {% endcall %}
+      </div>
     </div>
-</body>
-</html>
+
+    {# Toolbar Filters #}
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex flex-1 items-center gap-2">
+          {{ ui.input(id='task-filter-input', type='text', placeholder='Filter tasks...', class='h-8 w-[150px] lg:w-[250px]', attrs={'oninput': 'filterTasks()', 'aria-label': 'Filter tasks'}) }}
+          {{ facet_filter('Status', [('Backlog', 1), ('Todo', 1), ('In Progress', 2), ('Done', 1), ('Canceled', 1)]) }}
+          {{ facet_filter('Priority', [('Low', 1), ('Medium', 2), ('High', 1)]) }}
+        </div>
+        <div class="flex items-center gap-2">
+          {% call ui.dropdown_menu(class='hidden lg:contents') %}
+            {% call ui.dropdown_menu_trigger(variant='outline', size='sm', class='ml-auto hidden h-8 lg:flex') %}{{ lucide('settings-2', 'size-3.5', data_icon='inline-start') }} View{% endcall %}
+            {% call ui.dropdown_menu_content(align='end', class='w-40') %}
+              {{ ui.dropdown_menu_label(text='Toggle columns') }}
+              {{ ui.dropdown_menu_separator() }}
+              {% for col in ['Title', 'Status', 'Priority'] %}
+              {% call ui.dropdown_menu_checkbox_item(checked=true, attrs={'data-value': col|lower}) %}
+                {% call ui.dropdown_menu_checkbox_item_indicator(checked=true) %}{{ lucide('check', 'size-4') }}{% endcall %}
+                {{ col }}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.button(size='sm', type='button', class='h-8 text-xs') %}{{ lucide('plus', 'size-3.5', data_icon='inline-start') }} Add Task{% endcall %}
+        </div>
+      </div>
+
+      {# Tasks Data Table #}
+      {% call ui.table_container(class='rounded-md border border-border') %}
+        {% call ui.table() %}
+          {% call ui.table_header() %}
+            {% call ui.table_row() %}
+              {% call ui.table_head(class='w-12') %}{{ ui.checkbox(id='select-all', checked=false, class='translate-y-[2px]', attrs={'aria-label': 'Select all'}) }}{% endcall %}
+              {{ ui.table_head(text='Task', class='w-[100px]') }}
+              {{ ui.table_head(text='Title') }}
+              {{ ui.table_head(text='Status') }}
+              {{ ui.table_head(text='Priority') }}
+              {{ ui.table_head(class='w-12', attrs={'aria-label': 'Actions'}) }}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.table_body() %}
+            {% for task in tasks %}
+            {% call ui.table_row(selected=false, class='task-row', attrs={'data-search': task.code ~ ' ' ~ task.title ~ ' ' ~ task.status_label ~ ' ' ~ task.priority}) %}
+              {% call ui.table_cell() %}{{ ui.checkbox(id='select-' ~ task.code|lower, checked=false, class='task-checkbox translate-y-[2px]', attrs={'aria-label': 'Select ' ~ task.code}) }}{% endcall %}
+              {{ ui.table_cell(text=task.code, class='font-medium') }}
+              {% call ui.table_cell() %}
+                <div class="flex items-center gap-2 max-w-[500px]">
+                  {{ ui.badge(text=task.label|capitalize, variant='outline') }}
+                  <span class="truncate font-medium">{{ task.title }}</span>
+                </div>
+              {% endcall %}
+              {% call ui.table_cell() %}
+                <div class="flex w-[120px] items-center gap-2">
+                  {{ lucide(status_icons.get(task.status, 'circle'), 'size-4 text-muted-foreground') }}
+                  <span>{{ task.status_label }}</span>
+                </div>
+              {% endcall %}
+              {% call ui.table_cell() %}
+                <div class="flex items-center gap-2 capitalize">
+                  {{ lucide(priority_icons.get(task.priority, 'arrow-right'), 'size-4 text-muted-foreground') }}
+                  <span>{{ task.priority }}</span>
+                </div>
+              {% endcall %}
+              {% call ui.table_cell(class='text-right') %}
+                {% call ui.dropdown_menu() %}
+                  {% call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', class='text-muted-foreground data-[state=open]:bg-muted', attrs={'aria-label': 'Open menu'}) %}{{ lucide('ellipsis', 'size-4') }}{% endcall %}
+                  {% call ui.dropdown_menu_content(align='end', class='w-[160px]') %}
+                    {{ ui.dropdown_menu_item(text='Edit') }}
+                    {{ ui.dropdown_menu_item(text='Make a copy') }}
+                    {{ ui.dropdown_menu_item(text='Favorite') }}
+                    {{ ui.dropdown_menu_separator() }}
+                    {% call ui.dropdown_menu_item(variant='destructive') %}Delete{{ ui.dropdown_menu_shortcut(text='⌘⌫') }}{% endcall %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+            {% endfor %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+
+      {# Bottom Pagination & Selection Summary Bar #}
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-2 text-sm text-muted-foreground">
+        <div id="selected-count" class="flex-1">0 of {{ tasks|length }} row(s) selected.</div>
+        <div class="flex items-center gap-6 lg:gap-8">
+          <div class="flex items-center gap-2">
+            {{ ui.label(text='Rows per page', for_='rows-per-page', class='text-sm font-medium') }}
+            {% call ui.select(attrs={'data-name': 'rows_per_page'}) %}
+              {% call ui.select_trigger(size='sm', placeholder_shown=false, id='rows-per-page', class='h-8 w-[70px]') %}
+                {{ ui.select_value(text='10', attrs={'style': 'pointer-events:none'}) }}
+                {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none size-4 opacity-50') }}
+              {% endcall %}
+              {% call ui.select_content(side='top') %}
+                {% for n in ['10', '20', '30', '40', '50'] %}
+                {{ ui.select_item(text=n, attrs={'data-value': n, 'data-state': 'checked' if n == '10' else 'unchecked', 'aria-selected': 'true' if n == '10' else 'false'}) }}
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+          </div>
+          <div class="flex items-center justify-center text-sm font-medium">Page 1 of 10</div>
+          {% call ui.pagination(class='mx-0 w-auto', attrs={'aria-label': 'pagination'}) %}
+            {% call ui.pagination_content() %}
+              {% for icon, label, extra in [('chevrons-left', 'Go to first page', 'hidden lg:flex'), ('chevron-left', 'Go to previous page', ''), ('chevron-right', 'Go to next page', ''), ('chevrons-right', 'Go to last page', 'hidden lg:flex')] %}
+              {% call ui.pagination_item() %}
+                {% call ui.pagination_link(size='icon', variant='outline', href='#', class='cn-pagination-link size-8 ' ~ extra, attrs={'aria-label': label}) %}{{ lucide(icon, 'size-4') }}{% endcall %}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

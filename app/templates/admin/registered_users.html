@@ -1,57 +1,88 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-8">
         <div class="w-full">
-            <a class="btn btn--ghost inline-flex items-center" href="{{ url_for('admin.index') }}">
-                ← Back to dashboard
-            </a>
+            {% call ui.button(variant='ghost', size='sm', href=url_for('admin.index')) %}{{ lucide('arrow-left') }}Back to dashboard{% endcall %}
 
-            <div class="card mt-6">
-                <div class="card-header">
-                    <h2 class="text-2xl font-semibold">Registered Users</h2>
-                    <p class="text-sm text-slate-600 dark:text-slate-400">View and manage currently registered users.</p>
-                </div>
-                <div class="card-content">
-                    <div class="flex items-center gap-3 mb-4">
-                        <label for="select-role" class="sr-only">Filter by role</label>
-                        <select id="select-role" class="input w-64">
-                            <option value="">All account types</option>
-                            {% for r in roles %}
-                                <option value="{{ r.name }}">{{ r.name }}s</option>
-                            {% endfor %}
-                        </select>
-                        <div class="ml-auto">
-                            <input id="search-users" type="text" placeholder="Search users…" class="input w-64">
-                        </div>
+            {% call ui.card(class='mt-6') %}
+                {% call ui.card_header() %}
+                    {{ ui.card_title(text='Registered Users') }}
+                    {{ ui.card_description(text='View and manage currently registered users.') }}
+                    {% call ui.card_action() %}
+                        {% call ui.button(size='sm', href=url_for('admin.new_user')) %}{{ lucide('plus') }}Add user{% endcall %}
+                    {% endcall %}
+                {% endcall %}
+                {% call ui.card_content(class='flex flex-col gap-4') %}
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        {% call ui.field(class='sm:w-64') %}
+                            {{ ui.field_label(text='Filter by role', for_='select-role', class='sr-only') }}
+                            {% call ui.native_select_wrapper() %}
+                                {% call ui.native_select(id='select-role') %}
+                                    {{ ui.native_select_option(text='All account types', value='') }}
+                                    {% for r in roles %}
+                                        {{ ui.native_select_option(text=r.name ~ 's', value=r.name) }}
+                                    {% endfor %}
+                                {% endcall %}
+                                {{ ui.native_select_icon() }}
+                            {% endcall %}
+                        {% endcall %}
+                        {% call ui.field(class='sm:ml-auto sm:w-64') %}
+                            {{ ui.field_label(text='Search users', for_='search-users', class='sr-only') }}
+                            {{ ui.input(id='search-users', type='search', attrs={'placeholder': 'Search users…'}) }}
+                        {% endcall %}
                     </div>
 
-                    {# Use overflow-x: scroll so that mobile views don't freak out
-                     # when the table is too wide #}
-                    <div class="overflow-x-auto">
-                        <table class="table w-full">
-                            <thead>
-                                <tr>
-                                    <th>First name</th>
-                                    <th class="sorted ascending">Last name</th>
-                                    <th>Email address</th>
-                                    <th>Account type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    {% call ui.table_container() %}
+                        {% call ui.table() %}
+                            {% call ui.table_header() %}
+                                {% call ui.table_row() %}
+                                    {{ ui.table_head(text='First name') }}
+                                    {{ ui.table_head(text='Last name', attrs={'aria-sort': 'ascending'}) }}
+                                    {{ ui.table_head(text='Email address') }}
+                                    {{ ui.table_head(text='Account type') }}
+                                    {% call ui.table_head(class='w-12') %}<span class="sr-only">Actions</span>{% endcall %}
+                                {% endcall %}
+                            {% endcall %}
+                            {% call ui.table_body() %}
                             {% for u in users | sort(attribute='last_name') %}
-                                <tr data-href="{{ url_for('admin.user_info', user_id=u.id) }}" class="cursor-pointer">
-                                    <td>{{ u.first_name }}</td>
-                                    <td>{{ u.last_name }}</td>
-                                    <td>{{ u.email }}</td>
-                                    <td class="user role">{{ u.role.name }}</td>
-                                </tr>
+                                {% call ui.table_row(class='cursor-pointer', attrs={'data-href': url_for('admin.user_info', user_id=u.id), 'data-role': u.role.name}) %}
+                                    {{ ui.table_cell(text=u.first_name, class='font-medium') }}
+                                    {{ ui.table_cell(text=u.last_name) }}
+                                    {{ ui.table_cell(text=u.email, class='text-muted-foreground') }}
+                                    {% call ui.table_cell() %}
+                                        {{ ui.badge(text=u.role.name, variant=('default' if u.is_admin() else 'secondary')) }}
+                                    {% endcall %}
+                                    {% call ui.table_cell(class='text-right') %}
+                                        {% call ui.dropdown_menu() %}
+                                            {% call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', attrs={'aria-label': 'Open menu'}) %}
+                                                {{ lucide('ellipsis') }}
+                                            {% endcall %}
+                                            {% call ui.dropdown_menu_content(align='end') %}
+                                                {% call ui.dropdown_menu_item(href=url_for('admin.user_info', user_id=u.id)) %}{{ lucide('user') }}View{% endcall %}
+                                                {% call ui.dropdown_menu_item(href=url_for('admin.change_user_email', user_id=u.id)) %}{{ lucide('mail') }}Change email{% endcall %}
+                                                {% call ui.dropdown_menu_item(href=url_for('admin.change_account_type', user_id=u.id)) %}{{ lucide('shield') }}Change account type{% endcall %}
+                                                {{ ui.dropdown_menu_separator() }}
+                                                {% call ui.dropdown_menu_item(variant='destructive', href=url_for('admin.delete_user_request', user_id=u.id)) %}{{ lucide('trash-2') }}Delete{% endcall %}
+                                            {% endcall %}
+                                        {% endcall %}
+                                    {% endcall %}
+                                {% endcall %}
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                            {% endcall %}
+                        {% endcall %}
+                    {% endcall %}
+
+                    {% call ui.empty(id='users-empty', class='hidden rounded-lg border') %}
+                        {% call ui.empty_header() %}
+                            {% call ui.empty_icon(variant='icon') %}{{ lucide('search') }}{% endcall %}
+                            {{ ui.empty_title(text='No users match') }}
+                            {{ ui.empty_description(text='Try another search term or account type.') }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
         </div>
     </div>
 
@@ -59,7 +90,8 @@
     document.addEventListener('DOMContentLoaded', function(){
         var search = document.getElementById('search-users');
         var selectRole = document.getElementById('select-role');
-        var tbody = document.querySelector('table tbody');
+        var tbody = document.querySelector('[data-slot="table-body"]');
+        var empty = document.getElementById('users-empty');
         var rows = Array.from(tbody ? tbody.querySelectorAll('tr') : []);
 
         function matchesSearch(row, q){
@@ -72,17 +104,19 @@
 
         function matchesRole(row, role){
             if(!role) return true;
-            var roleCell = row.querySelector('td.user.role');
-            return roleCell && roleCell.textContent.trim() === role;
+            return row.getAttribute('data-role') === role;
         }
 
         function filterRows(){
             var q = search ? search.value.trim() : '';
             var role = selectRole ? selectRole.value : '';
+            var visible = 0;
             rows.forEach(function(row){
                 var show = matchesSearch(row, q) && matchesRole(row, role);
                 row.style.display = show ? '' : 'none';
+                if(show) visible += 1;
             });
+            if(empty) empty.classList.toggle('hidden', visible > 0);
         }
 
         if(search){
@@ -92,11 +126,14 @@
             selectRole.addEventListener('change', filterRows);
         }
 
-        // Attach click navigation to rows using data-href
+        // Clicking a row opens the user; clicks inside the row's action menu are left to the menu.
         rows.forEach(function(row){
             var href = row.getAttribute('data-href');
             if(href){
-                row.addEventListener('click', function(){ window.location.href = href; });
+                row.addEventListener('click', function(e){
+                    if(e.target.closest('[data-fb="dropdown-menu"], a, button')) return;
+                    window.location.href = href;
+                });
             }
         });
     });

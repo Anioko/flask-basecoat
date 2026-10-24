@@ -1,211 +1,172 @@
-{% macro calendar_day(day) -%}
-  {% set classes = ['calendar-block__day'] %}
-  {% if day.is_outside %}
-    {% set _ = classes.append('is-outside') %}
-  {% endif %}
-  {% if day.from_next %}
-    {% set _ = classes.append('is-outside-next') %}
-  {% endif %}
-  {% if day.is_disabled %}
-    {% set _ = classes.append('is-disabled') %}
-  {% endif %}
-  {% if day.is_in_range %}
-    {% set _ = classes.append('is-in-range') %}
-  {% endif %}
-  {% if day.is_range_start %}
-    {% set _ = classes.append('is-range-start') %}
-  {% endif %}
-  {% if day.is_range_end %}
-    {% set _ = classes.append('is-range-end') %}
-  {% endif %}
-  {% if day.is_selected %}
-    {% set _ = classes.append('is-selected') %}
-  {% endif %}
-  {% if day.is_today %}
-    {% set _ = classes.append('is-today') %}
-  {% endif %}
-  {% if day.badge %}
-    {% set _ = classes.append('has-badge') %}
-  {% endif %}
-  {% if day.custom %}
-    {% set _ = classes.append('has-custom') %}
-  {% endif %}
-  <span class="{{ classes | join(' ') }}">
-    <span class="calendar-block__day-number">{{ day.label }}</span>
-    {% if day.badge %}
-      <span class="calendar-block__day-badge">{{ day.badge }}</span>
-    {% endif %}
-    {% if day.custom %}
-        {% set tone = 'info' %}
-        {% if day.custom.tone is defined %}
-          {% set tone = day.custom.tone %}
-        {% elif 'tone' in day.custom %}
-          {% set tone = day.custom['tone'] %}
-        {% endif %}
-        <span class="calendar-block__day-pill calendar-block__day-pill--{{ tone }}">{{ day.custom.label }}</span>
-    {% endif %}
-  </span>
-{%- endmacro %}
+{# Calendar block previews rendered with the calendar, button, field and item macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 
+{% macro calendar_day(day) -%}
+  {% set selected = day.is_selected or day.is_range_start or day.is_range_end %}
+  {% set classes = ['size-8 w-full font-normal'] %}
+  {% if day.is_in_range and not selected %}{% set _ = classes.append('rounded-none bg-accent text-accent-foreground hover:bg-accent') %}{% endif %}
+  {% if day.is_range_start %}{% set _ = classes.append('rounded-r-none') %}{% endif %}
+  {% if day.is_range_end %}{% set _ = classes.append('rounded-l-none') %}{% endif %}
+  {% if day.is_today and not selected %}{% set _ = classes.append('bg-accent text-accent-foreground') %}{% endif %}
+  {% if day.is_outside %}{% set _ = classes.append('text-muted-foreground opacity-50') %}{% endif %}
+  {% if day.badge or day.custom %}{% set _ = classes.append('h-auto flex-col gap-0.5 py-1') %}{% endif %}
+  <td class="p-0 text-center" role="gridcell"{% if selected %} aria-selected="true"{% endif %}{% if day.is_outside %} data-outside="true"{% endif %}>
+    {% call ui.button(variant=('default' if selected else 'ghost'), size='icon-sm', disabled=day.is_disabled, class=classes|join(' '), attrs={'data-selected': 'true' if selected else none, 'data-today': 'true' if day.is_today else none, 'aria-label': 'Day ' ~ day.label}) %}
+      <span>{{ day.label }}</span>
+      {% if day.badge %}<span class="size-1.5 rounded-full {{ 'bg-primary-foreground' if selected else 'bg-primary' }}" aria-label="{{ day.badge }}"></span>{% endif %}
+      {% if day.custom %}
+        {% set tone = day.custom.get('tone', 'info') if day.custom is mapping else 'info' %}
+        <span class="rounded-sm px-1 text-[9px] leading-tight {{ 'bg-destructive text-primary-foreground' if tone == 'danger' else ('bg-primary text-primary-foreground' if tone == 'success' else 'bg-secondary text-secondary-foreground') }}">{{ day.custom.label }}</span>
+      {% endif %}
+    {% endcall %}
+  </td>
+{%- endmacro %}
 
 {% macro calendar_month(month, data) -%}
   {% set has_weeks = month.week_numbers %}
-  <section class="calendar-block__month">
-    <header class="calendar-block__month-header">
-      <div>
-        <h3 class="calendar-block__month-title">{{ month.label }}</h3>
-        {% if data.navigation.dropdowns %}
-        <p class="calendar-block__month-caption">Adjust month and year</p>
-        {% endif %}
-      </div>
+  <div class="flex w-full flex-col gap-3">
+    <div class="flex items-center justify-between gap-2 px-1">
+      <p class="text-sm font-medium">{{ month.label }}</p>
       {% if data.navigation.dropdowns %}
-      <div class="calendar-block__month-controls" aria-hidden="true">
-        <button type="button" class="calendar-block__select">October</button>
-        <button type="button" class="calendar-block__select">2025</button>
+      <div class="flex gap-1">
+        {% call ui.button(variant='outline', size='xs') %}October{{ lucide('chevron-down') }}{% endcall %}
+        {% call ui.button(variant='outline', size='xs') %}2025{{ lucide('chevron-down') }}{% endcall %}
       </div>
       {% endif %}
-    </header>
-    <div class="calendar-block__weekdays{% if has_weeks %} calendar-block__weekdays--with-weeks{% endif %}">
-      {% if has_weeks %}
-        <span class="calendar-block__weekday calendar-block__weekday--spacer">Wk</span>
-      {% endif %}
-      {% for label in month.weekday_labels %}
-        <span class="calendar-block__weekday">{{ label }}</span>
-      {% endfor %}
     </div>
-    <div class="calendar-block__weeks">
-      {% for week in month.weeks %}
-      <div class="calendar-block__week{% if has_weeks %} calendar-block__week--with-weeks{% endif %}">
-        {% if has_weeks %}
-          <span class="calendar-block__week-number">{{ month.week_numbers[loop.index0] }}</span>
-        {% endif %}
-        {% for day in week %}
-          {{ calendar_day(day) }}
+    <table class="w-full border-collapse" role="grid" aria-label="{{ month.label }}">
+      <thead>
+        <tr class="flex">
+          {% if has_weeks %}<th class="w-8 text-[0.8rem] font-normal text-muted-foreground" scope="col">Wk</th>{% endif %}
+          {% for label in month.weekday_labels %}
+          <th class="flex-1 text-[0.8rem] font-normal text-muted-foreground" scope="col">{{ label[:2] }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for week in month.weeks %}
+        <tr class="mt-1 flex w-full items-center">
+          {% if has_weeks %}<td class="w-8 text-center text-[0.8rem] text-muted-foreground">{{ month.week_numbers[loop.index0] }}</td>{% endif %}
+          {% for day in week %}{{ calendar_day(day) }}{% endfor %}
+        </tr>
         {% endfor %}
-      </div>
-      {% endfor %}
-    </div>
+      </tbody>
+    </table>
     {% if month.time_inline %}
-    <div class="calendar-block__time-inline">
-      <label>{{ month.time_inline.label }}</label>
-      <input type="time" value="{{ month.time_inline.value }}" />
-    </div>
+    {% call ui.field(orientation='horizontal', class='border-t pt-3') %}
+      {{ ui.field_label(text=month.time_inline.label) }}
+      {{ ui.input(type='time', class='w-32', readonly=true, attrs={'value': month.time_inline.value}) }}
+    {% endcall %}
     {% endif %}
-  </section>
+  </div>
 {%- endmacro %}
-
 
 {% macro render_calendar_preview(variant) -%}
   {% set data = variant.data or {} %}
   {% set columns = data.columns or 1 %}
   {% set size = data.size or 'standard' %}
-  <section class="docs-section">
-    <div class="docs-preview docs-preview--calendar docs-preview--{{ variant.name }}" data-preview data-block="{{ variant.name }}" data-calendar-mode="{{ data.mode }}">
-      <article class="calendar-block calendar-block--cols-{{ columns }} calendar-block--size-{{ size }}">
-        <header class="calendar-block__header">
-          <div class="calendar-block__heading">
-            <p class="calendar-block__title">{{ data.header.title }}</p>
-            {% if data.header.subtitle %}
-            <p class="calendar-block__subtitle">{{ data.header.subtitle }}</p>
-            {% endif %}
-            {% if data.header.meta %}
-            <span class="calendar-block__meta-tag">{{ data.header.meta }}</span>
-            {% endif %}
-          </div>
-          <div class="calendar-block__nav" aria-hidden="true">
-            {% if data.navigation.dropdowns %}
-            <button type="button" class="calendar-block__select">October</button>
-            <button type="button" class="calendar-block__select">2025</button>
-            {% endif %}
-            {% if data.navigation.chevrons %}
-            <button type="button" class="calendar-block__chevron">‹</button>
-            <button type="button" class="calendar-block__chevron">›</button>
-            {% endif %}
-          </div>
-        </header>
-        {% if data.inline_actions %}
-        <div class="calendar-block__inline-actions" aria-label="Calendar quick actions">
-          {% for action in data.inline_actions %}
-          <button type="button">{{ action }}</button>
-          {% endfor %}
-        </div>
-        {% endif %}
-        <div class="calendar-block__months calendar-block__months--{{ columns }}">
-          {% for month in data.months %}
-            {{ calendar_month(month, data) }}
-          {% endfor %}
-        </div>
-        {% if data.time_picker %}
-        <div class="calendar-block__time">
-          <label>{{ data.time_picker.label }}</label>
-          <input type="text" value="{{ data.time_picker.value }}" readonly />
-        </div>
-        {% endif %}
-        {% if data.presets %}
-        <div class="calendar-block__presets" aria-label="Date presets">
-          {% for preset in data.presets %}
-          <button type="button">{{ preset }}</button>
-          {% endfor %}
-        </div>
-        {% endif %}
-        {% if data.inputs %}
-        <div class="calendar-block__inputs">
-          {% for field in data.inputs %}
-          <label>
-            <span>{{ field.label }}</span>
-            <input type="text" value="{{ field.value }}" readonly />
-          </label>
-          {% endfor %}
-        </div>
-        {% endif %}
-        {% if data.filters %}
-        <div class="calendar-block__filters">
-          <label>{{ data.filters.label }}</label>
-          <select>
-            {% for option in data.filters.options %}
-            <option>{{ option }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        {% endif %}
-        {% if data.events %}
-        <div class="calendar-block__events">
-          {% for event in data.events %}
-          <article>
-            <h4>{{ event.title }}</h4>
-            <p>{{ event.meta }}</p>
-          </article>
-          {% endfor %}
-        </div>
-        {% endif %}
-        {% if data.notes %}
-        <div class="calendar-block__notes">
-          <h3>Upcoming</h3>
-          <ul>
-            {% for note in data.notes %}
-            <li>
-              <span class="calendar-block__note-label">{{ note.label }}</span>
-              <span class="calendar-block__note-meta">{{ note.meta }}</span>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-        {% if data.drawer %}
-        <div class="calendar-block__drawer">
-          <h3>{{ data.drawer.title }}</h3>
-          <p>{{ data.drawer.copy }}</p>
-          <button type="button">{{ data.drawer.cta }}</button>
-        </div>
-        {% endif %}
-        {% if data.constraint or data.brand or (data.locale and data.locale != 'en') %}
-        <div class="calendar-block__meta-row">
-          {% if data.constraint %}<span>{{ data.constraint }}</span>{% endif %}
-          {% if data.brand %}<span>Powered by {{ data.brand }}</span>{% endif %}
-          {% if data.locale and data.locale != 'en' %}<span>Locale: {{ data.locale | upper }}</span>{% endif %}
-        </div>
-        {% endif %}
-      </article>
+  {% call d.preview(attrs={'data-block': variant.name, 'data-calendar-mode': data.mode}) %}
+    <header class="flex flex-wrap items-start justify-between gap-4">
+      <div class="flex flex-col gap-1">
+        <p class="text-lg font-semibold tracking-tight">{{ data.header.title }}</p>
+        {% if data.header.subtitle %}<p class="text-sm text-muted-foreground">{{ data.header.subtitle }}</p>{% endif %}
+        {% if data.header.meta %}{{ ui.badge(text=data.header.meta, variant='secondary', class='mt-1 w-fit') }}{% endif %}
+      </div>
+      {% if data.navigation.chevrons %}
+      <div class="flex gap-1">
+        {% call ui.button(variant='outline', size='icon-sm', attrs={'aria-label': 'Previous month'}) %}{{ lucide('chevron-left') }}{% endcall %}
+        {% call ui.button(variant='outline', size='icon-sm', attrs={'aria-label': 'Next month'}) %}{{ lucide('chevron-right') }}{% endcall %}
+      </div>
+      {% endif %}
+    </header>
+    {% if data.inline_actions %}
+    <div class="flex flex-wrap gap-2" aria-label="Calendar quick actions">
+      {% for action in data.inline_actions %}{{ ui.button(text=action, variant='outline', size='sm') }}{% endfor %}
     </div>
-  </section>
+    {% endif %}
+    {% call ui.calendar(class=tw('w-full rounded-lg border p-3', 'max-w-sm' if (columns == 1 and size != 'large') else ''), attrs={'data-columns': columns}) %}
+      <div class="grid gap-6 {{ 'md:grid-cols-2' if columns >= 2 else '' }} {{ 'xl:grid-cols-3' if columns >= 3 else '' }}">
+        {% for month in data.months %}{{ calendar_month(month, data) }}{% endfor %}
+      </div>
+    {% endcall %}
+    {% if data.time_picker %}
+    {% call ui.field(orientation='horizontal') %}
+      {{ ui.field_label(text=data.time_picker.label) }}
+      {{ ui.input(class='w-40', readonly=true, attrs={'value': data.time_picker.value}) }}
+    {% endcall %}
+    {% endif %}
+    {% if data.presets %}
+    <div class="flex flex-wrap gap-2" aria-label="Date presets">
+      {% for preset in data.presets %}{{ ui.button(text=preset, variant='secondary', size='sm') }}{% endfor %}
+    </div>
+    {% endif %}
+    {% if data.inputs %}
+    <div class="grid gap-4 sm:grid-cols-2">
+      {% for field in data.inputs %}
+      {% call ui.field() %}
+        {{ ui.field_label(text=field.label) }}
+        {{ ui.input(readonly=true, attrs={'value': field.value}) }}
+      {% endcall %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if data.filters %}
+    {% call ui.field(class='max-w-xs') %}
+      {{ ui.field_label(text=data.filters.label) }}
+      {% call ui.native_select_wrapper() %}
+        {% call ui.native_select() %}
+          {% for option in data.filters.options %}{{ ui.native_select_option(text=option, attrs={'value': option}) }}{% endfor %}
+        {% endcall %}
+        {{ ui.native_select_icon() }}
+      {% endcall %}
+    {% endcall %}
+    {% endif %}
+    {% if data.events %}
+    {% call ui.item_group() %}
+      {% for event in data.events %}
+      {% call ui.item(variant='outline', size='sm') %}
+        {% call ui.item_media(variant='icon') %}{{ lucide('calendar') }}{% endcall %}
+        {% call ui.item_content() %}
+          {{ ui.item_title(text=event.title) }}
+          {{ ui.item_description(text=event.meta) }}
+        {% endcall %}
+      {% endcall %}
+      {% endfor %}
+    {% endcall %}
+    {% endif %}
+    {% if data.notes %}
+    {% call ui.card(size='sm') %}
+      {% call ui.card_header() %}{{ ui.card_title(text='Upcoming') }}{% endcall %}
+      {% call ui.card_content() %}
+        <ul class="grid gap-2 text-sm">
+          {% for note in data.notes %}
+          <li class="flex items-center justify-between gap-4"><span>{{ note.label }}</span><span class="text-muted-foreground">{{ note.meta }}</span></li>
+          {% endfor %}
+        </ul>
+      {% endcall %}
+    {% endcall %}
+    {% endif %}
+    {% if data.drawer %}
+    {% call ui.card(size='sm', class='bg-muted/40') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text=data.drawer.title) }}
+        {{ ui.card_description(text=data.drawer.copy) }}
+      {% endcall %}
+      {% call ui.card_footer() %}{{ ui.button(text=data.drawer.cta) }}{% endcall %}
+    {% endcall %}
+    {% endif %}
+    {% if data.actions %}
+    <div class="flex flex-wrap justify-end gap-2">
+      {% for action in data.actions %}{{ ui.button(text=action, variant=('default' if loop.last else 'outline')) }}{% endfor %}
+    </div>
+    {% endif %}
+    {% if data.constraint or data.brand or (data.locale and data.locale != 'en') %}
+    <div class="flex flex-wrap gap-2 text-xs text-muted-foreground">
+      {% if data.constraint %}{{ ui.badge(text=data.constraint, variant='outline') }}{% endif %}
+      {% if data.brand %}{{ ui.badge(text='Powered by ' ~ data.brand, variant='outline') }}{% endif %}
+      {% if data.locale and data.locale != 'en' %}{{ ui.badge(text='Locale: ' ~ (data.locale|upper), variant='outline') }}{% endif %}
+    </div>
+    {% endif %}
+  {% endcall %}
 {%- endmacro %}

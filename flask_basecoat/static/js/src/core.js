@@ -20,6 +20,19 @@
   }
   function isOpen(el) { return el && el.getAttribute('data-state') === 'open'; }
 
+  /* ---- pairing: a content element belongs to the nearest unclaimed trigger before it in document order ---- */
+  function pairWith(content, selector, opts) {
+    opts = opts || {};
+    if (opts.adjacent) {
+      const prev = content.previousElementSibling;
+      return prev && prev.matches(selector) ? prev : null;
+    }
+    const candidates = qsa(document, selector).filter((el) => !el.fbPaired && !content.contains(el) && (el.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const trigger = candidates[candidates.length - 1] || null;
+    if (trigger) trigger.fbPaired = content;
+    return trigger;
+  }
+
   /* ---- ids ---- */
   let counter = 0;
   function ensureId(el, prefix) {
@@ -206,7 +219,7 @@
     el.dispatchEvent(new CustomEvent(`basecoat:${name}`, { bubbles: true, detail }));
   }
 
-  const api = { register, init, initAll, setState, isOpen, ensureId, float, pushLayer, removeLayer, trapFocus, focusFirst, focusables, roving, lockScroll, unlockScroll, emit, qs, qsa };
+  const api = { register, init, initAll, setState, isOpen, ensureId, float, pairWith, pushLayer, removeLayer, trapFocus, focusFirst, focusables, roving, lockScroll, unlockScroll, emit, qs, qsa };
   global.FlaskBasecoat = api;
 
   document.addEventListener('DOMContentLoaded', () => initAll(document));

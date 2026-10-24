@@ -3,1277 +3,686 @@
 {# Port of the upstream shadcn/ui example `attachment` (pinned source in compliance/upstream). #}
 {% block title %}attachment · flask-basecoat{% endblock %}
 {% block body %}
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80">
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80">
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80">
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&amp;auto=format&amp;fit=crop&amp;q=80">
-  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&amp;auto=format&amp;fit=crop&amp;q=80">
-  {% call ui.example_wrapper() %}
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80"><link rel="preload" as="image" href="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80"><link rel="preload" as="image" href="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80"><link rel="preload" as="image" href="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&amp;auto=format&amp;fit=crop&amp;q=80"><link rel="preload" as="image" href="https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&amp;auto=format&amp;fit=crop&amp;q=80">{% call ui.example_wrapper() %}
     {% call ui.example(title='Files', class='gap-8') %}
-      <div class="flex w-full flex-col gap-2">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div>
-        <div class="flex flex-col gap-3">
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+      <div class="flex w-full flex-col gap-2"><div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div><div class="flex flex-col gap-3">{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 9H8"></path>
-                <path d="M16 13H8"></path>
-                <path d="M16 17H8"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}sales-dashboard.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}PDF · 2.4 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}sales-dashboard.pdf{% endcall %}
+{% call ui.attachment_description() %}PDF · 2.4 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove sales-dashboard.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table" aria-hidden="true">
-                <path d="M12 3v18"></path>
-                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                <path d="M3 9h18"></path>
-                <path d="M3 15h18"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}customer-import.csv
-              {% endcall %}
-              {% call ui.attachment_description() %}CSV · 18 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table" aria-hidden="true"><path d="M12 3v18"></path><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}customer-import.csv{% endcall %}
+{% call ui.attachment_description() %}CSV · 18 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove customer-import.csv'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 12.5 8 15l2 2.5"></path>
-                <path d="m14 12.5 2 2.5-2 2.5"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}message-renderer.tsx
-              {% endcall %}
-              {% call ui.attachment_description() %}TypeScript · 12 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 12.5 8 15l2 2.5"></path><path d="m14 12.5 2 2.5-2 2.5"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}message-renderer.tsx{% endcall %}
+{% call ui.attachment_description() %}TypeScript · 12 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove message-renderer.tsx'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        </div>
-      </div>
-      <div class="flex w-full flex-col gap-2">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>
-        {% call ui.attachment_group(class='w-full') %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+</div></div><div class="flex w-full flex-col gap-2"><div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>{% call ui.attachment_group(class='w-full') %}
+          {% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 9H8"></path>
-                <path d="M16 13H8"></path>
-                <path d="M16 17H8"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}sales-dashboard.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}PDF · 2.4 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}sales-dashboard.pdf{% endcall %}
+{% call ui.attachment_description() %}PDF · 2.4 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove sales-dashboard.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table" aria-hidden="true">
-                <path d="M12 3v18"></path>
-                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                <path d="M3 9h18"></path>
-                <path d="M3 15h18"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}customer-import.csv
-              {% endcall %}
-              {% call ui.attachment_description() %}CSV · 18 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table" aria-hidden="true"><path d="M12 3v18"></path><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}customer-import.csv{% endcall %}
+{% call ui.attachment_description() %}CSV · 18 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove customer-import.csv'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 12.5 8 15l2 2.5"></path>
-                <path d="m14 12.5 2 2.5-2 2.5"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}message-renderer.tsx
-              {% endcall %}
-              {% call ui.attachment_description() %}TypeScript · 12 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 12.5 8 15l2 2.5"></path><path d="m14 12.5 2 2.5-2 2.5"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}message-renderer.tsx{% endcall %}
+{% call ui.attachment_description() %}TypeScript · 12 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove message-renderer.tsx'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-archive" aria-hidden="true">
-                <path d="M13.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v11.5"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M8 12v-1"></path>
-                <path d="M8 18v-2"></path>
-                <path d="M8 7V6"></path>
-                <circle cx="8" cy="20" r="2"></circle>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}source-assets.zip
-              {% endcall %}
-              {% call ui.attachment_description() %}ZIP · 4.2 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-archive" aria-hidden="true"><path d="M13.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v11.5"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M8 12v-1"></path><path d="M8 18v-2"></path><path d="M8 7V6"></path><circle cx="8" cy="20" r="2"></circle></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}source-assets.zip{% endcall %}
+{% call ui.attachment_description() %}ZIP · 4.2 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove source-assets.zip'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation" aria-hidden="true">
-                <path d="M2 3h20"></path>
-                <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path>
-                <path d="m7 21 5-5 5 5"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}quarterly-review.key
-              {% endcall %}
-              {% call ui.attachment_description() %}Keynote · 9 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation" aria-hidden="true"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}quarterly-review.key{% endcall %}
+{% call ui.attachment_description() %}Keynote · 9 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove quarterly-review.key'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Content Only', class='gap-8') %}
-      <div class="flex w-full flex-col gap-2">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Title</div>
-        <div class="flex flex-col gap-3">
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Content Only', class='gap-8') %}
+      <div class="flex w-full flex-col gap-2"><div class="px-1 text-xs font-medium text-muted-foreground">Title</div><div class="flex flex-col gap-3">{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}React Documentation
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              {% call ui.attachment_title() %}React Documentation{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove React Documentation'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}Tailwind CSS
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              {% call ui.attachment_title() %}Tailwind CSS{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove Tailwind CSS'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='sm', orientation='horizontal', data_state='done', class='w-48') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='sm', data_state='done', class='w-48') %}
             {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}shadcn/ui
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://ui.shadcn.com', attrs={'aria-label': 'Open shadcn/ui'}) }}
-          {% endcall %}
-        </div>
-      </div>
-      <div class="flex w-full flex-col gap-2">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Title and Description</div>
-        <div class="flex flex-col gap-3">
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+              {% call ui.attachment_title() %}shadcn/ui{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://ui.shadcn.com', attrs={'aria-label': 'Open shadcn/ui'}) }}{% endcall %}
+</div></div><div class="flex w-full flex-col gap-2"><div class="px-1 text-xs font-medium text-muted-foreground">Title and Description</div><div class="flex flex-col gap-3">{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}Building accessible components
-              {% endcall %}
-              {% call ui.attachment_description() %}react.dev · 8 min read
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              {% call ui.attachment_title() %}Building accessible components{% endcall %}
+{% call ui.attachment_description() %}react.dev · 8 min read{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove Building accessible components'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}Utility-first CSS framework
-              {% endcall %}
-              {% call ui.attachment_description() %}tailwindcss.com
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              {% call ui.attachment_title() %}Utility-first CSS framework{% endcall %}
+{% call ui.attachment_description() %}tailwindcss.com{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove Utility-first CSS framework'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='sm', orientation='horizontal', data_state='done', class='w-full max-w-80') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='sm', data_state='done', class='w-full max-w-80') %}
             {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}Compound components in React
-              {% endcall %}
-              {% call ui.attachment_description() %}ui.shadcn.com/docs
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://ui.shadcn.com/docs', attrs={'aria-label': 'Open Compound components in React'}) }}
-          {% endcall %}
-        </div>
-      </div>
-    {% endcall %}
-    {% call ui.example(title='States', class='gap-8') %}
-      <div class="flex w-full flex-col gap-3">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div>
-        <div class="flex flex-col gap-2">
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='idle', class='w-full') %}
+              {% call ui.attachment_title() %}Compound components in React{% endcall %}
+{% call ui.attachment_description() %}ui.shadcn.com/docs{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://ui.shadcn.com/docs', attrs={'aria-label': 'Open Compound components in React'}) }}{% endcall %}
+</div></div>{% endcall %}
+{% call ui.example(title='States', class='gap-8') %}
+      <div class="flex w-full flex-col gap-3"><div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div><div class="flex flex-col gap-2">{% call ui.attachment(orientation='horizontal', size='default', data_state='idle', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 6v6l4 2"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}selected-file.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}Ready to upload
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}selected-file.pdf{% endcall %}
+{% call ui.attachment_description() %}Ready to upload{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove selected-file.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='uploading', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='uploading', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
               {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading'}) %}
-                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}design-system.zip
-              {% endcall %}
-              {% call ui.attachment_description() %}Uploading · 64%
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>{% endcall %}
+{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}design-system.zip{% endcall %}
+{% call ui.attachment_description() %}Uploading · 64%{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove design-system.zip'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='processing', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='processing', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 9H8"></path>
-                <path d="M16 13H8"></path>
-                <path d="M16 17H8"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}market-research.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}Processing document
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}market-research.pdf{% endcall %}
+{% call ui.attachment_description() %}Processing document{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove market-research.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='error', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='error', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-exclamation-point lucide-file-warning" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M12 9v4"></path>
-                <path d="M12 17h.01"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}financial-model.xlsx
-              {% endcall %}
-              {% call ui.attachment_description() %}Upload failed. Try again.
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-exclamation-point lucide-file-warning" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}financial-model.xlsx{% endcall %}
+{% call ui.attachment_description() %}Upload failed. Try again.{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Retry upload'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true">
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                  <path d="M21 3v5h-5"></path>
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                  <path d="M8 16H3v5"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove attachment'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>{% endcall %}
+{% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove attachment'}) %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-                <path d="M20 6 9 17l-5-5"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}uploaded-report.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}Uploaded · 1.8 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}uploaded-report.pdf{% endcall %}
+{% call ui.attachment_description() %}Uploaded · 1.8 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove uploaded-report.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        </div>
-      </div>
-      <div class="flex w-full flex-col gap-3">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>
-        {% call ui.attachment_group(class='w-full') %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='idle') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+</div></div><div class="flex w-full flex-col gap-3"><div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>{% call ui.attachment_group(class='w-full') %}
+          {% call ui.attachment(orientation='vertical', size='default', data_state='idle') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 6v6l4 2"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}selected-file.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}Ready
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}selected-file.pdf{% endcall %}
+{% call ui.attachment_description() %}Ready{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove selected-file.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='uploading') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='uploading') %}
             {% call ui.attachment_media(variant='icon') %}
               {% call ui.spinner(class='lucide-loader-2', attrs={'aria-label': 'Loading'}) %}
-                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}design-system.zip
-              {% endcall %}
-              {% call ui.attachment_description() %}Uploading
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>{% endcall %}
+{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}design-system.zip{% endcall %}
+{% call ui.attachment_description() %}Uploading{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove design-system.zip'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='processing') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='processing') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-                <path d="M10 9H8"></path>
-                <path d="M16 13H8"></path>
-                <path d="M16 17H8"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}market-research.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}Processing
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}market-research.pdf{% endcall %}
+{% call ui.attachment_description() %}Processing{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove market-research.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='error') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='error') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-exclamation-point lucide-file-warning" aria-hidden="true">
-                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-                <path d="M12 9v4"></path>
-                <path d="M12 17h.01"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}financial-model.xlsx
-              {% endcall %}
-              {% call ui.attachment_description() %}Failed
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-exclamation-point lucide-file-warning" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}financial-model.xlsx{% endcall %}
+{% call ui.attachment_description() %}Failed{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Retry financial-model.xlsx'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true">
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                  <path d="M21 3v5h-5"></path>
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                  <path d="M8 16H3v5"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove financial-model.xlsx'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>{% endcall %}
+{% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove financial-model.xlsx'}) %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='icon') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true">
-                <path d="M20 6 9 17l-5-5"></path>
-              </svg>
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}uploaded-report.pdf
-              {% endcall %}
-              {% call ui.attachment_description() %}Done
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}uploaded-report.pdf{% endcall %}
+{% call ui.attachment_description() %}Done{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove uploaded-report.pdf'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Images', class='gap-8') %}
-      <div class="flex w-full flex-col gap-3">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div>
-        <div class="flex flex-col gap-2">
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Images', class='gap-8') %}
+      <div class="flex w-full flex-col gap-3"><div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div><div class="flex flex-col gap-2">{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}workspace.png
-              {% endcall %}
-              {% call ui.attachment_description() %}PNG · 820 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}PNG · 820 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open workspace.png'}) }}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open workspace.png'}) }}{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}desk-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}JPG · 1.1 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}desk-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG · 1.1 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove desk-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open desk-reference.jpg'}) }}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open desk-reference.jpg'}) }}{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}office-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}JPG · 940 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}office-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG · 940 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open office-reference.jpg'}) }}
-          {% endcall %}
-        </div>
-      </div>
-      <div class="flex w-full flex-col gap-2">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>
-        {% call ui.attachment_group(class='w-full') %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open office-reference.jpg'}) }}{% endcall %}
+</div></div><div class="flex w-full flex-col gap-2"><div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>{% call ui.attachment_group(class='w-full') %}
+          {% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}workspace.png
-              {% endcall %}
-              {% call ui.attachment_description() %}PNG · 820 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}PNG · 820 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open workspace.png'}) }}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open workspace.png'}) }}{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}desk-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}JPG · 1.1 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}desk-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG · 1.1 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove desk-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open desk-reference.jpg'}) }}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open desk-reference.jpg'}) }}{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}office-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}JPG · 940 KB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}office-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG · 940 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open office-reference.jpg'}) }}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open office-reference.jpg'}) }}{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Outdoor patio">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}patio-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}JPG · 1.6 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Outdoor patio">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}patio-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG · 1.6 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove patio-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open patio-reference.jpg'}) }}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open patio-reference.jpg'}) }}{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="House exterior">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}house-exterior.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}JPG · 1.4 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="House exterior">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}house-exterior.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG · 1.4 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove house-exterior.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-            {{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open house-exterior.jpg'}) }}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Image States', class='gap-8') %}
-      <div class="flex w-full flex-col gap-3">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div>
-        <div class="flex flex-col gap-2">
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='idle', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&auto=format&fit=crop&q=80', attrs={'rel': 'noreferrer', 'aria-label': 'Open house-exterior.jpg'}) }}{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Image States', class='gap-8') %}
+      <div class="flex w-full flex-col gap-3"><div class="px-1 text-xs font-medium text-muted-foreground">Horizontal</div><div class="flex flex-col gap-2">{% call ui.attachment(orientation='horizontal', size='default', data_state='idle', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}office-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}Ready to upload
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}office-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}Ready to upload{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='uploading', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='uploading', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}workspace.png
-              {% endcall %}
-              {% call ui.attachment_description() %}Uploading · 72%
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}Uploading · 72%{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='processing', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='processing', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}desk-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}Processing image
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}desk-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}Processing image{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove desk-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='error', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='error', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}office-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}Upload failed
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}office-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}Upload failed{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Retry image upload'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true">
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                  <path d="M21 3v5h-5"></path>
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                  <path d="M8 16H3v5"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove attachment'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>{% endcall %}
+{% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove attachment'}) %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}workspace.png
-              {% endcall %}
-              {% call ui.attachment_description() %}Uploaded · 1.2 MB
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}Uploaded · 1.2 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        </div>
-      </div>
-      <div class="flex w-full flex-col gap-2">
-        <div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>
-        {% call ui.attachment_group(class='w-full') %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='idle') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+</div></div><div class="flex w-full flex-col gap-2"><div class="px-1 text-xs font-medium text-muted-foreground">Vertical</div>{% call ui.attachment_group(class='w-full') %}
+          {% call ui.attachment(orientation='vertical', size='default', data_state='idle') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}office-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}Ready
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}office-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}Ready{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='uploading') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='uploading') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}workspace.png
-              {% endcall %}
-              {% call ui.attachment_description() %}Uploading
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}Uploading{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='processing') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='processing') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}desk-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}Processing
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}desk-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}Processing{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove desk-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='error') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='error') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}office-reference.jpg
-              {% endcall %}
-              {% call ui.attachment_description() %}Failed
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}office-reference.jpg{% endcall %}
+{% call ui.attachment_description() %}Failed{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Retry office-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true">
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                  <path d="M21 3v5h-5"></path>
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                  <path d="M8 16H3v5"></path>
-                </svg>
-              {% endcall %}
-              {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office-reference.jpg'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>{% endcall %}
+{% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office-reference.jpg'}) %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
             {% call ui.attachment_media(variant='image') %}
-              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-            {% endcall %}
-            {% call ui.attachment_content() %}
-              {% call ui.attachment_title() %}workspace.png
-              {% endcall %}
-              {% call ui.attachment_description() %}Done
-              {% endcall %}
-            {% endcall %}
-            {% call ui.attachment_actions() %}
+              <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+              {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}Done{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
               {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
-              {% endcall %}
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      </div>
-    {% endcall %}
-    {% call ui.example(title='Sizes', class='gap-3') %}
-      {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+</div>{% endcall %}
+{% call ui.example(title='Sizes', class='gap-3') %}
+      {% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
         {% call ui.attachment_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-            <path d="M10 9H8"></path>
-            <path d="M16 13H8"></path>
-            <path d="M16 17H8"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.attachment_content() %}
-          {% call ui.attachment_title() %}Default attachment
-          {% endcall %}
-          {% call ui.attachment_description() %}PDF · 2.4 MB
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.attachment(size='sm', orientation='horizontal', data_state='done', class='w-full') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+          {% call ui.attachment_title() %}Default attachment{% endcall %}
+{% call ui.attachment_description() %}PDF · 2.4 MB{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='sm', data_state='done', class='w-full') %}
         {% call ui.attachment_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-            <path d="M10 9H8"></path>
-            <path d="M16 13H8"></path>
-            <path d="M16 17H8"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.attachment_content() %}
-          {% call ui.attachment_title() %}Small attachment
-          {% endcall %}
-          {% call ui.attachment_description() %}PDF · 2.4 MB
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.attachment(size='xs', orientation='horizontal', data_state='done', class='w-full') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+          {% call ui.attachment_title() %}Small attachment{% endcall %}
+{% call ui.attachment_description() %}PDF · 2.4 MB{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='xs', data_state='done', class='w-full') %}
         {% call ui.attachment_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-            <path d="M10 9H8"></path>
-            <path d="M16 13H8"></path>
-            <path d="M16 17H8"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.attachment_content() %}
-          {% call ui.attachment_title() %}Extra small attachment
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Scrollable Group', class='gap-4') %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+          {% call ui.attachment_title() %}Extra small attachment{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Scrollable Group', class='gap-4') %}
       {% call ui.attachment_group(class='w-full') %}
-        {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-64') %}
+        {% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-64') %}
           {% call ui.attachment_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-              <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-              <path d="M10 9H8"></path>
-              <path d="M16 13H8"></path>
-              <path d="M16 17H8"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}briefing-notes.pdf
-            {% endcall %}
-            {% call ui.attachment_description() %}PDF · 1.4 MB
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}briefing-notes.pdf{% endcall %}
+{% call ui.attachment_description() %}PDF · 1.4 MB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove briefing-notes.pdf'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-64') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-64') %}
           {% call ui.attachment_media(variant='image') %}
-            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}workspace.png
-            {% endcall %}
-            {% call ui.attachment_description() %}PNG · 820 KB
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Workspace">{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}workspace.png{% endcall %}
+{% call ui.attachment_description() %}PNG · 820 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove workspace.png'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-64') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-64') %}
           {% call ui.attachment_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table" aria-hidden="true">
-              <path d="M12 3v18"></path>
-              <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-              <path d="M3 9h18"></path>
-              <path d="M3 15h18"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}customers.csv
-            {% endcall %}
-            {% call ui.attachment_description() %}CSV · 18 KB
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table" aria-hidden="true"><path d="M12 3v18"></path><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}customers.csv{% endcall %}
+{% call ui.attachment_description() %}CSV · 18 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove customers.csv'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-64') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-64') %}
           {% call ui.attachment_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code" aria-hidden="true">
-              <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-              <path d="M10 12.5 8 15l2 2.5"></path>
-              <path d="m14 12.5 2 2.5-2 2.5"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}renderer.tsx
-            {% endcall %}
-            {% call ui.attachment_description() %}TSX · 12 KB
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 12.5 8 15l2 2.5"></path><path d="m14 12.5 2 2.5-2 2.5"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}renderer.tsx{% endcall %}
+{% call ui.attachment_description() %}TSX · 12 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove renderer.tsx'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-      {% call ui.attachment_group(class='w-full') %}
-        {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment_group(class='w-full') %}
+        {% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
           {% call ui.attachment_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-              <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-              <path d="M10 9H8"></path>
-              <path d="M16 13H8"></path>
-              <path d="M16 17H8"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}invoice.pdf
-            {% endcall %}
-            {% call ui.attachment_description() %}PDF
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}invoice.pdf{% endcall %}
+{% call ui.attachment_description() %}PDF{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove invoice.pdf'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
           {% call ui.attachment_media(variant='image', class='w-full') %}
-            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}desk.jpg
-            {% endcall %}
-            {% call ui.attachment_description() %}JPG
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Desk">{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}desk.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove desk.jpg'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
           {% call ui.attachment_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-archive" aria-hidden="true">
-              <path d="M13.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v11.5"></path>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-              <path d="M8 12v-1"></path>
-              <path d="M8 18v-2"></path>
-              <path d="M8 7V6"></path>
-              <circle cx="8" cy="20" r="2"></circle>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}assets.zip
-            {% endcall %}
-            {% call ui.attachment_description() %}ZIP
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-archive" aria-hidden="true"><path d="M13.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v11.5"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M8 12v-1"></path><path d="M8 18v-2"></path><path d="M8 7V6"></path><circle cx="8" cy="20" r="2"></circle></svg>{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}assets.zip{% endcall %}
+{% call ui.attachment_description() %}ZIP{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove assets.zip'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
           {% call ui.attachment_media(variant='image', class='w-full') %}
-            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}office.jpg
-            {% endcall %}
-            {% call ui.attachment_description() %}JPG
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&amp;auto=format&amp;fit=crop&amp;q=80" alt="Office">{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}office.jpg{% endcall %}
+{% call ui.attachment_description() %}JPG{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove office.jpg'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment(size='default', orientation='vertical', data_state='done') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.attachment(orientation='vertical', size='default', data_state='done') %}
           {% call ui.attachment_media(variant='icon') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-              <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-              <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-              <path d="M10 9H8"></path>
-              <path d="M16 13H8"></path>
-              <path d="M16 17H8"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_content() %}
-            {% call ui.attachment_title() %}notes.pdf
-            {% endcall %}
-            {% call ui.attachment_description() %}PDF
-            {% endcall %}
-          {% endcall %}
-          {% call ui.attachment_actions() %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+            {% call ui.attachment_title() %}notes.pdf{% endcall %}
+{% call ui.attachment_description() %}PDF{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
             {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove notes.pdf'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-                <path d="M18 6 6 18"></path>
-                <path d="m6 6 12 12"></path>
-              </svg>
-            {% endcall %}
-          {% endcall %}
-        {% endcall %}
-      {% endcall %}
-    {% endcall %}
-    {% call ui.example(title='Triggers', class='gap-3') %}
-      {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Triggers', class='gap-3') %}
+      {% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
         {% call ui.attachment_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
-            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-            <path d="M10 9H8"></path>
-            <path d="M16 13H8"></path>
-            <path d="M16 17H8"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.attachment_content() %}
-          {% call ui.attachment_title() %}contract-review.pdf
-          {% endcall %}
-          {% call ui.attachment_description() %}PDF · 820 KB
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment_actions() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+          {% call ui.attachment_title() %}contract-review.pdf{% endcall %}
+{% call ui.attachment_description() %}PDF · 820 KB{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
           {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Download attachment'}) %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true">
-              <path d="M12 15V3"></path>
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <path d="m7 10 5 5 5-5"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove attachment'}) %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-              <path d="M18 6 6 18"></path>
-              <path d="m6 6 12 12"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {{ ui.attachment_trigger(href='#', attrs={'rel': 'noreferrer', 'aria-label': 'Open contract-review.pdf'}) }}
-      {% endcall %}
-      {% call ui.attachment(size='default', orientation='horizontal', data_state='done', class='w-full') %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download" aria-hidden="true"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg>{% endcall %}
+{% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove attachment'}) %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.attachment_trigger(href='#', attrs={'rel': 'noreferrer', 'aria-label': 'Open contract-review.pdf'}) }}{% endcall %}
+{% call ui.attachment(orientation='horizontal', size='default', data_state='done', class='w-full') %}
         {% call ui.attachment_media(variant='icon') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true">
-            <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
-            <path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
-            <circle cx="11.5" cy="14.5" r="2.5"></circle>
-            <path d="M13.3 16.3 15 18"></path>
-          </svg>
-        {% endcall %}
-        {% call ui.attachment_content() %}
-          {% call ui.attachment_title() %}research-summary.pdf
-          {% endcall %}
-          {% call ui.attachment_description() %}Open preview dialog
-          {% endcall %}
-        {% endcall %}
-        {% call ui.attachment_actions() %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="M13.3 16.3 15 18"></path></svg>{% endcall %}
+{% call ui.attachment_content() %}
+          {% call ui.attachment_title() %}research-summary.pdf{% endcall %}
+{% call ui.attachment_description() %}Open preview dialog{% endcall %}
+{% endcall %}
+{% call ui.attachment_actions() %}
           {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Copy link'}) %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-            </svg>
-          {% endcall %}
-          {% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove research-summary.pdf'}) %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
-              <path d="M18 6 6 18"></path>
-              <path d="m6 6 12 12"></path>
-            </svg>
-          {% endcall %}
-        {% endcall %}
-        {{ ui.dialog_trigger(as_=none, class='cn-attachment-trigger absolute inset-0 z-10 outline-none', attrs={'aria-label': 'Preview research-summary.pdf'}) }}
-      {% endcall %}
-    {% endcall %}
-  {% endcall %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>{% endcall %}
+{% call ui.attachment_action(size='icon-xs', variant='ghost', attrs={'aria-label': 'Remove research-summary.pdf'}) %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>{% endcall %}
+{% endcall %}
+{{ ui.dialog_trigger(as_=none, class='cn-attachment-trigger absolute inset-0 z-10 outline-none', attrs={'aria-label': 'Preview research-summary.pdf'}) }}{% endcall %}
+{% endcall %}
+{% endcall %}
 {% endblock %}

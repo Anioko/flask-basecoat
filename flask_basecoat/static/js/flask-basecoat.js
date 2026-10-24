@@ -20,6 +20,19 @@
   }
   function isOpen(el) { return el && el.getAttribute('data-state') === 'open'; }
 
+  /* ---- pairing: a content element belongs to the nearest unclaimed trigger before it in document order ---- */
+  function pairWith(content, selector, opts) {
+    opts = opts || {};
+    if (opts.adjacent) {
+      const prev = content.previousElementSibling;
+      return prev && prev.matches(selector) ? prev : null;
+    }
+    const candidates = qsa(document, selector).filter((el) => !el.fbPaired && !content.contains(el) && (el.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const trigger = candidates[candidates.length - 1] || null;
+    if (trigger) trigger.fbPaired = content;
+    return trigger;
+  }
+
   /* ---- ids ---- */
   let counter = 0;
   function ensureId(el, prefix) {
@@ -206,7 +219,7 @@
     el.dispatchEvent(new CustomEvent(`basecoat:${name}`, { bubbles: true, detail }));
   }
 
-  const api = { register, init, initAll, setState, isOpen, ensureId, float, pushLayer, removeLayer, trapFocus, focusFirst, focusables, roving, lockScroll, unlockScroll, emit, qs, qsa };
+  const api = { register, init, initAll, setState, isOpen, ensureId, float, pairWith, pushLayer, removeLayer, trapFocus, focusFirst, focusables, roving, lockScroll, unlockScroll, emit, qs, qsa };
   global.FlaskBasecoat = api;
 
   document.addEventListener('DOMContentLoaded', () => initAll(document));
@@ -702,19 +715,20 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 
   /* ---- Combobox ---- */
   FB.register('combobox', {
-    selector: '[data-fb="combobox"]',
-    init(wrapper) {
-      const content = FB.qs(wrapper, '[data-slot="combobox-content"]');
-      const trigger = FB.qs(wrapper, '[data-slot="combobox-trigger"], [data-slot="input-group-button"][role="combobox"]');
-      const input = FB.qs(wrapper, '[data-slot="combobox-input"], [data-slot="combobox-chip-input"], [data-slot="input-group-control"][role="combobox"]');
-      const valueEl = FB.qs(wrapper, '[data-slot="combobox-value"]');
-      const clear = FB.qs(wrapper, '[data-slot="combobox-clear"]');
-      const chips = FB.qs(wrapper, '[data-slot="combobox-chips"]');
-      const list = content && (FB.qs(content, '[data-slot="combobox-list"]') || content);
-      if (!content || !list) return;
-      const anchor = trigger || (input && (input.closest('[data-slot="input-group"]') || input)) || wrapper;
-      const multiple = !!chips || wrapper.hasAttribute('data-multiple');
-      const name = wrapper.getAttribute('data-name') || wrapper.getAttribute('name');
+    selector: '[data-slot="combobox-content"]',
+    init(content) {
+      const trigger = FB.pairWith(content, '[data-slot="combobox-trigger"], [data-slot="input-group-button"][role="combobox"]');
+      const input = FB.pairWith(content, '[data-slot="combobox-input"], [data-slot="combobox-chip-input"], [data-slot="input-group-control"][role="combobox"]');
+      if (!trigger && !input) return;
+      // the host is the visible control group the content belongs to
+      const host = (input || trigger).closest('[data-slot="combobox-chips"], [data-slot="input-group"]') || trigger || input;
+      const valueEl = trigger && FB.qs(trigger, '[data-slot="combobox-value"]');
+      const clear = FB.qs(host, '[data-slot="combobox-clear"]') || FB.pairWith(content, '[data-slot="combobox-clear"]');
+      const chips = host.matches('[data-slot="combobox-chips"]') ? host : FB.qs(host, '[data-slot="combobox-chips"]');
+      const list = FB.qs(content, '[data-slot="combobox-list"]') || content;
+      const anchor = host;
+      const multiple = !!chips || host.hasAttribute('data-multiple') || content.hasAttribute('data-multiple');
+      const name = host.getAttribute('data-name') || content.getAttribute('data-name') || (trigger && trigger.getAttribute('data-name')) || (input && input.getAttribute('name'));
       content.setAttribute('data-floating', ''); content.setAttribute('data-popper-var', 'combobox');
       const id = FB.ensureId(content, 'combobox');
       [trigger, input].forEach((t) => t && t.setAttribute('aria-controls', id));
@@ -722,7 +736,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const placeholder = valueEl ? valueEl.textContent : '';
       let selected = multiple ? [] : null;
       let layer = null;
-      const hidden = () => { let h = FB.qs(wrapper, 'input[type=hidden][data-fb-combobox]'); if (!h && name) { h = document.createElement('input'); h.type = 'hidden'; h.name = name; h.setAttribute('data-fb-combobox', ''); wrapper.appendChild(h); } return h; };
+      const hidden = () => { let h = host.fbHidden; if (!h && name && !(input && input.getAttribute('name') === name)) { h = document.createElement('input'); h.type = 'hidden'; h.name = name; h.setAttribute('data-fb-combobox', ''); host.insertAdjacentElement('afterend', h); host.fbHidden = h; } return h || null; };
 
       function reposition() { FB.float(anchor, content, { side: content.getAttribute('data-side') || 'bottom', align: content.getAttribute('data-align') || 'start', sideOffset: Number(content.getAttribute('data-side-offset') || 4), alignOffset: Number(content.getAttribute('data-align-offset') || 0) }); }
       function open() {
@@ -761,13 +775,13 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       function sync() {
         const values = multiple ? selected.map(valueOf) : (selected ? [valueOf(selected)] : []);
         const h = hidden(); if (h) h.value = values.join(',');
-        wrapper.setAttribute('data-value', values.join(','));
+        host.setAttribute('data-value', values.join(','));
         if (valueEl) { valueEl.textContent = multiple ? (values.length ? selected.map(labelOf).join(', ') : placeholder) : (selected ? labelOf(selected) : placeholder); }
         if (input && !multiple && selected) input.value = labelOf(selected);
         if (clear) clear.toggleAttribute('data-visible', values.length > 0);
         ctl.items().forEach((i) => { const on = multiple ? selected.includes(i) : i === selected; i.setAttribute('data-checked', String(on)); i.setAttribute('aria-selected', String(on || i === ctl.highlighted)); const ind = FB.qs(i, '[data-slot="combobox-item-indicator"]'); if (ind) ind.style.visibility = on ? '' : 'hidden'; });
         renderChips();
-        FB.emit(wrapper, 'change', { value: multiple ? values : values[0] || null });
+        FB.emit(host, 'change', { value: multiple ? values : values[0] || null });
       }
       function toggleItem(item) {
         if (multiple) { const i = selected.indexOf(item); if (i >= 0) selected.splice(i, 1); else selected.push(item); sync(); if (input) { input.value = ''; ctl.filter(''); input.focus(); } }
@@ -782,7 +796,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
         trigger.addEventListener('keydown', (e) => { if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); open(); if (!input) ctl.move(1); } });
       }
       if (input) {
-        input.addEventListener('focus', () => { if (!wrapper.hasAttribute('data-open-on-click-only')) open(); });
+        input.addEventListener('focus', () => { if (!host.hasAttribute('data-open-on-click-only')) open(); });
         input.addEventListener('click', open);
         input.addEventListener('input', () => { open(); ctl.filter(input.value); if (!multiple && selected && labelOf(selected) !== input.value) { selected = null; const h = hidden(); if (h) h.value = ''; } });
         input.addEventListener('keydown', (e) => {
@@ -800,7 +814,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       });
       list.addEventListener('click', (e) => { const it = e.target.closest('[data-slot="combobox-item"]'); if (it && it.getAttribute('aria-disabled') !== 'true') toggleItem(it); });
       if (clear) clear.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); selected = multiple ? [] : null; if (input) input.value = ''; sync(); ctl.filter(''); });
-      wrapper.fbOpen = open; wrapper.fbClose = close;
+      content.fbOpen = open; content.fbClose = close; host.fbOpen = open; host.fbClose = close;
     },
   });
 })(window.FlaskBasecoat);
@@ -808,23 +822,23 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 
 /* ---- dialog ---- */
 /* Dialog, Alert Dialog, Sheet and Drawer: modal layers.
-   Markup (server-rendered): a display:contents wrapper [data-fb="dialog"] holding the trigger, overlay and content.
-   Behaviour mirrors Radix Dialog: aria-expanded/data-state on the trigger, scroll lock, focus trap, focus restore,
-   Escape and overlay click dismiss (alert-dialog ignores overlay click), exit animation before hiding. */
+   Markup (server-rendered, same DOM as upstream): a trigger, then an overlay and a content element. The runtime
+   pairs each content with the nearest preceding trigger of its kind in document order (FB.pairWith); any element
+   with data-fb-open="<content id>" opens it too. Behaviour mirrors Radix Dialog: aria-expanded/data-state on the
+   trigger, scroll lock, focus trap, focus restore, Escape and overlay click dismiss (alert-dialog ignores overlay
+   click), exit animation before hiding. */
 (function (FB) {
   'use strict';
 
-  function setup(kind, wrapper) {
-    const trigger = FB.qs(wrapper, `[data-slot="${kind}-trigger"]`);
-    const overlay = FB.qs(wrapper, `[data-slot="${kind}-overlay"]`);
-    const content = FB.qs(wrapper, `[data-slot="${kind}-content"]`);
-    if (!content) return;
+  function setup(kind, content) {
     const id = FB.ensureId(content, kind);
+    const trigger = FB.pairWith(content, `[data-slot="${kind}-trigger"]`);
+    const overlay = FB.pairWith(content, `[data-slot="${kind}-overlay"]`, { adjacent: true });
     if (trigger) trigger.setAttribute('aria-controls', id);
     const title = FB.qs(content, `[data-slot="${kind}-title"]`);
     const desc = FB.qs(content, `[data-slot="${kind}-description"]`);
-    if (title) content.setAttribute('aria-labelledby', FB.ensureId(title, `${kind}-title`));
-    if (desc) content.setAttribute('aria-describedby', FB.ensureId(desc, `${kind}-description`));
+    if (title && !content.hasAttribute('aria-labelledby')) content.setAttribute('aria-labelledby', FB.ensureId(title, `${kind}-title`));
+    if (desc && !content.hasAttribute('aria-describedby')) content.setAttribute('aria-describedby', FB.ensureId(desc, `${kind}-description`));
     let layer = null, untrap = null, previouslyFocused = null, closing = null, opener = null;
 
     function finishHide() {
@@ -847,10 +861,6 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
         content, trigger, modal: true,
         onDismiss(reason, e) {
           if (reason === 'outside' && (kind === 'alert-dialog' || (e && content.contains(e.target)))) return;
-          if (reason === 'outside' && e && overlay && !overlay.contains(e.target) && e.target !== overlay) {
-            // clicks on other fixed layers (toasts) do not dismiss
-            if (!e.target.closest || !e.target.closest('body')) return;
-          }
           close();
         },
       };
@@ -871,15 +881,15 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       if (target && target.focus) target.focus({ preventScroll: true });
       FB.emit(content, 'close', { kind });
     }
-    if (trigger) trigger.addEventListener('click', (e) => { e.preventDefault(); open(); });
+    if (trigger) trigger.addEventListener('click', (e) => { e.preventDefault(); open(trigger); });
     content.addEventListener('click', (e) => {
       const btn = e.target.closest(`[data-slot="${kind}-close"], [data-slot="${kind}-cancel"], [data-slot="${kind}-action"], [data-fb-close]`);
       if (btn && content.contains(btn)) { e.preventDefault(); close(); }
     });
     if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay && kind !== 'alert-dialog') close(); });
-    wrapper.fbOpen = open; wrapper.fbClose = close;
+    content.fbOpen = open; content.fbClose = close;
+    if (trigger) { trigger.fbOpen = open; trigger.fbClose = close; }
     if (content.getAttribute('data-state') === 'open') { FB.setState(content, 'closed'); open(); }
-    // Any element elsewhere may open this dialog through data-fb-open="<id>"
     document.addEventListener('click', (e) => {
       const from = e.target.closest && e.target.closest(`[data-fb-open="${id}"]`);
       if (from) { e.preventDefault(); open(from); }
@@ -887,7 +897,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
   }
 
   ['dialog', 'alert-dialog', 'sheet', 'drawer'].forEach((kind) => {
-    FB.register(kind, { selector: `[data-fb="${kind}"]`, init: (el) => setup(kind, el) });
+    FB.register(kind, { selector: `[data-slot="${kind}-content"]`, init: (el) => setup(kind, el) });
   });
 })(window.FlaskBasecoat);
 
@@ -1042,10 +1052,9 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     ind.innerHTML = on ? (icons[icon] || '') : '';
   }
 
-  function setupMenu(kind, wrapper, opts) {
-    const trigger = FB.qs(wrapper, `:scope > [data-slot="${kind}-trigger"], [data-slot="${kind}-trigger"]`);
-    const content = FB.qs(wrapper, `:scope > [data-slot="${kind}-content"], [data-slot="${kind}-content"]`);
-    if (!trigger || !content) return null;
+  function setupMenu(kind, content, opts) {
+    const trigger = FB.pairWith(content, `[data-slot="${kind}-trigger"]`);
+    if (!trigger) return null;
     const id = FB.ensureId(content, kind);
     content.setAttribute('data-floating', '');
     content.setAttribute('data-popper-var', kind);
@@ -1117,11 +1126,10 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       if (link && link !== item) link.click();
     }
 
-    /* submenus: [data-slot="kind-sub"] > sub-trigger + sub-content */
-    const subs = FB.qsa(content, `[data-fb="${kind}-sub"]`).map((sub) => {
-      const st = FB.qs(sub, `[data-slot="${kind}-sub-trigger"]`);
-      const sc = FB.qs(sub, `[data-slot="${kind}-sub-content"]`);
-      if (!st || !sc) return null;
+    /* submenus: a sub-content follows its sub-trigger inside the menu */
+    const subs = FB.qsa(content, `[data-slot="${kind}-sub-content"]`).map((sc) => {
+      const st = FB.pairWith(sc, `[data-slot="${kind}-sub-trigger"]`);
+      if (!st) return null;
       sc.setAttribute('data-floating', ''); sc.setAttribute('data-popper-var', kind);
       st.setAttribute('aria-controls', FB.ensureId(sc, `${kind}-sub`));
       let timer = 0;
@@ -1171,18 +1179,22 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       trigger.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     }
     const api = { trigger, content, open, close, isOpen: () => FB.isOpen(content) };
-    wrapper.fbOpen = open; wrapper.fbClose = close;
+    content.fbOpen = open; content.fbClose = close; trigger.fbOpen = open; trigger.fbClose = close;
     return api;
   }
 
-  FB.register('dropdown-menu', { selector: '[data-fb="dropdown-menu"]', init: (el) => setupMenu('dropdown-menu', el, {}) });
-  FB.register('context-menu', { selector: '[data-fb="context-menu"]', init: (el) => setupMenu('context-menu', el, {}) });
+  FB.register('dropdown-menu', { selector: '[data-slot="dropdown-menu-content"]', init: (el) => setupMenu('dropdown-menu', el, {}) });
+  FB.register('context-menu', { selector: '[data-slot="context-menu-content"]', init: (el) => setupMenu('context-menu', el, {}) });
 
   /* Menubar: a row of menus; hovering across triggers while one is open switches menus. */
   FB.register('menubar', {
     selector: '[data-slot="menubar"]',
     init(bar) {
-      const menus = FB.qsa(bar, '[data-fb="menubar-menu"]').map((m) => setupMenu('menubar', m, { side: 'bottom', align: 'start' })).filter(Boolean);
+      // Each trigger inside the bar is followed (in document order) by its content.
+      const triggersInBar = FB.qsa(bar, '[data-slot="menubar-trigger"]');
+      const menus = FB.qsa(document, '[data-slot="menubar-content"]')
+        .filter((c) => { const t = FB.qsa(document, '[data-slot="menubar-trigger"]').filter((x) => !x.fbPaired && (x.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING)).pop(); return t && triggersInBar.includes(t); })
+        .map((c) => setupMenu('menubar', c, { side: 'bottom', align: 'start' })).filter(Boolean);
       const triggers = () => menus.map((m) => m.trigger);
       const nav = FB.roving(triggers, { orientation: 'horizontal', loop: true, typeahead: false });
       menus.forEach((m, i) => {
@@ -1371,22 +1383,21 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 
 
 /* ---- popover ---- */
-/* Popover, Hover Card and Tooltip: non-modal floating layers anchored to a trigger.
+/* Popover, Hover Card and Tooltip: non-modal floating layers anchored to the trigger that precedes them.
    Popover opens on click (dismiss on outside/Escape, focus moves into the content).
    Hover Card opens on pointer hover / focus with open and close delays.
    Tooltip opens on hover / focus with a delay, closes on pointer leave, blur or Escape. */
 (function (FB) {
   'use strict';
 
-  function setup(kind, wrapper) {
-    const trigger = FB.qs(wrapper, `[data-slot="${kind}-trigger"]`) || FB.qs(wrapper, `[data-slot="${kind}-anchor"]`);
-    const content = FB.qs(wrapper, `[data-slot="${kind}-content"]`);
-    if (!trigger || !content) return;
+  function setup(kind, content) {
+    const trigger = FB.pairWith(content, `[data-slot="${kind}-trigger"], [data-slot="${kind}-anchor"]`);
+    if (!trigger) return;
     const id = FB.ensureId(content, kind);
     content.setAttribute('data-floating', '');
-    content.setAttribute('data-popper-var', kind === 'popover' ? 'popover' : kind === 'hover-card' ? 'hover-card' : 'tooltip');
-    const side = content.getAttribute('data-side') || wrapper.getAttribute('data-side') || (kind === 'tooltip' ? 'top' : 'bottom');
-    const align = content.getAttribute('data-align') || wrapper.getAttribute('data-align') || 'center';
+    content.setAttribute('data-popper-var', kind);
+    const side = content.getAttribute('data-side') || (kind === 'tooltip' ? 'top' : 'bottom');
+    const align = content.getAttribute('data-align') || 'center';
     const sideOffset = Number(content.getAttribute('data-side-offset') || (kind === 'tooltip' ? 0 : 4));
     const alignOffset = Number(content.getAttribute('data-align-offset') || 0);
     if (kind === 'popover') trigger.setAttribute('aria-controls', id);
@@ -1420,8 +1431,8 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       trigger.addEventListener('click', (e) => { e.preventDefault(); FB.isOpen(content) ? close() : open(); });
       content.addEventListener('click', (e) => { if (e.target.closest('[data-fb-close]')) close(); });
     } else {
-      const openDelay = Number(wrapper.getAttribute('data-open-delay') || (kind === 'tooltip' ? 0 : 700));
-      const closeDelay = Number(wrapper.getAttribute('data-close-delay') || (kind === 'tooltip' ? 0 : 300));
+      const openDelay = Number(content.getAttribute('data-open-delay') || trigger.getAttribute('data-open-delay') || (kind === 'tooltip' ? 0 : 700));
+      const closeDelay = Number(content.getAttribute('data-close-delay') || trigger.getAttribute('data-close-delay') || (kind === 'tooltip' ? 0 : 300));
       const scheduleOpen = () => { clearTimeout(closeTimer); openTimer = setTimeout(open, openDelay); };
       const scheduleClose = () => { clearTimeout(openTimer); closeTimer = setTimeout(close, closeDelay); };
       trigger.addEventListener('pointerenter', scheduleOpen);
@@ -1432,12 +1443,12 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       content.addEventListener('pointerleave', scheduleClose);
       if (kind === 'tooltip') trigger.addEventListener('pointerdown', close);
     }
-    wrapper.fbOpen = open; wrapper.fbClose = close;
+    content.fbOpen = open; content.fbClose = close; trigger.fbOpen = open; trigger.fbClose = close;
     if (content.getAttribute('data-state') === 'open') { FB.setState(content, 'closed'); open(); }
   }
 
   ['popover', 'hover-card', 'tooltip'].forEach((kind) => {
-    FB.register(kind, { selector: `[data-fb="${kind}"]`, init: (el) => setup(kind, el) });
+    FB.register(kind, { selector: `[data-slot="${kind}-content"]`, init: (el) => setup(kind, el) });
   });
 })(window.FlaskBasecoat);
 
@@ -1450,19 +1461,19 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
   'use strict';
 
   FB.register('select', {
-    selector: '[data-fb="select"]',
-    init(wrapper) {
-      const trigger = FB.qs(wrapper, '[data-slot="select-trigger"]');
-      const content = FB.qs(wrapper, '[data-slot="select-content"]');
-      const valueEl = trigger && FB.qs(trigger, '[data-slot="select-value"]');
-      if (!trigger || !content) return;
+    selector: '[data-slot="select-content"]',
+    init(content) {
+      const trigger = FB.pairWith(content, '[data-slot="select-trigger"]');
+      if (!trigger) return;
+      const wrapper = trigger; // data-name and data-value live on the trigger
+      const valueEl = FB.qs(trigger, '[data-slot="select-value"]');
       const id = FB.ensureId(content, 'select');
       trigger.setAttribute('aria-controls', id);
       content.setAttribute('data-floating', '');
       content.setAttribute('data-popper-var', 'select');
-      const name = wrapper.getAttribute('data-name') || wrapper.getAttribute('name');
+      const name = trigger.getAttribute('data-name') || content.getAttribute('data-name') || trigger.getAttribute('name');
       let input = null;
-      if (name) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; wrapper.appendChild(input); }
+      if (name) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; trigger.insertAdjacentElement('afterend', input); }
       const placeholder = valueEl ? valueEl.textContent : '';
       const items = () => FB.qsa(content, '[data-slot="select-item"]');
       const nav = FB.roving(items, { orientation: 'vertical', loop: false });
@@ -1510,7 +1521,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       });
       content.addEventListener('click', (e) => { const it = e.target.closest('[data-slot="select-item"]'); if (it) select(it); });
       content.addEventListener('pointermove', (e) => { const it = e.target.closest('[data-slot="select-item"]'); if (it && document.activeElement !== it) it.focus(); });
-      wrapper.fbOpen = open; wrapper.fbClose = close; wrapper.fbSelect = select;
+      content.fbOpen = open; content.fbClose = close; trigger.fbOpen = open; trigger.fbClose = close; trigger.fbSelect = select;
     },
   });
 })(window.FlaskBasecoat);

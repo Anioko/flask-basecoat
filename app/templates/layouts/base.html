@@ -1,55 +1,31 @@
+{% import 'basecoat/index.html' as ui %}
 {% import 'macros/nav_macros.html' as nav %}
+<!doctype html>
+<html lang="en" class="style-vega">
+<head>
+    {% include 'partials/_head.html' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    {{ basecoat.js() }}
 
-<!DOCTYPE html>
-<html>
-    <head>
-        {% include 'partials/_head.html' %}
+    {# Any templates that extend this template can set custom_head_tags to add scripts to their page #}
+    {% block custom_head_tags %}
+    {% endblock %}
+</head>
+<body class="min-h-svh bg-background text-foreground antialiased">
+    {% block nav %}
+        {# Pass a list of (endpoint, label, icon) tuples as `dropdown` to render extra navigation entries #}
+        {{ nav.render_nav(current_user) }}
+    {% endblock %}
 
-        {# BasecoatUI: Component library built on Tailwind CSS #}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.3/dist/basecoat.cdn.min.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-        <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.3/dist/js/dropdown-menu.min.js" defer></script>
+    {% include 'partials/_flashes.html' %}
 
-        {# Any templates that extend this template can set custom_head_tags to add scripts to their page #}
-        {% block custom_head_tags %}
-        {% endblock %}
-    </head>
-    <body>
-      {# Example dropdown menu setup. Uncomment lines to view
-        {% set dropdown = 
-          [
-            ('account stuff',
-              [
-                ('account.login', 'login', 'sign in'),
-                ('account.logout', 'logout', 'sign out'),
-                ('2nd drop', [
-                  ('account.login', 'login 2', ''),
-                  ('3rd drop', [
-                    ('main.index', 'home 2', '')
-                  ])
-                ])
-              ]
-            ),
-            ('main.index', 'home 1', 'home')
-          ]
-        %}
-      #}
+    {# When extended, the content block contains all the html of the webpage #}
+    {% block content %}
+    {% endblock %}
 
-        {% block nav %}
-          {# add dropdown variable here to the render_nav method to render dropdowns #}
-          {{ nav.render_nav(current_user) }}
-        {% endblock %}
-
-        {% include 'partials/_flashes.html' %}
-        {# When extended, the content block contains all the html of the webpage #}
-        {% block content %}
-        {% endblock %}
-
-        {# Implement CSRF protection for site #}
-        {% if csrf_token()|safe %}
-            <div style="visibility: hidden; display: none">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token()|safe }}">
-            </div>
-        {% endif %}
-    </body>
+    {# CSRF token for scripts that post without a form #}
+    {% if csrf_token()|safe %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token()|safe }}">
+    {% endif %}
+</body>
 </html>

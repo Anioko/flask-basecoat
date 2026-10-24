@@ -1,291 +1,146 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post Detail - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Blog Post Detail - shadcn/ui Example{% endblock %}
+{% block head %}
+  <script>
+    function copyArticleUrl() {
+      navigator.clipboard.writeText(window.location.href);
+      if (window.FlaskBasecoat && FlaskBasecoat.toast) {
+        FlaskBasecoat.toast.success('URL copied to clipboard!');
+      }
+    }
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+    function postBlogComment(e) {
+      e.preventDefault();
+      const input = document.getElementById('blog-comment-input');
+      const text = input.value.trim();
+      if (!text) return;
 
-        function copyArticleUrl() {
-            navigator.clipboard.writeText(window.location.href);
-            const feedback = document.getElementById('copy-feedback');
-            if (feedback) {
-                feedback.classList.remove('hidden');
-                setTimeout(() => feedback.classList.add('hidden'), 2000);
-            }
-        }
+      const list = document.getElementById('blog-comments-list');
+      const template = document.getElementById('blog-comment-template');
+      if (list && template) {
+        const node = template.content.firstElementChild.cloneNode(true);
+        node.querySelector('[data-comment-body]').textContent = text;
+        list.insertBefore(node, list.firstChild);
+        const count = document.getElementById('blog-comment-count');
+        if (count) count.textContent = String(parseInt(count.textContent, 10) + 1);
+      }
+      input.value = '';
+    }
+  </script>
+{% endblock %}
+{% set comments = [
+  {'initial': 'S', 'name': 'Sarah Johnson', 'when': '2 hours ago', 'likes': 12, 'body': "This is exactly what I needed! The personalization tips are incredibly valuable. I've been struggling with low open rates, and this gives me a clear direction to improve."},
+  {'initial': 'M', 'name': 'Mike Chen', 'when': '5 hours ago', 'likes': 8, 'body': 'Great insights on email personalization. I especially liked the section about adding elements that spark interest. Have you tested A/B variations of these techniques?'},
+  {'initial': 'E', 'name': 'Emily Rodriguez', 'when': '1 day ago', 'likes': 15, 'body': 'Thanks for sharing this comprehensive guide! The practical examples make it easy to understand how to implement these strategies in our own campaigns.'}
+] %}
+{% macro comment_card(initial, name, when, likes, body) %}
+  {% call ui.card(class='transition-colors hover:bg-muted/40') %}
+    {% call ui.card_content() %}
+      <div class="flex items-start space-x-4">
+        {% call ui.avatar(size='lg') %}
+          {{ ui.avatar_fallback(text=initial) }}
+        {% endcall %}
+        <div class="flex-1 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-medium text-foreground">{{ name }}</p>
+              <p class="text-sm text-muted-foreground">{{ when }}</p>
+            </div>
+          </div>
+          <p class="leading-relaxed text-foreground/80" data-comment-body>{{ body }}</p>
+          <div class="flex items-center gap-4">
+            {% call ui.button(variant='ghost', size='sm', type='button', class='text-muted-foreground hover:text-primary') %}
+              {{ lucide('heart', 'size-4') }}
+              {{ likes }}
+            {% endcall %}
+            {{ ui.button(text='Reply', variant='ghost', size='sm', type='button', class='text-muted-foreground hover:text-primary') }}
+          </div>
+        </div>
+      </div>
+    {% endcall %}
+  {% endcall %}
+{% endmacro %}
+{% block body %}
+  <div class="min-h-screen bg-background">
+    <div class="mx-auto max-w-4xl px-6 py-12">
+      <header class="space-y-6">
+        {{ ui.badge(text='Company', variant='outline') }}
+        <h1 class="text-4xl leading-15 font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl">The Best Way to Write a Recurring Email Newsletter</h1>
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center space-x-4">
+            {% call ui.avatar(size='lg', class='size-12') %}
+              {{ ui.avatar_image(src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', alt='Esther Howard') }}
+              {{ ui.avatar_fallback(text='EH') }}
+            {% endcall %}
+            <div>
+              <p class="font-medium">by Esther Howard</p>
+              <p class="text-sm text-muted-foreground">Nov 24, 2023</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="text-[11px] font-medium tracking-widest uppercase text-muted-foreground">Share this</span>
+            {% call ui.button(variant='outline', size='icon', type='button', class='rounded-full', aria_label='Share') %}
+              {{ lucide('share', 'size-4') }}
+            {% endcall %}
+            {% call ui.button(variant='outline', size='icon', type='button', class='rounded-full', aria_label='Copy link', attrs={'onclick': 'copyArticleUrl()'}) %}
+              {{ lucide('link', 'size-4') }}
+            {% endcall %}
+            {% call ui.button(variant='outline', size='icon', type='button', class='rounded-full', aria_label='Share by email') %}
+              {{ lucide('mail', 'size-4') }}
+            {% endcall %}
+          </div>
+        </div>
+      </header>
 
-        function postBlogComment(e) {
-            e.preventDefault();
-            const input = document.getElementById('blog-comment-input');
-            const text = input.value.trim();
-            if (!text) return;
+      <div class="mt-16">
+        <article class="space-y-8">
+          <div class="aspect-video w-full overflow-hidden rounded-xl bg-muted">
+            <img alt="Blog cover" class="h-full w-full object-cover" src="https://plus.unsplash.com/premium_photo-1683211783920-8c66ab120c09">
+          </div>
+          <div class="prose prose-lg max-w-none">
+            <p class="mb-6 leading-relaxed text-foreground/80">You cannot avoid the importance of the first outreach email for increasing your sales in the email campaign. But how can you move out from the crowd and evoke a meaningful and personalized response?</p>
+            <p class="mb-6 leading-relaxed text-foreground/80">Personalizing the emails for prospects and clients can get you the results you want from your email marketing strategy. As a result, you can engage prospects and drive them toward action, leading to a successful lead prospecting strategy in your sales outreach emails.</p>
+            <p class="mb-6 leading-relaxed text-foreground/80">Although you cannot personalize every email with great accuracy, you can add a few elements that are enough to spark interest.</p>
+            <p class="mb-6 leading-relaxed text-foreground/80">To get you in the right direction, here is the complete guide to email personalization for sales outreach that will help you create more engaging and effective email campaigns.</p>
+            <p class="mb-6 leading-relaxed text-foreground/80">The key to successful email marketing lies in understanding your audience deeply and crafting messages that resonate with their specific needs, challenges, and goals. This approach not only improves open rates but also builds stronger relationships with your prospects.</p>
+          </div>
+        </article>
+      </div>
 
-            const list = document.getElementById('blog-comments-list');
-            if (list) {
-                const commentEl = document.createElement('div');
-                commentEl.className = 'flex gap-4 p-4 rounded-xl border border-border bg-card animate-in fade-in slide-in-from-top-2';
-                commentEl.innerHTML = `
-                    <div class="size-10 rounded-full bg-primary/10 text-primary font-semibold flex items-center justify-center shrink-0">JD</div>
-                    <div class="flex-1 space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-semibold text-foreground text-sm">John Doe</span>
-                            <span class="text-xs text-muted-foreground">Just now</span>
-                        </div>
-                        <p class="text-sm text-muted-foreground leading-relaxed">${text}</p>
-                    </div>
-                `;
-                list.insertBefore(commentEl, list.firstChild);
-            }
-            input.value = '';
-        }
-    </script>
-</head>
-<body class="bg-background text-foreground antialiased min-h-screen">
-<div class="bg-background min-h-screen">
-<div class="mx-auto max-w-4xl px-6 py-12">
-<header class="space-y-6">
-<span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground" data-slot="badge" data-variant="outline">
-    Company
-   </span>
-<h1 class="text-foreground text-4xl leading-15 font-bold tracking-tight md:text-4xl lg:text-5xl">
-    The Best Way to Write a Recurring Email Newsletter
-   </h1>
-<div class="flex flex-wrap items-center justify-between gap-4">
-<div class="flex items-center space-x-4">
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-12 w-12" data-size="default" data-slot="avatar">
-<img alt="Esther Howard" class="aspect-square size-full rounded-full object-cover" data-slot="avatar-image" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&amp;w=2940&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"/>
-</span>
-<div>
-<p class="font-medium">
-       by
-       <!-- -->
-       Esther Howard
-      </p>
-<p class="text-muted-foreground text-sm">
-       Nov 24, 2023
-      </p>
-</div>
-</div>
-<div class="flex items-center space-x-3">
-<span class="text-muted-foreground text-[11px] font-medium tracking-widest uppercase">
-      Share this
-     </span>
-<button class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 size-9 hover:bg-blog-hover h-9 w-9 rounded-full" data-size="icon" data-slot="button" data-variant="outline">
-<svg aria-hidden="true" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z">
-</path>
-</svg>
-</button>
-<button class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 size-9 hover:bg-blog-hover h-9 w-9 rounded-full" data-size="icon" data-slot="button" data-variant="outline">
-<svg aria-hidden="true" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
-</path>
-</svg>
-</button>
-<button class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 size-9 hover:bg-blog-hover h-9 w-9 rounded-full" data-size="icon" data-slot="button" data-variant="outline">
-<svg aria-hidden="true" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
-</path>
-<rect height="12" width="4" x="2" y="9">
-</rect>
-<circle cx="4" cy="4" r="2">
-</circle>
-</svg>
-</button>
-</div>
-</div>
-</header>
-<div class="mt-16">
-<article class="space-y-8">
-<div class="bg-muted aspect-video w-full overflow-hidden rounded-xl">
-<img alt="Blog cover" class="h-full w-full object-cover" src="https://plus.unsplash.com/premium_photo-1683211783920-8c66ab120c09"/>
-</div>
-<div class="prose prose-lg max-w-none">
-<p class="text-blog-content mb-6 leading-relaxed">
-      You cannot avoid the importance of the first outreach email for increasing your sales in the email campaign. But how can you move out from the crowd and evoke a meaningful and personalized response?
-     </p>
-<p class="text-blog-content mb-6 leading-relaxed">
-      Personalizing the emails for prospects and clients can get you the results you want from your email marketing strategy. As a result, you can engage prospects and drive them toward action, leading to a successful lead prospecting strategy in your sales outreach emails.
-     </p>
-<p class="text-blog-content mb-6 leading-relaxed">
-      Although you cannot personalize every email with great accuracy, you can add a few elements that are enough to spark interest.
-     </p>
-<p class="text-blog-content mb-6 leading-relaxed">
-      To get you in the right direction, here is the complete guide to email personalization for sales outreach that will help you create more engaging and effective email campaigns.
-     </p>
-<p class="text-blog-content mb-6 leading-relaxed">
-      The key to successful email marketing lies in understanding your audience deeply and crafting messages that resonate with their specific needs, challenges, and goals. This approach not only improves open rates but also builds stronger relationships with your prospects.
-     </p>
-</div>
-</article>
-</div>
-<div class="mt-16">
-<section class="space-y-6">
-<div class="border-blog-border border-t pt-12">
-<h2 class="text-foreground mb-8 flex items-center gap-2 text-2xl font-bold">
-<svg aria-hidden="true" class="lucide lucide-message-circle h-6 w-6" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719">
-</path>
-</svg>
-      Comments (
-      <!-- -->
-      3
-      <!-- -->
-      )
-     </h2>
-<form class="bg-card border-blog-border mb-12 rounded-xl border p-6">
-<div class="space-y-4">
-<textarea class="flex field-sizing-content w-full rounded-md border bg-transparent px-2.5 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 border-blog-border focus:border-primary min-h-[100px] resize-none" data-slot="textarea" placeholder="Share your thoughts..."></textarea>
-<div class="flex justify-end">
-<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 gap-2" data-size="default" data-slot="button" data-variant="default" type="submit">
-<svg aria-hidden="true" class="lucide lucide-send h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
-</path>
-<path d="m21.854 2.147-10.94 10.939">
-</path>
-</svg>
-         <span onclick="postBlogComment(event)">Post Comment</span>
-        </button>
-</div>
-</div>
-</form>
-<div class="space-y-6">
-<div class="bg-card border-blog-border hover:bg-blog-hover rounded-xl border p-6 transition-colors">
-<div class="flex items-start space-x-4">
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-10 w-10" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs" data-slot="avatar-fallback">
-          S
-         </span>
-</span>
-<div class="flex-1 space-y-3">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-foreground font-medium">
-            Sarah Johnson
-           </p>
-<p class="text-blog-meta text-sm">
-            2 hours ago
-           </p>
-</div>
-</div>
-<p class="text-blog-content leading-relaxed">
-          This is exactly what I needed! The personalization tips are incredibly valuable. I've been struggling with low open rates, and this gives me a clear direction to improve.
-         </p>
-<div class="flex items-center gap-4">
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 text-blog-meta hover:text-primary gap-2" data-size="sm" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-heart h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5">
-</path>
-</svg>
-           12
-          </button>
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 text-blog-meta hover:text-primary" data-size="sm" data-slot="button" data-variant="ghost">
-           Reply
-          </button>
-</div>
-</div>
-</div>
-</div>
-<div class="bg-card border-blog-border hover:bg-blog-hover rounded-xl border p-6 transition-colors">
-<div class="flex items-start space-x-4">
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-10 w-10" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs" data-slot="avatar-fallback">
-          M
-         </span>
-</span>
-<div class="flex-1 space-y-3">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-foreground font-medium">
-            Mike Chen
-           </p>
-<p class="text-blog-meta text-sm">
-            5 hours ago
-           </p>
-</div>
-</div>
-<p class="text-blog-content leading-relaxed">
-          Great insights on email personalization. I especially liked the section about adding elements that spark interest. Have you tested A/B variations of these techniques?
-         </p>
-<div class="flex items-center gap-4">
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 text-blog-meta hover:text-primary gap-2" data-size="sm" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-heart h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5">
-</path>
-</svg>
-           8
-          </button>
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 text-blog-meta hover:text-primary" data-size="sm" data-slot="button" data-variant="ghost">
-           Reply
-          </button>
-</div>
-</div>
-</div>
-</div>
-<div class="bg-card border-blog-border hover:bg-blog-hover rounded-xl border p-6 transition-colors">
-<div class="flex items-start space-x-4">
-<span class="group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten h-10 w-10" data-size="default" data-slot="avatar">
-<span class="flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs" data-slot="avatar-fallback">
-          E
-         </span>
-</span>
-<div class="flex-1 space-y-3">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-foreground font-medium">
-            Emily Rodriguez
-           </p>
-<p class="text-blog-meta text-sm">
-            1 day ago
-           </p>
-</div>
-</div>
-<p class="text-blog-content leading-relaxed">
-          Thanks for sharing this comprehensive guide! The practical examples make it easy to understand how to implement these strategies in our own campaigns.
-         </p>
-<div class="flex items-center gap-4">
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 text-blog-meta hover:text-primary gap-2" data-size="sm" data-slot="button" data-variant="ghost">
-<svg aria-hidden="true" class="lucide lucide-heart h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5">
-</path>
-</svg>
-           15
-          </button>
-<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 text-blog-meta hover:text-primary" data-size="sm" data-slot="button" data-variant="ghost">
-           Reply
-          </button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-</div>
-</div>
-</div>
+      <div class="mt-16">
+        <section class="space-y-6">
+          <div class="border-t border-border pt-12">
+            <h2 class="mb-8 flex items-center gap-2 text-2xl font-bold text-foreground">
+              {{ lucide('message-circle', 'size-6') }}
+              Comments (<span id="blog-comment-count">{{ comments | length }}</span>)
+            </h2>
+            {% call ui.card(class='mb-12') %}
+              {% call ui.card_content() %}
+                <form onsubmit="postBlogComment(event)" class="space-y-4">
+                  {{ ui.textarea(id='blog-comment-input', name='comment', placeholder='Share your thoughts...', class='min-h-[100px] resize-none') }}
+                  <div class="flex justify-end">
+                    {% call ui.button(type='submit') %}
+                      {{ lucide('send', 'size-4') }}
+                      Post Comment
+                    {% endcall %}
+                  </div>
+                </form>
+              {% endcall %}
+            {% endcall %}
+            <div id="blog-comments-list" class="space-y-6">
+              {% for c in comments %}
+                {{ comment_card(c.initial, c.name, c.when, c.likes, c.body) }}
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 
-<div id="copy-feedback" class="fixed bottom-6 right-6 z-50 bg-foreground text-background text-xs font-medium px-3 py-1.5 rounded-md shadow-md hidden animate-in fade-in">
-    URL copied to clipboard!
-</div>
-</body>
-</html>
+  {# Cloned by postBlogComment() for new comments #}
+  <template id="blog-comment-template">
+    {{ comment_card('JD', 'John Doe', 'Just now', 0, '') }}
+  </template>
+{% endblock %}

@@ -1,399 +1,220 @@
-{% import 'basecoat/index.html' as bc %}
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart - shadcn/ui Example</title>
-    
-    {# Inter Font #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Shopping Cart - shadcn/ui Example{% endblock %}
+{% block head %}
+<script>
+  const cartState = {
+    items: [
+      { id: 'item-1', brand: 'Emporio Armani', name: 'Briefcase', price: 649, qty: 1 },
+      { id: 'item-2', brand: 'Prada', name: 'Sunglasses', price: 399, qty: 1 },
+      { id: 'item-3', brand: 'MCM', name: 'Bodybag', price: 1499, qty: 1 }
+    ],
+    giftWrap: false,
+    discountRate: 0,
+    couponCode: ''
+  };
 
-    {{ basecoat.css() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
-    
-    {{ basecoat.js() }}
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) { lucide.createIcons(); }
-        });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
+  function formatCurrency(amt) {
+    return '$' + amt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+  function updateQty(id, delta) {
+    const item = cartState.items.find(i => i.id === id);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    renderCart();
+  }
+  function removeItem(id) {
+    cartState.items = cartState.items.filter(i => i.id !== id);
+    const el = document.getElementById(id);
+    if (el) el.remove();
+    renderCart();
+  }
+  function applyCoupon() {
+    const input = document.getElementById('coupon-input');
+    const code = input.value.trim().toUpperCase();
+    const msg = document.getElementById('coupon-msg');
+    if (code === 'SHADCN20' || code === 'SAVE20') {
+      cartState.discountRate = 0.20;
+      cartState.couponCode = code;
+      msg.textContent = '20% discount coupon applied!';
+    } else if (code.length > 0) {
+      cartState.discountRate = 0.10;
+      cartState.couponCode = code;
+      msg.textContent = `Promo code "${code}" applied (10% off)!`;
+    } else {
+      cartState.discountRate = 0;
+      cartState.couponCode = '';
+      msg.textContent = '';
+    }
+    renderCart();
+  }
+  function toggleGiftWrap() {
+    cartState.giftWrap = !cartState.giftWrap;
+    const button = document.getElementById('gift-wrap-button');
+    button.querySelector('[data-label]').textContent = cartState.giftWrap ? 'Gift Wrap Added ($5.00)' : 'Add Gift Wrap';
+    button.setAttribute('aria-pressed', String(cartState.giftWrap));
+    button.setAttribute('data-variant', cartState.giftWrap ? 'secondary' : 'default');
+    renderCart();
+  }
+  function summaryRow(name, qty, total) {
+    const tpl = document.getElementById('summary-row-tpl');
+    const row = tpl.content.firstElementChild.cloneNode(true);
+    row.querySelector('[data-qty]').textContent = `${qty} x`;
+    row.querySelector('[data-name]').textContent = name;
+    row.querySelector('[data-total]').textContent = formatCurrency(total);
+    return row;
+  }
+  function renderCart() {
+    cartState.items.forEach(item => {
+      const el = document.getElementById(item.id);
+      if (el) {
+        const qtyInput = el.querySelector('.item-qty-input');
+        if (qtyInput) qtyInput.value = item.qty;
+        const minusBtn = el.querySelector('.item-minus-button');
+        if (minusBtn) minusBtn.disabled = item.qty <= 1;
+      }
+    });
 
-        const cartState = {
-            items: [
-                { id: 'item-1', brand: 'Emporio Armani', name: 'Briefcase', price: 649, qty: 1, image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=300' },
-                { id: 'item-2', brand: 'Prada', name: 'Sunglasses', price: 399, qty: 1, image: 'https://plus.unsplash.com/premium_photo-1670537994863-5ad53a3214e0?q=80&w=300' },
-                { id: 'item-3', brand: 'MCM', name: 'Bodybag', price: 1499, qty: 1, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=300' }
-            ],
-            giftWrap: false,
-            discountRate: 0,
-            couponCode: ''
-        };
+    let subtotal = 0;
+    let totalItems = 0;
+    const summaryList = document.getElementById('summary-items-list');
+    if (summaryList) summaryList.innerHTML = '';
+    cartState.items.forEach(item => {
+      const itemTotal = item.price * item.qty;
+      subtotal += itemTotal;
+      totalItems += item.qty;
+      if (summaryList) summaryList.appendChild(summaryRow(item.name, item.qty, itemTotal));
+    });
 
-        function formatCurrency(amt) {
-            return '$' + amt.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-        }
+    const giftCost = cartState.giftWrap ? 5 : 0;
+    const discountAmt = Math.round(subtotal * cartState.discountRate);
+    const total = subtotal - discountAmt + giftCost;
 
-        function updateQty(id, delta) {
-            const item = cartState.items.find(i => i.id === id);
-            if (!item) return;
-            item.qty = Math.max(1, item.qty + delta);
-            renderCart();
-        }
+    const itemsCountEl = document.getElementById('summary-items-count');
+    if (itemsCountEl) itemsCountEl.textContent = `${totalItems} items`;
+    const totalAmountEl = document.getElementById('summary-total-amount');
+    if (totalAmountEl) totalAmountEl.textContent = formatCurrency(total);
 
-        function removeItem(id) {
-            cartState.items = cartState.items.filter(i => i.id !== id);
-            renderCart();
-        }
+    if (summaryList && cartState.discountRate > 0) {
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between text-sm text-primary font-medium';
+      row.innerHTML = `<span>Discount (${Math.round(cartState.discountRate * 100)}%)</span><span class="tabular-nums">-${formatCurrency(discountAmt)}</span>`;
+      summaryList.appendChild(row);
+    }
+    if (summaryList && cartState.giftWrap) {
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between text-sm text-muted-foreground';
+      row.innerHTML = `<span>Gift Wrap</span><span class="tabular-nums font-medium text-foreground">$5.00</span>`;
+      summaryList.appendChild(row);
+    }
+  }
+</script>
+{% endblock %}
 
-        function applyCoupon() {
-            const input = document.getElementById('coupon-input');
-            const code = input.value.trim().toUpperCase();
-            const msg = document.getElementById('coupon-msg');
-            if (code === 'SHADCN20' || code === 'SAVE20') {
-                cartState.discountRate = 0.20;
-                cartState.couponCode = code;
-                msg.textContent = '20% discount coupon applied!';
-                msg.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1';
-            } else if (code.length > 0) {
-                cartState.discountRate = 0.10;
-                cartState.couponCode = code;
-                msg.textContent = `Promo code "${code}" applied (10% off)!`;
-                msg.className = 'text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1';
-            } else {
-                cartState.discountRate = 0;
-                cartState.couponCode = '';
-                msg.textContent = '';
-            }
-            renderCart();
-        }
+{% set cart_items = [
+  ('item-1', 'Emporio Armani', 'Briefcase', '$649.00', 649, 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=300'),
+  ('item-2', 'Prada', 'Sunglasses', '$399.00', 399, 'https://plus.unsplash.com/premium_photo-1670537994863-5ad53a3214e0?q=80&w=300'),
+  ('item-3', 'MCM', 'Bodybag', '$1,499.00', 1499, 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=300')
+] %}
 
-        function toggleGiftWrap() {
-            cartState.giftWrap = !cartState.giftWrap;
-            const btn = document.getElementById('gift-wrap-btn');
-            if (cartState.giftWrap) {
-                btn.textContent = 'Gift Wrap Added ($5.00)';
-                btn.className = 'group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none bg-emerald-600 text-white hover:bg-emerald-700 h-9 gap-1.5 px-2.5 w-full';
-            } else {
-                btn.textContent = 'Add Gift Wrap';
-                btn.className = 'group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 px-2.5 w-full';
-            }
-            renderCart();
-        }
-
-        function renderCart() {
-            // Update items DOM
-            cartState.items.forEach(item => {
-                const el = document.getElementById(item.id);
-                if (el) {
-                    const qtyInput = el.querySelector('.item-qty-input');
-                    if (qtyInput) qtyInput.value = item.qty;
-                    const minusBtn = el.querySelector('.item-minus-btn');
-                    if (minusBtn) minusBtn.disabled = item.qty <= 1;
-                }
-            });
-
-            // Recompute totals
-            let subtotal = 0;
-            let totalItems = 0;
-            const summaryList = document.getElementById('summary-items-list');
-            if (summaryList) summaryList.innerHTML = '';
-
-            cartState.items.forEach(item => {
-                const itemTotal = item.price * item.qty;
-                subtotal += itemTotal;
-                totalItems += item.qty;
-
-                if (summaryList) {
-                    const row = document.createElement('div');
-                    row.className = 'flex items-center justify-between text-sm';
-                    row.innerHTML = `
-                        <span class="text-muted-foreground flex items-center">
-                            <span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap border-border text-foreground mr-2" data-slot="badge">
-                                ${item.qty} x
-                            </span>
-                            ${item.name}
-                        </span>
-                        <span class="tabular-nums font-medium">${formatCurrency(itemTotal)}</span>
-                    `;
-                    summaryList.appendChild(row);
-                }
-            });
-
-            const giftCost = cartState.giftWrap ? 5 : 0;
-            const discountAmt = Math.round(subtotal * cartState.discountRate);
-            const total = subtotal - discountAmt + giftCost;
-
-            const itemsCountEl = document.getElementById('summary-items-count');
-            if (itemsCountEl) itemsCountEl.textContent = `${totalItems} items`;
-
-            const totalAmountEl = document.getElementById('summary-total-amount');
-            if (totalAmountEl) totalAmountEl.textContent = formatCurrency(total);
-
-            // Optional discount row
-            let discountRow = document.getElementById('summary-discount-row');
-            if (cartState.discountRate > 0) {
-                if (!discountRow && summaryList) {
-                    discountRow = document.createElement('div');
-                    discountRow.id = 'summary-discount-row';
-                    discountRow.className = 'flex items-center justify-between text-sm text-emerald-600 dark:text-emerald-400 font-medium';
-                    discountRow.innerHTML = `
-                        <span>Discount (${Math.round(cartState.discountRate * 100)}%)</span>
-                        <span class="tabular-nums" id="summary-discount-val">-${formatCurrency(discountAmt)}</span>
-                    `;
-                    summaryList.appendChild(discountRow);
-                } else if (discountRow) {
-                    document.getElementById('summary-discount-val').textContent = `-${formatCurrency(discountAmt)}`;
-                }
-            } else if (discountRow) {
-                discountRow.remove();
-            }
-
-            // Optional gift wrap row
-            let giftRow = document.getElementById('summary-gift-row');
-            if (cartState.giftWrap) {
-                if (!giftRow && summaryList) {
-                    giftRow = document.createElement('div');
-                    giftRow.id = 'summary-gift-row';
-                    giftRow.className = 'flex items-center justify-between text-sm text-muted-foreground';
-                    giftRow.innerHTML = `
-                        <span>Gift Wrap</span>
-                        <span class="tabular-nums font-medium text-foreground">$5.00</span>
-                    `;
-                    summaryList.appendChild(giftRow);
-                }
-            } else if (giftRow) {
-                giftRow.remove();
-            }
-        }
-    </script>
-</head>
-<body class="bg-background text-foreground antialiased min-h-full">
+{% block body %}
 <section class="mx-auto max-w-5xl px-4 py-10 sm:py-20">
-    <nav aria-label="breadcrumb" class="mb-6" data-slot="breadcrumb">
-        <ol class="flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground sm:gap-2.5" data-slot="breadcrumb-list">
-            <li class="inline-flex items-center gap-1.5" data-slot="breadcrumb-item">
-                <a class="transition-colors hover:text-foreground font-semibold text-foreground" data-slot="breadcrumb-link" href="#">
-                    Cart
-                </a>
-            </li>
-            <li aria-hidden="true" class="[&>svg]:size-3.5" data-slot="breadcrumb-separator" role="presentation">
-                <svg aria-hidden="true" class="lucide lucide-chevron-right size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="m9 18 6-6-6-6"></path>
-                </svg>
-            </li>
-            <li class="inline-flex items-center gap-1.5" data-slot="breadcrumb-item">
-                <a class="transition-colors hover:text-foreground" data-slot="breadcrumb-link" href="{{ url_for('basecoat_examples.checkout') }}">
-                    Address
-                </a>
-            </li>
-            <li aria-hidden="true" class="[&>svg]:size-3.5" data-slot="breadcrumb-separator" role="presentation">
-                <svg aria-hidden="true" class="lucide lucide-chevron-right size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="m9 18 6-6-6-6"></path>
-                </svg>
-            </li>
-            <li class="inline-flex items-center gap-1.5" data-slot="breadcrumb-item">
-                <span aria-current="page" aria-disabled="true" class="font-normal text-muted-foreground" data-slot="breadcrumb-page" role="link">
-                    Payment
-                </span>
-            </li>
-        </ol>
-    </nav>
+  {% call ui.breadcrumb(class='mb-6') %}
+    {% call ui.breadcrumb_list() %}
+      {% call ui.breadcrumb_item() %}{{ ui.breadcrumb_link(text='Cart', href='#', class='font-semibold text-foreground') }}{% endcall %}
+      {% call ui.breadcrumb_separator() %}{{ lucide('chevron-right') }}{% endcall %}
+      {% call ui.breadcrumb_item() %}{{ ui.breadcrumb_link(text='Address', href=url_for('basecoat_examples.checkout')) }}{% endcall %}
+      {% call ui.breadcrumb_separator() %}{{ lucide('chevron-right') }}{% endcall %}
+      {% call ui.breadcrumb_item() %}{{ ui.breadcrumb_page(text='Payment') }}{% endcall %}
+    {% endcall %}
+  {% endcall %}
 
-    <div class="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
-        <div id="cart-items-container">
-            <div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch mt-4" data-orientation="horizontal" data-slot="separator" role="none"></div>
-            
-            <!-- Item 1: Emporio Armani Briefcase -->
-            <div id="item-1" class="flex gap-4 py-6 border-b border-border">
-                <div class="bg-muted relative size-36 shrink-0 overflow-hidden rounded-md">
-                    <img alt="Briefcase" class="object-cover h-full w-full" loading="lazy" src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=300" />
-                </div>
-                <div class="flex min-w-0 flex-1 items-start justify-between gap-4">
-                    <div class="flex h-full min-w-0 grow flex-col space-y-1">
-                        <div class="text-muted-foreground text-xs">Emporio Armani</div>
-                        <div class="truncate font-semibold text-foreground">Briefcase</div>
-                        <div class="mt-auto text-sm font-medium">$649.00</div>
-                    </div>
-                </div>
-                <div class="flex flex-col items-end gap-4">
-                    <button onclick="removeItem('item-1')" aria-label="Remove Briefcase" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none hover:bg-muted hover:text-foreground size-6 rounded-md text-muted-foreground" type="button">
-                        <svg aria-hidden="true" class="lucide lucide-x size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6 6 18"></path>
-                            <path d="m6 6 12 12"></path>
-                        </svg>
-                    </button>
-                    <div class="group/input-group relative flex h-9 w-full min-w-0 items-center border border-input shadow-xs rounded-full px-1 mt-auto" data-slot="input-group">
-                        <button onclick="updateQty('item-1', -1)" aria-label="Decrease quantity" class="item-minus-btn group/button shrink-0 justify-center border border-transparent font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground flex items-center gap-2 text-sm size-6 rounded-full p-0 disabled:opacity-50 disabled:pointer-events-none" disabled type="button">
-                            <svg aria-hidden="true" class="lucide lucide-minus size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14"></path>
-                            </svg>
-                        </button>
-                        <input aria-label="Quantity" class="item-qty-input h-9 min-w-0 border-0 bg-transparent text-sm w-12 flex-none text-center font-medium tabular-nums outline-none" readonly value="1" />
-                        <button onclick="updateQty('item-1', 1)" aria-label="Increase quantity" class="group/button shrink-0 justify-center border border-transparent font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground flex items-center gap-2 text-sm size-6 rounded-full p-0" type="button">
-                            <svg aria-hidden="true" class="lucide lucide-plus size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14"></path>
-                                <path d="M12 5v14"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
+  <div class="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+    <div id="cart-items-container">
+      {{ ui.separator(class='mt-4') }}
 
-            <!-- Item 2: Prada Sunglasses -->
-            <div id="item-2" class="flex gap-4 py-6 border-b border-border">
-                <div class="bg-muted relative size-36 shrink-0 overflow-hidden rounded-md">
-                    <img alt="Sunglasses" class="object-cover h-full w-full" loading="lazy" src="https://plus.unsplash.com/premium_photo-1670537994863-5ad53a3214e0?q=80&w=300" />
-                </div>
-                <div class="flex min-w-0 flex-1 items-start justify-between gap-4">
-                    <div class="flex h-full min-w-0 grow flex-col space-y-1">
-                        <div class="text-muted-foreground text-xs">Prada</div>
-                        <div class="truncate font-semibold text-foreground">Sunglasses</div>
-                        <div class="mt-auto text-sm font-medium">$399.00</div>
-                    </div>
-                </div>
-                <div class="flex flex-col items-end gap-4">
-                    <button onclick="removeItem('item-2')" aria-label="Remove Sunglasses" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none hover:bg-muted hover:text-foreground size-6 rounded-md text-muted-foreground" type="button">
-                        <svg aria-hidden="true" class="lucide lucide-x size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6 6 18"></path>
-                            <path d="m6 6 12 12"></path>
-                        </svg>
-                    </button>
-                    <div class="group/input-group relative flex h-9 w-full min-w-0 items-center border border-input shadow-xs rounded-full px-1 mt-auto" data-slot="input-group">
-                        <button onclick="updateQty('item-2', -1)" aria-label="Decrease quantity" class="item-minus-btn group/button shrink-0 justify-center border border-transparent font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground flex items-center gap-2 text-sm size-6 rounded-full p-0 disabled:opacity-50 disabled:pointer-events-none" disabled type="button">
-                            <svg aria-hidden="true" class="lucide lucide-minus size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14"></path>
-                            </svg>
-                        </button>
-                        <input aria-label="Quantity" class="item-qty-input h-9 min-w-0 border-0 bg-transparent text-sm w-12 flex-none text-center font-medium tabular-nums outline-none" readonly value="1" />
-                        <button onclick="updateQty('item-2', 1)" aria-label="Increase quantity" class="group/button shrink-0 justify-center border border-transparent font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground flex items-center gap-2 text-sm size-6 rounded-full p-0" type="button">
-                            <svg aria-hidden="true" class="lucide lucide-plus size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14"></path>
-                                <path d="M12 5v14"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Item 3: MCM Bodybag -->
-            <div id="item-3" class="flex gap-4 py-6 border-b border-border">
-                <div class="bg-muted relative size-36 shrink-0 overflow-hidden rounded-md">
-                    <img alt="Bodybag" class="object-cover h-full w-full" loading="lazy" src="https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=300" />
-                </div>
-                <div class="flex min-w-0 flex-1 items-start justify-between gap-4">
-                    <div class="flex h-full min-w-0 grow flex-col space-y-1">
-                        <div class="text-muted-foreground text-xs">MCM</div>
-                        <div class="truncate font-semibold text-foreground">Bodybag</div>
-                        <div class="mt-auto text-sm font-medium">$1,499.00</div>
-                    </div>
-                </div>
-                <div class="flex flex-col items-end gap-4">
-                    <button onclick="removeItem('item-3')" aria-label="Remove Bodybag" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none hover:bg-muted hover:text-foreground size-6 rounded-md text-muted-foreground" type="button">
-                        <svg aria-hidden="true" class="lucide lucide-x size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6 6 18"></path>
-                            <path d="m6 6 12 12"></path>
-                        </svg>
-                    </button>
-                    <div class="group/input-group relative flex h-9 w-full min-w-0 items-center border border-input shadow-xs rounded-full px-1 mt-auto" data-slot="input-group">
-                        <button onclick="updateQty('item-3', -1)" aria-label="Decrease quantity" class="item-minus-btn group/button shrink-0 justify-center border border-transparent font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground flex items-center gap-2 text-sm size-6 rounded-full p-0 disabled:opacity-50 disabled:pointer-events-none" disabled type="button">
-                            <svg aria-hidden="true" class="lucide lucide-minus size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14"></path>
-                            </svg>
-                        </button>
-                        <input aria-label="Quantity" class="item-qty-input h-9 min-w-0 border-0 bg-transparent text-sm w-12 flex-none text-center font-medium tabular-nums outline-none" readonly value="1" />
-                        <button onclick="updateQty('item-3', 1)" aria-label="Increase quantity" class="group/button shrink-0 justify-center border border-transparent font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground flex items-center gap-2 text-sm size-6 rounded-full p-0" type="button">
-                            <svg aria-hidden="true" class="lucide lucide-plus size-3.5" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14"></path>
-                                <path d="M12 5v14"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
+      {% for id, brand, name, price_label, price, image in cart_items %}
+      <div id="{{ id }}" class="flex gap-4 py-6 border-b border-border">
+        <div class="bg-muted relative size-36 shrink-0 overflow-hidden rounded-md">
+          <img alt="{{ name }}" class="object-cover h-full w-full" loading="lazy" src="{{ image }}">
         </div>
-
-        <!-- Right Summary Column -->
-        <div class="space-y-4">
-            <!-- Coupons Card -->
-            <div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card p-6 text-sm text-card-foreground ring-1 ring-border shadow-xs" data-slot="card">
-                <div class="grid auto-rows-min items-start gap-1">
-                    <div class="font-heading text-base font-medium">Coupons</div>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <div class="flex items-center gap-2">
-                        <input id="coupon-input" class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" placeholder="Coupon code (e.g. SHADCN20)" />
-                        <button onclick="applyCoupon()" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium h-9 px-3 transition-colors" type="button">
-                            Apply
-                        </button>
-                    </div>
-                    <div id="coupon-msg"></div>
-                </div>
-            </div>
-
-            <!-- Gift Wrap Card -->
-            <div class="group/card flex flex-col gap-3 overflow-hidden rounded-xl bg-card p-6 text-sm text-card-foreground ring-1 ring-border shadow-xs" data-slot="card">
-                <div class="grid auto-rows-min items-start gap-1">
-                    <div class="font-heading text-base font-medium">Buying for love of your life?</div>
-                    <div class="text-sm text-muted-foreground">We'll wrap it beautifully to make it extra special!</div>
-                </div>
-                <div class="mt-2">
-                    <button id="gift-wrap-btn" onclick="toggleGiftWrap()" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium h-9 px-2.5 w-full transition-colors" type="button">
-                        Add Gift Wrap
-                    </button>
-                </div>
-            </div>
-
-            <!-- Price Details Card -->
-            <div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card p-6 text-sm text-card-foreground ring-1 ring-border shadow-xs" data-slot="card">
-                <div class="flex items-center justify-between">
-                    <div class="font-heading text-base font-medium">Price Details</div>
-                    <span id="summary-items-count" class="text-muted-foreground text-xs font-normal">3 items</span>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <div id="summary-items-list" class="space-y-3">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-muted-foreground flex items-center">
-                                <span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap border-border text-foreground mr-2">1 x</span>
-                                Briefcase
-                            </span>
-                            <span class="tabular-nums font-medium">$649</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-muted-foreground flex items-center">
-                                <span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap border-border text-foreground mr-2">1 x</span>
-                                Sunglasses
-                            </span>
-                            <span class="tabular-nums font-medium">$399</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-muted-foreground flex items-center">
-                                <span class="group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap border-border text-foreground mr-2">1 x</span>
-                                Bodybag
-                            </span>
-                            <span class="tabular-nums font-medium">$1,499</span>
-                        </div>
-                    </div>
-
-                    <div class="shrink-0 bg-border h-px w-full my-1"></div>
-
-                    <div class="flex items-center justify-between text-base font-semibold">
-                        <span>Total Amount</span>
-                        <span id="summary-total-amount" class="tabular-nums">$2,547</span>
-                    </div>
-
-                    <a href="{{ url_for('basecoat_examples.checkout') }}" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium h-10 px-4 mt-2 w-full transition-colors text-center shadow-xs">
-                        Confirm Order
-                    </a>
-                </div>
-            </div>
+        <div class="flex min-w-0 flex-1 items-start justify-between gap-4">
+          <div class="flex h-full min-w-0 grow flex-col space-y-1">
+            <div class="text-muted-foreground text-xs">{{ brand }}</div>
+            <div class="truncate font-semibold text-foreground">{{ name }}</div>
+            <div class="mt-auto text-sm font-medium">{{ price_label }}</div>
+          </div>
         </div>
+        <div class="flex flex-col items-end gap-4">
+          {% call ui.button(variant='ghost', size='icon-xs', type='button', class='text-muted-foreground', attrs={'onclick': "removeItem('" ~ id ~ "')", 'aria-label': 'Remove ' ~ name}) %}{{ lucide('x', 'size-3.5') }}{% endcall %}
+          {% call ui.input_group(class='mt-auto w-auto rounded-full px-1') %}
+            {% call ui.input_group_button(size='icon-xs', type='button', disabled=true, class='item-minus-button rounded-full', attrs={'onclick': "updateQty('" ~ id ~ "', -1)", 'aria-label': 'Decrease quantity'}) %}{{ lucide('minus', 'size-3.5') }}{% endcall %}
+            {{ ui.input_group_control(readonly=true, value='1', class='item-qty-input w-12 flex-none text-center font-medium tabular-nums', attrs={'aria-label': 'Quantity'}) }}
+            {% call ui.input_group_button(size='icon-xs', type='button', class='rounded-full', attrs={'onclick': "updateQty('" ~ id ~ "', 1)", 'aria-label': 'Increase quantity'}) %}{{ lucide('plus', 'size-3.5') }}{% endcall %}
+          {% endcall %}
+        </div>
+      </div>
+      {% endfor %}
     </div>
+
+    {# Right Summary Column #}
+    <div class="space-y-4">
+      {# Coupons Card #}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Coupons') }}{% endcall %}
+        {% call ui.card_content(class='flex flex-col gap-2') %}
+          <div class="flex items-center gap-2">
+            {{ ui.input(id='coupon-input', placeholder='Coupon code (e.g. SHADCN20)') }}
+            {{ ui.button(text='Apply', type='button', attrs={'onclick': 'applyCoupon()'}) }}
+          </div>
+          <div id="coupon-msg" class="text-xs text-primary font-medium mt-1"></div>
+        {% endcall %}
+      {% endcall %}
+
+      {# Gift Wrap Card #}
+      {% call ui.card() %}
+        {% call ui.card_header() %}
+          {{ ui.card_title(text='Buying for love of your life?') }}
+          {{ ui.card_description(text="We'll wrap it beautifully to make it extra special!") }}
+        {% endcall %}
+        {% call ui.card_content() %}
+          {% call ui.button(id='gift-wrap-button', type='button', class='w-full', attrs={'onclick': 'toggleGiftWrap()', 'aria-pressed': 'false'}) %}<span data-label>Add Gift Wrap</span>{% endcall %}
+        {% endcall %}
+      {% endcall %}
+
+      {# Price Details Card #}
+      {% call ui.card() %}
+        {% call ui.card_header(class='flex items-center justify-between') %}
+          {{ ui.card_title(text='Price Details') }}
+          <span id="summary-items-count" class="text-muted-foreground text-xs font-normal">3 items</span>
+        {% endcall %}
+        {% call ui.card_content(class='flex flex-col gap-3') %}
+          <div id="summary-items-list" class="space-y-3">
+            {% for id, brand, name, price_label, price, image in cart_items %}
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-muted-foreground flex items-center">{{ ui.badge(text='1 x', variant='outline', class='mr-2') }}{{ name }}</span>
+              <span class="tabular-nums font-medium">${{ '{:,}'.format(price) }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          <template id="summary-row-tpl">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-muted-foreground flex items-center">{{ ui.badge(variant='outline', class='mr-2', attrs={'data-qty': ''}) }}<span data-name></span></span>
+              <span class="tabular-nums font-medium" data-total></span>
+            </div>
+          </template>
+
+          {{ ui.separator(class='my-1') }}
+
+          <div class="flex items-center justify-between text-base font-semibold">
+            <span>Total Amount</span>
+            <span id="summary-total-amount" class="tabular-nums">$2,547</span>
+          </div>
+
+          {{ ui.button(text='Confirm Order', size='lg', href=url_for('basecoat_examples.checkout'), class='mt-2 w-full') }}
+        {% endcall %}
+      {% endcall %}
+    </div>
+  </div>
 </section>
-</body>
-</html>
+{% endblock %}
