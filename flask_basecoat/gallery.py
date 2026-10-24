@@ -39,3 +39,8 @@ def gallery():
         sample_columns=sample_columns,
         sample_rows=sample_rows
     )
+
+
+@gallery_bp.route('/gallery/checkbox')
+def gallery_checkbox():
+    return render_template('basecoat/gallery_checkbox.html')
