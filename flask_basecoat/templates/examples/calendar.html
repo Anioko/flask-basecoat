@@ -1,0 +1,721 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let currentMonthIdx = 9; // October (0-indexed)
+        let currentYear = 2026;
+
+        function updateMonthHeader() {
+            const heading = document.getElementById('calendar-month-heading');
+            if (heading) {
+                heading.textContent = `${months[currentMonthIdx]} ${currentYear}`;
+            }
+        }
+
+        function prevMonth() {
+            currentMonthIdx--;
+            if (currentMonthIdx < 0) {
+                currentMonthIdx = 11;
+                currentYear--;
+            }
+            updateMonthHeader();
+        }
+
+        function nextMonth() {
+            currentMonthIdx++;
+            if (currentMonthIdx > 11) {
+                currentMonthIdx = 0;
+                currentYear++;
+            }
+            updateMonthHeader();
+        }
+
+        function resetToday() {
+            currentMonthIdx = 9;
+            currentYear = 2026;
+            updateMonthHeader();
+        }
+
+        function openNewEventModal() {
+            const modal = document.getElementById('new-event-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeNewEventModal() {
+            const modal = document.getElementById('new-event-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function submitNewEvent(e) {
+            e.preventDefault();
+            const title = document.getElementById('event-title-input').value.trim();
+            const day = document.getElementById('event-day-input').value;
+            const color = document.getElementById('event-color-input').value;
+
+            if (!title) return;
+
+            // Find cell for day
+            const cell = document.querySelector(`[data-day="${day}"]`);
+            if (cell) {
+                const eventContainer = cell.querySelector('.events-list') || cell;
+                const chip = document.createElement('div');
+                chip.className = `text-xs px-1.5 py-0.5 rounded truncate font-medium cursor-pointer ${color}`;
+                chip.textContent = title;
+                chip.onclick = () => showEventDetail(title, `Day ${day}, ${months[currentMonthIdx]} ${currentYear}`);
+                eventContainer.appendChild(chip);
+            }
+
+            closeNewEventModal();
+            document.getElementById('event-title-input').value = '';
+        }
+
+        function showEventDetail(title, time) {
+            alert(`Event: ${title}\nTime: ${time}`);
+        }
+    </script>
+</head>
+<body class="bg-background text-foreground antialiased min-h-screen p-4 sm:p-6 lg:p-8">
+<div class="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1" style="--event-height:24px;--event-gap:4px;--week-cells-height:64px">
+<div class="flex items-center justify-between p-2 sm:p-4">
+<div class="flex items-center gap-1 sm:gap-4">
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 max-[479px]:aspect-square max-[479px]:p-0!" data-size="default" data-slot="button" data-variant="outline">
+<svg aria-hidden="true" class="remixicon min-[480px]:hidden" fill="currentColor" height="16" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 10H4V19H20V10ZM15.0355 11.136L16.4497 12.5503L11.5 17.5L7.96447 13.9645L9.37868 12.5503L11.5 14.6716L15.0355 11.136ZM7 5H4V8H20V5H17V6H15V5H9V6H7V5Z">
+</path>
+</svg>
+<span class="max-[479px]:sr-only">
+     Today
+    </span>
+</button>
+<div class="flex items-center sm:gap-2">
+<button aria-label="Previous" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="button" data-variant="ghost">
+<svg aria-hidden="true" class="lucide lucide-chevron-left" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="m15 18-6-6 6-6">
+</path>
+</svg>
+</button>
+<button aria-label="Next" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-9" data-size="icon" data-slot="button" data-variant="ghost">
+<svg aria-hidden="true" class="lucide lucide-chevron-right" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="m9 18 6-6-6-6">
+</path>
+</svg>
+</button>
+</div>
+<h2 class="text-sm font-semibold sm:text-lg md:text-xl">
+    <span id="calendar-month-heading">October 2026</span>
+   </h2>
+</div>
+<div class="flex items-center gap-2">
+<button aria-expanded="false" aria-haspopup="menu" class="group/button inline-flex shrink-0 items-center justify-center rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-9 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 gap-1.5 max-[479px]:h-8" data-size="default" data-slot="dropdown-menu-trigger" data-state="closed" data-variant="outline" id="radix-_R_6an9bsnpfjb_" type="button">
+<span>
+<span aria-hidden="true" class="min-[480px]:hidden">
+      M
+     </span>
+<span class="max-[479px]:sr-only">
+      Month
+     </span>
+</span>
+<svg aria-hidden="true" class="lucide lucide-chevron-down -me-1 opacity-60" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</button>
+<button class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 max-[479px]:aspect-square max-[479px]:p-0!" data-size="sm" data-slot="button" data-variant="default">
+<svg aria-hidden="true" class="lucide lucide-plus opacity-60 sm:-ms-1" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 12h14">
+</path>
+<path d="M12 5v14">
+</path>
+</svg>
+<span class="max-sm:sr-only">
+     <span onclick="openNewEventModal()">New event</span>
+    </span>
+</button>
+</div>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="contents" data-slot="month-view">
+<div class="border-border/70 grid grid-cols-7 border-b">
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Sun
+    </div>
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Mon
+    </div>
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Tue
+    </div>
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Wed
+    </div>
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Thu
+    </div>
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Fri
+    </div>
+<div class="text-muted-foreground/70 py-2 text-center text-sm">
+     Sat
+    </div>
+</div>
+<div class="grid flex-1 auto-rows-fr">
+<div class="grid grid-cols-7 [&amp;:last-child&gt;*]:border-b-0">
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0" data-outside-cell="true">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        27
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0" data-outside-cell="true">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        28
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0" data-outside-cell="true">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        29
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0" data-outside-cell="true">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        30
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8 rounded-l rounded-r-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" data-past-event="true" role="button" tabindex="0">
+<span class="truncate">
+            Annual Planning
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        1
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<button class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8 rounded-r rounded-l-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" data-past-event="true">
+<div aria-hidden="true" class="invisible">
+           Annual Planning
+          </div>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        2
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        3
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-7 [&amp;:last-child&gt;*]:border-b-0">
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        4
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        5
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        6
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        7
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        8
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        9
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        10
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-7 [&amp;:last-child&gt;*]:border-b-0">
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        11
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" data-past-event="true" role="button" tabindex="0">
+<span class="truncate">
+            Quarterly Budget Review
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        12
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        13
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        14
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        15
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-amber-200/50 hover:bg-amber-200/40 text-amber-950/80 dark:bg-amber-400/25 dark:hover:bg-amber-400/20 dark:text-amber-200 shadow-amber-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" data-past-event="true" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             1pm
+            </span>
+            Project Deadline
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        16
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        17
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-7 [&amp;:last-child&gt;*]:border-b-0">
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        18
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        19
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        20
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        21
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        22
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        23
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0" data-today="true">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        24
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             10am
+            </span>
+            Team Meeting
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-7 [&amp;:last-child&gt;*]:border-b-0">
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        25
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-emerald-200/50 hover:bg-emerald-200/40 text-emerald-950/80 dark:bg-emerald-400/25 dark:hover:bg-emerald-400/20 dark:text-emerald-200 shadow-emerald-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             12pm
+            </span>
+            Lunch with Client
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        26
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        27
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8 rounded-l rounded-r-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+            Product Launch
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        28
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<button class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8 rounded-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs">
+<div aria-hidden="true" class="invisible">
+           Product Launch
+          </div>
+</button>
+</div>
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-rose-200/50 hover:bg-rose-200/40 text-rose-950/80 dark:bg-rose-400/25 dark:hover:bg-rose-400/20 dark:text-rose-200 shadow-rose-700/8 rounded-l rounded-r-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             2:30pm
+            </span>
+            Sales Conference
+           </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        29
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<button class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8 rounded-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs">
+<div aria-hidden="true" class="invisible">
+           Product Launch
+          </div>
+</button>
+</div>
+<div class="aria-hidden:hidden">
+<button class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-rose-200/50 hover:bg-rose-200/40 text-rose-950/80 dark:bg-rose-400/25 dark:hover:bg-rose-400/20 dark:text-rose-200 shadow-rose-700/8 rounded-r rounded-l-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs">
+<div aria-hidden="true" class="invisible">
+<span>
+            2:30
+           </span>
+           Sales Conference
+          </div>
+</button>
+</div>
+<div class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             9am
+            </span>
+            Team Meeting
+           </span>
+</button>
+</div>
+</div>
+<div aria-hidden="true" class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-amber-200/50 hover:bg-amber-200/40 text-amber-950/80 dark:bg-amber-400/25 dark:hover:bg-amber-400/20 dark:text-amber-200 shadow-amber-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             9:45am
+            </span>
+            Team Meeting
+           </span>
+</button>
+</div>
+</div>
+<div aria-hidden="true" class="aria-hidden:hidden">
+<div class="touch-none" style="height: auto;">
+<button aria-describedby="_R_19bsnpfjb_" aria-disabled="false" aria-roledescription="draggable" class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8 rounded mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs" role="button" tabindex="0">
+<span class="truncate">
+<span class="truncate font-normal opacity-70 sm:text-[11px]">
+             2pm
+            </span>
+            Review contracts
+           </span>
+</button>
+</div>
+</div>
+<button aria-expanded="false" aria-haspopup="dialog" class="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-[var(--event-gap)] flex h-[var(--event-height)] w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs" data-slot="popover-trigger" data-state="closed" type="button">
+<span>
+          + 2
+          <span class="max-sm:sr-only">
+           more
+          </span>
+</span>
+</button>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        30
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+<div class="aria-hidden:hidden">
+<button class="focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8 rounded-r rounded-l-none mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs">
+<div aria-hidden="true" class="invisible">
+           Product Launch
+          </div>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0">
+<div class="data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1">
+<div class="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+        31
+       </div>
+<div class="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="_R_19bsnpfjb_" style="display: none;">
+  To pick up a draggable item, press the space bar.
+    While dragging, use the arrow keys to move the item.
+    Press space again to drop the item in its new position, or press escape to cancel.
+ </div>
+<div aria-atomic="true" aria-live="assertive" id="DndLiveRegion-0" role="status" style="position: fixed; top: 0px; left: 0px; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(100%); white-space: nowrap;">
+</div>
+</div>
+
+<!-- New Event Modal -->
+<div id="new-event-modal" class="fixed inset-0 z-50 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-card text-card-foreground border border-border shadow-lg rounded-xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95">
+        <div class="flex items-center justify-between border-b border-border pb-3">
+            <h3 class="text-lg font-semibold">Create New Event</h3>
+            <button onclick="closeNewEventModal()" class="size-6 text-muted-foreground hover:text-foreground flex items-center justify-center rounded-md">&times;</button>
+        </div>
+        <form onsubmit="submitNewEvent(event)" class="space-y-4">
+            <div class="space-y-1">
+                <label class="text-xs font-medium text-foreground">Event Title</label>
+                <input id="event-title-input" required class="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" placeholder="e.g. Q4 Sprint Retro" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-1">
+                    <label class="text-xs font-medium text-foreground">Day of Month</label>
+                    <select id="event-day-input" class="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                        <option value="15">15th</option>
+                        <option value="16">16th</option>
+                        <option value="17">17th</option>
+                        <option value="20">20th</option>
+                        <option value="22">22nd</option>
+                        <option value="25">25th</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-medium text-foreground">Category Color</label>
+                    <select id="event-color-input" class="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                        <option value="bg-blue-500/15 text-blue-700 dark:text-blue-300">Blue (Planning)</option>
+                        <option value="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">Emerald (Team)</option>
+                        <option value="bg-purple-500/15 text-purple-700 dark:text-purple-300">Purple (Review)</option>
+                        <option value="bg-red-500/15 text-red-700 dark:text-red-300">Red (Deadline)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-border">
+                <button type="button" onclick="closeNewEventModal()" class="h-9 px-3 rounded-md border border-input hover:bg-muted text-sm font-medium transition-colors">Cancel</button>
+                <button type="submit" class="h-9 px-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors">Add Event</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
