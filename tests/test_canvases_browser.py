@@ -10,15 +10,14 @@ from flask_basecoat.testing import make_app
 
 playwright = pytest.importorskip('playwright.sync_api')
 BUILT = [c['slug'] for c in registry.available()]
-PORT = 5131
 
 
 @pytest.fixture(scope='module')
 def base():
-    server = make_server('127.0.0.1', PORT, make_app())
+    server = make_server('127.0.0.1', 0, make_app())   # a free port, so parallel runs do not clash
     t = Thread(target=server.serve_forever, daemon=True)
     t.start()
-    yield f'http://127.0.0.1:{PORT}'
+    yield f'http://127.0.0.1:{server.server_port}'
     server.shutdown()
 
 
