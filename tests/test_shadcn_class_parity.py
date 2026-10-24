@@ -34,9 +34,30 @@ def parse_cva_component(tsx_content, component_name):
             'data_slot': 'button'
         }
     """
-    # Extract the cva call
-    cva_pattern = r'const\s+\w+Variants\s*=\s*cva\s*\((.*?)\);'
-    match = re.search(cva_pattern, tsx_content, re.DOTALL)
+    # Extract the cva call - handle nested parentheses by counting depth
+    cva_start = re.search(r'const\s+\w+Variants\s*=\s*cva\s*\(', tsx_content)
+    if not cva_start:
+        return None
+
+    # Find matching closing parenthesis
+    start_pos = cva_start.end() - 1  # Position of opening (
+    depth = 0
+    end_pos = start_pos
+
+    for i in range(start_pos, len(tsx_content)):
+        if tsx_content[i] == '(':
+            depth += 1
+        elif tsx_content[i] == ')':
+            depth -= 1
+            if depth == 0:
+                end_pos = i
+                break
+
+    if depth != 0:
+        return None
+
+    cva_content = tsx_content[start_pos + 1:end_pos]
+    match = type('Match', (), {'group': lambda self, n: cva_content})() if cva_content else None
 
     if not match:
         return None
