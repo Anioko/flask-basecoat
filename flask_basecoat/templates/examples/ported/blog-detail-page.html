@@ -2,6 +2,7 @@
 {% import 'basecoat/index.html' as ui %}
 {% import 'examples/ported/_content.html' as c %}
 {% block title %}Blog Detail Page · Flask-Basecoat{% endblock %}
+{% block html_attrs %} style="{{ ui.document_title_style('The Best Way to Write a Recurring Email Newsletter') }}"{% endblock %}
 {% set comments = [
   {'name': 'Sarah Johnson', 'content': "This is exactly what I needed! The personalization tips are incredibly valuable. I've been struggling with low open rates, and this gives me a clear direction to improve.", 'timestamp': '2 hours ago', 'likes': 12},
   {'name': 'Mike Chen', 'content': 'Great insights on email personalization. I especially liked the section about adding elements that spark interest. Have you tested A/B variations of these techniques?', 'timestamp': '5 hours ago', 'likes': 8},
@@ -37,8 +38,7 @@
 {%- endmacro %}
 
 {% block body %}
-<div class="bg-background min-h-screen">
-  <div class="mx-auto max-w-4xl px-6 py-12">
+{% call ui.document() %}
     <header class="space-y-6">
       {{ ui.badge(text='Company', variant='outline') }}
       <h1 class="text-foreground text-4xl leading-15 font-bold tracking-tight md:text-4xl lg:text-5xl">The Best Way to Write a Recurring Email Newsletter</h1>
@@ -93,8 +93,7 @@
         </div>
       </section>
     </div>
-  </div>
-</div>
+{% endcall %}
 <script>
   // New comments go to the top of the list, as the upstream page does with its comment state.
   (function () {

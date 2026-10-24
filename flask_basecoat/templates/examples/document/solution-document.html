@@ -1,0 +1,212 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# A solution document: the reading layout (ui.document, the blog detail column), a cover, and the print stylesheet
+   (app/assets/styles/print.css). Print it, or save it as PDF: A4 by default, ?size=letter for US Letter.
+   Rulings relied on: R17 (documents print as documents), R20 (Harvey balls), R16 (colour carries meaning, tokens only). #}
+{% set options = [
+  ('A', 'Extend the current system', 'Keep the 2009 claims platform and patch it for the new products.'),
+  ('B', 'Rehost in the cloud', 'Move the platform as it is onto managed infrastructure.'),
+  ('C', 'Replace with a packaged product', 'Adopt a claims software-as-a-service product and retire the platform line of business by line of business.'),
+  ('D', 'Rebuild in-house', 'Build new claims services on the group platform.'),
+] %}
+{% set criteria = [
+  ('Strategic fit', '25%', [25, 50, 100, 100]),
+  ('Three-year cost', '20%', [50, 50, 75, 25]),
+  ('Time to value', '20%', [75, 50, 75, 25]),
+  ('Delivery risk', '20%', [75, 75, 50, 25]),
+  ('Regulatory and data control', '15%', [50, 75, 75, 100]),
+] %}
+{% set scores = ['53.8', '58.8', '76.3', '55.0'] %}
+{% set risks = [
+  ('R1', 'Claims data does not map cleanly onto the product, delaying the first line of business', 'High', 'Medium', 'Data lead', 'Profile the motor data in the first six weeks; agree a mapping before contract signature.'),
+  ('R2', 'The supplier cannot meet the regulator\'s outsourcing and exit requirements', 'Medium', 'High', 'Compliance director', 'Make exit assistance and data return conditions of contract; submit the outsourcing notification early.'),
+  ('R3', 'Integration team capacity is below plan, so delivery slips behind the forecast shown in Figure 2', 'High', 'High', 'Programme director', 'Add four engineers from Q3 2027 and release two from the legacy team as motor cuts over.'),
+  ('R4', 'Handlers resist the new process and productivity dips at each cutover', 'Medium', 'Medium', 'Head of claims', 'Run each cutover with handlers from that line of business as process owners, and keep a two-week parallel run.'),
+  ('R5', 'Run cost of the legacy platform does not fall as lines of business move', 'Medium', 'Medium', 'Finance business partner', 'Tie each decommissioning step to a named saving and report it monthly.'),
+  ('R6', 'Customer service levels fall during migration', 'Low', 'High', 'Customer operations lead', 'Hold service levels as a gate for every cutover; roll back if two weeks miss target.'),
+] %}
+{% set steps = [
+  ('Approve Option C and the £11.0m envelope', 'Executive committee', '12 Nov 2026'),
+  ('Appoint the programme director and the supplier negotiation team', 'Chief operating officer', '20 Nov 2026'),
+  ('Profile and map motor claims data', 'Data lead', '15 Jan 2027'),
+  ('Complete supplier due diligence and outsourcing notification', 'Compliance director', '26 Feb 2027'),
+  ('Sign the contract with exit and data return terms', 'Procurement', '31 Mar 2027'),
+  ('Start the motor build and the first parallel run', 'Programme director', '30 Apr 2027'),
+] %}
+{% block title %}{{ title }} · Flask-Basecoat{% endblock %}
+{% block html_class %}{{ ' print-letter' if page_size == 'letter' else ' print-a4' }}{% endblock %}
+{% block html_attrs %} style="{{ ui.document_title_style(title) }}"{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="blog-detail-page">{% endblock %}
+
+{% macro section_title(text) -%}
+<h2 class="text-foreground text-2xl font-bold">{{ text }}</h2>
+{%- endmacro %}
+
+{% block body %}
+{% call ui.document() %}
+  <div class="mb-8">
+    {% call ui.breadcrumb(attrs={'aria-label': 'breadcrumb'}) %}{% call ui.breadcrumb_list() %}
+      {% call ui.breadcrumb_item() %}{% call ui.breadcrumb_link(href=url_for('basecoat_examples.index')) %}Examples{% endcall %}{% endcall %}
+      {% call ui.breadcrumb_separator() %}{{ lucide('chevron-right') }}{% endcall %}
+      {% call ui.breadcrumb_item() %}{{ ui.breadcrumb_page(text='Solution document') }}{% endcall %}
+    {% endcall %}{% endcall %}
+  </div>
+
+  {{ ui.document_cover(title=title, organisation='Harbourline Insurance Group', date='24 October 2026', version='1.2', author='Amara Okafor, Lead Architect') }}
+
+  {% call ui.document_body() %}
+
+  <section class="space-y-6">
+    {{ section_title('Executive summary') }}
+    <p class="text-foreground/80 leading-relaxed">Harbourline settles about 410,000 claims a year on a claims platform that went live in 2009. It runs on hardware the manufacturer stopped supporting in 2024, it cannot price the parametric home product the board approved for 2027, and four of the six people who understand its batch scheduler have left or will retire within two years. This document recommends how to replace it.</p>
+    <p class="text-foreground/80 leading-relaxed">We compared four options against five weighted criteria (Table 1). Option C, replacing the platform with a packaged claims product and moving one line of business at a time, scores highest at 76.3 out of 100. It costs £11.0m over three years, within £0.2m of keeping the current system running, and it is the only option that meets the product timetable without leaving the group dependent on a handful of specialists.</p>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="space-y-1"><p class="text-muted-foreground text-sm">Three-year cost, Option C</p><p class="text-2xl font-semibold tabular-nums">£11.0m</p></div>
+      <div class="space-y-1"><p class="text-muted-foreground text-sm">First line of business live</p><p class="text-2xl font-semibold tabular-nums">Q4 2027</p></div>
+      <div class="space-y-1"><p class="text-muted-foreground text-sm">Legacy run cost removed by 2029</p><p class="text-2xl font-semibold tabular-nums">£3.1m a year</p></div>
+    </div>
+    {% call ui.alert() %}
+      {{ lucide('circle-alert') }}
+      {{ ui.alert_title(text='Decision requested') }}
+      {{ ui.alert_description(text='Approve Option C and an envelope of £11.0m over three years at the executive committee on 12 November 2026, so that supplier due diligence can start in January.') }}
+    {% endcall %}
+    <p class="text-foreground/80 leading-relaxed">The main risk is delivery capacity, not technology. On today's team the forecast reaches 90 per cent of claims migrated by the end of 2028, not 100 (Figure 2). The recommendation therefore includes four additional integration engineers from the third quarter of 2027. The remaining sections set out the context, the options and how we scored them, the cost and delivery picture, the risks, and the next six steps.</p>
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Context and objectives') }}
+    <p class="text-foreground/80 leading-relaxed">The platform handles registration, reserving, payments and recovery for motor, home and commercial claims. It was built for a book one third of today's size. Peak-season handling times have risen from 11 to 17 days in three years, and 38 per cent of handler time is spent re-keying data between the platform and the document system.</p>
+    <h3 class="text-foreground text-lg font-semibold">What the programme must achieve</h3>
+    <p class="text-foreground/80 leading-relaxed">The executive committee set three objectives in July 2026. First, support the 2027 home product, which needs claims to be triggered by weather data without a handler opening a case. Second, cut the average handling time for a standard motor claim from 17 days to 9. Third, remove the single points of failure: no component should depend on one person, and the recovery time objective for claims should fall from 36 hours to 4.</p>
+    <h3 class="text-foreground text-lg font-semibold">Constraints we accepted</h3>
+    <p class="text-foreground/80 leading-relaxed">Claims data stays in the United Kingdom. The regulator's outsourcing rules apply to any option that moves processing to a supplier, including the right to audit and a tested exit plan. Customers must not see a change in service levels during migration, and the programme may not run beyond the end of 2028 because the current hardware support contract ends that December.</p>
+    <h3 class="text-foreground text-lg font-semibold">What we did</h3>
+    <p class="text-foreground/80 leading-relaxed">Between August and October 2026 the architecture team interviewed 23 handlers, team leaders and managers, reviewed twelve months of incident and change records, profiled the motor and home data, and held working sessions with four suppliers and with the group technology platform team. Costs are three-year estimates in 2026 pounds, reviewed by finance.</p>
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Options considered') }}
+    <p class="text-foreground/80 leading-relaxed">Four options came out of the working sessions. They cover the range from doing the least to building everything ourselves. Each was assessed on five criteria, weighted by the executive committee. The Harvey ball shows how far an option meets a criterion, from empty (not at all) to full (completely).</p>
+    {% call ui.table_container() %}{% call ui.table() %}
+      {{ ui.table_caption(text='Table 1. Options scored against the weighted criteria') }}
+      {% call ui.table_header() %}{% call ui.table_row() %}
+        {{ ui.table_head(text='Criterion') }}
+        {{ ui.table_head(text='Weight', class='text-right') }}
+        {% for key, name, summary in options %}{{ ui.table_head(text='Option ' ~ key, class='text-center') }}{% endfor %}
+      {% endcall %}{% endcall %}
+      {% call ui.table_body() %}
+        {% for criterion, weight, values in criteria %}
+        {% call ui.table_row() %}
+          {{ ui.table_cell(text=criterion, class='font-medium') }}
+          {{ ui.table_cell(text=weight, class='text-right tabular-nums') }}
+          {% for v in values %}{% call ui.table_cell(class='text-center') %}{{ ui.harvey_ball(v) }}{% endcall %}{% endfor %}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+      {% call ui.table_footer() %}{% call ui.table_row() %}
+        {{ ui.table_cell(text='Weighted score out of 100', class='font-medium') }}
+        {{ ui.table_cell(text='100%', class='text-right tabular-nums') }}
+        {% for s in scores %}{{ ui.table_cell(text=s, class='text-center font-medium tabular-nums') }}{% endfor %}
+      {% endcall %}{% endcall %}
+    {% endcall %}{% endcall %}
+    <div class="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-sm" aria-label="Harvey ball scale">
+      <span class="text-foreground font-medium">Scale</span>
+      {% for v in [0, 25, 50, 75, 100] %}<span class="flex items-center gap-1.5">{{ ui.harvey_ball(v) }}{{ v }}</span>{% endfor %}
+    </div>
+    <div class="space-y-3">
+      {% for key, name, summary in options %}
+      <p class="text-foreground/80 leading-relaxed"><span class="text-foreground font-medium">Option {{ key }}, {{ name | lower }}.</span> {{ summary }}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Cost and evaluation') }}
+    <p class="text-foreground/80 leading-relaxed">Option A is cheapest to start and dearest to run: patching adds about £3.2m a year in support and workarounds by 2028. Option D is the reverse, with the lowest running cost and a build cost of £11.8m that no other benefit offsets. Options B and C sit between them. Option C costs £5.1m to implement and £5.9m to run over three years, a total of £11.0m against £10.8m for Option A (Figure 1).</p>
+    {% call ui.card(class='@container/card') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text='Figure 1. Three-year cost by option') }}
+        {{ ui.card_description(text='Pounds million, 2026 prices. Build and migration is a one-off cost.') }}
+      {% endcall %}
+      {% call ui.card_content() %}
+        {{ ui.chart_from_spec(cost_chart, id='document-costs', class='aspect-auto h-[250px] w-full') }}
+      {% endcall %}
+    {% endcall %}
+    <p class="text-foreground/80 leading-relaxed">Cost alone does not separate A, B and C, so the scores weigh what the money buys. Option C wins on strategic fit because the product ships parametric triggers and a handler workbench that we would otherwise build. It loses ground to A and B on delivery risk, which is why risk carries its own section below. Option D scores full marks for fit and for control of data, but its twelve-month build delays the first line of business to 2029, after the hardware support contract ends.</p>
+    <p class="text-foreground/80 leading-relaxed">Sensitivity was tested by moving each weight by ten points either way. Option C stays first in every case. Option B overtakes it only if delivery risk is weighted above 53 per cent, more than two and a half times the weight the committee chose.</p>
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Delivery plan') }}
+    <p class="text-foreground/80 leading-relaxed">Option C is delivered in three waves. Motor goes first because its data is the cleanest and it carries the largest volume: build and parallel run from April 2027, cutover in the fourth quarter. Home follows in the second quarter of 2028 with the parametric product, and commercial lines complete the migration in the last quarter of 2028, ahead of the end of hardware support.</p>
+    {% call ui.card(class='@container/card') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text='Figure 2. Claims migrated by quarter') }}
+        {{ ui.card_description(text='Per cent of the claims book on the new platform at the end of each quarter.') }}
+      {% endcall %}
+      {% call ui.card_content() %}
+        {{ ui.chart_from_spec(delivery_chart, id='document-delivery', class='aspect-auto h-[250px] w-full') }}
+      {% endcall %}
+    {% endcall %}
+    <p class="text-foreground/80 leading-relaxed">The planned line assumes the integration team has fourteen engineers from the third quarter of 2027. Today it has ten. On that smaller team the forecast falls behind from the first wave and reaches 90 per cent at the end of 2028, ten points short of the date the hardware contract allows. The recommendation closes that gap by adding four engineers, at a cost already inside the £11.0m envelope.</p>
+    <p class="text-foreground/80 leading-relaxed">Each cutover is gated. A line of business moves only after two consecutive weeks in parallel run in which payments match to the penny and service levels are at or above target. If a gate is missed the wave waits; the plan has six weeks of slack in each wave for that reason.</p>
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Recommendation') }}
+    <p class="text-foreground/80 leading-relaxed">We recommend Option C: replace the claims platform with a packaged claims product, migrating motor, then home, then commercial lines, with the platform retired by the end of 2028.</p>
+    <h3 class="text-foreground text-lg font-semibold">Why this option</h3>
+    <p class="text-foreground/80 leading-relaxed">It is the only option that meets the product timetable, the date the hardware support ends and the ambition to cut handling time to nine days. It scores 76.3 out of 100, against 58.8 for the next option, and it holds first place under every sensitivity test we ran. It also removes the dependence on a few specialists, because the supplier carries platform operations and the group keeps only configuration and integration skills.</p>
+    <h3 class="text-foreground text-lg font-semibold">What we ask the committee to approve</h3>
+    <p class="text-foreground/80 leading-relaxed">An envelope of £11.0m over three years, of which £5.1m is one-off. Four additional integration engineers from the third quarter of 2027. Authority to negotiate with the two shortlisted suppliers, with exit assistance and data return as conditions. A programme director reporting to the chief operating officer, and a steering group that reviews every cutover gate.</p>
+    <h3 class="text-foreground text-lg font-semibold">What the group gets</h3>
+    <p class="text-foreground/80 leading-relaxed">By the end of 2029 the legacy run cost of £3.1m a year is gone, the average handling time for a standard motor claim is nine days, the recovery time objective is four hours, and the parametric home product launches without custom build. The benefit case, reviewed by finance, pays back the one-off cost in the second half of 2030.</p>
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Risks') }}
+    <p class="text-foreground/80 leading-relaxed">Six risks matter most. Each has an owner who reports it monthly to the steering group. Likelihood and impact are rated before mitigation. The first three are the ones that would change the recommendation if they could not be reduced.</p>
+    {% call ui.table_container() %}{% call ui.table() %}
+      {{ ui.table_caption(text='Table 2. Risk register for Option C') }}
+      {% call ui.table_header() %}{% call ui.table_row() %}
+        {{ ui.table_head(text='Ref') }}{{ ui.table_head(text='Risk') }}{{ ui.table_head(text='Likelihood') }}{{ ui.table_head(text='Impact') }}{{ ui.table_head(text='Owner') }}{{ ui.table_head(text='Mitigation') }}
+      {% endcall %}{% endcall %}
+      {% call ui.table_body() %}
+        {% for ref, risk, likelihood, impact, owner, mitigation in risks %}
+        {% call ui.table_row() %}
+          {{ ui.table_cell(text=ref, class='font-medium') }}
+          {{ ui.table_cell(text=risk) }}
+          {% call ui.table_cell() %}{{ ui.badge(text=likelihood, variant='outline') }}{% endcall %}
+          {% call ui.table_cell() %}{{ ui.badge(text=impact, variant='outline') }}{% endcall %}
+          {{ ui.table_cell(text=owner) }}
+          {{ ui.table_cell(text=mitigation) }}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}{% endcall %}
+  </section>
+
+  <section class="space-y-6">
+    {{ section_title('Next steps') }}
+    <p class="text-foreground/80 leading-relaxed">If the committee approves on 12 November, the next six months are about removing the two risks that could stop the programme: data mapping and the regulator's outsourcing requirements. Nothing in this period commits the group to a supplier.</p>
+    {% call ui.table_container() %}{% call ui.table() %}
+      {{ ui.table_caption(text='Table 3. Actions to the start of the motor build') }}
+      {% call ui.table_header() %}{% call ui.table_row() %}
+        {{ ui.table_head(text='Action') }}{{ ui.table_head(text='Owner') }}{{ ui.table_head(text='Date', class='text-right') }}
+      {% endcall %}{% endcall %}
+      {% call ui.table_body() %}
+        {% for action, owner, date in steps %}
+        {% call ui.table_row() %}
+          {{ ui.table_cell(text=action, class='font-medium') }}
+          {{ ui.table_cell(text=owner) }}
+          {{ ui.table_cell(text=date, class='text-right tabular-nums') }}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}{% endcall %}
+    <p class="text-foreground/80 leading-relaxed">The architecture team will report progress against this list at each monthly steering group, together with the risk register and the delivery forecast. Questions about this document go to Amara Okafor, Lead Architect.</p>
+  </section>
+
+  {% endcall %}
+{% endcall %}
+{% endblock %}

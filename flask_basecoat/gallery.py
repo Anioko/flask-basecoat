@@ -31,6 +31,10 @@ def component_names():
     return sorted(p.stem for p in pages.glob('*.html'))
 
 
+# Macros the library adds to shadcn's set (R17, R20). They have a gallery page but no upstream example to compare with.
+LIBRARY_ADDITIONS = ('document', 'harvey-ball')
+
+
 def block_names():
     if _BLOCKS.exists():
         return sorted(p.name for p in _BLOCKS.iterdir() if p.is_dir() and p.name.split('-')[0] in ('dashboard', 'login', 'signup', 'sidebar'))
@@ -77,7 +81,7 @@ class DemoForm(Form):
 
 @gallery_bp.route('/')
 def index():
-    comps = [{'name': n, 'ready': has_page('components', n)} for n in component_names()]
+    comps = [{'name': n, 'ready': has_page('components', n)} for n in sorted(set(component_names()) | set(LIBRARY_ADDITIONS))]
     blocks = [{'name': n, 'ready': has_page('blocks', n)} for n in block_names()]
     return render_template('basecoat/pages/index.html', components=comps, blocks=blocks, chart_groups=chart_groups())
 

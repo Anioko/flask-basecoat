@@ -16,6 +16,9 @@
 
 /* Behaviour hooks that React/Radix provide at runtime and a server-rendered page needs in CSS. */
 @import "./runtime.css";
+/* Print: the light tokens in print, then the print stylesheet (R17). */
+@import "../../../compliance/golden/generated/tokens-print.css";
+@import "./print.css";
 
 /* Pages must carry class="style-vega" on <html>; the upstream style pack scopes every recipe under it. */
 @layer base {

@@ -1,0 +1,45 @@
+{# document: the reading layout for long-form documents (R17), plus the cover. Not shadcn components.
+   The frame is the blog detail screen's column (examples/ported/blog-detail-page): max-w-4xl, header, article.
+   Macros: document, document_cover, document_body. The print stylesheet (app/assets/styles/print.css) keys on the data-document* hooks.
+
+   {% call ui.document() %}
+     {{ ui.document_cover(title='…', organisation='…', date='24 October 2026', version='1.2', author='…') }}
+     {% call ui.document_body() %}<h2>…</h2><p>…</p>{% endcall %}
+   {% endcall %}
+
+   Put class="print-a4" or "print-letter" on <html> to choose the sheet (A4 when neither), and set the running header
+   with <html style="--document-title: …"> through document_title_style(title). #}
+{% import 'basecoat/avatar.html' as _avatar %}
+{% import 'basecoat/badge.html' as _badge %}
+
+{% macro document(class='', attrs={}) -%}
+<div class="bg-background min-h-screen"><div class="{{ tw('mx-auto max-w-4xl px-6 py-12', class) }}" data-document{% for k, v in attrs.items() %} {{ k }}="{{ v }}"{% endfor %}>{{ caller() if caller }}</div></div>
+{%- endmacro %}
+
+{# The title block on screen and page 1 in print. Same header as the blog detail screen, with the version and the organisation. #}
+{% macro document_cover(title, organisation, date, version, author, class='', id=none, attrs={}) -%}
+<header class="{{ tw('space-y-6', class) }}" data-document-cover{% if id %} id="{{ id }}"{% endif %}{% for k, v in attrs.items() %} {{ k }}="{{ v }}"{% endfor %}>
+  <div class="flex flex-wrap items-center gap-3" data-document-cover-meta>
+    {{ _badge.badge(text='Version ' ~ version, variant='outline') }}
+    <p class="text-muted-foreground text-sm font-medium uppercase" data-document-organisation>{{ organisation }}</p>
+  </div>
+  <h1 class="text-foreground text-4xl leading-15 font-bold tracking-tight md:text-4xl lg:text-5xl" data-document-title>{{ title }}</h1>
+  <div class="flex items-center space-x-4" data-document-cover-byline>
+    {% call _avatar.avatar(class='h-12 w-12') %}{{ _avatar.avatar_fallback(text=author[:1]) }}{% endcall %}
+    <div>
+      <p class="font-medium" data-document-author>by {{ author }}</p>
+      <p class="text-muted-foreground text-sm" data-document-date>{{ date }}</p>
+    </div>
+  </div>
+</header>
+{%- endmacro %}
+
+{% macro document_body(class='', attrs={}) -%}
+<div class="mt-16"><article class="{{ tw('space-y-8', class) }}" data-document-body{% for k, v in attrs.items() %} {{ k }}="{{ v }}"{% endfor %}>{{ caller() if caller }}</article></div>
+{%- endmacro %}
+
+{# The value for <html style="…">: sets --document-title, which the print stylesheet puts in the running header.
+   Usage in a layout: <html style="{{ ui.document_title_style(title) }}"> #}
+{% macro document_title_style(title) -%}
+--document-title: {{ ('"' ~ (title|string|replace('\\', '\\\\')|replace('"', '\\"')|replace('\n', ' ')) ~ '"') }}
+{%- endmacro %}

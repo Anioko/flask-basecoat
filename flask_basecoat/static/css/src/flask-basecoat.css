@@ -12,6 +12,9 @@
 @import "../../../../compliance/golden/generated/tokens.css";
 @import "../../../../compliance/upstream/shadcn/styles/style-vega.css" layer(base);
 @import "../../../../app/assets/styles/runtime.css";
+/* Print: the light tokens in print, then the print stylesheet (R17). */
+@import "../../../../compliance/golden/generated/tokens-print.css";
+@import "../../../../app/assets/styles/print.css";
 
 /* Pages must carry class="style-vega" on <html>; the upstream style pack scopes every recipe under it. */
 @layer base {
