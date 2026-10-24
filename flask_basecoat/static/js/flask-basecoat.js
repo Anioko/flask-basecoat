@@ -3554,7 +3554,12 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
    Interactive charts: an element with data-chart-control="<the chart's data-chart value>" and data-chart-state="<name>"
    sets that state value from its basecoat:change event (select, single toggle group) or from data-chart-value on
    click (buttons), then the chart redraws; the other controls bound to the same state show the new value.
-   spec.onMedia sets state from a media query (upstream useIsMobile effects). */
+   spec.onMedia sets state from a media query (upstream useIsMobile effects).
+
+   Views: a single ToggleGroup with data-chart-view="<the chart's data-chart value>" swaps panels. A panel is any element
+   with data-chart-view-panel="<the same value>" and data-chart-view-value="<an item's value>"; the panels whose value is
+   not the pressed item's are hidden (the matrix's "View" toggle: Chart and Table). One view is always chosen: pressing the
+   pressed item again keeps it. */
 (function (FB) {
   'use strict';
   const NS = (window.FlaskBasecoatChart = window.FlaskBasecoatChart || {});
@@ -4228,6 +4233,19 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       root.fbRedraw = () => root.fbChart.render();
       const id = root.getAttribute('data-chart');
       if (id) {
+        document.addEventListener('basecoat:change', (e) => {
+          const group = e.target.closest && e.target.closest(`[data-chart-view="${id}"]`);
+          if (!group) return;
+          const panels = Array.from(document.querySelectorAll(`[data-chart-view-panel="${id}"]`));
+          let value = e.detail.value;
+          if (Array.isArray(value)) value = value.length ? value[0] : '';
+          if (value === '') { // the pressed item was pressed again: put it back
+            const shown = panels.find((p) => !p.hidden);
+            if (shown && group.fbSetValue) group.fbSetValue(shown.getAttribute('data-chart-view-value'));
+            return;
+          }
+          panels.forEach((p) => { p.hidden = p.getAttribute('data-chart-view-value') !== value; });
+        });
         // Controls sharing one state (a ToggleGroup and a Select both bound to `timeRange`, as upstream) follow each
         // other: the value chosen in one is shown by the others, without them emitting a change of their own.
         let syncing = false;

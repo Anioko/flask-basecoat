@@ -24,6 +24,17 @@ def server():
         return render_template_string("""{% extends 'basecoat/pages/_layout.html' %}{% import 'basecoat/index.html' as ui %}
 {% block body %}<div class="p-4"><div style="width: {{ w }}px">{{ ui.chart_from_spec(spec, id='t', class='aspect-auto w-full', attrs={'style': 'height: ' ~ h ~ 'px'}) }}</div></div>{% endblock %}""", spec=specs[key], w=w, h=h)
 
+    @app.route('/v/<key>')
+    def views(key):
+        return render_template_string("""{% extends 'basecoat/pages/_layout.html' %}{% import 'basecoat/index.html' as ui %}
+{% block body %}<div class="p-4">
+{% call ui.toggle_group(type='single', variant='outline', attrs={'aria-label': 'View', 'data-chart-view': 'chart-t'}) %}
+  {{ ui.toggle_group_item(text='Chart', value='chart', variant='outline', pressed=true) }}{{ ui.toggle_group_item(text='Table', value='table', variant='outline') }}
+{% endcall %}
+<div data-chart-view-panel="chart-t" data-chart-view-value="chart" id="chart-panel"><div style="width: 500px">{{ ui.chart_from_spec(spec, id='t', class='aspect-auto w-full', attrs={'style': 'height: 250px'}) }}</div></div>
+<div data-chart-view-panel="chart-t" data-chart-view-value="table" id="table-panel" hidden>The table</div>
+</div>{% endblock %}""", spec=specs[key])
+
     srv = make_server('127.0.0.1', 0, app, threaded=True)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     yield f'http://127.0.0.1:{srv.server_port}', specs
@@ -279,3 +290,26 @@ def test_payload_field_formatter_names_the_hovered_point_in_the_tooltip(draw):
     tip = page.locator('.recharts-tooltip-wrapper .cn-chart-tooltip')
     tip.wait_for()
     assert tip.inner_text().split('\n')[0] == 'Beta'
+
+
+# ---------------------------------------------------------------- the "View" toggle of a form: chart or table
+
+def test_view_toggle_swaps_the_chart_panel_and_the_table_panel(server, browser):
+    base, specs = server
+    specs['views'] = bar_spec()
+    page = browser.new_page(viewport={'width': 700, 'height': 600})
+    try:
+        page.goto(f'{base}/v/views')
+        page.wait_for_function("() => document.querySelector('svg.recharts-surface')?.getBoundingClientRect().width > 0")
+        assert page.locator('#chart-panel').is_visible() and not page.locator('#table-panel').is_visible()
+        page.locator('[data-slot=toggle-group-item]', has_text='Table').click()
+        assert page.locator('#table-panel').is_visible() and not page.locator('#chart-panel').is_visible()
+        page.locator('[data-slot=toggle-group-item]', has_text='Table').click()  # pressing the chosen view again keeps it
+        assert page.locator('#table-panel').is_visible()
+        assert page.locator('[data-slot=toggle-group-item][data-state=on]').inner_text() == 'Table'
+        page.locator('[data-slot=toggle-group-item]', has_text='Chart').click()
+        assert page.locator('#chart-panel').is_visible() and not page.locator('#table-panel').is_visible()
+        # the chart is drawn again at its width when it comes back into view
+        page.wait_for_function("() => document.querySelector('svg.recharts-surface')?.getBoundingClientRect().width > 400")
+    finally:
+        page.close()
