@@ -205,7 +205,7 @@
   "calendar": {
     "status": "rendered",
     "source": "upstream-example",
-    "bytes": 926047,
+    "bytes": 925814,
     "slots": [
       "button",
       "calendar",
@@ -1798,7 +1798,7 @@
   "block:sidebar-12": {
     "status": "rendered",
     "source": "upstream-block",
-    "bytes": 87658,
+    "bytes": 87644,
     "slots": [
       "avatar",
       "avatar-fallback",
@@ -1874,7 +1874,7 @@
   "block:sidebar-15": {
     "status": "rendered",
     "source": "upstream-block",
-    "bytes": 130486,
+    "bytes": 130472,
     "slots": [
       "avatar",
       "avatar-fallback",

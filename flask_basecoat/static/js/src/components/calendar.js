@@ -11,6 +11,8 @@
 
   const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  // react-day-picker's month dropdown (options and caption) uses the short en-US month names.
+  const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const pad = (n) => String(n).padStart(2, '0');
   const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const ddmmyyyy = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
@@ -77,7 +79,7 @@
           const label = `${MONTHS[first.getMonth()]} ${first.getFullYear()}`;
           const caption = dropdown
             ? `<div class="flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium rdp-dropdowns">
-                 <span data-disabled="false" class="cn-calendar-dropdown-root relative rounded-(--cell-radius) rdp-dropdown_root"><select aria-label="Choose the Month" data-fb-month class="absolute inset-0 bg-popover opacity-0 rdp-dropdown rdp-months_dropdown">${MONTHS.map((mn, i) => `<option value="${i}"${i === first.getMonth() ? ' selected' : ''}>${mn}</option>`).join('')}</select><span aria-hidden="true" class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label">${MONTHS[first.getMonth()]}${svg('down', 'size-4 rdp-chevron', 18)}</span></span>
+                 <span data-disabled="false" class="cn-calendar-dropdown-root relative rounded-(--cell-radius) rdp-dropdown_root"><select aria-label="Choose the Month" data-fb-month class="absolute inset-0 bg-popover opacity-0 rdp-dropdown rdp-months_dropdown">${MONTHS_SHORT.map((mn, i) => `<option value="${i}"${i === first.getMonth() ? ' selected' : ''}>${mn}</option>`).join('')}</select><span aria-hidden="true" class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label">${MONTHS_SHORT[first.getMonth()]}${svg('down', 'size-4 rdp-chevron', 18)}</span></span>
                  <span data-disabled="false" class="cn-calendar-dropdown-root relative rounded-(--cell-radius) rdp-dropdown_root"><select aria-label="Choose the Year" data-fb-year class="absolute inset-0 bg-popover opacity-0 rdp-dropdown rdp-years_dropdown">${Array.from({ length: 101 }, (_, i) => first.getFullYear() - 100 + i + 50).filter((yy) => yy >= 1926 && yy <= 2100).map((yy) => `<option value="${yy}"${yy === first.getFullYear() ? ' selected' : ''}>${yy}</option>`).join('')}</select><span aria-hidden="true" class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label">${first.getFullYear()}${svg('down', 'size-4 rdp-chevron', 18)}</span></span>
                </div>`
             : `<span class="font-medium select-none cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground rdp-caption_label" role="status" aria-live="polite">${label}</span>`;

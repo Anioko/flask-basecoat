@@ -12,6 +12,20 @@ import * as React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 import { TooltipProvider } from "../upstream/shadcn/radix/ui/tooltip"
 
+// Render in the locale of the shadcn site (en-US) whatever the machine's default is: react-day-picker formats month
+// names through Intl, and a British default turns "Sep" into "Sept".
+const SystemDateTimeFormat = Intl.DateTimeFormat
+const PinnedDateTimeFormat = function (locales?: string | string[], options?: Intl.DateTimeFormatOptions) {
+  return new SystemDateTimeFormat(locales ?? "en-US", options)
+} as unknown as typeof Intl.DateTimeFormat
+Object.assign(PinnedDateTimeFormat, { supportedLocalesOf: SystemDateTimeFormat.supportedLocalesOf })
+;(PinnedDateTimeFormat as any).prototype = SystemDateTimeFormat.prototype
+Intl.DateTimeFormat = PinnedDateTimeFormat
+for (const m of ["toLocaleString", "toLocaleDateString", "toLocaleTimeString"] as const) {
+  const original = Date.prototype[m]
+  Date.prototype[m] = function (this: Date, locales?: any, options?: any) { return original.call(this, locales ?? "en-US", options) }
+}
+
 const here = path.dirname(fileURLToPath(import.meta.url))
 const examplesDir = path.resolve(here, "../upstream/shadcn/radix/examples")
 const outDir = path.resolve(here, "out")
