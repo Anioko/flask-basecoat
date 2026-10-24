@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Playground - shadcn/ui Example</title>
+    <title>Playground - Shadcn UI Examples</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,153 +23,150 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
-        function updateSliderVal(sliderId, displayId) {
-            const val = document.getElementById(sliderId).value;
-            document.getElementById(displayId).textContent = val;
+        function updateTemperature(val) {
+            document.getElementById('temp-val').textContent = val;
+        }
+        function updateMaxLength(val) {
+            document.getElementById('maxlen-val').textContent = val;
+        }
+        function updateTopP(val) {
+            document.getElementById('topp-val').textContent = val;
+        }
+        function handlePlaygroundSubmit() {
+            const ta = document.getElementById('playground-prompt');
+            const submitBtn = document.getElementById('submit-btn');
+            if (!ta.value.trim()) {
+                ta.value = "We scoop happiness one cone at a time!";
+                return;
+            }
+            submitBtn.textContent = "Generating...";
+            setTimeout(() => {
+                ta.value += "\n\n1. Pure Joy in Every Scoop!\n2. Crafting Smiles, One Flavor at a Time.\n3. Artisanal Chill for Sunny Days.";
+                submitBtn.textContent = "Submit";
+            }, 600);
         }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-4 sm:p-6 lg:p-8">
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
     {{ bc.toast_container() }}
 
-    <div class="max-w-7xl mx-auto space-y-6">
-        {# Top Navigation and Actions #}
-        <div class="flex items-center justify-between border-b border-border pb-4">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Playground</span>
-            </div>
-            <div class="flex items-center gap-3">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </div>
-
-        {# Header & Toolbar from playground/page.tsx #}
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-4">
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight text-foreground">Playground</h1>
-                <p class="text-xs text-muted-foreground mt-0.5">The OpenAI playground is an interface for experimenting with GPT-4 and reasoning models.</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-                <select class="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
-                    <option>Load a preset...</option>
-                    <option>Grammar correction</option>
-                    <option>Code generation</option>
-                    <option>Structured JSON extractor</option>
-                </select>
-                {{ bc.button('Save', variant='secondary', size='sm', icon='save') }}
-                {{ bc.button('View Code', variant='outline', size='sm', icon='code') }}
-                {{ bc.button('Share', variant='outline', size='sm', icon='share-2') }}
-                {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground', icon='rotate-ccw') }}
+    <div class="bg-background">
+        {# Top Action Toolbar #}
+        <div class="flex flex-col items-start justify-between gap-2 p-4 py-4 sm:flex-row sm:items-center sm:gap-0 md:h-16">
+            <h2 class="text-lg font-semibold">Playground</h2>
+            <div class="ml-auto flex w-full gap-2 sm:justify-end">
+                <button class="inline-flex items-center justify-between rounded-md border border-input bg-background shadow-xs hover:bg-muted hover:text-foreground h-9 gap-1.5 px-2.5 text-sm font-medium flex-1 md:max-w-[200px] lg:max-w-[300px]" type="button">
+                    <span>Load a preset...</span>
+                    <i data-lucide="chevrons-up-down" class="size-4 opacity-50"></i>
+                </button>
+                <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3 text-sm font-medium" type="button">
+                    Save
+                </button>
+                <div class="hidden gap-2 md:flex">
+                    <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3 text-sm font-medium" type="button">
+                        View code
+                    </button>
+                    <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3 text-sm font-medium" type="button">
+                        Share
+                    </button>
+                </div>
+                <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 size-9" type="button" aria-label="Actions">
+                    <i data-lucide="ellipsis" class="size-4"></i>
+                </button>
             </div>
         </div>
 
-        {# Main Grid: Canvas (Left) + Sliders Sidebar (Right) #}
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
-            {# Left Prompt Canvas #}
-            <div class="space-y-6">
-                {# System Prompt Card #}
-                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
-                    <div class="flex items-center justify-between">
-                        <label class="text-sm font-semibold text-foreground">System Prompt</label>
-                        <span class="text-xs text-muted-foreground">Instructions & Context</span>
-                    </div>
-                    <textarea
-                        rows="4"
-                        class="w-full rounded-md border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none font-mono"
-                    >You are an expert full-stack engineer and UI architect. You output clean, canonical components that strictly adhere to shadcn design tokens and accessibility standards.</textarea>
-                </div>
+        <div class="shrink-0 bg-border h-px w-full"></div>
 
-                {# User Input & Response Canvas #}
-                <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-3">
-                    <div class="flex items-center justify-between">
-                        <label class="text-sm font-semibold text-foreground">User Prompt</label>
-                        <span class="text-xs text-muted-foreground">Prompt completion</span>
-                    </div>
-                    <textarea
-                        rows="8"
-                        placeholder="Enter your prompt here..."
-                        class="w-full rounded-md border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                    >Refactor the pricing table into a 4-tier responsive grid with monthly and yearly toggling. Include custom accent borders for the Solo tier.</textarea>
-
-                    <div class="flex items-center justify-between pt-2">
-                        <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span>Tokens: ~42</span>
+        {# Workbench Grid #}
+        <div class="flex h-[calc(100vh-4.5rem)] flex-1 flex-col">
+            <div class="flex flex-1 flex-col p-4">
+                <div class="grid flex-1 items-stretch gap-6 md:grid-cols-[1fr_220px]">
+                    {# Sidebar Settings #}
+                    <div class="hidden flex-col gap-6 sm:flex md:order-2">
+                        {# Mode Tabs #}
+                        <div class="grid gap-3">
+                            <span class="text-sm font-medium leading-none">Mode</span>
+                            <div class="bg-muted text-muted-foreground h-9 items-center justify-center rounded-lg p-[3px] grid w-full grid-cols-3">
+                                <button type="button" class="bg-background text-foreground inline-flex h-full flex-1 items-center justify-center rounded-md text-sm font-medium shadow-xs" title="Complete">
+                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                                        <rect x="4" y="3" width="12" height="2" rx="1"></rect>
+                                        <rect x="4" y="7" width="12" height="2" rx="1"></rect>
+                                        <rect x="4" y="11" width="3" height="2" rx="1"></rect>
+                                        <rect x="4" y="15" width="3" height="2" rx="1"></rect>
+                                        <rect x="8.5" y="11" width="3" height="2" rx="1"></rect>
+                                        <rect x="8.5" y="15" width="3" height="2" rx="1"></rect>
+                                        <rect x="13" y="11" width="3" height="2" rx="1"></rect>
+                                    </svg>
+                                </button>
+                                <button type="button" class="text-muted-foreground hover:text-foreground inline-flex h-full flex-1 items-center justify-center rounded-md text-sm font-medium" title="Insert">
+                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.491 7.769a.888.888 0 0 1 .287.648.888.888 0 0 1-.287.648l-3.916 3.667a1.013 1.013 0 0 1-.692.268c-.26 0-.509-.097-.692-.268L5.275 9.065A.886.886 0 0 1 5 8.42a.889.889 0 0 1 .287-.64c.181-.17.427-.267.683-.269.257-.002.504.09.69.258L8.903 9.87V3.917c0-.243.103-.477.287-.649.183-.171.432-.268.692-.268.26 0 .509.097.692.268a.888.888 0 0 1 .287.649V9.87l2.245-2.102c.183-.172.432-.269.692-.269.26 0 .508.097.692.269Z"></path>
+                                    </svg>
+                                </button>
+                                <button type="button" class="text-muted-foreground hover:text-foreground inline-flex h-full flex-1 items-center justify-center rounded-md text-sm font-medium" title="Edit">
+                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                                        <rect x="4" y="3" width="12" height="2" rx="1"></rect>
+                                        <rect x="4" y="7" width="12" height="2" rx="1"></rect>
+                                        <rect x="4" y="11" width="3" height="2" rx="1"></rect>
+                                        <rect x="4" y="15" width="4" height="2" rx="1"></rect>
+                                        <rect x="8.5" y="11" width="3" height="2" rx="1"></rect>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            {{ bc.button('Submit', variant='default', size='sm', icon='sparkles') }}
+
+                        {# Model Selector #}
+                        <div class="grid gap-3">
+                            <label class="text-sm font-medium leading-none">Model</label>
+                            <button class="inline-flex shrink-0 items-center justify-between rounded-md border border-input bg-background shadow-xs hover:bg-muted hover:text-foreground h-9 px-2.5 text-sm font-medium w-full" type="button">
+                                <span>text-davinci-003</span>
+                                <i data-lucide="chevrons-up-down" class="size-4 text-muted-foreground"></i>
+                            </button>
+                        </div>
+
+                        {# Temperature #}
+                        <div class="grid gap-2 pt-2">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-medium leading-none">Temperature</label>
+                                <span id="temp-val" class="text-muted-foreground w-12 text-right text-sm">0.56</span>
+                            </div>
+                            <input type="range" min="0" max="1" step="0.01" value="0.56" oninput="updateTemperature(this.value)" class="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer">
+                        </div>
+
+                        {# Maximum Length #}
+                        <div class="grid gap-2 pt-2">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-medium leading-none">Maximum Length</label>
+                                <span id="maxlen-val" class="text-muted-foreground w-12 text-right text-sm">256</span>
+                            </div>
+                            <input type="range" min="1" max="4000" step="1" value="256" oninput="updateMaxLength(this.value)" class="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer">
+                        </div>
+
+                        {# Top P #}
+                        <div class="grid gap-2 pt-2">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-medium leading-none">Top P</label>
+                                <span id="topp-val" class="text-muted-foreground w-12 text-right text-sm">0.9</span>
+                            </div>
+                            <input type="range" min="0" max="1" step="0.05" value="0.9" oninput="updateTopP(this.value)" class="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer">
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {# Right Tuning Sidebar #}
-            <div class="rounded-xl border border-border bg-card p-6 shadow-xs space-y-6">
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Model</label>
-                    <select class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-ring">
-                        <option>gpt-4o</option>
-                        <option>gpt-4-turbo</option>
-                        <option>claude-3-5-sonnet</option>
-                        <option>o1-preview</option>
-                    </select>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <label class="font-semibold text-foreground">Temperature</label>
-                        <span id="temp-val" class="font-mono text-xs text-muted-foreground">0.70</span>
+                    {# Workbench Editor Area #}
+                    <div class="flex flex-1 flex-col md:order-1">
+                        <div class="flex h-full flex-col gap-4">
+                            <textarea id="playground-prompt" class="flex min-h-16 w-full rounded-md border border-input bg-transparent text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring flex-1 p-4 md:text-sm font-mono leading-relaxed" placeholder="Write a tagline for an ice cream shop"></textarea>
+                            <div class="flex items-center gap-2">
+                                <button id="submit-btn" onclick="handlePlaygroundSubmit()" class="inline-flex shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/80 h-9 px-4 text-sm font-medium shadow-xs transition-colors" type="button">
+                                    Submit
+                                </button>
+                                <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-secondary text-secondary-foreground hover:bg-secondary/80 size-9" type="button" aria-label="Show history" onclick="document.getElementById('playground-prompt').value='Write a tagline for an ice cream shop'">
+                                    <i data-lucide="rotate-ccw" class="size-4"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <input
-                        id="temp-slider"
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value="0.70"
-                        class="w-full accent-primary cursor-pointer"
-                        oninput="updateSliderVal('temp-slider', 'temp-val')"
-                    >
-                    <p class="text-[11px] text-muted-foreground">Controls randomness: lowering results in less random completions.</p>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <label class="font-semibold text-foreground">Maximum Length</label>
-                        <span id="len-val" class="font-mono text-xs text-muted-foreground">256</span>
-                    </div>
-                    <input
-                        id="len-slider"
-                        type="range"
-                        min="1"
-                        max="4096"
-                        step="1"
-                        value="256"
-                        class="w-full accent-primary cursor-pointer"
-                        oninput="updateSliderVal('len-slider', 'len-val')"
-                    >
-                    <p class="text-[11px] text-muted-foreground">The maximum number of tokens to generate.</p>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <label class="font-semibold text-foreground">Top P</label>
-                        <span id="topp-val" class="font-mono text-xs text-muted-foreground">0.90</span>
-                    </div>
-                    <input
-                        id="topp-slider"
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value="0.90"
-                        class="w-full accent-primary cursor-pointer"
-                        oninput="updateSliderVal('topp-slider', 'topp-val')"
-                    >
-                    <p class="text-[11px] text-muted-foreground">Controls diversity via nucleus sampling.</p>
                 </div>
             </div>
         </div>

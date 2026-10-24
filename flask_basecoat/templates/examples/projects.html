@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects List - shadcn/ui Example</title>
+    <title>Projects List - Shadcn UI Examples</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,190 +25,70 @@
         }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
     {{ bc.toast_container() }}
 
-    <div class="max-w-7xl mx-auto space-y-8">
-        {# Top Navigation and Actions #}
-        <div class="flex items-center justify-between border-b border-border pb-6">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Platform</span>
-            </div>
-            <div class="flex items-center gap-3">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </div>
-
-        {# Header Section #}
-        <div class="flex items-center justify-between">
-            <div class="space-y-1">
-                <h1 class="text-3xl font-bold tracking-tight">Projects Board</h1>
-                <p class="text-muted-foreground text-sm">List of your ongoing projects</p>
-            </div>
-            {{ bc.button('New Project', variant='default', icon='plus') }}
-        </div>
-
-        {# Projects 8-Card Grid #}
-        {% set projects = [
-            {
-                'id': 1,
-                'title': 'Mobile App',
-                'subtitle': 'Prototyping',
-                'progress': 78,
-                'timeLeft': '1 week left',
-                'date': 'May 01, 2021',
-                'color': 'bg-orange-500/10 border-orange-500/25 dark:bg-orange-950/30 dark:border-orange-900/40',
-                'progressColor': 'bg-orange-500',
-                'badgeColor': 'bg-orange-500 text-white',
-                'icon': '📱',
-                'team': ['AL', 'BT', 'CW']
-            },
-            {
-                'id': 2,
-                'title': 'Design Learn Management System',
-                'subtitle': 'UI/UX Design',
-                'progress': 32,
-                'timeLeft': '2 week left',
-                'date': 'June 04, 2021',
-                'color': 'bg-blue-500/10 border-blue-500/25 dark:bg-blue-950/30 dark:border-blue-900/40',
-                'progressColor': 'bg-blue-500',
-                'badgeColor': 'bg-blue-500 text-white',
-                'icon': '💻',
-                'team': ['JD', 'EM', 'RK']
-            },
-            {
-                'id': 3,
-                'title': 'Chat Mobile App',
-                'subtitle': 'Prototyping',
-                'progress': 64,
-                'timeLeft': '6 week left',
-                'date': 'Oct 27, 2021',
-                'color': 'bg-pink-500/10 border-pink-500/25 dark:bg-pink-950/30 dark:border-pink-900/40',
-                'progressColor': 'bg-pink-500',
-                'badgeColor': 'bg-pink-500 text-white',
-                'icon': '💬',
-                'team': ['SK', 'LN', 'TR']
-            },
-            {
-                'id': 4,
-                'title': 'Store Dashboard',
-                'subtitle': 'UI/UX Design',
-                'progress': 45,
-                'timeLeft': '3 week left',
-                'date': 'Sep 16, 2021',
-                'color': 'bg-green-500/10 border-green-500/25 dark:bg-green-950/30 dark:border-green-900/40',
-                'progressColor': 'bg-green-500',
-                'badgeColor': 'bg-green-500 text-white',
-                'icon': '📊',
-                'team': ['WP', 'MN', 'OP']
-            },
-            {
-                'id': 5,
-                'title': 'NFT Marketplace App',
-                'subtitle': 'Prototyping',
-                'progress': 69,
-                'timeLeft': '4 week left',
-                'date': 'Jan 03, 2021',
-                'color': 'bg-purple-500/10 border-purple-500/25 dark:bg-purple-950/30 dark:border-purple-900/40',
-                'progressColor': 'bg-red-500',
-                'badgeColor': 'bg-red-500 text-white',
-                'icon': '🎨',
-                'team': ['EV', 'HG']
-            },
-            {
-                'id': 6,
-                'title': 'Mobile App',
-                'subtitle': 'Prototyping',
-                'progress': 56,
-                'timeLeft': '2 week left',
-                'date': 'May 09, 2021',
-                'color': 'bg-blue-500/10 border-blue-500/25 dark:bg-blue-950/30 dark:border-blue-900/40',
-                'progressColor': 'bg-blue-500',
-                'badgeColor': 'bg-blue-500 text-white',
-                'icon': '📱',
-                'team': ['KL', 'ZX']
-            },
-            {
-                'id': 7,
-                'title': 'LMS App Design',
-                'subtitle': 'UI/UX Design',
-                'progress': 78,
-                'timeLeft': '2 week left',
-                'date': 'Jan 03, 2021',
-                'color': 'bg-yellow-500/10 border-yellow-500/25 dark:bg-yellow-950/30 dark:border-yellow-900/40',
-                'progressColor': 'bg-orange-500',
-                'badgeColor': 'bg-orange-500 text-white',
-                'icon': '🎓',
-                'team': ['QA', 'WS', 'ED']
-            },
-            {
-                'id': 8,
-                'title': 'Design Learn Management System',
-                'subtitle': 'UI/UX Design',
-                'progress': 25,
-                'timeLeft': '1 week left',
-                'date': 'June 04, 2021',
-                'color': 'bg-blue-500/10 border-blue-500/25 dark:bg-blue-950/30 dark:border-blue-900/40',
-                'progressColor': 'bg-blue-500',
-                'badgeColor': 'bg-blue-500 text-white',
-                'icon': '💻',
-                'team': ['RF', 'TG', 'YH']
-            }
-        ] %}
-
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {% for project in projects %}
-                <div class="relative overflow-hidden rounded-xl border p-6 shadow-xs transition-shadow hover:shadow-md {{ project.color }}">
-                    {# Top Settings Trigger #}
-                    <div class="absolute top-4 right-4">
-                        {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-foreground/70 hover:text-foreground', icon='settings') }}
+    <div class="bg-background">
+        <div class="min-h-screen p-4 sm:p-6 lg:p-8">
+            <div class="mx-auto max-w-7xl space-y-6">
+                {# Header #}
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight">Projects Board</h1>
+                        <p class="text-muted-foreground mt-1 text-sm">{{ projects|length }} ongoing projects</p>
                     </div>
-
-                    {# Date #}
-                    <div class="mb-3 text-xs font-medium text-muted-foreground">{{ project.date }}</div>
-
-                    {# Emoji Icon #}
-                    <div class="mb-4 text-4xl select-none">{{ project.icon }}</div>
-
-                    {# Title & Subtitle #}
-                    <div class="mb-6 min-h-[56px]">
-                        <h3 class="mb-1 text-base font-semibold leading-snug tracking-tight text-foreground line-clamp-2">{{ project.title }}</h3>
-                        <p class="text-xs font-medium text-muted-foreground">{{ project.subtitle }}</p>
-                    </div>
-
-                    {# Progress Bar #}
-                    <div class="mb-6 space-y-2">
-                        <div class="flex items-center justify-between text-xs font-medium">
-                            <span class="text-muted-foreground">Progress</span>
-                            <span class="font-semibold">{{ project.progress }}%</span>
-                        </div>
-                        <div class="h-2 w-full rounded-full bg-foreground/10 overflow-hidden">
-                            <div class="h-2 rounded-full transition-all duration-300 {{ project.progressColor }}" style="width: {{ project.progress }}%;"></div>
-                        </div>
-                    </div>
-
-                    {# Bottom Team & Time Left #}
-                    <div class="flex items-center justify-between pt-1">
-                        {# Avatar Stack #}
-                        <div class="flex -space-x-2 overflow-hidden">
-                            {% for member in project.team %}
-                                <div class="inline-flex h-7 w-7 items-center justify-center rounded-full border-2 border-background bg-muted text-[10px] font-semibold text-foreground shadow-xs">
-                                    {{ member }}
-                                </div>
-                            {% endfor %}
-                        </div>
-
-                        {# Time Left Badge #}
-                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold {{ project.badgeColor }} shadow-2xs">
-                            {{ project.timeLeft }}
-                        </span>
-                    </div>
+                    <button class="inline-flex shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 px-3 text-sm font-medium shadow-xs transition-colors sm:self-start">
+                        <i data-lucide="plus" class="size-4"></i>
+                        New Project
+                    </button>
                 </div>
-            {% endfor %}
+
+                {# Cards Grid #}
+                <div class="grid grid-cols-1 gap-4 lg:gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {% for p in projects %}
+                    <div class="overflow-hidden rounded-xl bg-card p-5 text-sm text-card-foreground border border-border border-t-4 {% if p.color == 'orange' %}border-t-orange-500{% elif p.color == 'blue' %}border-t-blue-500{% elif p.color == 'pink' %}border-t-pink-500{% elif p.color == 'green' %}border-t-green-500{% elif p.color == 'red' %}border-t-red-500{% elif p.color == 'yellow' %}border-t-yellow-500{% elif p.color == 'emerald' %}border-t-emerald-500{% else %}border-t-primary{% endif %} shadow-none transition-shadow hover:shadow-md">
+                        <div class="flex flex-col gap-3">
+                            <div class="flex items-start justify-between">
+                                <div class="rounded-lg p-2 {% if p.color == 'orange' %}bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400{% elif p.color == 'blue' %}bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400{% elif p.color == 'pink' %}bg-pink-100 dark:bg-pink-950 text-pink-600 dark:text-pink-400{% elif p.color == 'green' %}bg-green-100 dark:bg-green-950 text-green-600 dark:text-green-400{% elif p.color == 'red' %}bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400{% elif p.color == 'yellow' %}bg-yellow-100 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400{% elif p.color == 'emerald' %}bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400{% else %}bg-primary/10 text-primary{% endif %}">
+                                    <i data-lucide="{{ p.icon }}" class="size-5"></i>
+                                </div>
+                                <button class="inline-flex shrink-0 items-center justify-center rounded-md hover:bg-muted text-muted-foreground -mr-1 size-8" aria-label="Project actions">
+                                    <i data-lucide="ellipsis" class="size-4"></i>
+                                </button>
+                            </div>
+
+                            <div class="mt-4 space-y-1">
+                                <h3 class="leading-relaxed font-semibold">{{ p.title }}</h3>
+                                <span class="inline-flex h-5 w-fit items-center justify-center rounded-full px-2 py-0.5 text-xs font-normal bg-secondary text-secondary-foreground">
+                                    {{ p.category }}
+                                </span>
+                            </div>
+
+                            <div class="mt-4 space-y-1.5">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-muted-foreground">Progress</span>
+                                    <span class="font-medium">{{ p.progress }}%</span>
+                                </div>
+                                <div class="relative flex w-full items-center overflow-x-hidden rounded-full bg-muted h-1.5">
+                                    <div class="h-full bg-primary rounded-full transition-all" style="width: {{ p.progress }}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex items-center justify-between">
+                                <div class="flex -space-x-2">
+                                    {% for m in p.members %}
+                                    <span class="relative flex shrink-0 rounded-full border-background size-7 border-2 overflow-hidden" title="{{ m.name }}">
+                                        <img class="aspect-square size-full object-cover" alt="{{ m.name }}" src="{{ m.avatar }}">
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                <span class="text-muted-foreground text-xs">{{ p.time_left }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </body>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stonewind Trekker - Product Detail - shadcn/ui Example</title>
+    <title>Product Detail Page - Shadcn UI Examples</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,179 +24,254 @@
             document.documentElement.classList.toggle('dark');
         }
 
-        let currentQty = 1;
-        function updateQuantity(delta) {
-            currentQty = Math.max(1, currentQty + delta);
-            document.getElementById('qty-display').textContent = currentQty;
-        }
-
         const images = [
-            'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=1000&q=80',
-            'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1000&q=80',
-            'https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1000&q=80',
-            'https://images.unsplash.com/photo-1578932750294-f5075e85f44a?auto=format&fit=crop&w=1000&q=80'
+            "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop",
+            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=900&q=80&fit=crop",
+            "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=900&q=80&fit=crop",
+            "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&h=900&q=80&fit=crop"
         ];
-        let currentImgIdx = 0;
+        let currentIdx = 0;
 
-        function setMainImage(index) {
-            currentImgIdx = (index + images.length) % images.length;
-            document.getElementById('main-product-img').src = images[currentImgIdx];
-            document.querySelectorAll('[data-thumb-idx]').forEach(el => {
-                const idx = parseInt(el.getAttribute('data-thumb-idx'));
-                if (idx === currentImgIdx) {
-                    el.classList.add('border-primary', 'ring-2', 'ring-primary');
-                    el.classList.remove('border-border');
-                } else {
-                    el.classList.remove('border-primary', 'ring-2', 'ring-primary');
-                    el.classList.add('border-border');
+        function setProductImage(idx) {
+            currentIdx = idx;
+            document.getElementById('main-product-img').src = images[currentIdx];
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`thumb-${i}`);
+                if (btn) {
+                    if (i === currentIdx) {
+                        btn.className = "w-20 overflow-hidden rounded-lg border-2 transition-colors border-primary";
+                    } else {
+                        btn.className = "w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border";
+                    }
                 }
-            });
+            }
         }
 
-        function cycleImage(delta) {
-            setMainImage(currentImgIdx + delta);
+        function prevImage() {
+            let next = (currentIdx - 1 + images.length) % images.length;
+            setProductImage(next);
         }
 
-        function selectSize(btn) {
-            document.querySelectorAll('.size-pill').forEach(b => {
-                b.className = "size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer";
+        function nextImage() {
+            let next = (currentIdx + 1) % images.length;
+            setProductImage(next);
+        }
+
+        let qty = 1;
+        function updateQty(delta) {
+            qty = Math.max(1, qty + delta);
+            document.getElementById('qty-display').textContent = qty;
+        }
+
+        function selectSize(btn, size) {
+            document.querySelectorAll('.size-btn').forEach(b => {
+                b.className = "size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border";
             });
-            btn.className = "size-pill flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-primary text-primary-foreground text-sm font-medium transition-colors shadow-xs cursor-pointer";
+            btn.className = "size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-primary text-primary-foreground border-primary";
+            document.getElementById('selected-size').textContent = size;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium transition-colors";
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabId}`).className = "tab-btn bg-background text-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium shadow-xs";
         }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans p-6 md:p-10">
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
     {{ bc.toast_container() }}
 
-    <div class="max-w-7xl mx-auto space-y-6">
-        {# Top Navigation and Actions #}
-        <div class="flex items-center justify-between border-b border-border pb-6">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Store</span>
-            </div>
-            <div class="flex items-center gap-3">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </div>
+    <div class="bg-background">
+        <div class="mx-auto max-w-6xl space-y-10 px-4 py-8">
+            <div class="grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
+                {# Left Gallery #}
+                <div class="flex gap-3">
+                    {# Thumbnail list #}
+                    <div class="hidden flex-col gap-2 sm:flex">
+                        <button id="thumb-0" onclick="setProductImage(0)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-primary">
+                            <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop" alt="View 1" class="aspect-square object-cover">
+                        </button>
+                        <button id="thumb-1" onclick="setProductImage(1)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=900&q=80&fit=crop" alt="View 2" class="aspect-square object-cover">
+                        </button>
+                        <button id="thumb-2" onclick="setProductImage(2)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                            <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=900&q=80&fit=crop" alt="View 3" class="aspect-square object-cover">
+                        </button>
+                        <button id="thumb-3" onclick="setProductImage(3)" class="w-20 overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                            <img src="https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=800&h=900&q=80&fit=crop" alt="View 4" class="aspect-square object-cover">
+                        </button>
+                    </div>
 
-        {# Title and Category Header #}
-        <div class="flex items-start justify-between">
-            <div class="grid gap-1">
-                <div class="text-sm font-medium text-muted-foreground uppercase tracking-wide">Jacket</div>
-                <h1 class="text-3xl font-extrabold tracking-tight text-foreground">Stonewind Trekker</h1>
-                <div class="flex items-center gap-2 mt-1">
-                    <div class="flex items-center gap-0.5">
-                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
-                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
-                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
-                        <i data-lucide="star" class="h-4 w-4 fill-amber-400 text-amber-400"></i>
-                        <i data-lucide="star" class="h-4 w-4 text-muted-foreground/30"></i>
-                    </div>
-                    <span class="text-sm font-semibold text-foreground">4.9</span>
-                    <span class="text-xs text-muted-foreground">(128 reviews)</span>
-                </div>
-            </div>
-            {{ bc.button(variant='ghost', size='icon', class='rounded-full text-muted-foreground hover:text-foreground', icon='share-2') }}
-        </div>
-
-        <div class="border-t border-border"></div>
-
-        {# Main Grid #}
-        <div class="grid items-start gap-8 md:grid-cols-2 lg:gap-12 pt-4">
-            {# Image Gallery #}
-            <div class="grid gap-4 md:grid-cols-[100px_1fr] lg:grid-cols-[110px_1fr]">
-                {# Thumbnails #}
-                <div class="hidden flex-col gap-3 md:flex">
-                    <div data-thumb-idx="0" onclick="setMainImage(0)" class="overflow-hidden rounded-lg border-2 border-primary ring-2 ring-primary cursor-pointer transition-all">
-                        <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 1" class="aspect-4/3 object-cover h-20 w-full">
-                    </div>
-                    <div data-thumb-idx="1" onclick="setMainImage(1)" class="overflow-hidden rounded-lg border border-border cursor-pointer transition-all hover:border-foreground/50">
-                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 2" class="aspect-4/3 object-cover h-20 w-full">
-                    </div>
-                    <div data-thumb-idx="2" onclick="setMainImage(2)" class="overflow-hidden rounded-lg border border-border cursor-pointer transition-all hover:border-foreground/50">
-                        <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 3" class="aspect-4/3 object-cover h-20 w-full">
-                    </div>
-                    <div data-thumb-idx="3" onclick="setMainImage(3)" class="overflow-hidden rounded-lg border border-border cursor-pointer transition-all hover:border-foreground/50">
-                        <img src="https://images.unsplash.com/photo-1578932750294-f5075e85f44a?auto=format&fit=crop&w=400&q=80" alt="Thumbnail 4" class="aspect-4/3 object-cover h-20 w-full">
+                    {# Main Image Frame #}
+                    <div class="relative flex-1 overflow-hidden rounded-xl">
+                        <img id="main-product-img" src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop" alt="Stonewind Trekker Jacket" class="aspect-[4/5] w-full object-cover">
+                        <span class="inline-flex h-5 w-fit shrink-0 items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium text-white absolute top-3 left-3 bg-emerald-500">
+                            New Arrival
+                        </span>
+                        <button onclick="prevImage()" class="size-9 absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-muted" aria-label="Previous image">
+                            <i data-lucide="chevron-left" class="size-5"></i>
+                        </button>
+                        <button onclick="nextImage()" class="size-9 absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-muted" aria-label="Next image">
+                            <i data-lucide="chevron-right" class="size-5"></i>
+                        </button>
                     </div>
                 </div>
 
-                {# Main Image #}
-                <div class="relative overflow-hidden rounded-xl border border-border bg-muted/20">
-                    <img id="main-product-img" src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=1000&q=80" alt="Stonewind Trekker Jacket" class="aspect-4/3 h-[410px] w-full object-cover">
-                    
-                    <div class="absolute top-4 left-4 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-                        New Arrival
-                    </div>
-
-                    <div class="absolute top-1/2 left-3 -translate-y-1/2">
-                        {{ bc.button(variant='secondary', size='icon', class='rounded-full h-9 w-9 bg-background/80 backdrop-blur-xs hover:bg-background shadow-sm', icon='chevron-left', on_click='cycleImage(-1)') }}
-                    </div>
-                    <div class="absolute top-1/2 right-3 -translate-y-1/2">
-                        {{ bc.button(variant='secondary', size='icon', class='rounded-full h-9 w-9 bg-background/80 backdrop-blur-xs hover:bg-background shadow-sm', icon='chevron-right', on_click='cycleImage(1)') }}
-                    </div>
-                </div>
-            </div>
-
-            {# Product Details & Purchase Controls #}
-            <div class="grid gap-6">
-                {# Pricing #}
-                <div class="flex items-baseline gap-3">
-                    <span class="text-4xl font-extrabold tracking-tight text-foreground">$99.29</span>
-                    <span class="text-lg text-muted-foreground line-through font-medium">$129.99</span>
-                    <span class="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">Save 24%</span>
-                </div>
-
-                {# Color Options #}
-                <div class="grid gap-2">
-                    <label class="text-sm font-semibold text-foreground">Color</label>
-                    <div class="flex items-center gap-3">
-                        <button type="button" class="h-8 w-8 rounded-full bg-neutral-900 border-2 border-primary ring-2 ring-primary ring-offset-2 ring-offset-background cursor-pointer"></button>
-                        <button type="button" class="h-8 w-8 rounded-full bg-[#1e3a8a] border border-border ring-offset-2 ring-offset-background hover:scale-105 transition-transform cursor-pointer"></button>
-                        <button type="button" class="h-8 w-8 rounded-full bg-[#3f6212] border border-border ring-offset-2 ring-offset-background hover:scale-105 transition-transform cursor-pointer"></button>
-                    </div>
-                </div>
-
-                {# Size Selection #}
-                <div class="grid gap-2">
-                    <label class="text-sm font-semibold text-foreground">Size</label>
-                    <div class="flex items-center gap-2">
-                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">S</div>
-                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-primary bg-primary text-primary-foreground text-sm font-medium transition-colors shadow-xs cursor-pointer" onclick="selectSize(this)">M</div>
-                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">L</div>
-                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">XL</div>
-                        <div class="size-pill flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-sm font-medium hover:bg-muted text-foreground transition-colors cursor-pointer" onclick="selectSize(this)">2XL</div>
-                    </div>
-                </div>
-
-                {# Composition #}
-                <div class="grid gap-1">
-                    <label class="text-sm font-semibold text-foreground">Composition</label>
-                    <p class="text-sm text-muted-foreground">
-                        Premium Fabric Blend: 70% Merino Wool & 30% Acrylic with weather-resistant DWR coating.
-                    </p>
-                </div>
-
-                {# Quantity #}
-                <div class="grid gap-2">
-                    <label class="text-sm font-semibold text-foreground">Quantity</label>
-                    <div class="flex items-center gap-2">
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='minus', on_click='updateQuantity(-1)') }}
-                        <div id="qty-display" class="flex h-8 w-12 items-center justify-center rounded-md border border-border bg-card text-sm font-semibold text-foreground">
-                            1
+                {# Right Details Column #}
+                <div class="space-y-5">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="space-y-1">
+                            <p class="text-muted-foreground text-sm">Outdoor Jacket</p>
+                            <h1 class="text-2xl font-bold sm:text-3xl">Stonewind Trekker</h1>
+                            <div class="flex items-center gap-2">
+                                <div class="flex text-amber-400">
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 fill-amber-400"></i>
+                                    <i data-lucide="star" class="size-4 text-muted-foreground/30"></i>
+                                </div>
+                                <span class="text-muted-foreground text-sm">4.9 · 498 reviews</span>
+                            </div>
                         </div>
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='plus', on_click='updateQuantity(1)') }}
+                        <div class="flex gap-1">
+                            <button class="inline-flex shrink-0 items-center justify-center size-9 rounded-full hover:bg-muted text-muted-foreground" aria-label="Add to wishlist">
+                                <i data-lucide="heart" class="size-5"></i>
+                            </button>
+                            <button class="inline-flex shrink-0 items-center justify-center size-9 rounded-full hover:bg-muted text-muted-foreground" aria-label="Share">
+                                <i data-lucide="share-2" class="size-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {# Price Block #}
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-3xl font-bold">$99.29</span>
+                        <span class="text-muted-foreground text-lg line-through">$129.99</span>
+                        <span class="inline-flex h-5 w-fit items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium bg-destructive/10 text-destructive">-24%</span>
+                    </div>
+
+                    <div class="shrink-0 bg-border h-px w-full"></div>
+
+                    {# Color Selector #}
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium">Color: <span class="text-muted-foreground font-normal">Ocean Blue</span></p>
+                        <div class="flex gap-2">
+                            <button class="overflow-hidden rounded-lg border-2 transition-colors border-primary">
+                                <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=900&q=80&fit=crop" alt="Ocean Blue" class="h-16 w-16 object-cover sm:h-20 sm:w-20">
+                            </button>
+                            <button class="overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=900&q=80&fit=crop" alt="Black" class="h-16 w-16 object-cover sm:h-20 sm:w-20">
+                            </button>
+                            <button class="overflow-hidden rounded-lg border-2 transition-colors border-transparent hover:border-border">
+                                <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=900&q=80&fit=crop" alt="Olive" class="h-16 w-16 object-cover sm:h-20 sm:w-20">
+                            </button>
+                        </div>
+                    </div>
+
+                    {# Size Selector #}
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-medium">Size: <span id="selected-size" class="text-muted-foreground font-normal">M</span></p>
+                            <button class="text-muted-foreground hover:text-foreground text-xs underline underline-offset-2">Size Guide</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="selectSize(this, 'XS')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">XS</button>
+                            <button onclick="selectSize(this, 'S')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">S</button>
+                            <button onclick="selectSize(this, 'M')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-primary text-primary-foreground border-primary">M</button>
+                            <button onclick="selectSize(this, 'L')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">L</button>
+                            <button onclick="selectSize(this, 'XL')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">XL</button>
+                            <button onclick="selectSize(this, '2XL')" class="size-btn flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors bg-background hover:bg-muted border-border">2XL</button>
+                        </div>
+                    </div>
+
+                    {# Composition Note #}
+                    <div class="bg-muted/50 rounded-lg px-4 py-3 text-sm">
+                        <span class="font-medium">Composition:</span>
+                        <span class="text-muted-foreground">70% Merino Wool &amp; 30% Acrylic</span>
+                    </div>
+
+                    {# Quantity Picker #}
+                    <div class="space-y-2">
+                        <p class="text-sm font-medium">Quantity</p>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQty(-1)" class="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-background shadow-xs hover:bg-muted size-9" aria-label="Decrease quantity">
+                                <i data-lucide="minus" class="size-4"></i>
+                            </button>
+                            <span id="qty-display" class="w-10 text-center text-sm font-medium">1</span>
+                            <button onclick="updateQty(1)" class="inline-flex shrink-0 items-center justify-center rounded-md border border-input bg-background shadow-xs hover:bg-muted size-9" aria-label="Increase quantity">
+                                <i data-lucide="plus" class="size-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {# Action Buttons #}
+                    <div class="flex gap-3">
+                        <button class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/80 gap-1.5 px-4 h-12 flex-1 text-base font-medium shadow-xs transition-colors">
+                            <i data-lucide="shopping-bag" class="size-5"></i>
+                            Add to Cart
+                        </button>
+                        <button class="inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-muted hover:text-foreground gap-1.5 px-4 h-12 flex-1 text-base font-medium shadow-xs transition-colors">
+                            Buy Now
+                        </button>
+                    </div>
+
+                    {# Guarantee Badges #}
+                    <div class="grid grid-cols-3 gap-3 pt-1">
+                        <div class="bg-muted/50 flex flex-col items-center gap-1.5 rounded-lg px-2 py-3 text-center">
+                            <i data-lucide="truck" class="size-4 text-muted-foreground"></i>
+                            <p class="text-muted-foreground text-xs leading-tight">Free shipping over $50</p>
+                        </div>
+                        <div class="bg-muted/50 flex flex-col items-center gap-1.5 rounded-lg px-2 py-3 text-center">
+                            <i data-lucide="rotate-ccw" class="size-4 text-muted-foreground"></i>
+                            <p class="text-muted-foreground text-xs leading-tight">30-day returns</p>
+                        </div>
+                        <div class="bg-muted/50 flex flex-col items-center gap-1.5 rounded-lg px-2 py-3 text-center">
+                            <i data-lucide="shield" class="size-4 text-muted-foreground"></i>
+                            <p class="text-muted-foreground text-xs leading-tight">2-year warranty</p>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                {# CTA Buttons #}
-                <div class="flex flex-col gap-3 pt-2 sm:flex-row">
-                    {{ bc.button('Add to Cart', variant='default', class='h-12 flex-1 text-base font-semibold justify-center', icon='shopping-bag') }}
-                    {{ bc.button('Buy Now', class='h-12 flex-1 bg-[#D9FF66] hover:bg-[#c6eb5e] text-neutral-900 border-0 text-base font-bold justify-center shadow-xs') }}
+            {# Bottom Tabs #}
+            <div class="flex flex-col gap-2">
+                <div class="bg-muted text-muted-foreground inline-flex h-9 items-center justify-center rounded-lg p-[3px] w-full sm:w-auto">
+                    <button id="tab-btn-desc" onclick="switchTab('desc')" class="tab-btn bg-background text-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium shadow-xs">Description</button>
+                    <button id="tab-btn-specs" onclick="switchTab('specs')" class="tab-btn text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium transition-colors">Specifications</button>
+                    <button id="tab-btn-reviews" onclick="switchTab('reviews')" class="tab-btn text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center rounded-md px-3 py-1 text-sm font-medium transition-colors">Reviews (3)</button>
+                </div>
+
+                <div id="tab-desc" class="tab-content flex-1 mt-5 max-w-2xl space-y-4">
+                    <p class="text-muted-foreground leading-relaxed">The Stonewind Trekker is engineered for adventurers who demand both performance and style. Crafted from a premium merino wool blend, it provides exceptional warmth while remaining breathable during high-output activities.</p>
+                    <p class="text-muted-foreground leading-relaxed">The DWR coating repels light rain and moisture, while the articulated sleeves allow unrestricted movement on the trail or the mountain. Whether you're summit pushing or city exploring, the Trekker adapts to your environment.</p>
+                    <ul class="text-muted-foreground space-y-1.5 text-sm">
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>Merino wool blend for natural temperature regulation</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>DWR water-repellent finish</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>Articulated sleeve pattern for full range of motion</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>6 total pockets including 2 hidden interior pockets</li>
+                        <li class="flex items-start gap-2"><span class="text-primary mt-0.5">✓</span>Packable into the chest pocket</li>
+                    </ul>
+                </div>
+
+                <div id="tab-specs" class="tab-content hidden flex-1 mt-5 max-w-2xl space-y-2 text-sm text-muted-foreground">
+                    <p>• Material: 70% Merino Wool, 30% Acrylic</p>
+                    <p>• Weight: 420g (Size M)</p>
+                    <p>• Fit: Regular / Articulated</p>
+                    <p>• Country of Origin: Portugal</p>
+                </div>
+
+                <div id="tab-reviews" class="tab-content hidden flex-1 mt-5 max-w-2xl space-y-4">
+                    <div class="border-b border-border pb-3">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-semibold text-sm">Sarah Jenkins</span>
+                            <span class="text-muted-foreground text-xs">2 weeks ago</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">Incredible warmth for its weight. Took it hiking in the Rockies and it held up against chilling winds seamlessly.</p>
+                    </div>
                 </div>
             </div>
         </div>

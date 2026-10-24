@@ -155,43 +155,81 @@ def authentication():
 
 @examples_bp.route('/dashboard')
 def dashboard():
-    """Shadcn Admin Dashboard screen."""
+    """Shadcn Marketly E-Commerce Admin Dashboard screen."""
     kpi_cards = [
         {
             'title': 'Total Revenue',
-            'value': '$45,231.89',
-            'change': '+20.1% from last month',
-            'icon': 'dollar-sign'
+            'value': '$48,920',
+            'change': '+12.4%',
+            'change_type': 'positive',
+            'period': 'This Month',
+            'icon': 'coins'
         },
         {
-            'title': 'Subscriptions',
-            'value': '+2,350',
-            'change': '+180.1% from last month',
-            'icon': 'users'
+            'title': 'Orders',
+            'value': '1,284',
+            'change': '+6.1%',
+            'change_type': 'positive',
+            'period': 'This Month',
+            'icon': 'shopping-bag'
         },
         {
-            'title': 'Sales',
-            'value': '+12,234',
-            'change': '+19% from last month',
-            'icon': 'credit-card'
-        },
-        {
-            'title': 'Active Now',
-            'value': '+573',
-            'change': '+201 since last hour',
-            'icon': 'activity'
+            'title': 'Refunds',
+            'value': '$1,260',
+            'change': '-2.3%',
+            'change_type': 'negative',
+            'period': 'This Month',
+            'icon': 'receipt'
         }
     ]
 
-    recent_sales = [
-        {'name': 'Olivia Martin', 'email': 'olivia.martin@email.com', 'amount': '+$1,999.00', 'initials': 'OM'},
-        {'name': 'Jackson Lee', 'email': 'jackson.lee@email.com', 'amount': '+$39.00', 'initials': 'JL'},
-        {'name': 'Isabella Nguyen', 'email': 'isabella.nguyen@email.com', 'amount': '+$299.00', 'initials': 'IN'},
-        {'name': 'William Kim', 'email': 'will@email.com', 'amount': '+$99.00', 'initials': 'WK'},
-        {'name': 'Sofia Davis', 'email': 'sofia.davis@email.com', 'amount': '+$39.00', 'initials': 'SD'}
+    customer_inquiries = [
+        {
+            'name': 'Hannah Reid',
+            'avatar': 'https://randomuser.me/api/portraits/women/14.jpg',
+            'message': 'Do you ship to Canada?',
+            'time': '9 min ago',
+            'unread': 3
+        },
+        {
+            'name': 'Omar Haddad',
+            'avatar': 'https://randomuser.me/api/portraits/men/52.jpg',
+            'message': 'Where is my order #4821?',
+            'time': '1 h ago',
+            'unread': 0
+        },
+        {
+            'name': 'Lina Park',
+            'avatar': 'https://randomuser.me/api/portraits/women/61.jpg',
+            'message': 'Can I exchange the size?',
+            'time': '3 h ago',
+            'unread': 0
+        }
     ]
 
-    return render_template('examples/dashboard.html', kpi_cards=kpi_cards, recent_sales=recent_sales)
+    best_sellers = [
+        {'name': 'Linen Shirt', 'sold': '212 sold', 'price': '$48.00', 'icon': 'shirt'},
+        {'name': 'Leather Tote', 'sold': '164 sold', 'price': '$96.00', 'icon': 'shopping-bag'},
+        {'name': 'Wireless Earbuds', 'sold': '131 sold', 'price': '$79.00', 'icon': 'headphones'},
+        {'name': 'Trail Sneakers', 'sold': '97 sold', 'price': '$112.00', 'icon': 'footprints'}
+    ]
+
+    inventory_items = [
+        {'name': 'Canvas Cap', 'sku': 'CAP-5520', 'status': 'In Stock', 'status_type': 'emerald', 'stock': '210', 'price': '$24.00', 'icon': 'hard-hat'},
+        {'name': 'Leather Tote', 'sku': 'TOT-2210', 'status': 'Low Stock', 'status_type': 'amber', 'stock': '9', 'price': '$96.00', 'icon': 'shopping-bag'},
+        {'name': 'Linen Shirt', 'sku': 'LIN-1042', 'status': 'In Stock', 'status_type': 'emerald', 'stock': '320', 'price': '$48.00', 'icon': 'shirt'},
+        {'name': 'Trail Sneakers', 'sku': 'SNK-4401', 'status': 'Out of Stock', 'status_type': 'destructive', 'stock': '0', 'price': '$112.00', 'icon': 'footprints'},
+        {'name': 'Wireless Earbuds', 'sku': 'EAR-3307', 'status': 'In Stock', 'status_type': 'emerald', 'stock': '142', 'price': '$79.00', 'icon': 'headphones'},
+        {'name': 'Wool Scarf', 'sku': 'SCF-6613', 'status': 'Low Stock', 'status_type': 'amber', 'stock': '6', 'price': '$36.00', 'icon': 'sparkles'}
+    ]
+
+    return render_template(
+        'examples/dashboard.html',
+        kpi_cards=kpi_cards,
+        customer_inquiries=customer_inquiries,
+        best_sellers=best_sellers,
+        inventory_items=inventory_items
+    )
 
 
 @examples_bp.route('/tasks')
@@ -251,64 +289,105 @@ def projects():
     """Shadcn Projects List screen."""
     project_items = [
         {
-            'title': 'Mobile Banking Redesign',
-            'subtitle': 'iOS & Android Native App',
+            'title': 'Mobile App',
+            'category': 'Prototyping',
             'progress': 78,
             'time_left': '1 week left',
-            'date': 'May 01, 2026',
-            'status': 'In Progress',
-            'icon': '📱',
-            'team': ['JD', 'OM', 'SD']
+            'color': 'orange',
+            'icon': 'smartphone',
+            'members': [
+                {'name': 'Maya Chen', 'avatar': 'https://randomuser.me/api/portraits/women/44.jpg'},
+                {'name': 'James Wilson', 'avatar': 'https://randomuser.me/api/portraits/men/32.jpg'},
+                {'name': 'Sofia Rodriguez', 'avatar': 'https://randomuser.me/api/portraits/women/68.jpg'}
+            ]
         },
         {
-            'title': 'Architecture Governance Portal',
-            'subtitle': 'Entelim ArchiMate 3.2 Engine',
-            'progress': 92,
-            'time_left': '3 days left',
-            'date': 'June 04, 2026',
-            'status': 'Review',
-            'icon': '🏛️',
-            'team': ['JD', 'WK']
-        },
-        {
-            'title': 'Design Token CI Pipeline',
-            'subtitle': 'Tailwind & Basecoat CSS Integration',
-            'progress': 100,
-            'time_left': 'Completed',
-            'date': 'Oct 27, 2026',
-            'status': 'Done',
-            'icon': '🎨',
-            'team': ['JL', 'IN', 'OM']
-        },
-        {
-            'title': 'Enterprise SSO & IAM Bridge',
-            'subtitle': 'Okta, SAML 2.0 & OIDC Claim Sync',
-            'progress': 45,
-            'time_left': '4 weeks left',
-            'date': 'Nov 15, 2026',
-            'status': 'In Progress',
-            'icon': '🔒',
-            'team': ['WK', 'SD']
-        },
-        {
-            'title': 'Microservices Telemetry Mesh',
-            'subtitle': 'OpenTelemetry & Prometheus Ingestion',
-            'progress': 60,
+            'title': 'Design Learn Management System',
+            'category': 'UI/UX Design',
+            'progress': 32,
             'time_left': '2 weeks left',
-            'date': 'Dec 02, 2026',
-            'status': 'In Progress',
-            'icon': '⚡',
-            'team': ['JD', 'OM', 'JL']
+            'color': 'blue',
+            'icon': 'layout-dashboard',
+            'members': [
+                {'name': 'James Wilson', 'avatar': 'https://randomuser.me/api/portraits/men/32.jpg'},
+                {'name': 'Sofia Rodriguez', 'avatar': 'https://randomuser.me/api/portraits/women/68.jpg'},
+                {'name': 'Daniel Park', 'avatar': 'https://randomuser.me/api/portraits/men/15.jpg'}
+            ]
         },
         {
-            'title': 'Customer Self-Serve Billing Portal',
-            'subtitle': 'Stripe Connect & Invoice Automation',
-            'progress': 25,
+            'title': 'Chat Mobile App',
+            'category': 'Prototyping',
+            'progress': 64,
             'time_left': '6 weeks left',
-            'date': 'Dec 20, 2026',
-            'status': 'Backlog',
-            'icon': '💳',
-            'team': ['SD', 'IN']
+            'color': 'pink',
+            'icon': 'message-circle',
+            'members': [
+                {'name': 'Maya Chen', 'avatar': 'https://randomuser.me/api/portraits/women/44.jpg'},
+                {'name': 'Sofia Rodriguez', 'avatar': 'https://randomuser.me/api/portraits/women/68.jpg'},
+                {'name': 'Emma Thompson', 'avatar': 'https://randomuser.me/api/portraits/women/32.jpg'}
+            ]
+        },
+        {
+            'title': 'Store Dashboard',
+            'category': 'UI/UX Design',
+            'progress': 45,
+            'time_left': '3 weeks left',
+            'color': 'green',
+            'icon': 'chart-column',
+            'members': [
+                {'name': 'James Wilson', 'avatar': 'https://randomuser.me/api/portraits/men/32.jpg'},
+                {'name': 'Daniel Park', 'avatar': 'https://randomuser.me/api/portraits/men/15.jpg'},
+                {'name': 'Emma Thompson', 'avatar': 'https://randomuser.me/api/portraits/women/32.jpg'}
+            ]
+        },
+        {
+            'title': 'NFT Marketplace App',
+            'category': 'Prototyping',
+            'progress': 69,
+            'time_left': '4 weeks left',
+            'color': 'red',
+            'icon': 'palette',
+            'members': [
+                {'name': 'Maya Chen', 'avatar': 'https://randomuser.me/api/portraits/women/44.jpg'},
+                {'name': 'Sofia Rodriguez', 'avatar': 'https://randomuser.me/api/portraits/women/68.jpg'}
+            ]
+        },
+        {
+            'title': 'Mobile App Redesign',
+            'category': 'Prototyping',
+            'progress': 56,
+            'time_left': '2 weeks left',
+            'color': 'blue',
+            'icon': 'smartphone',
+            'members': [
+                {'name': 'James Wilson', 'avatar': 'https://randomuser.me/api/portraits/men/32.jpg'},
+                {'name': 'Daniel Park', 'avatar': 'https://randomuser.me/api/portraits/men/15.jpg'}
+            ]
+        },
+        {
+            'title': 'Learning Platform Web',
+            'category': 'UI/UX Design',
+            'progress': 82,
+            'time_left': '1 week left',
+            'color': 'yellow',
+            'icon': 'graduation-cap',
+            'members': [
+                {'name': 'Maya Chen', 'avatar': 'https://randomuser.me/api/portraits/women/44.jpg'},
+                {'name': 'Emma Thompson', 'avatar': 'https://randomuser.me/api/portraits/women/32.jpg'}
+            ]
+        },
+        {
+            'title': 'Fitness Tracker App',
+            'category': 'Development',
+            'progress': 91,
+            'time_left': '3 days left',
+            'color': 'emerald',
+            'icon': 'activity',
+            'members': [
+                {'name': 'James Wilson', 'avatar': 'https://randomuser.me/api/portraits/men/32.jpg'},
+                {'name': 'Daniel Park', 'avatar': 'https://randomuser.me/api/portraits/men/15.jpg'},
+                {'name': 'Sofia Rodriguez', 'avatar': 'https://randomuser.me/api/portraits/women/68.jpg'}
+            ]
         }
     ]
     return render_template('examples/projects.html', projects=project_items)
@@ -319,49 +398,127 @@ def changelog():
     """Shadcn Product Changelog screen."""
     changelog_entries = [
         {
-            'version': 'v1.2.0',
-            'date': 'Oct 23, 2026',
-            'summary': 'Full architectural alignment with shadcn/ui and Basecoat UI upstream engine. Introduced semantic cards, dialog zoom transitions, Inter typography tokens, and WTForms error rings.',
-            'tags': [
-                {'name': 'Major Release', 'variant': 'default'},
-                {'name': 'UI Engine', 'variant': 'secondary'}
+            'version': '4.3.0',
+            'date': 'Apr 2, 2025',
+            'badges': [
+                {'name': 'New Features', 'color': 'violet', 'icon': 'sparkles'},
+                {'name': 'Improvements', 'color': 'blue', 'icon': 'zap'}
             ],
-            'improvements': [
-                'Aligned button, card, and dialog macro DOM structure with Basecoat CSS selectors.',
-                'Integrated Inter font family for crisp, genuine shadcn aesthetics on all operating systems.',
-                'Implemented caller slot composability for data tables and dialog action footers.'
-            ],
-            'fixes': [
-                'Resolved dialog centering bug by enclosing content in a single modal container wrapper.',
-                'Fixed WTForms container class to bind native .field destructive ring selectors.'
+            'sections': [
+                {
+                    'title': 'New Features',
+                    'color': 'violet',
+                    'icon': 'sparkles',
+                    'items': [
+                        'Introduced an AI-powered search bar with semantic query understanding.',
+                        'Added real-time collaboration — multiple users can now edit dashboards simultaneously.',
+                        'New chart types: Waterfall, Funnel, and Sankey diagrams.'
+                    ]
+                },
+                {
+                    'title': 'Improvements',
+                    'color': 'blue',
+                    'icon': 'zap',
+                    'items': [
+                        'Redesigned the onboarding flow with interactive step-by-step guidance.',
+                        'Dashboard loading time reduced by 40% through lazy rendering.'
+                    ]
+                }
             ]
         },
         {
-            'version': 'v1.1.0',
-            'date': 'Oct 15, 2026',
-            'summary': 'Packaged flask-basecoat as an installable Python module with automated anti-drift CI ratchets and WTForms adapters.',
-            'tags': [
-                {'name': 'Governance', 'variant': 'secondary'},
-                {'name': 'Packaging', 'variant': 'outline'}
+            'version': '4.2.92',
+            'date': 'Mar 22, 2025',
+            'badges': [
+                {'name': 'Improvements', 'color': 'blue', 'icon': 'zap'},
+                {'name': 'Security', 'color': 'emerald', 'icon': 'shield-check'},
+                {'name': 'Bug Fixes', 'color': 'rose', 'icon': 'bug'}
             ],
-            'improvements': [
-                'Added pyproject.toml and setuptools build support.',
-                'Implemented check_raw_components.py CI ratchet locking baseline raw tag counts.'
-            ],
-            'fixes': [
-                'Fixed setuptools 84+ pkg_resources compatibility in virtual environment.'
+            'sections': [
+                {
+                    'title': 'Improvements',
+                    'color': 'blue',
+                    'icon': 'zap',
+                    'items': [
+                        'Improved tooltip UI and keyboard navigation in settings panels.',
+                        'New bulk-action toolbar in the user management table.'
+                    ]
+                },
+                {
+                    'title': 'Security',
+                    'color': 'emerald',
+                    'icon': 'shield-check',
+                    'items': [
+                        'Added SAML request signing support for enterprise SSO providers.',
+                        'Enabled SAML encrypted assertion claims.'
+                    ]
+                },
+                {
+                    'title': 'Bug Fixes',
+                    'color': 'rose',
+                    'icon': 'bug',
+                    'items': [
+                        'Fixed a race condition causing duplicate webhook deliveries.',
+                        'Resolved layout shift on initial page load in Safari.'
+                    ]
+                }
             ]
         },
         {
-            'version': 'v1.0.0',
-            'date': 'Oct 01, 2026',
-            'summary': 'Initial release of flask-basecoat boilerplate with Basecoat UI and Tailwind CSS.',
-            'tags': [
-                {'name': 'Initial Release', 'variant': 'secondary'}
+            'version': '4.2.88',
+            'date': 'Mar 15, 2025',
+            'badges': [
+                {'name': 'Improvements', 'color': 'blue', 'icon': 'zap'},
+                {'name': 'Bug Fixes', 'color': 'rose', 'icon': 'bug'}
             ],
-            'improvements': [
-                'Replaced obsolete Semantic UI with Basecoat UI and Tailwind utility classes.',
-                'Modernized Python dependencies to Python 3.11+.'
+            'sections': [
+                {
+                    'title': 'Improvements',
+                    'color': 'blue',
+                    'icon': 'zap',
+                    'items': [
+                        'Enhanced dashboard loading performance with incremental data fetching.',
+                        'New advanced filtering options for the user management view.'
+                    ]
+                },
+                {
+                    'title': 'Bug Fixes',
+                    'color': 'rose',
+                    'icon': 'bug',
+                    'items': [
+                        'Fixed report generation failing silently for datasets over 50k rows.',
+                        'Resolved minor UI glitches on small-screen mobile devices.',
+                        'Corrected incorrect timezone conversion in scheduled report emails.'
+                    ]
+                }
+            ]
+        },
+        {
+            'version': '4.2.85',
+            'date': 'Mar 8, 2025',
+            'badges': [
+                {'name': 'New Features', 'color': 'violet', 'icon': 'sparkles'},
+                {'name': 'Bug Fixes', 'color': 'rose', 'icon': 'bug'}
+            ],
+            'sections': [
+                {
+                    'title': 'New Features',
+                    'color': 'violet',
+                    'icon': 'sparkles',
+                    'items': [
+                        'Dark mode support across the entire application.',
+                        'Customizable notification preferences per workspace.',
+                        'CSV and PDF export for all data tables.'
+                    ]
+                },
+                {
+                    'title': 'Bug Fixes',
+                    'color': 'rose',
+                    'icon': 'bug',
+                    'items': [
+                        'Fixed broken pagination on the audit log screen.'
+                    ]
+                }
             ]
         }
     ]
@@ -382,7 +539,70 @@ def coming_soon():
 @examples_bp.route('/blog')
 def blog():
     """Shadcn Blog & Articles screen."""
-    return render_template('examples/blog.html')
+    hero_post = {
+        'title': 'Mastering UI Elements: A Practical Guide for Designers',
+        'badge': 'Business',
+        'image': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80'
+    }
+    featured_posts = [
+        {
+            'title': 'Revolutionizing industries through SaaS implementation',
+            'read_time': '10 min',
+            'image': 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+            'title': 'Synergizing saas and UX design for elevating digital experiences',
+            'read_time': '8 min',
+            'image': 'https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+            'title': 'Navigating saas waters with intuitive UI and UX',
+            'read_time': '9 min',
+            'image': 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+            'title': 'Sculpting saas success - the art of UI and UX design',
+            'read_time': '4 min',
+            'image': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+            'title': 'Transforming saas platforms - a UI/UX design odyssey',
+            'read_time': '12 min',
+            'image': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80'
+        }
+    ]
+    recent_posts = [
+        {
+            'title': 'Mastering UI Elements: A Practical Guide for Designers',
+            'snippet': 'Dive into the world of user interfaces with our expert guides, latest trends, and practical tips.',
+            'author': 'Jennifer Taylor',
+            'avatar': 'https://i.pravatar.cc/48?img=5',
+            'read_time': '3 min read',
+            'image': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+            'title': 'Crafting Seamless Experiences: The Art of Intuitive UI Design',
+            'snippet': 'Explore the principles and techniques that drive user-centric UI design, ensuring a seamless and intuitive experience for your audience.',
+            'author': 'Jennifer Taylor',
+            'avatar': 'https://i.pravatar.cc/48?img=5',
+            'read_time': '5 min read',
+            'image': 'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+            'title': 'Beyond Aesthetics: The Power of Emotional UX Design',
+            'snippet': 'Delve into the realm of emotional design and discover how incorporating empathy and psychological insights can elevate user experiences.',
+            'author': 'Ryan A.',
+            'avatar': 'https://i.pravatar.cc/48?img=12',
+            'read_time': '2 min read',
+            'image': 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80'
+        }
+    ]
+    return render_template(
+        'examples/blog.html',
+        hero_post=hero_post,
+        featured_posts=featured_posts,
+        recent_posts=recent_posts
+    )
 
 
 @examples_bp.route('/onboarding')
@@ -412,7 +632,177 @@ def playground():
 @examples_bp.route('/product-list')
 def product_list():
     """Shadcn Product Catalog screen."""
-    return render_template('examples/product_list.html')
+    products = [
+        {
+            'id': 1,
+            'title': 'iPhone 14 Pro Max 256GB Space Black',
+            'price': '$999.00',
+            'old_price': '$1299.00',
+            'discount': '-23%',
+            'rating': '4.8',
+            'orders': '234',
+            'delivery': 'Tomorrow',
+            'is_new': True,
+            'image': 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&q=80&fit=crop',
+            'category': 'phones',
+            'brand': 'apple'
+        },
+        {
+            'id': 2,
+            'title': 'Samsung Galaxy S23 Ultra 512GB',
+            'price': '$899.00',
+            'old_price': '$1199.00',
+            'discount': '-25%',
+            'rating': '4.7',
+            'orders': '189',
+            'delivery': '2 days',
+            'is_new': True,
+            'image': 'https://images.unsplash.com/photo-1610945264803-c22b62831454?w=400&h=300&q=80&fit=crop',
+            'category': 'phones',
+            'brand': 'samsung'
+        },
+        {
+            'id': 3,
+            'title': 'Huawei P50 Pro 128GB Golden',
+            'price': '$699.00',
+            'old_price': '$899.00',
+            'discount': '-22%',
+            'rating': '4.5',
+            'orders': '154',
+            'delivery': '3 days',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&q=80&fit=crop',
+            'category': 'phones',
+            'brand': 'huawei'
+        },
+        {
+            'id': 4,
+            'title': 'Sony WH-1000XM5 Wireless Headphones',
+            'price': '$299.00',
+            'old_price': '$399.00',
+            'discount': '-25%',
+            'rating': '4.9',
+            'orders': '456',
+            'delivery': 'Tomorrow',
+            'is_new': True,
+            'image': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&q=80&fit=crop',
+            'category': 'headsets',
+            'brand': 'sony'
+        },
+        {
+            'id': 5,
+            'title': 'Bose QuietComfort 45 Headphones',
+            'price': '$249.00',
+            'old_price': None,
+            'discount': None,
+            'rating': '4.6',
+            'orders': '321',
+            'delivery': '2 days',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&q=80&fit=crop',
+            'category': 'headsets',
+            'brand': 'bose'
+        },
+        {
+            'id': 6,
+            'title': 'MacBook Pro 16" M2 Pro 512GB Space Gray',
+            'price': '$1999.00',
+            'old_price': '$2499.00',
+            'discount': '-20%',
+            'rating': '4.9',
+            'orders': '112',
+            'delivery': 'Tomorrow',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&q=80&fit=crop',
+            'category': 'laptops',
+            'brand': 'apple'
+        },
+        {
+            'id': 7,
+            'title': 'Dell XPS 15 9530 i7 1TB',
+            'price': '$1499.00',
+            'old_price': '$1799.00',
+            'discount': '-16%',
+            'rating': '4.6',
+            'orders': '89',
+            'delivery': 'Within 7 days',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=300&q=80&fit=crop',
+            'category': 'laptops',
+            'brand': 'dell'
+        },
+        {
+            'id': 8,
+            'title': 'Microsoft Surface Laptop 5 15"',
+            'price': '$1299.00',
+            'old_price': None,
+            'discount': None,
+            'rating': '4.5',
+            'orders': '76',
+            'delivery': 'Tomorrow',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1611186871525-9b90e2e48fde?w=400&h=300&q=80&fit=crop',
+            'category': 'laptops',
+            'brand': 'microsoft'
+        },
+        {
+            'id': 9,
+            'title': 'LG C3 55" 4K OLED evo TV',
+            'price': '$1199.00',
+            'old_price': '$1499.00',
+            'discount': '-20%',
+            'rating': '4.8',
+            'orders': '64',
+            'delivery': 'Within 7 days',
+            'is_new': True,
+            'image': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829e1?w=400&h=300&q=80&fit=crop',
+            'category': 'tv',
+            'brand': 'lg'
+        },
+        {
+            'id': 10,
+            'title': 'Samsung 65" QN90C Neo QLED 4K TV',
+            'price': '$1599.00',
+            'old_price': None,
+            'discount': None,
+            'rating': '4.7',
+            'orders': '53',
+            'delivery': 'Within 7 days',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=300&q=80&fit=crop',
+            'category': 'tv',
+            'brand': 'samsung'
+        },
+        {
+            'id': 11,
+            'title': 'JBL Charge 5 Portable Bluetooth Speaker',
+            'price': '$179.00',
+            'old_price': None,
+            'discount': None,
+            'rating': '4.8',
+            'orders': '512',
+            'delivery': 'Today',
+            'is_new': False,
+            'image': 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=300&q=80&fit=crop',
+            'category': 'sound',
+            'brand': 'jbl'
+        },
+        {
+            'id': 12,
+            'title': 'Apple Watch Series 9 GPS 45mm Midnight',
+            'price': '$399.00',
+            'old_price': None,
+            'discount': None,
+            'rating': '4.9',
+            'orders': '342',
+            'delivery': 'Today',
+            'is_new': True,
+            'image': 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=300&q=80&fit=crop',
+            'category': 'watches',
+            'brand': 'apple'
+        }
+    ]
+    return render_template('examples/product_list.html', products=products)
 
 
 @examples_bp.route('/product-detail')

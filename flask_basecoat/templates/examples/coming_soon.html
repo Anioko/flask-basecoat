@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon - shadcn/ui Example</title>
+    <title>Coming Soon Page - Shadcn UI Examples</title>
     
     {# Inter Font #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,21 +21,22 @@
             if (window.lucide) { lucide.createIcons(); }
             startCountdown();
         });
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
 
         function startCountdown() {
-            let days = 28, hours = 14, mins = 36, secs = 45;
+            let days = 30, hours = 0, mins = 59, secs = 57;
             setInterval(() => {
                 secs--;
                 if (secs < 0) { secs = 59; mins--; }
                 if (mins < 0) { mins = 59; hours--; }
                 if (hours < 0) { hours = 23; days--; }
-                document.getElementById('c-days').textContent = String(days).padStart(2, '0');
-                document.getElementById('c-hours').textContent = String(hours).padStart(2, '0');
-                document.getElementById('c-mins').textContent = String(mins).padStart(2, '0');
-                document.getElementById('c-secs').textContent = String(secs).padStart(2, '0');
+                const dEl = document.getElementById('c-days');
+                const hEl = document.getElementById('c-hours');
+                const mEl = document.getElementById('c-mins');
+                const sEl = document.getElementById('c-secs');
+                if (dEl) dEl.textContent = String(days).padStart(2, '0');
+                if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+                if (mEl) mEl.textContent = String(mins).padStart(2, '0');
+                if (sEl) sEl.textContent = String(secs).padStart(2, '0');
             }, 1000);
         }
     </script>
@@ -43,102 +44,114 @@
 <body class="min-h-full bg-background text-foreground antialiased font-sans">
     {{ bc.toast_container() }}
 
-    <div class="grid min-h-screen lg:grid-cols-2">
-        {# Left Section (Photo Hero + Navigation) #}
-        <div class="relative flex flex-1 flex-col items-start justify-between bg-neutral-900 p-8 lg:p-12 text-white overflow-hidden">
-            {# Background Photo Overlay #}
-            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80');"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
-
-            {# Brand Logo #}
-            <div class="relative z-10 flex w-full items-center justify-between">
-                <div class="flex items-center gap-2 font-bold tracking-tight text-lg text-white">
-                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <div class="bg-background">
+        <div class="grid min-h-screen lg:grid-cols-2">
+            {# Left Hero Presentation Pane #}
+            <div class="relative hidden flex-col items-start justify-between overflow-hidden bg-zinc-950 p-12 lg:flex">
+                <div class="absolute top-[-80px] left-[-80px] size-[400px] rounded-full bg-violet-600/30 blur-[120px]"></div>
+                <div class="absolute right-[-60px] bottom-[-60px] size-[350px] rounded-full bg-indigo-500/20 blur-[100px]"></div>
+                <div class="absolute top-1/2 left-1/2 size-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/10 blur-[80px]"></div>
+                <div class="absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle, rgb(255, 255, 255) 1px, transparent 1px); background-size: 32px 32px;"></div>
+                
+                <div class="flex items-center gap-2 font-bold text-white text-lg relative z-10">
+                    <svg class="size-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
                     </svg>
-                    <span>Acme Logo</span>
+                    <span>shadcn/ui</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm', class='text-white hover:text-white hover:bg-white/10') }}
-                    {{ bc.button(variant='outline', size='sm', class='text-white border-white/20 hover:bg-white/10', icon='moon', on_click='toggleDarkMode()') }}
+
+                <div class="relative z-10 max-w-md space-y-4">
+                    <p class="text-3xl leading-snug font-semibold text-balance text-white">Something great is on its way.</p>
+                    <p class="text-sm leading-relaxed text-balance text-zinc-400">We're putting the finishing touches on something we think you'll really love. Follow us for updates.</p>
+                    <nav class="flex flex-wrap gap-x-6 gap-y-2">
+                        <a class="text-xs text-zinc-400 transition-colors hover:text-white" href="#">About</a>
+                        <a class="text-xs text-zinc-400 transition-colors hover:text-white" href="#">Contact</a>
+                        <a class="text-xs text-zinc-400 transition-colors hover:text-white" href="#">Help</a>
+                        <a class="text-xs text-zinc-400 transition-colors hover:text-white" href="#">Privacy</a>
+                    </nav>
                 </div>
+                <p class="relative z-10 text-xs text-zinc-600">© 2026 Shadcnexamples Inc.</p>
             </div>
 
-            {# Middle Inspiration Quote #}
-            <div class="relative z-10 space-y-3 max-w-md my-auto py-12">
-                <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-sm text-white">
-                    Coming Soon
-                </span>
-                <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl text-white">
-                    Designing the future of developer tools.
-                </h2>
-                <p class="text-sm text-neutral-300">
-                    We are building a unified workspace for real-time collaboration, generative workflows, and automated release verification.
-                </p>
-            </div>
+            {# Right Countdown & Subscription Pane #}
+            <div class="flex min-h-screen flex-col items-center justify-center px-6 py-16 lg:px-16">
+                <div class="w-full max-w-md space-y-12">
+                    <div class="flex items-center gap-2 font-bold text-foreground text-lg lg:hidden">
+                        <svg class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+                        </svg>
+                        <span>shadcn/ui</span>
+                    </div>
 
-            {# Bottom Nav Links #}
-            <nav class="relative z-10 flex w-full gap-6 text-sm text-neutral-400">
-                <a href="#" class="hover:text-white transition-colors">About</a>
-                <a href="#" class="hover:text-white transition-colors">Contact</a>
-                <a href="#" class="hover:text-white transition-colors">Feedback</a>
-                <a href="#" class="hover:text-white transition-colors">Help</a>
-            </nav>
-        </div>
+                    <div class="space-y-4">
+                        <span class="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-600 dark:text-violet-400">
+                            <span class="size-1.5 animate-pulse rounded-full bg-violet-500"></span>In development
+                        </span>
+                        <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">Coming Soon</h1>
+                        <p class="text-muted-foreground">Stay connected and be the first to know when we launch.</p>
+                    </div>
 
-        {# Right Section (Countdown + Subscription) #}
-        <div class="relative flex flex-1 flex-col items-center justify-between p-8 lg:p-12 bg-card">
-            <div class="flex w-full items-center justify-end">
-                {{ bc.button(variant='ghost', size='icon', class='rounded-full text-muted-foreground hover:text-foreground', icon='share-2') }}
-            </div>
+                    {# Countdown Display #}
+                    <div class="grid grid-cols-4 gap-3">
+                        <div class="relative">
+                            <div class="bg-muted flex flex-col items-center rounded-lg border border-border px-2 py-4 text-center space-y-1">
+                                <span id="c-days" class="text-3xl font-bold tabular-nums sm:text-4xl">30</span>
+                                <span class="text-muted-foreground text-[10px] font-medium tracking-wider uppercase">Days</span>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="bg-muted flex flex-col items-center rounded-lg border border-border px-2 py-4 text-center space-y-1">
+                                <span id="c-hours" class="text-3xl font-bold tabular-nums sm:text-4xl">00</span>
+                                <span class="text-muted-foreground text-[10px] font-medium tracking-wider uppercase">Hours</span>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="bg-muted flex flex-col items-center rounded-lg border border-border px-2 py-4 text-center space-y-1">
+                                <span id="c-mins" class="text-3xl font-bold tabular-nums sm:text-4xl">59</span>
+                                <span class="text-muted-foreground text-[10px] font-medium tracking-wider uppercase">Minutes</span>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="bg-muted flex flex-col items-center rounded-lg border border-border px-2 py-4 text-center space-y-1">
+                                <span id="c-secs" class="text-3xl font-bold tabular-nums sm:text-4xl">57</span>
+                                <span class="text-muted-foreground text-[10px] font-medium tracking-wider uppercase">Seconds</span>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="flex flex-col items-center space-y-12 text-center max-w-md my-auto py-12">
-                {# Heading #}
-                <div class="space-y-2">
-                    <h1 class="text-4xl font-extrabold tracking-tight text-[#6a5acd] lg:text-5xl">Coming Soon</h1>
-                    <p class="text-muted-foreground text-base">Stay Connected, Stay Updated!</p>
+                    {# Email Notification Form #}
+                    <div class="space-y-3">
+                        <h2 class="text-muted-foreground text-sm font-semibold tracking-widest uppercase">Get notified</h2>
+                        <form class="flex gap-2" method="POST">
+                            <input class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 flex-1" required placeholder="your@email.com" type="email" name="email">
+                            <button class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 h-9 px-4 text-sm font-medium transition-colors" type="submit">Notify me</button>
+                        </form>
+                    </div>
+
+                    {# Social Links #}
+                    <div class="flex items-center justify-between border-t border-border pt-8">
+                        <p class="text-muted-foreground text-xs">Follow us for updates</p>
+                        <div class="flex items-center gap-3">
+                            <a aria-label="Twitter" class="text-muted-foreground hover:text-foreground transition-colors" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                                </svg>
+                            </a>
+                            <a aria-label="Facebook" class="text-muted-foreground hover:text-foreground transition-colors" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </a>
+                            <a aria-label="Instagram" class="text-muted-foreground hover:text-foreground transition-colors" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
-                {# Countdown Timer Display #}
-                <div class="grid grid-cols-4 gap-3 sm:gap-4 w-full">
-                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
-                        <span id="c-days" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">28</span>
-                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Days</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
-                        <span id="c-hours" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">14</span>
-                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Hours</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
-                        <span id="c-mins" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground tabular-nums">36</span>
-                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Mins</span>
-                    </div>
-                    <div class="flex flex-col items-center justify-center rounded-xl border border-border bg-muted/40 p-3 sm:p-4 shadow-2xs">
-                        <span id="c-secs" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#6a5acd] tabular-nums">45</span>
-                        <span class="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">Secs</span>
-                    </div>
-                </div>
-
-                {# Email Capture Form #}
-                <div class="space-y-4 w-full">
-                    <h2 class="text-xl font-bold tracking-tight text-foreground sm:text-2xl">Get Updates!</h2>
-                    <form class="flex w-full rounded-full border border-border p-1 bg-background shadow-xs focus-within:ring-2 focus-within:ring-ring" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
-                        <input
-                            type="email"
-                            required
-                            placeholder="Email Address"
-                            class="flex-1 rounded-full border-none bg-transparent px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                        >
-                        {{ bc.button('Send Now', variant='default', class='rounded-full px-5 text-sm font-semibold') }}
-                    </form>
-                </div>
-            </div>
-
-            {# Social Icons #}
-            <div class="flex w-full justify-center gap-6 lg:justify-end text-muted-foreground pt-6">
-                <a href="#" class="hover:text-foreground transition-colors"><i data-lucide="facebook" class="h-5 w-5"></i></a>
-                <a href="#" class="hover:text-foreground transition-colors"><i data-lucide="twitter" class="h-5 w-5"></i></a>
-                <a href="#" class="hover:text-foreground transition-colors"><i data-lucide="linkedin" class="h-5 w-5"></i></a>
             </div>
         </div>
     </div>

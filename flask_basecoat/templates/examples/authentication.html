@@ -29,12 +29,8 @@
     {{ bc.toast_container() }}
 
     <div class="relative min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        {# Top Right Nav Actions #}
-        <div class="absolute top-4 right-4 md:top-8 md:right-8 z-20 flex items-center gap-2">
-            {{ bc.button('Back to Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-            {{ bc.button('Toggle Dark', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            {{ bc.button('Login', href='#', variant='outline', size='sm') }}
-        </div>
+        {# Top Right Login Button #}
+        <a class="inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm font-medium whitespace-nowrap transition-colors hover:bg-muted hover:text-foreground h-9 px-3 absolute top-4 right-4 md:top-8 md:right-8 z-20" href="{{ url_for('basecoat_examples.authentication') }}">Login</a>
 
         {# Left Brand Hero (Hidden on Mobile) #}
         <div class="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r border-border">

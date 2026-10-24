@@ -94,7 +94,7 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         self.assertEqual(resp_dash.status_code, 200)
         self.assertIn('Dashboard', resp_dash.get_data(as_text=True))
         self.assertIn('Total Revenue', resp_dash.get_data(as_text=True))
-        self.assertIn('Documents', resp_dash.get_data(as_text=True))
+        self.assertIn('Olivia', resp_dash.get_data(as_text=True))
 
         # 4. /examples/tasks
         resp_tasks = client.get('/examples/tasks')
@@ -111,7 +111,7 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         # 6. /examples/profile
         resp_profile = client.get('/examples/profile')
         self.assertEqual(resp_profile.status_code, 200)
-        self.assertIn('Sophia Anderson', resp_profile.get_data(as_text=True))
+        self.assertIn('John Doe', resp_profile.get_data(as_text=True))
         self.assertIn('Personal', resp_profile.get_data(as_text=True))
 
         # 7. /examples/projects
@@ -124,50 +124,50 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         resp_changelog = client.get('/examples/changelog')
         self.assertEqual(resp_changelog.status_code, 200)
         self.assertIn('What', resp_changelog.get_data(as_text=True))
-        self.assertIn('Version 4.2.92', resp_changelog.get_data(as_text=True))
+        self.assertIn('4.3.0', resp_changelog.get_data(as_text=True))
 
         # 9. /examples/coming-soon
         resp_cs = client.get('/examples/coming-soon')
         self.assertEqual(resp_cs.status_code, 200)
         self.assertIn('Coming Soon', resp_cs.get_data(as_text=True))
-        self.assertIn('Get Updates!', resp_cs.get_data(as_text=True))
+        self.assertIn('Get notified', resp_cs.get_data(as_text=True))
 
         # 10. /examples/blog
         resp_blog = client.get('/examples/blog')
         self.assertEqual(resp_blog.status_code, 200)
         self.assertIn('Recent Posts', resp_blog.get_data(as_text=True))
-        self.assertIn('Unlocking Business Efficiency', resp_blog.get_data(as_text=True))
+        self.assertIn('Mastering UI Elements', resp_blog.get_data(as_text=True))
 
         # 11. /examples/onboarding
         resp_onboard = client.get('/examples/onboarding')
         self.assertEqual(resp_onboard.status_code, 200)
-        self.assertIn('Choose Account Type', resp_onboard.get_data(as_text=True))
+        self.assertIn('Personal Account', resp_onboard.get_data(as_text=True))
         self.assertIn('Personal Account', resp_onboard.get_data(as_text=True))
         self.assertIn('Corporate Account', resp_onboard.get_data(as_text=True))
 
         # 12. /examples/chat
         resp_chat = client.get('/examples/chat')
         self.assertEqual(resp_chat.status_code, 200)
-        self.assertIn('Acme Messenger', resp_chat.get_data(as_text=True))
+        self.assertIn('Messages', resp_chat.get_data(as_text=True))
         self.assertIn('Shannon Baker', resp_chat.get_data(as_text=True))
 
         # 13. /examples/ai-chat
         resp_ai = client.get('/examples/ai-chat')
         self.assertEqual(resp_ai.status_code, 200)
-        self.assertIn('How can I help you today?', resp_ai.get_data(as_text=True))
-        self.assertIn('Can you fly?', resp_ai.get_data(as_text=True))
+        self.assertIn('Welcome, John Doe', resp_ai.get_data(as_text=True))
+        self.assertIn('Best icons library', resp_ai.get_data(as_text=True))
 
         # 14. /examples/playground
         resp_play = client.get('/examples/playground')
         self.assertEqual(resp_play.status_code, 200)
         self.assertIn('Playground', resp_play.get_data(as_text=True))
-        self.assertIn('System Prompt', resp_play.get_data(as_text=True))
+        self.assertIn('text-davinci-003', resp_play.get_data(as_text=True))
 
         # 15. /examples/product-list
         resp_plist = client.get('/examples/product-list')
         self.assertEqual(resp_plist.status_code, 200)
-        self.assertIn('Hardware Catalog', resp_plist.get_data(as_text=True))
-        self.assertIn('Headsets', resp_plist.get_data(as_text=True))
+        self.assertIn('iPhone 14 Pro Max', resp_plist.get_data(as_text=True))
+        self.assertIn('Sony WH-1000XM5', resp_plist.get_data(as_text=True))
 
         # 16. /examples/product-detail
         resp_pdetail = client.get('/examples/product-detail')

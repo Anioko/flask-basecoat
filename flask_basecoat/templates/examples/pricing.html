@@ -64,31 +64,19 @@
         }
     </script>
 </head>
-<body class="min-h-full bg-background text-foreground antialiased font-sans px-4 py-12 sm:px-6 lg:px-8">
+<body class="min-h-full bg-background text-foreground antialiased font-sans">
     {{ bc.toast_container() }}
 
-    <div class="mx-auto max-w-7xl">
-        {# Top bar with links and theme toggle #}
-        <div class="flex items-center justify-between border-b border-border pb-6 mb-12">
-            <div class="flex items-center gap-2 font-bold tracking-tight text-lg">
-                <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                </svg>
-                <span>Acme Platform</span>
-            </div>
-            <div class="flex items-center gap-3">
-                {{ bc.button('All Examples', href=url_for('basecoat_examples.index'), variant='ghost', size='sm') }}
-                {{ bc.button('Toggle Theme', variant='outline', size='sm', icon='moon', on_click='toggleDarkMode()') }}
-            </div>
-        </div>
-
-        {# Header Section #}
-        <header class="mb-12 space-y-4 text-center">
-            <h1 class="text-4xl font-bold tracking-tight md:text-5xl">Pricing</h1>
-            <p class="text-muted-foreground text-lg text-balance max-w-2xl mx-auto">
-                Upgrade to link your custom domain, track your visits, edit your content & much more.
-            </p>
-        </header>
+    <div class="bg-background">
+        <div class="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl">
+                {# Header Section #}
+                <header class="mb-12 space-y-4 text-center">
+                    <h1 class="text-4xl font-bold tracking-tight md:text-5xl">Pricing</h1>
+                    <p class="text-muted-foreground text-lg text-balance max-w-2xl mx-auto">
+                        Upgrade to link your custom domain, track your visits, edit your content &amp; much more.
+                    </p>
+                </header>
 
         {# Billing Toggle Switcher #}
         <div class="mb-12 text-center">
@@ -354,6 +342,8 @@
                 {{ bc.button('Compare plans', variant='ghost', class='text-muted-foreground mt-8 w-full justify-center text-xs', icon_right='download') }}
             </div>
 
+        </div>
+            </div>
         </div>
     </div>
 </body>
