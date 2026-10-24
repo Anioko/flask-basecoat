@@ -38,7 +38,7 @@
 
   /* Floating layers are positioned by flask-basecoat.js with fixed coordinates. */
   [data-floating] {
-    position: fixed;
+    position: fixed !important; /* recipe classes such as the select content's `relative` live in the utilities layer and would win otherwise */
     inset-inline-start: 0;
     top: 0;
     z-index: 50;
