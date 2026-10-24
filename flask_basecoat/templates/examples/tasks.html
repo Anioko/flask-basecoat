@@ -97,7 +97,8 @@
 
         {# Tasks Data Table #}
         <div class="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
-            {% call bc.table() %}
+            <div data-slot="table-container" class="relative w-full overflow-x-auto">
+                <table data-slot="table" class="w-full caption-bottom text-sm">
                 <thead>
                     <tr class="border-b border-border bg-muted/40">
                         <th class="h-10 w-12 px-4 text-left align-middle font-medium text-muted-foreground">
@@ -163,12 +164,13 @@
                                 </div>
                             </td>
                             <td class="p-4 align-middle text-right">
-                                {{ bc.button(variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground hover:text-foreground', icon='more-horizontal') }}
+                                {{ bc.button(content='<i data-lucide="more-horizontal"></i>', variant='ghost', size='icon', class='h-8 w-8 text-muted-foreground hover:text-foreground') }}
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
-            {% endcall %}
+                </table>
+            </div>
 
             {# Bottom Pagination & Selection Summary Bar #}
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4 border-t border-border text-xs text-muted-foreground">
@@ -187,10 +189,10 @@
                     </div>
                     <span>Page 1 of 10</span>
                     <div class="flex items-center gap-1">
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevrons-left') }}
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevron-left') }}
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevron-right') }}
-                        {{ bc.button(variant='outline', size='icon', class='h-8 w-8', icon='chevrons-right') }}
+                        {{ bc.button(content='<i data-lucide="chevrons-left"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                        {{ bc.button(content='<i data-lucide="chevron-left"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                        {{ bc.button(content='<i data-lucide="chevron-right"></i>', variant='outline', size='icon', class='h-8 w-8') }}
+                        {{ bc.button(content='<i data-lucide="chevrons-right"></i>', variant='outline', size='icon', class='h-8 w-8') }}
                     </div>
                 </div>
             </div>
