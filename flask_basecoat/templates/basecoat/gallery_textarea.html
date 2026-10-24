@@ -1,0 +1,70 @@
+{% from 'basecoat/button.html' import button %}
+{% from 'basecoat/textarea.html' import textarea %}
+{% from 'basecoat/label.html' import label %}
+<!DOCTYPE html>
+<html lang="en" class="h-full{% if theme == 'dark' %} dark{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textarea - Basecoat UI Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/basecoat.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <script src="{{ url_for('basecoat.static', filename='js/all.min.js') }}" defer></script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 font-sans">
+    <main class="max-w-3xl mx-auto space-y-8" data-gallery="textarea" data-theme="{{ theme }}">
+        <header class="flex items-center justify-between border-b border-border pb-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Textarea</h1>
+                <p class="text-sm text-muted-foreground mt-1">Every size and state ({{ theme }} theme).</p>
+            </div>
+            <nav class="flex items-center gap-2" aria-label="Gallery">
+                {{ button(content='Gallery index', variant='ghost', href=url_for('basecoat_gallery.gallery'), id='gallery-index-link') }}
+                {{ button(content='Light', variant='outline', size='sm', href=url_for('basecoat_gallery.gallery_textarea'), id='theme-light') }}
+                {{ button(content='Dark', variant='outline', size='sm', href=url_for('basecoat_gallery.gallery_textarea', theme='dark'), id='theme-dark') }}
+            </nav>
+        </header>
+
+        <section class="space-y-3" aria-labelledby="h-default">
+            <h2 id="h-default" class="text-lg font-semibold">Default</h2>
+            {{ textarea(id='state-default', name='default', placeholder='Type your message here.', aria_label='Default textarea') }}
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-value">
+            <h2 id="h-value" class="text-lg font-semibold">With value</h2>
+            {% call textarea(id='state-value', name='value', aria_label='Textarea with a value') %}A value passed through the call block.{% endcall %}
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-sizes">
+            <h2 id="h-sizes" class="text-lg font-semibold">Sizes</h2>
+            {{ textarea(id='size-rows-2', rows=2, placeholder='Two rows', aria_label='Two rows') }}
+            {{ textarea(id='size-rows-6', rows=6, placeholder='Six rows', aria_label='Six rows') }}
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-states">
+            <h2 id="h-states" class="text-lg font-semibold">States</h2>
+            {{ textarea(id='state-disabled', content='Disabled', disabled=true, aria_label='Disabled textarea') }}
+            {{ textarea(id='state-readonly', content='Read only', readonly=true, aria_label='Read-only textarea') }}
+            {{ textarea(id='state-required', placeholder='Required', required=true, aria_label='Required textarea') }}
+            {{ textarea(id='state-invalid', content='Invalid entry', invalid=true, aria_label='Invalid textarea') }}
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-label">
+            <h2 id="h-label" class="text-lg font-semibold">With label and text</h2>
+            <div class="grid w-full gap-3">
+                {{ label(for='message', content='Your message') }}
+                {{ textarea(id='message', name='message', placeholder='Type your message here.', aria_describedby='message-help') }}
+                <p id="message-help" class="text-sm text-muted-foreground">Your message will be copied to the support team.</p>
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-button">
+            <h2 id="h-button" class="text-lg font-semibold">With button</h2>
+            <form action="#" onsubmit="return false" class="grid w-full gap-2">
+                {{ textarea(id='button-message', name='button_message', placeholder='Type your message here.', aria_label='Your message') }}
+                {{ button(content='Send message', type='submit', id='send') }}
+            </form>
+        </section>
+    </main>
+</body>
+</html>

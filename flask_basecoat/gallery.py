@@ -45,3 +45,9 @@ def gallery():
 def gallery_button():
     theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
     return render_template('basecoat/gallery_button.html', theme=theme)
+
+
+@gallery_bp.route('/gallery/textarea')
+def gallery_textarea():
+    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
+    return render_template('basecoat/gallery_textarea.html', theme=theme)
