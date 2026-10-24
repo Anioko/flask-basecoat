@@ -1101,7 +1101,7 @@ def test_dropdown_menu_parity():
     content_classes = normalize_classes(content_match.group(1).replace('\n', ' '))
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
-    template_str = "{% from 'dropdown-menu.html' import dropdown_menu_content %}{{ dropdown_menu_content() }}"
+    template_str = "{% from 'dropdown.html' import dropdown_menu_content %}{{ dropdown_menu_content() }}"
     template = env.from_string(template_str)
     html = template.render()
 
@@ -1119,7 +1119,7 @@ def test_dropdown_menu_parity():
     assert item_match, "Failed to parse dropdown-menu.tsx item classes"
     item_classes = normalize_classes(item_match.group(1).replace('\n', ' '))
 
-    template_str = "{% from 'dropdown-menu.html' import dropdown_menu_item %}{{ dropdown_menu_item() }}"
+    template_str = "{% from 'dropdown.html' import dropdown_menu_item %}{{ dropdown_menu_item() }}"
     template = env.from_string(template_str)
     html = template.render()
 
