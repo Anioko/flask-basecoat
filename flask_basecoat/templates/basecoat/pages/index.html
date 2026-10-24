@@ -1,11 +1,11 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
-{% block title %}flask-basecoat · shadcn/ui components and blocks{% endblock %}
+{% block title %}Flask-Basecoat · shadcn/ui components and blocks{% endblock %}
 {% block body %}
 <div class="mx-auto flex w-full max-w-6xl flex-col gap-10 p-6 md:p-10">
   <header class="flex flex-col gap-3 border-b pb-8">
     <div class="flex items-center justify-between gap-4">
-      <h1 class="text-3xl font-semibold tracking-tight">flask-basecoat</h1>
+      <h1 class="text-3xl font-semibold tracking-tight">Flask-Basecoat</h1>
       <div class="flex items-center gap-2">
         {{ ui.button(variant='outline', size='sm', href=url_for('basecoat_gallery.gallery'), text='WTForms adapter') }}
         {% call ui.button(variant='ghost', size='icon-sm', attrs={'data-theme-toggle': '', 'aria-label': 'Toggle theme'}) %}{{ lucide('sun', 'dark:hidden') }}{{ lucide('moon', 'hidden dark:block') }}{% endcall %}

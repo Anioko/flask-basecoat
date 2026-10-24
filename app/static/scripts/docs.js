@@ -1,6 +1,6 @@
 /* Documentation shell enhancements: the "On this page" table of contents and the sidebar search.
    Theme switching, the collapsible sidebar, copy buttons and every interactive component come from the
-   flask-basecoat runtime; this file only adds what is specific to the docs pages. */
+   Flask-Basecoat runtime; this file only adds what is specific to the docs pages. */
 (function () {
   function slugify(text) {
     return (text || "")

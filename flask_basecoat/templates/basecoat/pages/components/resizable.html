@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `resizable` (pinned source in compliance/upstream). #}
-{% block title %}resizable · flask-basecoat{% endblock %}
+{% block title %}resizable · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Horizontal') %}{% call ui.resizable_panel_group(id='_R_h_', class='min-h-[200px] rounded-lg border style-lyra:rounded-none style-sera:rounded-none', attrs={'style': 'height:100%;width:100%;overflow:hidden;display:flex;flex-direction:row;flex-wrap:nowrap;touch-action:pan-y'}) %}{% call ui.resizable_panel(id='_R_bh_', attrs={'style': 'min-height:0;max-height:100%;height:auto;min-width:0;max-width:100%;width:auto;border:none;border-width:0;padding:0;margin:0;display:flex;flex-basis:25%;overflow:visible'}) %}<div style="max-height:100%;max-width:100%;flex-grow:1;overflow:auto;touch-action:pan-y"><div class="flex h-full items-center justify-center p-6"><span class="font-semibold">Sidebar</span></div></div>{% endcall %}{{ ui.resizable_handle(id='_R_jh_', attrs={'aria-orientation': 'vertical', 'style': 'flex-basis:auto;flex-grow:0;flex-shrink:0;touch-action:none'}) }}{% call ui.resizable_panel(id='_R_rh_', attrs={'style': 'min-height:0;max-height:100%;height:auto;min-width:0;max-width:100%;width:auto;border:none;border-width:0;padding:0;margin:0;display:flex;flex-basis:75%;overflow:visible'}) %}<div style="max-height:100%;max-width:100%;flex-grow:1;overflow:auto;touch-action:pan-y"><div class="flex h-full items-center justify-center p-6"><span class="font-semibold">Content</span></div></div>{% endcall %}{% endcall %}{% endcall %}

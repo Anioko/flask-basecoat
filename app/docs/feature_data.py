@@ -10,7 +10,7 @@ FeatureData = Dict[str, object]
 _FEATURE_DEFAULT: FeatureData = {
     "eyebrow": "Features",
     "headline": "Everything teams need to move faster",
-    "description": "Basecoat UI ships production-grade sections that let cross-functional teams ship without tradeoffs.",
+    "description": "Flask-Basecoat ships production-grade sections that let cross-functional teams ship without tradeoffs.",
     "layout": "grid",
     "features": [],
 }
@@ -26,7 +26,7 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
             },
             {
                 "title": "Composable sections",
-                "description": "Drop in Basecoat layouts that already align with shadcn/ui structure and naming.",
+                "description": "Drop in Flask-Basecoat layouts that already align with shadcn/ui structure and naming.",
                 "icon": "CS",
             },
             {
@@ -52,7 +52,7 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
             },
         ],
         "cta": {"label": "Browse the feature catalog", "style": "primary"},
-        "meta": "Catalog highlights from the Basecoat feature library.",
+        "meta": "Catalog highlights from the Flask-Basecoat feature library.",
     },
     "feature-02": {
         "layout": "split",
@@ -61,7 +61,7 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
         "features": [
             {
                 "title": "Migration assistant",
-                "description": "Transform legacy templates into Basecoat-ready sections without downtime.",
+                "description": "Transform legacy templates into Flask-Basecoat-ready sections without downtime.",
             },
             {
                 "title": "Theme orchestrator",
@@ -69,25 +69,25 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
             },
             {
                 "title": "Live content slots",
-                "description": "Swap messages from your CMS while preserving Basecoat layout integrity.",
+                "description": "Swap messages from your CMS while preserving Flask-Basecoat layout integrity.",
             },
         ],
         "media": {
-            "title": "Experience Basecoat Compose",
-            "description": "Visual builder that maps product flows to Basecoat UI segments in minutes.",
+            "title": "Experience Flask-Basecoat Compose",
+            "description": "Visual builder that maps product flows to Flask-Basecoat segments in minutes.",
             "items": [
                 {"label": "Flows launched", "value": "28"},
                 {"label": "Review cycles saved", "value": "3x"},
                 {"label": "Regions", "value": "5"},
             ],
-            "caption": "Interactive canvas running inside Basecoat Studio.",
+            "caption": "Interactive canvas running inside Flask-Basecoat Studio.",
         },
         "cta": {"label": "See Compose in action", "style": "secondary"},
     },
     "feature-03": {
         "layout": "metrics",
         "headline": "Operational excellence out of the box",
-        "description": "Basecoat keeps multi-product orgs aligned with measurable quality gates.",
+        "description": "Flask-Basecoat keeps multi-product orgs aligned with measurable quality gates.",
         "metrics": [
             {"label": "launch velocity", "value": "+42%"},
             {"label": "bug regressions", "value": "-63%"},
@@ -107,7 +107,7 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
                 "description": "Map operational responsibilities directly within blocks to streamline ownership.",
             },
         ],
-        "meta": "Metrics reported by Basecoat customers after six months in production.",
+        "meta": "Metrics reported by Flask-Basecoat customers after six months in production.",
     },
     "feature-04": {
         "layout": "timeline",
@@ -116,12 +116,12 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
         "timeline": [
             {
                 "title": "Assess",
-                "description": "Inventory existing screens and align them to Basecoat primitives with guided scoring.",
+                "description": "Inventory existing screens and align them to Flask-Basecoat primitives with guided scoring.",
                 "note": "Includes token drift analysis across brands.",
             },
             {
                 "title": "Assemble",
-                "description": "Compose new experiences with Basecoat sections tailored to your roadmap.",
+                "description": "Compose new experiences with Flask-Basecoat sections tailored to your roadmap.",
                 "note": "Pair with Compose to preview page states instantly.",
             },
             {
@@ -135,7 +135,7 @@ _FEATURE_BLUEPRINTS: Dict[str, FeatureData] = {
             },
         ],
         "cta": {"label": "Download the playbook", "style": "ghost"},
-        "meta": "Timeline sourced from Basecoat customer enablement guides.",
+        "meta": "Timeline sourced from Flask-Basecoat customer enablement guides.",
     },
 }
 

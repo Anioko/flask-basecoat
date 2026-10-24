@@ -477,7 +477,7 @@ def convert(kind, name):
         elif isinstance(ch.tag, str):
             parts.append(render_node(ch, 1, ctx))
     inner = ''.join(parts)
-    title = f'{name} · flask-basecoat'
+    title = f'{name} · Flask-Basecoat'
     page = (
         "{% extends 'basecoat/pages/_layout.html' %}\n"
         "{% import 'basecoat/index.html' as ui %}\n"

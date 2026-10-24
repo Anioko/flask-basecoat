@@ -1,6 +1,6 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
-{% block title %}WTForms adapter · flask-basecoat{% endblock %}
+{% block title %}WTForms adapter · Flask-Basecoat{% endblock %}
 {% block body %}
 {% for category, message in get_flashed_messages(with_categories=true) %}<template data-fb-flash data-variant="{{ 'error' if category in ('error', 'danger') else category }}">{{ message }}</template>{% endfor %}
 {% call ui.example_wrapper(class='lg:grid-cols-1 2xl:grid-cols-1') %}

@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `avatar` (pinned source in compliance/upstream). #}
-{% block title %}avatar · flask-basecoat{% endblock %}
+{% block title %}avatar · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Sizes') %}<div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}{% call ui.avatar_fallback() %}CN{% endcall %}{% endcall %}{% call ui.avatar(size='default') %}{% call ui.avatar_fallback() %}CN{% endcall %}{% endcall %}{% call ui.avatar(size='lg') %}{% call ui.avatar_fallback() %}CN{% endcall %}{% endcall %}</div><div class="flex flex-wrap items-center gap-2">{% call ui.avatar(size='sm') %}{% call ui.avatar_fallback() %}CN{% endcall %}{% endcall %}{% call ui.avatar(size='default') %}{% call ui.avatar_fallback() %}CN{% endcall %}{% endcall %}{% call ui.avatar(size='lg') %}{% call ui.avatar_fallback() %}CN{% endcall %}{% endcall %}</div>{% endcall %}

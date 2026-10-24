@@ -1,4 +1,4 @@
-/* flask-basecoat runtime core.
+/* Flask-Basecoat runtime core.
    Server-rendered shadcn markup carries Radix's data-state contract; this core gives it behaviour:
    component registration and lazy init, open/close state with aria sync, floating positioning,
    dismiss-on-outside/escape layers, focus trapping and roving focus, and a tiny event bus.
@@ -210,7 +210,7 @@
       if (!set) { set = new Set(); initialized.set(node, set); }
       if (set.has(name)) return;
       set.add(name);
-      try { def.init(node, api); } catch (err) { console.error(`[flask-basecoat] ${name} init failed`, err); }
+      try { def.init(node, api); } catch (err) { console.error(`[Flask-Basecoat] ${name} init failed`, err); }
     });
   }
   function initAll(root) { registry.forEach((_, name) => init(name, root)); }

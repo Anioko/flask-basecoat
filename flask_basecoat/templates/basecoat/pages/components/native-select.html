@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `native-select` (pinned source in compliance/upstream). #}
-{% block title %}native-select · flask-basecoat{% endblock %}
+{% block title %}native-select · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.native_select_wrapper(size='default') %}{% call ui.native_select(size='default') %}{% call ui.native_select_option(attrs={'value': ''}) %}Select a fruit{% endcall %}{% call ui.native_select_option(attrs={'value': 'apple'}) %}Apple{% endcall %}{% call ui.native_select_option(attrs={'value': 'banana'}) %}Banana{% endcall %}{% call ui.native_select_option(attrs={'value': 'blueberry'}) %}Blueberry{% endcall %}{% call ui.native_select_option(disabled=true, attrs={'value': 'grapes'}) %}Grapes{% endcall %}{% call ui.native_select_option(attrs={'value': 'pineapple'}) %}Pineapple{% endcall %}{% endcall %}{% call ui.native_select_icon() %}<path d="m6 9 6 6 6-6"></path>{% endcall %}{% endcall %}{% endcall %}

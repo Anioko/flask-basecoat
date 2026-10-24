@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `empty` (pinned source in compliance/upstream). #}
-{% block title %}empty · flask-basecoat{% endblock %}
+{% block title %}empty · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper(class='grid-cols-1!') %}
 {% call ui.example(title='Basic') %}{% call ui.empty() %}{% call ui.empty_header() %}{% call ui.empty_title() %}No projects yet{% endcall %}{% call ui.empty_description() %}You haven't created any projects yet. Get started by creating your first project.{% endcall %}{% endcall %}{% call ui.empty_content() %}<div class="flex gap-2">{% call ui.button(size='default', variant='default', href='#') %}Create project{% endcall %}{% call ui.button(size='default', variant='outline') %}Import project{% endcall %}</div>{% call ui.button(size='default', variant='link', href='#', class='text-muted-foreground') %}Learn more <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}

@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "flask-basecoat"
+name = "Flask-Basecoat"
 version = "1.0.0"
 description = "The shadcn/ui design system as Jinja macros for Flask: every registry component and block, checked against the pinned upstream sources"
 readme = "README.md"

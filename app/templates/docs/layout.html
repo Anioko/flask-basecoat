@@ -38,7 +38,7 @@
                       {{ lucide('blocks') }}
                     </div>
                     <div class="grid flex-1 text-left text-sm leading-tight">
-                      <span class="truncate font-medium">Basecoat Design System</span>
+                      <span class="truncate font-medium">Flask-Basecoat Design System</span>
                       <span class="truncate text-xs text-sidebar-foreground/70">Documentation</span>
                     </div>
                   {% endcall %}
@@ -74,7 +74,7 @@
               {% call ui.sidebar_menu() %}
                 {% call ui.sidebar_menu_item() %}
                   {% call ui.sidebar_menu_button(href='https://basecoatui.dev', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}
-                    {{ lucide('external-link') }}<span>Basecoat UI</span>
+                    {{ lucide('external-link') }}<span>Flask-Basecoat</span>
                   {% endcall %}
                 {% endcall %}
                 {% call ui.sidebar_menu_item() %}
@@ -126,7 +126,7 @@
         <div class="flex flex-1 gap-10 px-4 py-8 sm:px-6 lg:px-10">
           <article data-docs-article class="min-w-0 flex-1 max-w-3xl">
             <header class="flex flex-col gap-2">
-              <p class="text-sm font-medium text-muted-foreground">{{ page.section if page.section else 'Basecoat Docs' }}</p>
+              <p class="text-sm font-medium text-muted-foreground">{{ page.section if page.section else 'Flask-Basecoat Docs' }}</p>
               <h1 class="scroll-m-20 text-3xl font-bold tracking-tight sm:text-4xl">{{ page.title }}</h1>
               {% if page.description %}<p class="text-lg text-muted-foreground">{{ page.description }}</p>{% endif %}
             </header>

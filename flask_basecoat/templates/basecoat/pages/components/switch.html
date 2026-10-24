@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `switch` (pinned source in compliance/upstream). #}
-{% block title %}switch · flask-basecoat{% endblock %}
+{% block title %}switch · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.field(orientation='horizontal') %}{% call ui.switch(size='default', checked=false, id='switch-basic') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='switch-basic') %}Airplane Mode{% endcall %}{% endcall %}{% endcall %}

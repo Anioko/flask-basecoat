@@ -1,12 +1,12 @@
 """
 Local Deployment Runner for flask-basecoat.
 Launches the Flask application with all 16 ported shadcn examples and the
-Basecoat component gallery enabled on http://127.0.0.1:5100.
+Flask-Basecoat component gallery enabled on http://127.0.0.1:5100.
 """
 import os
 import sys
 
-# Ensure flask-basecoat root is in python path
+# Ensure Flask-Basecoat root is in python path
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)

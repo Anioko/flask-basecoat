@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `alert` (pinned source in compliance/upstream). #}
-{% block title %}alert · flask-basecoat{% endblock %}
+{% block title %}alert · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper(class='lg:grid-cols-1') %}
 {% call ui.example(title='Basic', class='style-sera:bg-transparent') %}<div class="mx-auto flex w-full max-w-lg flex-col gap-4">{% call ui.alert() %}{% call ui.alert_title() %}Success! Your changes have been saved.{% endcall %}{% endcall %}{% call ui.alert() %}{% call ui.alert_title() %}Success! Your changes have been saved.{% endcall %}{% call ui.alert_description() %}This is an alert with title and description.{% endcall %}{% endcall %}{% call ui.alert() %}{% call ui.alert_description() %}This one has a description only. No title. No icon.{% endcall %}{% endcall %}</div>{% endcall %}

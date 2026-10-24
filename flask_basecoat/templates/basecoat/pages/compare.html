@@ -1,6 +1,6 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
-{% block title %}Compare {{ name }} · flask-basecoat{% endblock %}
+{% block title %}Compare {{ name }} · Flask-Basecoat{% endblock %}
 {% block body %}
 <div class="flex h-svh flex-col">
   <header class="flex flex-wrap items-center gap-3 border-b px-4 py-2">
@@ -27,8 +27,8 @@
       <iframe id="compare-golden" src="{{ golden_url }}" title="Upstream render of {{ name }}" class="min-h-0 flex-1 w-full bg-background"></iframe>
     </div>
     <div class="flex min-h-0 flex-col">
-      <div class="border-b px-3 py-1 text-xs font-medium text-muted-foreground">flask-basecoat · {{ name }}</div>
-      <iframe id="compare-ours" src="{{ ours_url }}" title="flask-basecoat render of {{ name }}" class="min-h-0 flex-1 w-full bg-background"></iframe>
+      <div class="border-b px-3 py-1 text-xs font-medium text-muted-foreground">Flask-Basecoat · {{ name }}</div>
+      <iframe id="compare-ours" src="{{ ours_url }}" title="Flask-Basecoat render of {{ name }}" class="min-h-0 flex-1 w-full bg-background"></iframe>
     </div>
   </div>
 </div>

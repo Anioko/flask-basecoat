@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `badge` (pinned source in compliance/upstream). #}
-{% block title %}badge · flask-basecoat{% endblock %}
+{% block title %}badge · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper(class='lg:grid-cols-1') %}
 {% call ui.example(title='Variants') %}<div class="flex flex-wrap gap-2 style-sera:gap-6">{% call ui.badge(variant='default') %}Default{% endcall %}{% call ui.badge(variant='secondary') %}Secondary{% endcall %}{% call ui.badge(variant='destructive') %}Destructive{% endcall %}{% call ui.badge(variant='outline') %}Outline{% endcall %}{% call ui.badge(variant='ghost') %}Ghost{% endcall %}{% call ui.badge(variant='link') %}Link{% endcall %}</div>{% endcall %}

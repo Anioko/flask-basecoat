@@ -68,7 +68,7 @@ class SidebarRoutesTestCase(unittest.TestCase):
         self.assertIn('Projects', html)
         self.assertIn('Settings', html)
 
-        # The sidebar behaviour comes from the flask-basecoat runtime
+        # The sidebar behaviour comes from the Flask-Basecoat runtime
         self.assertIn('flask-basecoat.js', html)
         self.assertIn('data-slot="sidebar-trigger"', html)
 

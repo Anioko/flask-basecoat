@@ -176,7 +176,7 @@ _DRAWER_BLUEPRINTS: Dict[str, DrawerData] = {
                         "description": "Shared feedback on keyboard interactions.",
                     },
                     {
-                        "title": "Shipped Basecoat theme",
+                        "title": "Shipped Flask-Basecoat theme",
                         "time": "Monday",
                         "description": "Rolled out design tokens v2 to production.",
                     },

@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `card` (pinned source in compliance/upstream). #}
-{% block title %}card · flask-basecoat{% endblock %}
+{% block title %}card · Flask-Basecoat{% endblock %}
 {% block body %}
 <link rel="preload" as="image" href="https://images.unsplash.com/photo-1604076850742-4c7221f3101b?q=80&amp;w=1887&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">{% call ui.example_wrapper() %}
 {% call ui.example(title='Default Size') %}{% call ui.card(size='default', class='mx-auto w-full max-w-sm') %}{% call ui.card_header() %}{% call ui.card_title() %}Default Card{% endcall %}{% call ui.card_description() %}This card uses the default size variant.{% endcall %}{% endcall %}{% call ui.card_content() %}<p>The card component supports a size prop that defaults to "default" for standard spacing and sizing.</p>{% endcall %}{% call ui.card_footer() %}{% call ui.button(size='default', variant='outline', class='w-full') %}Action{% endcall %}{% endcall %}{% endcall %}{% endcall %}

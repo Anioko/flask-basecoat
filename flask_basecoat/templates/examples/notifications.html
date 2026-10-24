@@ -1,6 +1,6 @@
 {% extends 'examples/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
-{% block title %}Notifications · flask-basecoat{% endblock %}
+{% block title %}Notifications · Flask-Basecoat{% endblock %}
 {% block head %}
 <script>
   let activeTab = 'all';
@@ -54,7 +54,7 @@
 {% set notifications = [
   {'id': 'n-1', 'type': 'mention', 'unread': true, 'initials': 'OG', 'tone': 'bg-chart-1/15 text-chart-1', 'time': '5m ago',
    'title': '<span class="font-semibold">Olivia Grant</span> mentioned you in <span class="font-medium text-primary">PR #42</span>',
-   'body': '"Looks good, ready to merge! Basecoat components match shadcn 100%."'},
+   'body': '"Looks good, ready to merge! Flask-Basecoat components match shadcn 100%."'},
   {'id': 'n-2', 'type': 'mention', 'unread': true, 'initials': 'SD', 'tone': 'bg-chart-2/15 text-chart-2', 'time': '25m ago',
    'title': '<span class="font-semibold">Sofia Davis</span> assigned you to <span class="font-semibold">Workplace Safety Guide 2024</span>',
    'body': 'Task priority is set to Low Priority with due date Nov 15.'},

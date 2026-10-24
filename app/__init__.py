@@ -67,7 +67,7 @@ def create_app(config):
         from flask_sslify import SSLify
         SSLify(app)
 
-    # Initialize Basecoat UI
+    # Initialize Flask-Basecoat
     from flask_basecoat import Basecoat
     basecoat = Basecoat()
     basecoat.init_app(app)

@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `table` (pinned source in compliance/upstream). #}
-{% block title %}table · flask-basecoat{% endblock %}
+{% block title %}table · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.table_container() %}{% call ui.table() %}{% call ui.table_caption() %}A list of your recent invoices.{% endcall %}{% call ui.table_header() %}{% call ui.table_row() %}{% call ui.table_head(class='w-[100px]') %}Invoice{% endcall %}{% call ui.table_head() %}Status{% endcall %}{% call ui.table_head() %}Method{% endcall %}{% call ui.table_head(class='text-right') %}Amount{% endcall %}{% endcall %}{% endcall %}{% call ui.table_body() %}{% call ui.table_row() %}{% call ui.table_cell(class='font-medium') %}INV001{% endcall %}{% call ui.table_cell() %}Paid{% endcall %}{% call ui.table_cell() %}Credit Card{% endcall %}{% call ui.table_cell(class='text-right') %}$250.00{% endcall %}{% endcall %}{% call ui.table_row() %}{% call ui.table_cell(class='font-medium') %}INV002{% endcall %}{% call ui.table_cell() %}Pending{% endcall %}{% call ui.table_cell() %}PayPal{% endcall %}{% call ui.table_cell(class='text-right') %}$150.00{% endcall %}{% endcall %}{% call ui.table_row() %}{% call ui.table_cell(class='font-medium') %}INV003{% endcall %}{% call ui.table_cell() %}Unpaid{% endcall %}{% call ui.table_cell() %}Bank Transfer{% endcall %}{% call ui.table_cell(class='text-right') %}$350.00{% endcall %}{% endcall %}{% endcall %}{% endcall %}{% endcall %}{% endcall %}

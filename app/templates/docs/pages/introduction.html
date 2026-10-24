@@ -6,7 +6,7 @@
   <div class="flex flex-col gap-4">
     {{ ui.badge(text='Overview', variant='secondary', class='w-fit') }}
     <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">Design parity with shadcn/ui, without leaving Flask</h2>
-    <p class="text-muted-foreground">Basecoat Docs recreate the shadcn/ui documentation experience in a Python-friendly stack. Every component is a Jinja macro imported from <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">basecoat/index.html</code>, so live previews, copyable markup and the pages you ship all come from the same source.</p>
+    <p class="text-muted-foreground">Flask-Basecoat Docs recreate the shadcn/ui documentation experience in a Python-friendly stack. Every component is a Jinja macro imported from <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">basecoat/index.html</code>, so live previews, copyable markup and the pages you ship all come from the same source.</p>
     <div class="flex flex-wrap items-center gap-3">
       {% call ui.button(href=url_for('docs.page', slug='installation')) %}Start installing{{ lucide('arrow-right') }}{% endcall %}
       {% call ui.button(variant='link', href='https://ui.shadcn.com', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}Compare with shadcn/ui{{ lucide('external-link') }}{% endcall %}
@@ -24,8 +24,8 @@
   </dl>
 </section>
 
-{{ d.h2('Why Basecoat docs exist') }}
-{{ d.p('Teams love the polish of shadcn/ui, but its starter defaults assume a Next.js workspace. Basecoat Docs bring the same navigation, layout and interaction patterns to Flask so product squads can document UI decisions where the backend already lives.') }}
+{{ d.h2('Why Flask-Basecoat docs exist') }}
+{{ d.p('Teams love the polish of shadcn/ui, but its starter defaults assume a Next.js workspace. Flask-Basecoat Docs bring the same navigation, layout and interaction patterns to Flask so product squads can document UI decisions where the backend already lives.') }}
 {% call d.grid(cols=2) %}
   {% call ui.card() %}
     {% call ui.card_header() %}
@@ -66,13 +66,13 @@
 {{ d.h2('How the documentation is structured') }}
 {% call d.p() %}The {{ d.c('docs') }} blueprint keeps content declarative: each page is registered in {{ d.c('app/docs/navigation.py') }} with its slug, description and template. Rendered pages combine prose, macros and live previews so your team can ship design decisions and implementation details together.{% endcall %}
 {% call d.grid(cols=3) %}
-  {{ d.link_card('Getting Started', url_for('docs.page', slug='installation'), 'Install dependencies, compile the stylesheet and register the Basecoat extension.', cta='Install') }}
+  {{ d.link_card('Getting Started', url_for('docs.page', slug='installation'), 'Install dependencies, compile the stylesheet and register the Flask-Basecoat extension.', cta='Install') }}
   {{ d.link_card('Foundations', url_for('docs.page', slug='theming'), 'Design tokens, dark mode and the Vega style pack that every macro relies on.', cta='Theme') }}
   {{ d.link_card('Blocks', url_for('docs.page', slug='blocks'), 'Browse production-ready layouts and drop them into your product with copyable macros.', cta='Browse') }}
 {% endcall %}
 
 {{ d.h2('When to use this blueprint') }}
-{{ d.p('Reach for Basecoat Docs when you want shadcn/ui ergonomics without adopting a new frontend stack. Because everything renders server-side, you can document API contracts, business rules and UI decisions right next to the routes that need them.') }}
+{{ d.p('Reach for Flask-Basecoat Docs when you want shadcn/ui ergonomics without adopting a new frontend stack. Because everything renders server-side, you can document API contracts, business rules and UI decisions right next to the routes that need them.') }}
 {{ d.p('As the catalogue grows, your docs serve as the canonical reference: the same macros power live previews, component snippets and the UI your customers see.') }}
 {% call d.callout(title='Start with the macros', icon='sparkles') %}Import the barrel once per template with <code class="font-mono">{% raw %}{% import 'basecoat/index.html' as ui %}{% endraw %}</code> and every component is one call away.{% endcall %}
 {% endblock %}

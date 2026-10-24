@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `radio-group` (pinned source in compliance/upstream). #}
-{% block title %}radio-group · flask-basecoat{% endblock %}
+{% block title %}radio-group · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.radio_group(attrs={'style': 'outline:none'}) %}{% call ui.field(orientation='horizontal') %}{{ ui.radio_group_item(checked=false, value='default', id='r1') }}<input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="default">{% call ui.field_label(as_='label', for_='r1', class='font-normal') %}Default{% endcall %}{% endcall %}{% call ui.field(orientation='horizontal') %}{% call ui.radio_group_item(checked=true, value='comfortable', id='r2') %}{% call ui.radio_group_indicator(checked=true) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}<input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="comfortable">{% call ui.field_label(as_='label', for_='r2', class='font-normal') %}Comfortable{% endcall %}{% endcall %}{% call ui.field(orientation='horizontal') %}{{ ui.radio_group_item(checked=false, value='compact', id='r3') }}<input type="radio" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="compact">{% call ui.field_label(as_='label', for_='r3', class='font-normal') %}Compact{% endcall %}{% endcall %}{% endcall %}{% endcall %}

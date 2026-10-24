@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `code-block` (pinned source in compliance/upstream). #}
-{% block title %}code-block · flask-basecoat{% endblock %}
+{% block title %}code-block · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper(class='md:grid-cols-1') %}
 {% call ui.example(title='Plain') %}{% call ui.code_block(variant='default', size='default') %}{% call ui.code_block_content(attrs={'style': 'counter-reset:line 0'}) %}{% raw %}<code data-slot="code-block-code" class="cn-code-block-code grid min-h-lh min-w-max content-start in-data-numbered:grid-cols-[auto_1fr] in-data-wrap:min-w-0">$ pnpm build

@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `trace` (pinned source in compliance/upstream). #}
-{% block title %}trace · flask-basecoat{% endblock %}
+{% block title %}trace · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Chat', container_class='md:col-span-2') %}<div class="flex min-h-96 w-full max-w-xl flex-col gap-6 text-sm">{% call ui.button(size='sm', variant='outline', class='mt-auto self-start') %}Send message{% endcall %}</div>{% endcall %}

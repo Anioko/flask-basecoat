@@ -1,5 +1,5 @@
 """
-Automated Screenshot Capture Script for Basecoat Component Gallery & Examples.
+Automated Screenshot Capture Script for Flask-Basecoat Component Gallery & Examples.
 Uses Playwright to capture high-res desktop (light/dark), mobile, and ported shadcn application screens.
 """
 import os

@@ -29,7 +29,7 @@ _PLAN_FEATURES_ENTERPRISE = _PLAN_FEATURES_SCALE + [
 _PRICING_DEFAULT: PricingData = {
     "eyebrow": "Pricing",
     "headline": "Simple pricing for growing product teams",
-    "description": "Plans that flex from startups to global organisations with Basecoat UI components pre-integrated.",
+    "description": "Plans that flex from startups to global organisations with Flask-Basecoat components pre-integrated.",
     "layout": "classic",
     "billing_toggle": {
         "label": "Billing",
@@ -103,7 +103,7 @@ _PRICING_BLUEPRINTS: Dict[str, PricingData] = {
                 "price": "$29",
                 "period": "month",
                 "price_yearly": "$290",
-                "description": "Ship faster with Basecoat UI starter kits and docs.",
+                "description": "Ship faster with Flask-Basecoat starter kits and docs.",
                 "features": [
                     "Up to 5 team seats",
                     "Unlimited components",
@@ -143,7 +143,7 @@ _PRICING_BLUEPRINTS: Dict[str, PricingData] = {
         ],
         "announcement": {
             "heading": "Have legacy Semantic UI screens?",
-            "copy": "We migrate them to modern Basecoat UI layouts without downtime.",
+            "copy": "We migrate them to modern Flask-Basecoat layouts without downtime.",
             "action": {"label": "Book migration consult", "url": "#"},
         },
     },
@@ -216,11 +216,11 @@ _PRICING_BLUEPRINTS: Dict[str, PricingData] = {
             "items": [
                 {
                     "label": "Dedicated onboarding",
-                    "detail": "Specialists guide your team through Basecoat setup and rollout.",
+                    "detail": "Specialists guide your team through Flask-Basecoat setup and rollout.",
                 },
                 {
                     "label": "Design system migration",
-                    "detail": "Audit existing components and migrate to Basecoat tokens.",
+                    "detail": "Audit existing components and migrate to Flask-Basecoat tokens.",
                 },
                 {
                     "label": "Change management",
@@ -230,7 +230,7 @@ _PRICING_BLUEPRINTS: Dict[str, PricingData] = {
         },
         "faq": [
             {
-                "question": "Can we self-host Basecoat assets?",
+                "question": "Can we self-host Flask-Basecoat assets?",
                 "answer": "Yes. Plans include private npm registry access and deployment guides.",
             },
             {

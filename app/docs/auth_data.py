@@ -57,7 +57,7 @@ _AUTH_BLUEPRINTS: Dict[str, AuthData] = {
             "link": {"label": "Create an account", "url": "/signup"},
         },
         "cover": {
-            "title": "Basecoat Design System",
+            "title": "Flask-Basecoat Design System",
             "description": "Build consistent user experiences with production-ready Flask components.",
             "image": "Authentication illustration",
         },
@@ -89,7 +89,7 @@ _AUTH_BLUEPRINTS: Dict[str, AuthData] = {
     "signup-02": {
         "layout": "split",
         "title": "Get started today",
-        "description": "Create your account and join thousands of teams already building with Basecoat",
+        "description": "Create your account and join thousands of teams already building with Flask-Basecoat",
         "fields": [
             {"type": "text", "label": "Full name", "placeholder": "Enter your full name"},
             {"type": "email", "label": "Work email", "placeholder": "you@company.com"},
@@ -116,7 +116,7 @@ _AUTH_BLUEPRINTS: Dict[str, AuthData] = {
         },
         "cover": {
             "title": "Join 500+ teams",
-            "description": "Companies using Basecoat ship 3x faster with consistent design systems.",
+            "description": "Companies using Flask-Basecoat ship 3x faster with consistent design systems.",
             "stats": [
                 {"value": "500+", "label": "Active teams"},
                 {"value": "50k+", "label": "Components shipped"},

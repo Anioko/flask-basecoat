@@ -59,7 +59,7 @@ def index():
         {
             'id': 'profile',
             'title': 'Settings & Profile',
-            'description': 'User profile and account settings with native Basecoat tabs (Personal, Account, Security, Notifications).',
+            'description': 'User profile and account settings with native Flask-Basecoat tabs (Personal, Account, Security, Notifications).',
             'href': url_for('basecoat_examples.profile'),
             'tags': ['Core Block', 'Tabs', 'Forms', 'Avatar']
         },

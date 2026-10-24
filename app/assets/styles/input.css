@@ -1,4 +1,4 @@
-/* flask-basecoat stylesheet entry (Tailwind v4).
+/* Flask-Basecoat stylesheet entry (Tailwind v4).
    The visual layer is the upstream shadcn/ui pipeline, pinned under compliance/upstream:
    tailwind -> tw-animate -> shadcn/tailwind.css -> theme mapping -> neutral tokens -> Vega style pack.
    The same files feed the golden oracle, so what the checks compare against is what ships. */

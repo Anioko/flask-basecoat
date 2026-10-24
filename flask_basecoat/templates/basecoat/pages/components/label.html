@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `label` (pinned source in compliance/upstream). #}
-{% block title %}label · flask-basecoat{% endblock %}
+{% block title %}label · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='With Checkbox') %}{% call ui.field(orientation='horizontal') %}{{ ui.checkbox(checked=false, id='label-demo-terms') }}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='label-demo-terms') %}Accept terms and conditions{% endcall %}{% endcall %}{% endcall %}

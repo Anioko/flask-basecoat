@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `button-group` (pinned source in compliance/upstream). #}
-{% block title %}button-group · flask-basecoat{% endblock %}
+{% block title %}button-group · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}<div class="flex flex-col gap-4">{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}Button{% endcall %}{% call ui.button(size='default', variant='outline') %}Another Button{% endcall %}{% endcall %}</div>{% endcall %}

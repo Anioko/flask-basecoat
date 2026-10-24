@@ -9,11 +9,11 @@ TestimonialData = Dict[str, object]
 
 _TESTIMONIAL_DEFAULT: TestimonialData = {
     "eyebrow": "Testimonials",
-    "headline": "Teams ship faster with Basecoat UI",
-    "description": "Product leaders share how Basecoat blocks accelerate release cycles.",
+    "headline": "Teams ship faster with Flask-Basecoat",
+    "description": "Product leaders share how Flask-Basecoat blocks accelerate release cycles.",
     "layout": "grid",
     "quotes": [],
-    "meta": "Stories collected from multi-product SaaS teams using Basecoat.",
+    "meta": "Stories collected from multi-product SaaS teams using Flask-Basecoat.",
 }
 
 _TESTIMONIAL_BLUEPRINTS: Dict[str, TestimonialData] = {
@@ -21,7 +21,7 @@ _TESTIMONIAL_BLUEPRINTS: Dict[str, TestimonialData] = {
         "layout": "grid",
         "quotes": [
             {
-                "quote": "Basecoat's pre-built flows let us redesign onboarding in days instead of months.",
+                "quote": "Flask-Basecoat's pre-built flows let us redesign onboarding in days instead of months.",
                 "author": "Kai Parker",
                 "role": "Head of Product Design",
                 "company": "Nebula Systems",
@@ -48,7 +48,7 @@ _TESTIMONIAL_BLUEPRINTS: Dict[str, TestimonialData] = {
         "layout": "highlight",
         "headline": "Loved by scaling product teams",
         "featured": {
-            "quote": "Release velocity nearly doubled after migrating our marketing flows to Basecoat blocks.",
+            "quote": "Release velocity nearly doubled after migrating our marketing flows to Flask-Basecoat blocks.",
             "author": "Nia Flores",
             "role": "Director of Engineering",
             "company": "Orbit Labs",
@@ -86,7 +86,7 @@ _TESTIMONIAL_BLUEPRINTS: Dict[str, TestimonialData] = {
         ],
         "quotes": [
             {
-                "quote": "We re-launched six core journeys using Basecoat sections with zero regression bugs.",
+                "quote": "We re-launched six core journeys using Flask-Basecoat sections with zero regression bugs.",
                 "author": "Jun Kobayashi",
                 "role": "VP of Engineering",
                 "company": "Planify",
@@ -105,7 +105,7 @@ _TESTIMONIAL_BLUEPRINTS: Dict[str, TestimonialData] = {
     "testimonial-04": {
         "layout": "split",
         "featured": {
-            "quote": "We replaced brittle marketing pages with Basecoat layouts that our CMS can reuse instantly.",
+            "quote": "We replaced brittle marketing pages with Flask-Basecoat layouts that our CMS can reuse instantly.",
             "author": "Morgan Lee",
             "role": "Growth Lead",
             "company": "SharedSignal",

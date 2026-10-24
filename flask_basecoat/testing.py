@@ -1,4 +1,4 @@
-"""A bare Flask application with only flask-basecoat installed.
+"""A bare Flask application with only Flask-Basecoat installed.
 
 Used by the compliance checks and the test suite so component pages are rendered without the demo
 application's database, login or mail configuration.

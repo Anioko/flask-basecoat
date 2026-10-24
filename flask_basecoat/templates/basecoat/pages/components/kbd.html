@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `kbd` (pinned source in compliance/upstream). #}
-{% block title %}kbd · flask-basecoat{% endblock %}
+{% block title %}kbd · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}<div class="flex items-center gap-2">{% call ui.kbd() %}Ctrl{% endcall %}{% call ui.kbd() %}⌘K{% endcall %}{% call ui.kbd() %}Ctrl + B{% endcall %}</div>{% endcall %}

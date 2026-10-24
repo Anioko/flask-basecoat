@@ -1,7 +1,7 @@
 {% extends 'examples/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Mail client built from the sidebar family and resizable panels, the way the upstream mail block composes them. #}
-{% block title %}Mail · flask-basecoat{% endblock %}
+{% block title %}Mail · Flask-Basecoat{% endblock %}
 {% block body %}
 {% set tag_variant = {'work': 'default', 'personal': 'outline'} %}
 {% set mails = [
@@ -10,7 +10,7 @@
    'body': "Hi team,\n\nLet's have a meeting tomorrow at 10:00 AM to discuss the upcoming project deliverables and sync on open tasks.\n\nPlease review the design drafts and requirements before the call so we can jump straight into architectural decisions.\n\nBest regards,\nWilliam"},
   {'id': 'mail-2', 'name': 'Alice Smith', 'email': 'alicesmith@example.com', 'date': 'Oct 21, 2026, 4:15:00 PM', 'when': 'about 3 years ago', 'subject': 'Re: Project Update', 'unread': false, 'tags': ['work', 'important'],
    'teaser': "Thank you for the project update. It looks great! I've gone through the report, and the progress is impressive. The team has done a fantastic job, and I appreciate the hard work everyone has put in.\n\nI have a few minor suggestions that I'll include in the attached document.\n\nLet's discuss these duri",
-   'body': "Hi Alicia,\n\nThank you for sending the updated project status report. The progress on Basecoat integration and theme tokens looks fantastic!\n\nI left a couple of minor comments on the pull request regarding CSS variable fallbacks. Let me know if you need any clarification.\n\nThanks,\nAlice"},
+   'body': "Hi Alicia,\n\nThank you for sending the updated project status report. The progress on Flask-Basecoat integration and theme tokens looks fantastic!\n\nI left a couple of minor comments on the pull request regarding CSS variable fallbacks. Let me know if you need any clarification.\n\nThanks,\nAlice"},
   {'id': 'mail-3', 'name': 'Bob Johnson', 'email': 'bobjohnson@example.com', 'date': 'Oct 20, 2026, 11:30:00 AM', 'when': 'over 3 years ago', 'subject': 'Weekend Plans', 'unread': false, 'tags': ['personal'],
    'teaser': "Any plans for the weekend? I was thinking of going hiking in the nearby mountains. It's been a while since we had some outdoor fun.\n\nIf you're interested, let me know, and we can plan the details. It'll be a great way to unwind and enjoy nature.\n\nLooking forward to your response!\n\nBest, Bob",
    'body': "Hey Alicia,\n\nAre you free this weekend? A few of us are planning to hike up Mount Rainier on Saturday morning if the weather holds.\n\nLet me know if you want to join us and I'll send over the meeting spot!\n\nCheers,\nBob"},

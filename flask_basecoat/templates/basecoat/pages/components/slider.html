@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `slider` (pinned source in compliance/upstream). #}
-{% block title %}slider · flask-basecoat{% endblock %}
+{% block title %}slider · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.slider(orientation='horizontal', dir='ltr', attrs={'aria-disabled': 'false', 'style': '--radix-slider-thumb-transform:translateX(-50%)'}) %}{% call ui.slider_track(orientation='horizontal') %}{{ ui.slider_range(orientation='horizontal', attrs={'style': 'left:0%;right:50%'}) }}{% endcall %}<span style="transform:var(--radix-slider-thumb-transform);position:absolute;left:calc(0% + 0px)">{{ ui.slider_thumb(orientation='horizontal', attrs={'style': 'display:none'}) }}</span><input style="display:none">{% endcall %}{% endcall %}

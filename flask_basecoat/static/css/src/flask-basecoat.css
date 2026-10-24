@@ -1,4 +1,4 @@
-/* Shipped stylesheet for flask-basecoat consumers.
+/* Shipped stylesheet for Flask-Basecoat consumers.
    Identical pipeline to the golden oracle (compliance/golden/golden.css) and to the demo app build,
    scanning only the package templates and runtime so every class a macro can emit is present. */
 @import "tailwindcss" source(none);

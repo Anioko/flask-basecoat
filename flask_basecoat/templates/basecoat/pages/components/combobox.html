@@ -11,7 +11,7 @@
 {%- set s = slot('combobox', kwargs, class, id, attrs) -%}
 <div{{ s.attributes }}>{{ caller() if caller }}</div>{%- endmacro %}
 {% set combobox = ui.combobox if ui.combobox is defined else _combobox_root %}
-{% block title %}combobox · flask-basecoat{% endblock %}
+{% block title %}combobox · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
     {% call ui.example(title='Basic') %}

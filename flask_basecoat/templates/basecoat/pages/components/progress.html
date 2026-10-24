@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `progress` (pinned source in compliance/upstream). #}
-{% block title %}progress · flask-basecoat{% endblock %}
+{% block title %}progress · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Progress Bar') %}<div class="flex w-full flex-col gap-4">{% call ui.progress() %}{{ ui.progress_indicator(attrs={'style': 'transform:translateX(-100%)'}) }}{% endcall %}{% call ui.progress() %}{{ ui.progress_indicator(attrs={'style': 'transform:translateX(-75%)'}) }}{% endcall %}{% call ui.progress() %}{{ ui.progress_indicator(attrs={'style': 'transform:translateX(-50%)'}) }}{% endcall %}{% call ui.progress() %}{{ ui.progress_indicator(attrs={'style': 'transform:translateX(-25%)'}) }}{% endcall %}{% call ui.progress() %}{{ ui.progress_indicator(attrs={'style': 'transform:translateX(-0%)'}) }}{% endcall %}</div>{% endcall %}

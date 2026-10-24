@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `skeleton` (pinned source in compliance/upstream). #}
-{% block title %}skeleton · flask-basecoat{% endblock %}
+{% block title %}skeleton · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Avatar') %}<div class="flex w-full items-center gap-4">{{ ui.skeleton(class='size-10 shrink-0 rounded-full') }}<div class="grid gap-2">{{ ui.skeleton(class='h-4 w-[150px]') }}{{ ui.skeleton(class='h-4 w-[100px]') }}</div></div>{% endcall %}

@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `textarea` (pinned source in compliance/upstream). #}
-{% block title %}textarea · flask-basecoat{% endblock %}
+{% block title %}textarea · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.textarea(attrs={'placeholder': 'Type your message here.'}) %}{% raw %}{% endraw %}{% endcall %}{% endcall %}

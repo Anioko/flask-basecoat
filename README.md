@@ -1,4 +1,4 @@
-# flask-basecoat
+# Flask-Basecoat
 
 The shadcn/ui design system for Flask and Jinja2. Every component in the shadcn/ui registry and every
 block (sidebars, logins, signups, the dashboard) is a Jinja macro, styled by the upstream shadcn stylesheet
@@ -22,7 +22,7 @@ copy of the shadcn/ui sources and checked against them in a browser.
 ## Install
 
 ```bash
-pip install flask-basecoat
+pip install Flask-Basecoat
 ```
 
 ```python

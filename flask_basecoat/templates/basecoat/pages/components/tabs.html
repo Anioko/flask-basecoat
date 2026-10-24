@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `tabs` (pinned source in compliance/upstream). #}
-{% block title %}tabs · flask-basecoat{% endblock %}
+{% block title %}tabs · Flask-Basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
 {% call ui.example(title='Basic') %}{% call ui.tabs(orientation='horizontal') %}{% call ui.tabs_list(variant='default', orientation='horizontal', attrs={'style': 'outline:none'}) %}{% call ui.tabs_trigger(active=true, orientation='horizontal', aria_controls='radix-_R_11_-content-home', id='radix-_R_11_-trigger-home') %}Home{% endcall %}{% call ui.tabs_trigger(orientation='horizontal', aria_controls='radix-_R_11_-content-settings', id='radix-_R_11_-trigger-settings') %}Settings{% endcall %}{% endcall %}{% endcall %}{% endcall %}

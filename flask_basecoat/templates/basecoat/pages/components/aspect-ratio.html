@@ -1,7 +1,7 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {# Port of the upstream shadcn/ui example `aspect-ratio` (pinned source in compliance/upstream). #}
-{% block title %}aspect-ratio · flask-basecoat{% endblock %}
+{% block title %}aspect-ratio · Flask-Basecoat{% endblock %}
 {% block body %}
 <link rel="preload" as="image" href="https://avatar.vercel.sh/shadcn1">{% call ui.example_wrapper(class='max-w-4xl 2xl:max-w-4xl') %}
 {% call ui.example(title='16:9', class='items-center justify-center') %}<div style="position:relative;width:100%;padding-bottom:56.25%" data-radix-aspect-ratio-wrapper="">{% call ui.aspect_ratio(class='rounded-lg bg-muted style-lyra:rounded-none style-luma:rounded-3xl style-sera:rounded-none', attrs={'style': 'position:absolute;top:0;right:0;bottom:0;left:0'}) %}<img src="https://avatar.vercel.sh/shadcn1" alt="Photo" class="h-full w-full rounded-lg object-cover grayscale dark:brightness-20 style-lyra:rounded-none style-luma:rounded-3xl style-sera:rounded-none">{% endcall %}</div>{% endcall %}
