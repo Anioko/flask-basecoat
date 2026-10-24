@@ -1,10 +1,15 @@
-{# shadcn label macro - exact class parity with shadcn/ui label.tsx #}
-{% macro label(content='', for='', class='') %}
+{# shadcn label macro - exact class parity with shadcn/ui label.tsx (one part, data-slot="label").
+   Children: pass content='...' or use {% call label(for='id') %}...{% endcall %}.
+   for / id are forwarded; ARIA association comes from for=<control id>, and clicking the label focuses or toggles the control.
+   Disabled states are driven by the surrounding markup, as in shadcn: a disabled control before it as a sibling with class "peer"
+   (peer-disabled) or an ancestor with class "group" and data-disabled="true" (group-data-[disabled=true]). #}
+{% macro label(content='', for='', id='', class='') %}
 <label
     data-slot="label"
     class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 {{ class }}"
+    {%- if id %} id="{{ id }}"{% endif %}
     {%- if for %} for="{{ for }}"{% endif %}
 >
-    {{- content|safe -}}
+    {{- caller() if caller else content|safe -}}
 </label>
 {%- endmacro -%}
