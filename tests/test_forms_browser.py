@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
+from .live_server import TEST_SERVER_BASE_URL
+
 
 class FormBrowserTest(unittest.TestCase):
     """Browser tests for form visual rendering and styling"""
@@ -26,7 +28,7 @@ class FormBrowserTest(unittest.TestCase):
         try:
             cls.driver = webdriver.Chrome(options=chrome_options)
             cls.driver.implicitly_wait(10)
-            cls.base_url = 'http://localhost:5100'
+            cls.base_url = TEST_SERVER_BASE_URL
         except Exception as e:
             raise unittest.SkipTest(f"Chrome driver not available: {e}")
 
