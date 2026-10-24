@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en" data-color-theme="light">
+  <head>
+    <meta name="charset" content="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flask-Basecoat</title>
+
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+
+
+<script type="text/javascript" src="/static/scripts/app.js"></script>
+
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.3/dist/basecoat.cdn.min.css">
+    <link rel="stylesheet" href="/static/styles/app.css">
+    <link rel="stylesheet" href="/static/styles/docs.css">
+    
+  </head>
+  <body class="docs-shell">
+    <button class="docs-mobile-toggle" type="button" data-mobile-toggle aria-label="Toggle navigation">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    </button>
+    <aside class="docs-sidebar" data-sidebar>
+      <div class="docs-sidebar__header">
+        <a href="/" class="docs-brand">
+          <span class="docs-brand__logo">🌗</span>
+          <span class="docs-brand__label">Basecoat Design System</span>
+        </a>
+      </div>
+      <nav class="docs-nav" aria-label="Documentation navigation">
+        
+          <div class="docs-nav__section">
+            <h2 class="docs-nav__heading">Getting Started</h2>
+            <ul class="docs-nav__list">
+              
+                
+                
+                <li>
+                  <a href="/docs/introduction" class="docs-nav__link " >
+                    <span class="docs-nav__title">Introduction</span>
+                    <span class="docs-nav__description">Understand the goals of the Basecoat Design System and how it maps to shadcn/ui.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/installation" class="docs-nav__link " >
+                    <span class="docs-nav__title">Installation</span>
+                    <span class="docs-nav__description">Add the Basecoat docs stack to an existing Flask project.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/project-structure" class="docs-nav__link " >
+                    <span class="docs-nav__title">Project Structure</span>
+                    <span class="docs-nav__description">How the documentation blueprint and assets are organized.</span>
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        
+          <div class="docs-nav__section">
+            <h2 class="docs-nav__heading">Foundations</h2>
+            <ul class="docs-nav__list">
+              
+                
+                
+                <li>
+                  <a href="/docs/theming" class="docs-nav__link " >
+                    <span class="docs-nav__title">Theming</span>
+                    <span class="docs-nav__description">Customize colors, typography, and spacing using Basecoat tokens.</span>
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        
+          <div class="docs-nav__section">
+            <h2 class="docs-nav__heading">Blocks</h2>
+            <ul class="docs-nav__list">
+              
+                
+                
+                <li>
+                  <a href="/docs/blocks" class="docs-nav__link " >
+                    <span class="docs-nav__title">Blocks Overview</span>
+                    <span class="docs-nav__description">Browse every shadcn block category and Basecoat coverage status.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/blocks/sidebar-demo" class="docs-nav__link " >
+                    <span class="docs-nav__title">Sidebar Layout</span>
+                    <span class="docs-nav__description">Replica of the shadcn sidebar block composed with Basecoat UI.</span>
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        
+          <div class="docs-nav__section">
+            <h2 class="docs-nav__heading">Components</h2>
+            <ul class="docs-nav__list">
+              
+                
+                
+                <li>
+                  <a href="/docs/components" class="docs-nav__link " >
+                    <span class="docs-nav__title">Components Overview</span>
+                    <span class="docs-nav__description">Browse shadcn/ui components adapted for Flask-Basecoat.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/components/test" class="docs-nav__link " >
+                    <span class="docs-nav__title">Test Page</span>
+                    <span class="docs-nav__description">Test if routing and JSON loading works.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/components/kanban" class="docs-nav__link " >
+                    <span class="docs-nav__title">Kanban Board</span>
+                    <span class="docs-nav__description">Drag-and-drop task board with column organization and status tracking.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/components/list" class="docs-nav__link " >
+                    <span class="docs-nav__title">Task List</span>
+                    <span class="docs-nav__description">Interactive task list with drag-and-drop reordering and status management.</span>
+                  </a>
+                </li>
+              
+                
+                
+                <li>
+                  <a href="/docs/components/gantt" class="docs-nav__link " >
+                    <span class="docs-nav__title">Gantt Chart</span>
+                    <span class="docs-nav__description">Project timeline visualization with task dependencies and milestones.</span>
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        
+      </nav>
+      <div class="docs-sidebar__footer">
+        <a class="docs-sidebar__cta" href="https://github.com/hack4impact/flask-base" target="_blank" rel="noreferrer">View Original Flask-Base</a>
+        <a class="docs-sidebar__cta" href="https://basecoatui.dev" target="_blank" rel="noreferrer">Basecoat UI</a>
+      </div>
+    </aside>
+    <div class="docs-main" data-main>
+      <header class="docs-topbar">
+        <div class="docs-breadcrumbs" aria-label="Breadcrumb">
+          
+            
+              
+                <a href="/docs/components">Components</a>
+              
+              <span class="divider">/</span>
+            
+          
+            
+              <span aria-current="page">Badge</span>
+            
+          
+        </div>
+        <form class="docs-search" role="search" aria-label="Docs search">
+          <label class="sr-only" for="docs-search">Search docs</label>
+          <svg class="docs-search__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-5.197-5.197m0 0A6.75 6.75 0 1 0 5.25 5.25a6.75 6.75 0 0 0 10.553 8.053Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="docs-search" class="docs-search__input" type="search" name="query" placeholder="Search docs…" autocomplete="off" spellcheck="false" data-docs-search>
+          <div class="docs-search__results" data-docs-search-results aria-live="polite"></div>
+        </form>
+        <div class="docs-actions">
+          <button type="button" class="docs-action" data-theme-toggle>
+            <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5V3m0 18v-1.5M6.52 6.52 5.4 5.4m13.2 13.2-1.12-1.12M4.5 12H3m18 0h-1.5M6.52 17.48 5.4 18.6m13.2-13.2-1.12 1.12M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.25a8.25 8.25 0 0 0 13.72 6.12 8.25 8.25 0 0 1-8.09-11.17A8.25 8.25 0 0 0 4 12.25Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            <span class="sr-only">Toggle theme</span>
+          </button>
+          <a class="docs-action" href="https://github.com/hack4impact/flask-basecoat" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </header>
+      <main class="docs-content" id="content">
+        <div class="docs-content__inner">
+          <article class="docs-article">
+            <header class="docs-page-header">
+              <p class="docs-eyebrow">Components</p>
+              <h1>Badge</h1>
+              <p class="docs-page-description">Displays a badge or a component that looks like a badge.</p>
+            </header>
+            
+<section class="docs-section">
+  <div class="docs-callout docs-callout--info">
+    <h2>Badge</h2>
+    <p>Displays a badge or a component that looks like a badge.</p>
+    <p>
+      Shadcn reference:
+      <a class="docs-link" href="https://ui.shadcn.com/docs/components/badge" target="_blank" rel="noreferrer">https://ui.shadcn.com/docs/components/badge</a>
+    </p>
+    <p><a class="docs-link" href="/docs/components">Back to components overview</a></p>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2>Variants</h2>
+  <p>Different styles and states for the badge component.</p>
+  
+  <div class="docs-preview docs-preview--components" data-preview>
+    <div class="component-showcase">
+  <h3>Badge Variants</h3>
+  <div class="component-grid">
+    <div class="component-example">
+      <h4>Default Badge</h4>
+      <span class="badge">Badge</span>
+      <p class="component-description">Standard badge styling</p>
+    </div>
+    <div class="component-example">
+      <h4>Secondary Badge</h4>
+      <span class="badge badge-secondary">Badge</span>
+      <p class="component-description">Muted badge variant</p>
+    </div>
+    <div class="component-example">
+      <h4>Outline Badge</h4>
+      <span class="badge badge-outline">Badge</span>
+      <p class="component-description">Badge with outline styling</p>
+    </div>
+    <div class="component-example">
+      <h4>Destructive Badge</h4>
+      <span class="badge badge-destructive">Badge</span>
+      <p class="component-description">Badge for warnings or errors</p>
+    </div>
+  </div>
+</div>
+  </div>
+</section>
+
+<section class="docs-section">
+  <h2>Usage Examples</h2>
+  <p>Here are some practical examples of using the badge component:</p>
+  
+  
+</section>
+
+<section class="docs-section">
+  <h2>Implementation Notes</h2>
+  <ul class="docs-list">
+    <li>Components use Basecoat CSS classes for consistent styling</li>
+    <li>All variants support dark mode through CSS custom properties</li>
+    <li>Accessibility attributes are included where appropriate</li>
+    <li>Components are designed to be composable and customizable</li>
+  </ul>
+</section>
+
+<section class="docs-section">
+  <h2>Related Components</h2>
+  <p>Other components that work well with badge:</p>
+  
+  <div class="docs-grid">
+    
+    
+    
+    <article class="docs-card">
+      <h3><a class="docs-link" href="/docs/components/button">Button</a></h3>
+      <p><a class="docs-link" href="/docs/components/button">View component &rarr;</a></p>
+    </article>
+    
+    <article class="docs-card">
+      <h3><a class="docs-link" href="/docs/components/card">Card</a></h3>
+      <p><a class="docs-link" href="/docs/components/card">View component &rarr;</a></p>
+    </article>
+    
+    <article class="docs-card">
+      <h3><a class="docs-link" href="/docs/components/avatar">Avatar</a></h3>
+      <p><a class="docs-link" href="/docs/components/avatar">View component &rarr;</a></p>
+    </article>
+    
+  </div>
+</section>
+
+          </article>
+          <aside class="docs-toc" data-docs-toc aria-label="On this page" role="navigation"></aside>
+        </div>
+        <nav class="docs-pagination" aria-label="Pagination">
+          
+          
+        </nav>
+      </main>
+    </div>
+    <script src="/static/scripts/docs.js" defer></script>
+    <script src="/static/scripts/components.js" defer></script>
+    
+  </body>
+</html>
