@@ -1,0 +1,151 @@
+{# Capability dialogs: the four dialogs the capability map uses. Each is a macro returning a Dialog (or Alert Dialog) to
+   be placed once on a page and opened by any element with data-fb-open="<id>" (or data-cap-action, see capability-map.js).
+     form_dialog()           add a capability, add a sub-capability, or edit one. Capability type is the three types
+                             plus "Not set" (an empty capability_type); a sub-capability's type and level are locked
+     metadata_dialog(map)    rename the map and edit its description
+     type_dialog(map)        edit the description of each capability type
+     delete_dialog()         confirm deletion; names how many sub-capabilities go with it
+   Usage: {{ dlg.form_dialog() }} ... {{ dlg.delete_dialog() }}. #}
+{% import 'basecoat/index.html' as ui %}
+
+{% set TYPE_OPTIONS = [('strategic', 'Strategic'), ('operational', 'Operational'), ('supporting', 'Supporting'), ('', 'Not set')] %}
+{% set LEVELS = [('0', 'Level 0 (Domain)'), ('1', 'Level 1 (Capability)'), ('2', 'Level 2 (Sub-capability)'), ('3', 'Level 3 (Component)'), ('4', 'Level 4 (Sub-component)')] %}
+{% set MATURITY_OPTIONS = [('1', '1 - Initial'), ('2', '2 - Developing'), ('3', '3 - Defined'), ('4', '4 - Managed'), ('5', '5 - Optimized')] %}
+{% set LEVEL_OPTIONS = [('none', 'None'), ('low', 'Low'), ('medium', 'Medium'), ('high', 'High')] %}
+
+{#- A Select that submits a hidden input named `name`. -#}
+{% macro select_field(name, id, options, value, label, extra='') -%}
+{% call ui.field() %}
+  {{ ui.field_label(as_='label', for_=id, text=label) }}
+  {% call ui.select() %}
+    {% call ui.select_trigger(id=id, class='w-full', attrs={'data-name': name, 'data-field': name}) %}{{ ui.select_value(text=(options|selectattr(0, 'equalto', value)|first)[1]) }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+    {% call ui.select_content() %}{% for v, l in options %}{{ ui.select_item(text=l, value=v, checked=(v == value)) }}{% endfor %}{% endcall %}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro form_dialog(id='cap-form') -%}
+{{ ui.dialog_overlay() }}
+{% call ui.dialog_content(id=id, class='max-h-[90vh] overflow-y-auto sm:max-w-2xl') %}
+  <form class="flex flex-col gap-6" novalidate data-cap-form>
+    {% call ui.dialog_header() %}
+      {{ ui.dialog_title(text='Add capability', attrs={'data-f-title': ''}) }}
+      {{ ui.dialog_description(text='Create a capability at the root level.', attrs={'data-f-desc': ''}) }}
+    {% endcall %}
+    {% call ui.field_set() %}
+      {{ ui.field_legend(text='Basic information') }}
+      {% call ui.field_group() %}
+        {% call ui.field(attrs={'data-name-field': ''}) %}
+          {{ ui.field_label(as_='label', for_=id ~ '-name', text='Capability name') }}
+          {{ ui.input(id=id ~ '-name', name='name', required=true, placeholder='For example, Customer engagement', attrs={'aria-describedby': id ~ '-name-error'}) }}
+          {{ ui.field_error(text='Capability name is required.', id=id ~ '-name-error', attrs={'hidden': ''}) }}
+        {% endcall %}
+        {% call ui.field() %}
+          {{ ui.field_label(as_='label', for_=id ~ '-description', text='Description') }}
+          {{ ui.textarea(id=id ~ '-description', name='description', attrs={'rows': '2', 'placeholder': 'What this capability covers'}) }}
+        {% endcall %}
+        <div class="grid grid-cols-2 gap-4">
+          {{ select_field('capability_type', id ~ '-type', TYPE_OPTIONS, 'operational', 'Capability type') }}
+          {{ select_field('level', id ~ '-level', LEVELS, '0', 'Hierarchy level') }}
+        </div>
+        {% call ui.field() %}
+          {{ ui.field_label(as_='label', for_=id ~ '-owner', text='Owner') }}
+          {{ ui.input(id=id ~ '-owner', name='owner', placeholder='For example, Chief Technology Officer') }}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.field_set() %}
+      {{ ui.field_legend(text='Capability metrics') }}
+      <div class="grid grid-cols-3 gap-4">
+        {{ select_field('maturity', id ~ '-maturity', MATURITY_OPTIONS, '3', 'Maturity') }}
+        {{ select_field('strategicImportance', id ~ '-importance', [('low', 'Low'), ('medium', 'Medium'), ('high', 'High'), ('critical', 'Critical')], 'medium', 'Strategic importance') }}
+        {{ select_field('currentInvestment', id ~ '-current', LEVEL_OPTIONS, 'medium', 'Current investment') }}
+        {{ select_field('plannedInvestment', id ~ '-planned', LEVEL_OPTIONS, 'medium', 'Planned investment') }}
+        {{ select_field('riskLevel', id ~ '-risk', [('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], 'medium', 'Risk level') }}
+      </div>
+    {% endcall %}
+    {% call ui.dialog_footer() %}
+      {{ ui.dialog_close(text='Cancel', variant='outline', size='default', type='button') }}
+      {{ ui.button(text='Create capability', type='submit', attrs={'data-f-submit': ''}) }}
+    {% endcall %}
+  </form>
+  {% call ui.dialog_close(variant='ghost', size='icon-sm', class='absolute top-4 right-4') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro metadata_dialog(map, id='map-meta') -%}
+{{ ui.dialog_overlay() }}
+{% call ui.dialog_content(id=id, class='sm:max-w-xl') %}
+  <form class="flex flex-col gap-6" data-meta-form data-name="{{ map.name }}" data-desc="{{ map.description }}">
+    {% call ui.dialog_header() %}
+      {{ ui.dialog_title(text='Edit capability map details') }}
+      {{ ui.dialog_description(text='Update the name and description of the map. They appear in the header and in every export.') }}
+    {% endcall %}
+    {% call ui.field_group() %}
+      {% call ui.field() %}
+        {{ ui.field_label(as_='label', for_=id ~ '-name', text='Capability map name') }}
+        {{ ui.input(id=id ~ '-name', name='name', value=map.name, required=true, placeholder='Enter the map name', attrs={'data-autofocus': ''}) }}
+        {{ ui.field_description(text='For example, Enterprise business capabilities.') }}
+      {% endcall %}
+      {% call ui.field() %}
+        {{ ui.field_label(as_='label', for_=id ~ '-description', text='Description') }}
+        {% call ui.textarea(id=id ~ '-description', name='description', attrs={'rows': '3'}) %}{{ map.description }}{% endcall %}
+        {{ ui.field_description(text='A brief overview of what this map represents and its purpose.') }}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.dialog_footer() %}
+      {{ ui.dialog_close(text='Cancel', variant='outline', size='default', type='button') }}
+      {{ ui.button(text='Save changes', type='submit') }}
+    {% endcall %}
+  </form>
+  {% call ui.dialog_close(variant='ghost', size='icon-sm', class='absolute top-4 right-4') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro type_dialog(map, id='type-desc') -%}
+{% set hints = {'strategic': 'High-level capabilities that define competitive advantage and long-term direction.', 'operational': 'Core business processes and functions that directly deliver value.', 'supporting': 'Foundational enablers such as IT, HR and Finance that support operations.'} %}
+{% set icons = {'strategic': 'target', 'operational': 'settings', 'supporting': 'shield'} %}
+{{ ui.dialog_overlay() }}
+{% call ui.dialog_content(id=id, class='max-h-[90vh] overflow-y-auto sm:max-w-2xl') %}
+  <form class="flex flex-col gap-6" data-type-form>
+    {% call ui.dialog_header() %}
+      {{ ui.dialog_title(text='Edit capability type descriptions') }}
+      {{ ui.dialog_description(text='Describe each capability type. The descriptions appear under each group heading in the map, the tree and applications by capability.') }}
+    {% endcall %}
+    {% call ui.field_group() %}
+      {% for key, label in [('strategic', 'Strategic'), ('operational', 'Operational'), ('supporting', 'Supporting')] %}
+      {% call ui.field() %}
+        {% call ui.field_label(as_='label', for_=id ~ '-' ~ key) %}{{ lucide(icons[key], 'text-muted-foreground') }}{{ label }}{% endcall %}
+        {% call ui.textarea(id=id ~ '-' ~ key, name=key, attrs={'rows': '2'}) %}{{ (map.typeDescriptions or {}).get(key, '') }}{% endcall %}
+        {{ ui.field_description(text=hints[key]) }}
+      {% endcall %}
+      {% endfor %}
+    {% endcall %}
+    {% call ui.dialog_footer() %}
+      {{ ui.dialog_close(text='Cancel', variant='outline', size='default', type='button') }}
+      {{ ui.button(text='Save changes', type='submit') }}
+    {% endcall %}
+  </form>
+  {% call ui.dialog_close(variant='ghost', size='icon-sm', class='absolute top-4 right-4') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro delete_dialog(id='cap-delete') -%}
+{{ ui.alert_dialog_overlay() }}
+{% call ui.alert_dialog_content(id=id, size='default') %}
+  {% call ui.alert_dialog_header() %}
+    {% call ui.alert_dialog_media(class='bg-destructive/10 text-destructive dark:bg-destructive/20') %}{{ lucide('triangle-alert') }}{% endcall %}
+    {{ ui.alert_dialog_title(text='Delete capability') }}
+    {% call ui.alert_dialog_description() %}Delete <strong class="font-medium text-foreground" data-del-name>this capability</strong>? <span data-del-leaf>This cannot be undone.</span>{% endcall %}
+  {% endcall %}
+  {% call ui.alert(attrs={'data-del-warning': '', 'hidden': ''}) %}
+    {{ lucide('triangle-alert') }}
+    {% call ui.alert_title() %}This capability has <span data-del-count>0</span> <span data-del-noun>sub-capabilities</span>{% endcall %}
+    {{ ui.alert_description(text='Deleting it also deletes every sub-capability under it. This cannot be undone.') }}
+  {% endcall %}
+  {% call ui.alert_dialog_footer() %}
+    {{ ui.alert_dialog_cancel(text='Cancel') }}
+    {{ ui.alert_dialog_action(text='Delete', variant='destructive', attrs={'data-del-confirm': ''}) }}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}

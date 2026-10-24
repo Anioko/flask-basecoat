@@ -34,9 +34,14 @@ CAPABILITY = [
     ('capability-map', 'Capability map', 'C2'),
     ('capability-tree', 'Capability tree', 'C2'),
     ('applications-by-capability', 'Applications by capability', 'C2'),
-    ('capability-planning', 'Capability planning', 'C2'),
+    ('capability-planning', 'Capability planning', 'B'),
     ('capability-dialogs', 'Capability dialogs', 'B'),
 ]
+
+
+def capability_data():
+    """The Northwind Logistics capability map, its applications and their links (capability_type on every capability)."""
+    return json.loads((_HERE / 'data' / 'capability_map' / 'northwind.json').read_text(encoding='utf8'))
 
 
 def canvases():

@@ -1,0 +1,126 @@
+{# Capability-map parts shared by the viewer, tree, applications-by-capability and planning macros.
+
+   Groups: every macro takes `capability_type` from the capability data and groups by it (flask_basecoat/capability.py):
+   Strategic, Operational, Supporting, then "Type not set". Nothing else is read as a type.
+
+   The ramp (maturity, importance, investment): ONE sequential ramp of the primary token, five steps at opacity 20, 40,
+   60, 80 and 100 percent; step 0 means "nothing" and is a dashed outline with no fill. A step is a swatch or a band
+   beside text that is always printed ("Maturity 3/5, Defined"), so colour is never the only signal, and the text sits
+   on the card, never on a step, so its contrast does not depend on the token values. Distances between steps in
+   normal vision, protanopia, deuteranopia and tritanopia are printed by scripts/capability_ramp.py and asserted by
+   tests/test_capability_ramp.py (closest pair at least 0.08 OKLab).
+   Behaviour is flask_basecoat/static/js/src/components/capability-map.js. #}
+{% import 'basecoat/index.html' as ui %}
+
+{% set RAMP = {0: 'border-dashed', 1: 'bg-primary/20', 2: 'bg-primary/40', 3: 'bg-primary/60', 4: 'bg-primary/80', 5: 'bg-primary'} %}
+{% set MATURITY = {1: 'Initial', 2: 'Developing', 3: 'Defined', 4: 'Managed', 5: 'Optimized'} %}
+{% set METRICS = [('maturity', 'Maturity'), ('importance', 'Importance'), ('investment', 'Investment')] %}
+{% set LEGENDS = {
+  'maturity': [(1, '1 Initial'), (2, '2 Developing'), (3, '3 Defined'), (4, '4 Managed'), (5, '5 Optimized')],
+  'importance': [(1, 'Low'), (2, 'Medium'), (4, 'High'), (5, 'Critical')],
+  'investment': [(0, 'None'), (1, 'Low'), (3, 'Medium'), (5, 'High')]} %}
+{% set LIFECYCLE_ICON = {'Invest': 'circle-check', 'Tolerate': 'circle-dashed', 'Migrate': 'loader', 'Eliminate': 'circle-alert'} %}
+{% set CHEVRON = 'shrink-0 text-muted-foreground' %}
+
+{#- The text of the selected metric, all three rendered, one visible. -#}
+{% macro metric_text(c) -%}
+{%- set m = c.metrics or {} -%}
+<span data-metric-text="maturity">Maturity {{ m.maturity or 0 }}/5{% if MATURITY.get(m.maturity) %}, {{ MATURITY[m.maturity] }}{% endif %}</span><span data-metric-text="importance" hidden>{{ (m.strategicImportance or 'not set')|capitalize }} importance</span><span data-metric-text="investment" hidden>{{ (m.currentInvestment or 'not set')|capitalize }} investment</span>
+{%- endmacro %}
+
+{#- A swatch of the ramp: a plain token class for the step (border-dashed for step 0), swapped by the script when the metric changes. -#}
+{% macro swatch(c, class='size-4', fixed=false) -%}
+{%- set s = capability_steps(c.metrics) -%}
+<span class="{{ RAMP[s.maturity] }} {{ class }} shrink-0 rounded-sm border" role="presentation" data-ramp{% if not fixed %} data-h-maturity="{{ s.maturity }}" data-h-importance="{{ s.importance }}" data-h-investment="{{ s.investment }}"{% endif %}></span>
+{%- endmacro %}
+
+{#- The heat bar across the top of a map tile. -#}
+{% macro bar(c) -%}
+{%- set s = capability_steps(c.metrics) -%}
+<span class="{{ RAMP[s.maturity] }} block h-1.5 w-full shrink-0 rounded-full border" role="presentation" data-ramp data-h-maturity="{{ s.maturity }}" data-h-importance="{{ s.importance }}" data-h-investment="{{ s.investment }}"></span>
+{%- endmacro %}
+
+{#- The metric ToggleGroup ("Heat by"). -#}
+{% macro metric_toggle() -%}
+{% call ui.toggle_group(type='single', variant='outline', size='sm', attrs={'aria-label': 'Heat by', 'data-capmap-metric': ''}) %}
+  {% for value, label in METRICS %}{{ ui.toggle_group_item(text=label, value=value, variant='outline', size='sm', pressed=(value == 'maturity')) }}{% endfor %}
+{% endcall %}
+{%- endmacro %}
+
+{#- The legend: one Badge per step, each with its swatch and its word; one row per metric, the selected one visible. -#}
+{% macro legend() -%}
+{% for key, label in METRICS %}
+<div class="flex flex-wrap items-center gap-2" data-legend="{{ key }}"{% if key != 'maturity' %} hidden{% endif %} role="group" aria-label="Legend, {{ label|lower }}">
+  <span class="text-xs font-medium text-muted-foreground">{{ label }}</span>
+  {% for step, text in LEGENDS[key] %}{% call ui.badge(variant='outline') %}<span class="{{ RAMP[step] }} size-3 rounded-sm border" role="presentation"></span>{{ text }}{% endcall %}{% endfor %}
+  {% if key == 'maturity' %}{% call ui.badge(variant='outline') %}<span class="{{ RAMP[0] }} size-3 rounded-sm border" role="presentation"></span>Not assessed{% endcall %}{% endif %}
+</div>
+{% endfor %}
+{%- endmacro %}
+
+{#- The one view ToggleGroup: <name> view with two options. -#}
+{% macro view_toggle(name, first, second, attr='data-capmap-view') -%}
+{% call ui.toggle_group(type='single', variant='outline', size='sm', attrs={'aria-label': name ~ ' view', attr: ''}) %}
+  {{ ui.toggle_group_item(text=first[1], value=first[0], variant='outline', size='sm', pressed=true) }}
+  {{ ui.toggle_group_item(text=second[1], value=second[0], variant='outline', size='sm') }}
+{% endcall %}
+{%- endmacro %}
+
+{#- The list route and the table view: every capability as a row, with its own type. -#}
+{% macro capability_table(caps, name) -%}
+{% call ui.table_container() %}{% call ui.table(attrs={'aria-label': name ~ ', list view'}) %}
+  {% call ui.table_header() %}{% call ui.table_row() %}
+    {% for h in ['Capability', 'Type', 'Level', 'Owner', 'Maturity', 'Importance', 'Investment', 'Risk'] %}{{ ui.table_head(text=h, attrs={'scope': 'col'}) }}{% endfor %}
+  {% endcall %}{% endcall %}
+  {% call ui.table_body() %}
+    {% for c in caps %}
+    {% call ui.table_row() %}
+      {% call ui.table_head(class='font-medium', attrs={'scope': 'row'}) %}{{ c.name }}{% endcall %}
+      {{ ui.table_cell(text=capability_type_label(c)) }}
+      {{ ui.table_cell(text='L' ~ c.level, class='tabular-nums') }}
+      {{ ui.table_cell(text=c.metrics.owner or 'No owner. Assign one') }}
+      {% call ui.table_cell() %}<span class="flex items-center gap-2">{{ swatch(c, fixed=true) }}<span>{{ c.metrics.maturity }}/5, {{ MATURITY.get(c.metrics.maturity, '') }}</span></span>{% endcall %}
+      {{ ui.table_cell(text=c.metrics.strategicImportance|capitalize) }}
+      {{ ui.table_cell(text=c.metrics.currentInvestment|capitalize) }}
+      {{ ui.table_cell(text=(c.metrics.riskLevel or 'medium')|capitalize) }}
+    {% endcall %}
+    {% endfor %}
+  {% endcall %}
+{% endcall %}{% endcall %}
+{%- endmacro %}
+
+{#- One Sheet for the details of a capability, filled by the script from the page data when a name is activated. -#}
+{% macro detail_sheet(id) -%}
+{{ ui.sheet_overlay() }}
+{% call ui.sheet_content(side='right', id=id, attrs={'data-capmap-sheet': ''}) %}
+  {% call ui.sheet_header() %}
+    {{ ui.sheet_title(text='Capability', attrs={'data-f': 'name'}) }}
+    {{ ui.sheet_description(text='', attrs={'data-f': 'description'}) }}
+  {% endcall %}
+  <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 px-4 text-sm">
+    {% for key, label in [('type', 'Type'), ('level', 'Level'), ('owner', 'Owner'), ('maturity', 'Maturity'), ('importance', 'Importance'), ('investment', 'Investment'), ('risk', 'Risk'), ('apps', 'Supported by')] %}
+    <dt class="text-muted-foreground">{{ label }}</dt><dd data-f="{{ key }}">-</dd>
+    {% endfor %}
+  </dl>
+  {% call ui.sheet_footer() %}{{ ui.sheet_close(text='Close', variant='outline', size='default') }}{% endcall %}
+  {% call ui.sheet_close(variant='ghost', size='icon-sm', class='absolute top-4 right-4') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{#- The page data for the script. -#}
+{% macro data_script(data) -%}
+<script type="application/json" data-capmap-data>{{ {'capabilities': data.capabilities, 'applications': data.applications}|tojson }}</script>
+{%- endmacro %}
+
+{#- Group heading used by the map and the tree. -#}
+{% macro group_heading(g, prefix) -%}
+<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+  <h3 class="text-sm font-semibold" id="{{ prefix }}-grp-{{ g.key }}">{{ g.label }}{% if g.key != 'unset' %} capabilities{% endif %}</h3>
+  <p class="text-xs text-muted-foreground">{{ g.description }}{% if g.description %} · {% endif %}{{ g['items']|length }} {{ 'capability' if g['items']|length == 1 else 'capabilities' }}</p>
+</div>
+{%- endmacro %}
+
+{#- The empty state of a group with no capabilities. -#}
+{% macro empty_group(g) -%}
+<p class="text-sm text-muted-foreground">No {{ g.label|lower }} capabilities yet. Add one, or set the type of an existing capability.</p>
+{%- endmacro %}

@@ -1,0 +1,85 @@
+{# Applications by capability, C2: a matrix as one Table. Rows are capabilities, grouped under their own
+   capability_type (Strategic, Operational, Supporting, then "Type not set") as row groups with a heading each;
+   columns are Capability, Level, Maturity (swatch and words), the applications that support it, and the count.
+   A capability with no application says so. The "Coverage view" ToggleGroup narrows the rows to capabilities without one.
+   Usage: {{ apps.applications_by_capability(data) }}. #}
+{% import 'basecoat/capability_map/_parts.html' as p %}
+{% import 'basecoat/index.html' as ui %}
+
+{% macro stat_card(label, value, badge, icon, headline, detail) -%}
+{% call ui.card(class='@container/card') %}
+  {% call ui.card_header() %}
+    {{ ui.card_description(text=label) }}
+    {% call ui.card_title(class='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl') %}{{ value }}{% endcall %}
+    {% call ui.card_action() %}{% call ui.badge(variant='outline') %}{{ lucide(icon) }}{{ badge }}{% endcall %}{% endcall %}
+  {% endcall %}
+  {% call ui.card_footer(class='flex-col items-start gap-1.5 text-sm') %}
+    <div class="line-clamp-1 flex gap-2 font-medium">{{ headline }}</div>
+    <div class="text-muted-foreground">{{ detail }}</div>
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro applications_by_capability(data, id='applications-by-capability') -%}
+{%- set caps = data.capabilities -%}
+{%- set apps = data.applications -%}
+{%- set groups = capability_groups(caps, data.map.typeDescriptions) -%}
+{%- set supporting = {} -%}
+{%- set covered = [] -%}
+{%- for c in caps -%}
+  {%- set mine = [] -%}{%- for a in apps %}{% if c.id in a.capabilities %}{% set _ = mine.append(a) %}{% endif %}{% endfor -%}
+  {%- set _ = supporting.update({c.id: mine}) -%}{%- if mine %}{% set _ = covered.append(c) %}{% endif -%}
+{%- endfor -%}
+{%- set gaps = caps|length - covered|length -%}
+<div class="flex flex-col gap-4" data-capmap="{{ id }}">
+  <div class="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    {{ stat_card('Applications', apps|length, apps|map(attribute='domain')|unique|list|length ~ ' domains', 'layers', 'In service across the group', 'Grouped by technical domain') }}
+    {{ stat_card('Capabilities supported', covered|length ~ ' of ' ~ caps|length, (covered|length * 100 // caps|length) ~ '%', 'target', 'Backed by at least one application', gaps ~ ' run on spreadsheets and email') }}
+    {{ stat_card('Without an application', gaps, 'Gaps', 'triangle-alert', 'Capabilities no application supports', 'Filter the table to see them') }}
+    {{ stat_card('Migrate or retire', apps|selectattr('lifecycle', 'in', ['Migrate', 'Eliminate'])|list|length, 'By 2027', 'refresh-cw', 'Replacements approved in the plan', 'Applications marked Migrate or Eliminate') }}
+  </div>
+
+  <div class="flex flex-wrap items-end justify-between gap-3">
+    <div class="flex max-w-3xl flex-col gap-1">
+      <h2 class="text-lg font-semibold tracking-tight">{{ data.application_map.name }}</h2>
+      <p class="text-sm text-muted-foreground">Which applications support each capability, grouped by capability type.</p>
+    </div>
+    {% call ui.toggle_group(type='single', variant='outline', size='sm', attrs={'aria-label': 'Coverage view', 'data-capmap-filter': ''}) %}
+      {{ ui.toggle_group_item(text='All capabilities', value='all', variant='outline', size='sm', pressed=true) }}
+      {{ ui.toggle_group_item(text='Without an application', value='gaps', variant='outline', size='sm') }}
+    {% endcall %}
+  </div>
+  <div class="flex flex-col gap-2">{{ p.legend() }}</div>
+
+  <div class="flex flex-col gap-2">
+    <div class="overflow-x-auto rounded-lg border" role="region" tabindex="0" aria-label="Applications by capability, scroll horizontally" data-entelim-form="C2">
+      {% call ui.table_container(class='min-w-240') %}{% call ui.table(attrs={'aria-label': 'Applications by capability'}) %}
+        {% call ui.table_header() %}{% call ui.table_row() %}
+          {% for h in ['Capability', 'Level', 'Maturity', 'Applications', 'Count'] %}{{ ui.table_head(text=h, attrs={'scope': 'col'}) }}{% endfor %}
+        {% endcall %}{% endcall %}
+        {% for g in groups %}
+        {% call ui.table_body(attrs={'data-cap-group': g.key}) %}
+          {% call ui.table_row(class='bg-muted/50') %}{% call ui.table_head(class='font-semibold', attrs={'colspan': '5', 'scope': 'rowgroup', 'id': id ~ '-grp-' ~ g.key}) %}{{ g.label }}{% if g.key != 'unset' %} capabilities{% endif %} · {{ g['items']|length }}{% endcall %}{% endcall %}
+          {% for c in g['items'] %}
+          {% set mine = supporting[c.id] %}
+          {% call ui.table_row(attrs={'data-covered': '1' if mine else '0', 'data-cap-tile': c.id}) %}
+            {% call ui.table_head(class='font-medium whitespace-normal', attrs={'scope': 'row'}) %}<span class="{{ {0: '', 1: 'ml-4', 2: 'ml-8', 3: 'ml-12', 4: 'ml-16'}.get(c.level, '') }}">{{ c.name }}</span>{% endcall %}
+            {{ ui.table_cell(text='L' ~ c.level, class='tabular-nums') }}
+            {% call ui.table_cell() %}<span class="flex items-center gap-2">{{ p.swatch(c, fixed=true) }}<span class="whitespace-nowrap">{{ c.metrics.maturity }}/5, {{ p.MATURITY.get(c.metrics.maturity, '') }}</span></span>{% endcall %}
+            {% call ui.table_cell(class='whitespace-normal') %}
+              {% if mine %}<span class="flex flex-wrap gap-1">{% for a in mine %}{% call ui.badge(variant='outline') %}{{ lucide(p.LIFECYCLE_ICON.get(a.lifecycle, 'circle')) }}{{ a.name }}{% endcall %}{% endfor %}</span>
+              {% else %}<span class="text-muted-foreground">No application supports this capability. Add one.</span>{% endif %}
+            {% endcall %}
+            {{ ui.table_cell(text=mine|length, class='tabular-nums') }}
+          {% endcall %}
+          {% endfor %}
+          {% if not g['items'] %}{% call ui.table_row() %}{{ ui.table_cell(text='No ' ~ g.label|lower ~ ' capabilities yet.', attrs={'colspan': '5'}, class='text-muted-foreground') }}{% endcall %}{% endif %}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}{% endcall %}
+    </div>
+    <p class="text-xs text-muted-foreground">Scroll sideways on a narrow screen. The lifecycle of each application is its icon: Invest, Tolerate, Migrate, Eliminate.</p>
+  </div>
+  <p class="sr-only" role="status" aria-live="polite" data-capmap-live></p>
+</div>
+{%- endmacro %}

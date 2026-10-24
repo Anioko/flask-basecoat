@@ -1,0 +1,68 @@
+{# Capability map (viewer), C2: the levelled heat map of recognisable-form-v1 section 4. Three bands from the
+   capability_type field (Strategic, Operational, Supporting, then "Type not set"); level-1 capabilities are tiles
+   side by side, each holding its sub-capabilities; every tile is shaded by one chosen measure (Heat by), with the
+   legend always on screen and the figure printed in words beside the swatch. A name opens its detail in a Sheet.
+   The list route is a Table of every capability with its own type.
+   Usage: {{ capmap.capability_map(data) }}; data = {'map': {name, description, typeDescriptions}, 'capabilities': [...with capability_type...], 'applications': [...]}. #}
+{% import 'basecoat/capability_map/_parts.html' as p %}
+{% import 'basecoat/index.html' as ui %}
+
+{% macro tile(c, caps, depth, sheet) -%}
+{%- set kids = capability_children(caps, c.id) -%}
+<div class="flex flex-col gap-2 rounded-lg border bg-card p-3" data-cap-tile="{{ c.id }}">
+  {{ p.bar(c) }}
+  <div class="flex items-start gap-1">
+    {% if kids %}{% call ui.button(variant='ghost', size='icon-xs', class=p.CHEVRON, attrs={'data-cap-toggle': c.id, 'aria-expanded': 'true' if depth == 0 else 'false', 'aria-label': 'Show sub-capabilities of ' ~ c.name}) %}{{ lucide('chevron-right', 'group-aria-expanded/button:hidden') }}{{ lucide('chevron-down', 'hidden group-aria-expanded/button:block') }}{% endcall %}{% endif %}
+    {% call ui.button(variant='link', class='h-auto min-w-0 flex-1 justify-start p-0 text-left whitespace-normal text-foreground ' ~ ('text-base font-semibold' if depth == 0 else 'text-sm font-medium'), attrs={'data-fb-open': sheet, 'data-cap-open': c.id}) %}{{ c.name }}{% endcall %}
+  </div>
+  <p class="flex items-center gap-2 text-xs text-muted-foreground">{{ p.swatch(c) }}<span>{{ p.metric_text(c) }}</span></p>
+  {% if depth == 0 %}<div class="flex flex-wrap gap-1">{{ ui.badge(text=capability_type_label(c), variant='outline') }}{% if kids %}{{ ui.badge(text=kids|length ~ ' sub', variant='secondary') }}{% endif %}</div>{% endif %}
+  {% if kids %}
+  <div class="flex flex-col gap-2" data-cap-children="{{ c.id }}"{% if depth > 0 %} hidden{% endif %}>
+    {% for k in kids %}{{ tile(k, caps, depth + 1, sheet) }}{% endfor %}
+  </div>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro capability_map(data, id='capability-map') -%}
+{%- set caps = data.capabilities -%}
+{%- set groups = capability_groups(capability_roots(caps), data.map.typeDescriptions) -%}
+{%- set sheet = id ~ '-detail' -%}
+<div class="flex flex-col gap-4" data-capmap="{{ id }}">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div class="flex max-w-3xl flex-col gap-1">
+      <h2 class="text-lg font-semibold tracking-tight">{{ data.map.name }}</h2>
+      <p class="text-sm text-muted-foreground">{{ data.map.description }}</p>
+    </div>
+    {{ p.view_toggle('Map', ('map', 'Map'), ('list', 'List')) }}
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    {{ p.metric_toggle() }}
+    {% call ui.button_group() %}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-expand-all': ''}) %}{{ lucide('chevrons-up-down') }}Expand all{% endcall %}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-collapse-all': ''}) %}{{ lucide('minimize') }}Collapse all{% endcall %}
+    {% endcall %}
+  </div>
+  <div class="flex flex-col gap-2">{{ p.legend() }}</div>
+
+  <div class="flex flex-col gap-2" data-capmap-pane="map">
+    <div class="overflow-x-auto rounded-lg" role="region" tabindex="0" aria-label="Capability map, scroll horizontally" data-entelim-form="C2">
+      <div class="flex min-w-240 flex-col gap-4">
+        {% for g in groups %}
+        <section class="flex flex-col gap-3 rounded-lg border p-4" aria-labelledby="{{ id }}-grp-{{ g.key }}">
+          {{ p.group_heading(g, id) }}
+          {% if g['items'] %}<div class="grid grid-cols-3 items-start gap-3">{% for c in g['items'] %}{{ tile(c, caps, 0, sheet) }}{% endfor %}</div>{% else %}{{ p.empty_group(g) }}{% endif %}
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="text-xs text-muted-foreground">Scroll sideways on a narrow screen. Each tile shows its figure in words; open a name for its detail.</p>
+  </div>
+  <div hidden data-capmap-pane="list">{{ p.capability_table(caps, 'Capability map') }}</div>
+
+  <p class="sr-only" role="status" aria-live="polite" data-capmap-live></p>
+  {{ p.detail_sheet(sheet) }}
+  {{ p.data_script(data) }}
+</div>
+{%- endmacro %}

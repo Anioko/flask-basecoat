@@ -189,6 +189,22 @@ def canvas(slug):
     return render_template(entry['page'], data=canvas_data(slug), entry=entry)
 
 
+@examples_bp.route('/capability/')
+def capability_index():
+    """Directory of the capability-map views."""
+    from flask_basecoat.canvases import CAPABILITY
+    return render_template('examples/capability/index.html', views=[dict(slug=s, title=t, form=f) for s, t, f in CAPABILITY])
+
+
+@examples_bp.route('/capability/<slug>')
+def capability(slug):
+    """One capability-map view with the Northwind Logistics capability data."""
+    from flask_basecoat.canvases import CAPABILITY, capability_data
+    if slug not in {s for s, _, _ in CAPABILITY}:
+        abort(404)
+    return render_template(f'examples/capability/{slug}.html', data=capability_data())
+
+
 @examples_bp.route('/<slug>', methods=['GET', 'POST'])
 def ported(slug):
     """A ported screen (templates/examples/ported/<slug>.html); earlier addresses redirect to their replacement."""

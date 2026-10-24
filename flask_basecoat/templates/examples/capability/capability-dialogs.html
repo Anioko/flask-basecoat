@@ -1,0 +1,51 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/capability_map/capability-dialogs.html' as dlg %}
+{% import 'basecoat/capability_map/_parts.html' as p %}
+{% import 'basecoat/index.html' as ui %}
+{#- The four capability dialogs on the dashboard-01 frame, Tier B. Check:  python compliance/scripts/check_page.py /examples/capability/capability-dialogs --nearest dashboard-01 --browser -#}
+{% block title %}Capability dialogs · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% macro action(text, act, icon, variant='outline', id=none, group=none) -%}
+{% set attrs = {'data-cap-action': act} %}{% if id %}{% set _ = attrs.update({'data-cap-id': id}) %}{% endif %}{% if group %}{% set _ = attrs.update({'data-group': group}) %}{% endif %}
+{% call ui.button(variant=variant, size='sm', attrs=attrs) %}{{ lucide(icon) }}{{ text }}{% endcall %}
+{%- endmacro %}
+{% block body %}
+{% call shell('Capability dialogs') %}
+  <div class="flex flex-col gap-4 px-4 lg:px-6">
+    <div class="flex max-w-3xl flex-col gap-1">
+      <h2 class="text-lg font-semibold tracking-tight">Capability dialogs</h2>
+      <p class="text-sm text-muted-foreground">The four dialogs the capability map uses to add, edit, describe and delete capabilities, opened here on Northwind Logistics data. Saving announces the result and emits an event; nothing is stored.</p>
+    </div>
+    <div class="grid gap-4 @3xl/main:grid-cols-2">
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Capability form') }}{{ ui.card_description(text='Add a capability at the root, add a sub-capability (its type and level follow the parent and are locked), or edit one. The type can be left not set.') }}{% endcall %}
+        {% call ui.card_content(class='flex flex-wrap gap-2') %}
+          {{ action('Add capability', 'add', 'plus', 'default', group='strategic') }}
+          {{ action('Add sub-capability to Freight Billing', 'child', 'corner-up-right', id='order-billing') }}
+          {{ action('Edit Shipment Visibility', 'edit', 'pencil', id='transport-visibility') }}
+          {{ action('Edit Sustainability Reporting (no type)', 'edit', 'pencil', id='esg') }}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Capability map details') }}{{ ui.card_description(text='Rename the map and change its description.') }}{% endcall %}
+        {% call ui.card_content(class='flex flex-wrap gap-2') %}{{ action('Edit map details', 'meta', 'pencil') }}{% endcall %}
+      {% endcall %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Capability type descriptions') }}{{ ui.card_description(text='The sentence under each group heading: Strategic, Operational and Supporting.') }}{% endcall %}
+        {% call ui.card_content(class='flex flex-wrap gap-2') %}{{ action('Edit type descriptions', 'types', 'pencil') }}{% endcall %}
+      {% endcall %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Delete confirmation') }}{{ ui.card_description(text='Names how many sub-capabilities go with the one you delete.') }}{% endcall %}
+        {% call ui.card_content(class='flex flex-wrap gap-2') %}
+          {{ action('Delete Shipment Visibility', 'delete', 'trash-2', 'destructive', id='transport-visibility') }}
+          {{ action('Delete Order Management', 'delete', 'trash-2', 'destructive', id='order') }}
+        {% endcall %}
+      {% endcall %}
+    </div>
+    <p class="sr-only" role="status" aria-live="polite" data-capmap-live></p>
+  </div>
+  {{ dlg.form_dialog() }}{{ dlg.metadata_dialog(data.map) }}{{ dlg.type_dialog(data.map) }}{{ dlg.delete_dialog() }}
+  {{ p.data_script(data) }}
+{% endcall %}
+{% endblock %}

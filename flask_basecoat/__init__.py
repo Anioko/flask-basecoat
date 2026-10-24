@@ -65,6 +65,12 @@ class Basecoat:
         app.jinja_env.globals.setdefault('lucide', lucide)
         app.jinja_env.globals.setdefault('slot', _slot)
         app.jinja_env.globals.setdefault('tw', tw)
+        from . import capability as _capability
+        app.jinja_env.globals.setdefault('capability_groups', _capability.capability_groups)
+        app.jinja_env.globals.setdefault('capability_roots', _capability.capability_roots)
+        app.jinja_env.globals.setdefault('capability_children', _capability.capability_children)
+        app.jinja_env.globals.setdefault('capability_type_label', _capability.type_label)
+        app.jinja_env.globals.setdefault('capability_steps', _capability.steps)
         from . import charts as _charts
         app.jinja_env.globals.setdefault('chart_spec', _charts.load_spec)
         app.jinja_env.globals.setdefault('chart_style_css', _charts.chart_style_css)

@@ -1,0 +1,13 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/capability_map/capability-tree.html' as capmap %}
+{% import 'basecoat/capability_map/capability-dialogs.html' as dlg %}
+{#- Capability tree on the dashboard-01 frame, Tier C2. Check:  python compliance/scripts/check_page.py /examples/capability/capability-tree --nearest dashboard-01 --browser -#}
+{% block title %}Capability tree · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% block body %}
+{% call shell('Capability tree') %}
+  <div class="px-4 lg:px-6">{{ capmap.capability_tree(data) }}</div>
+  {{ dlg.form_dialog() }}{{ dlg.delete_dialog() }}
+{% endcall %}
+{% endblock %}

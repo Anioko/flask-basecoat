@@ -1,0 +1,1631 @@
+{
+  "map": {
+    "name": "Northwind Logistics Business Capability Map",
+    "description": "What Northwind must be able to do to move freight for 2,300 shippers across 14 sites, assessed in the Q3 2026 capability review.",
+    "typeDescriptions": {
+      "strategic": "High-level capabilities that differentiate the organization",
+      "operational": "Core business operations that deliver value to customers",
+      "supporting": "Foundational capabilities that enable strategic and operational layers"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "strategy",
+      "name": "Strategy & Planning",
+      "description": "Sets corporate direction, long-range plans and the portfolio of change across the group.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Helena Voss, Chief Strategy Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "strategy-corporate",
+      "name": "Corporate Strategy",
+      "description": "Five-year strategy, market entry decisions and the annual strategic review.",
+      "level": 1,
+      "parentId": "strategy",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Helena Voss, Chief Strategy Officer",
+        "riskLevel": "low"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "strategy-portfolio",
+      "name": "Portfolio & Investment Planning",
+      "description": "Prioritises and funds change initiatives against strategic goals.",
+      "level": 1,
+      "parentId": "strategy",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Marcus Okafor, Head of PMO",
+        "riskLevel": "high"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "strategy-portfolio-business-case",
+      "name": "Business Case Management",
+      "description": "Templates, benefit tracking and stage-gate approval for investments.",
+      "level": 2,
+      "parentId": "strategy-portfolio",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Marcus Okafor, Head of PMO",
+        "riskLevel": "medium"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "strategy-portfolio-benefits",
+      "name": "Benefits Realisation",
+      "description": "Tracks delivered value after go-live against the approved case.",
+      "level": 2,
+      "parentId": "strategy-portfolio",
+      "metrics": {
+        "maturity": 1,
+        "strategicImportance": "high",
+        "currentInvestment": "none",
+        "plannedInvestment": "medium",
+        "owner": "Marcus Okafor, Head of PMO",
+        "riskLevel": "high"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "strategy-market",
+      "name": "Market Intelligence",
+      "description": "Competitor, lane-rate and customer-segment analysis for pricing and growth.",
+      "level": 1,
+      "parentId": "strategy",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Ines Duarte, Director of Insights",
+        "riskLevel": "medium"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "strategy-partnerships",
+      "name": "Partnerships & Alliances",
+      "description": "Carrier alliances, port partnerships and joint ventures.",
+      "level": 1,
+      "parentId": "strategy",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "low",
+        "owner": "Tomasz Brandt, VP Alliances",
+        "riskLevel": "low"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "network",
+      "name": "Network & Route Design",
+      "description": "Designs the hub, depot and lane network that every shipment moves through.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Priya Raman, VP Network Strategy",
+        "riskLevel": "medium"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "network-modelling",
+      "name": "Network Modelling",
+      "description": "Scenario models for hub locations, capacity and service levels.",
+      "level": 1,
+      "parentId": "network",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Priya Raman, VP Network Strategy",
+        "riskLevel": "medium"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "network-modelling-hub",
+      "name": "Hub Location Planning",
+      "description": "Site selection and catchment analysis for new cross-dock hubs.",
+      "level": 2,
+      "parentId": "network-modelling",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Priya Raman, VP Network Strategy",
+        "riskLevel": "medium"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "network-modelling-capacity",
+      "name": "Capacity Planning",
+      "description": "Seasonal capacity plans for linehaul, sortation and dock doors.",
+      "level": 2,
+      "parentId": "network-modelling",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Daniel Mensah, Capacity Planning Lead",
+        "riskLevel": "high"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "network-lanes",
+      "name": "Lane & Rate Design",
+      "description": "Defines lanes, transit times and the base tariff for each corridor.",
+      "level": 1,
+      "parentId": "network",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Sofia Lindqvist, Pricing Director",
+        "riskLevel": "low"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "network-sustainability",
+      "name": "Sustainable Network Design",
+      "description": "Emissions modelling and modal shift to rail and short-sea.",
+      "level": 1,
+      "parentId": "network",
+      "metrics": {
+        "maturity": 1,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Amara Nwosu, Head of Sustainability",
+        "riskLevel": "high"
+      },
+      "capability_type": "strategic"
+    },
+    {
+      "id": "customer",
+      "name": "Customer Management",
+      "description": "Wins, onboards and serves shippers from first quote to renewal.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Rachel Kim, Chief Commercial Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "customer-sales",
+      "name": "Sales & Quoting",
+      "description": "Spot and contract quoting, tender responses and the deal desk.",
+      "level": 1,
+      "parentId": "customer",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Luis Ortega, VP Sales",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "customer-sales-spot",
+      "name": "Spot Quoting",
+      "description": "Instant quotes for ad-hoc freight from the portal and sales team.",
+      "level": 2,
+      "parentId": "customer-sales",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Luis Ortega, VP Sales",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "customer-sales-tender",
+      "name": "Tender Management",
+      "description": "Responses to annual RFQs from enterprise shippers.",
+      "level": 2,
+      "parentId": "customer-sales",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Luis Ortega, VP Sales",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "customer-onboarding",
+      "name": "Customer Onboarding",
+      "description": "Credit checks, account set-up and integration with shipper systems.",
+      "level": 1,
+      "parentId": "customer",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Grace Adeyemi, Customer Success Lead",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "customer-service",
+      "name": "Customer Service",
+      "description": "Shipment enquiries, claims and exception handling across channels.",
+      "level": 1,
+      "parentId": "customer",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Grace Adeyemi, Customer Success Lead",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "customer-account",
+      "name": "Account Management",
+      "description": "Quarterly business reviews, renewals and growth plans for key accounts.",
+      "level": 1,
+      "parentId": "customer",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Rachel Kim, Chief Commercial Officer",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "order",
+      "name": "Order Management",
+      "description": "Captures, validates and releases transport and warehouse orders.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "critical",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Jonas Weber, Director of Order Operations",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "order-capture",
+      "name": "Order Capture",
+      "description": "Orders from portal, EDI and API, validated against contract rules.",
+      "level": 1,
+      "parentId": "order",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "critical",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Jonas Weber, Director of Order Operations",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "order-booking",
+      "name": "Booking & Scheduling",
+      "description": "Pickup slots, dock appointments and delivery windows.",
+      "level": 1,
+      "parentId": "order",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Jonas Weber, Director of Order Operations",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "order-billing",
+      "name": "Freight Billing",
+      "description": "Rating, invoicing and accessorial charges for completed shipments.",
+      "level": 1,
+      "parentId": "order",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Elena Petrova, Billing Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "order-billing-rating",
+      "name": "Shipment Rating",
+      "description": "Applies contract tariffs, fuel surcharge and accessorials.",
+      "level": 2,
+      "parentId": "order-billing",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Elena Petrova, Billing Manager",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "order-billing-disputes",
+      "name": "Invoice Dispute Handling",
+      "description": "Resolves billing disputes and credit notes with shippers.",
+      "level": 2,
+      "parentId": "order-billing",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Elena Petrova, Billing Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport",
+      "name": "Transportation Management",
+      "description": "Plans, executes and tracks every movement by road, rail and sea.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Kwame Asante, Chief Operating Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-planning",
+      "name": "Load Planning & Optimisation",
+      "description": "Consolidates orders into loads and optimises routes each night.",
+      "level": 1,
+      "parentId": "transport",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Kwame Asante, Chief Operating Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-planning-routes",
+      "name": "Route Optimisation",
+      "description": "Multi-stop routing with time windows and driver hours.",
+      "level": 2,
+      "parentId": "transport-planning",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Nadia Haddad, Planning Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-planning-consolidation",
+      "name": "Load Consolidation",
+      "description": "Builds full loads from part-load orders across customers.",
+      "level": 2,
+      "parentId": "transport-planning",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Nadia Haddad, Planning Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-carrier",
+      "name": "Carrier Management",
+      "description": "Subcontractor onboarding, rates, scorecards and capacity.",
+      "level": 1,
+      "parentId": "transport",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Oliver Grant, Head of Procurement",
+        "riskLevel": "high"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-visibility",
+      "name": "Shipment Visibility",
+      "description": "Real-time tracking, ETA prediction and proactive exception alerts.",
+      "level": 1,
+      "parentId": "transport",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Mei Tanaka, Control Tower Lead",
+        "riskLevel": "high"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-visibility-tracking",
+      "name": "Real-time Tracking",
+      "description": "GPS and carrier milestone feeds in a single shipment timeline.",
+      "level": 2,
+      "parentId": "transport-visibility",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Mei Tanaka, Control Tower Lead",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-visibility-eta",
+      "name": "ETA Prediction",
+      "description": "Machine-learned arrival times from traffic, dwell and history.",
+      "level": 2,
+      "parentId": "transport-visibility",
+      "metrics": {
+        "maturity": 1,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Mei Tanaka, Control Tower Lead",
+        "riskLevel": "high"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "transport-customs",
+      "name": "Customs & Trade",
+      "description": "Declarations, tariff classification and cross-border documents.",
+      "level": 1,
+      "parentId": "transport",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Farid Rahimi, Trade Compliance Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "warehouse",
+      "name": "Warehouse Operations",
+      "description": "Receives, stores, picks and dispatches stock across 14 sites.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Anna Kowalski, VP Warehousing",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "warehouse-inbound",
+      "name": "Inbound & Receiving",
+      "description": "Advance shipping notices, receipt checks and put-away.",
+      "level": 1,
+      "parentId": "warehouse",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "low",
+        "owner": "Anna Kowalski, VP Warehousing",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "warehouse-inventory",
+      "name": "Inventory Control",
+      "description": "Stock accuracy, cycle counts and replenishment.",
+      "level": 1,
+      "parentId": "warehouse",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Anna Kowalski, VP Warehousing",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "warehouse-fulfilment",
+      "name": "Pick, Pack & Dispatch",
+      "description": "Wave picking, packing stations and outbound sortation.",
+      "level": 1,
+      "parentId": "warehouse",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Samuel Osei, Fulfilment Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "warehouse-fulfilment-picking",
+      "name": "Wave Picking",
+      "description": "Groups orders into pick waves by carrier cut-off.",
+      "level": 2,
+      "parentId": "warehouse-fulfilment",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "low",
+        "owner": "Samuel Osei, Fulfilment Manager",
+        "riskLevel": "low"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "warehouse-fulfilment-returns",
+      "name": "Returns Processing",
+      "description": "Receives, grades and restocks returned goods.",
+      "level": 2,
+      "parentId": "warehouse-fulfilment",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Samuel Osei, Fulfilment Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "fleet",
+      "name": "Fleet Management",
+      "description": "Owns and maintains 640 tractors, 1,900 trailers and their drivers.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Viktor Nilsen, Head of Fleet",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "fleet-maintenance",
+      "name": "Fleet Maintenance",
+      "description": "Preventive maintenance, inspections and workshop scheduling.",
+      "level": 1,
+      "parentId": "fleet",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Viktor Nilsen, Head of Fleet",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "fleet-telematics",
+      "name": "Telematics & Fuel",
+      "description": "Vehicle telemetry, fuel cards and driving-behaviour scoring.",
+      "level": 1,
+      "parentId": "fleet",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Viktor Nilsen, Head of Fleet",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "fleet-drivers",
+      "name": "Driver Management",
+      "description": "Rostering, hours-of-service compliance and driver training.",
+      "level": 1,
+      "parentId": "fleet",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Lucy Fernandes, Driver Operations Manager",
+        "riskLevel": "medium"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "fleet-electrification",
+      "name": "Fleet Electrification",
+      "description": "Electric vehicle pilots, charging infrastructure and range planning.",
+      "level": 1,
+      "parentId": "fleet",
+      "metrics": {
+        "maturity": 1,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Amara Nwosu, Head of Sustainability",
+        "riskLevel": "high"
+      },
+      "capability_type": "operational"
+    },
+    {
+      "id": "finance",
+      "name": "Finance & Accounting",
+      "description": "Records, reports and controls the group's money.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "David Laurent, Chief Financial Officer",
+        "riskLevel": "low"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "finance-accounting",
+      "name": "General Accounting",
+      "description": "Ledger, month-end close and statutory reporting.",
+      "level": 1,
+      "parentId": "finance",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "low",
+        "owner": "David Laurent, Chief Financial Officer",
+        "riskLevel": "low"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "finance-payables",
+      "name": "Carrier Payables",
+      "description": "Self-billing and payment of subcontracted carriers.",
+      "level": 1,
+      "parentId": "finance",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Chloe Martin, Financial Controller",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "finance-planning",
+      "name": "Financial Planning & Analysis",
+      "description": "Budgets, forecasts and lane-level profitability.",
+      "level": 1,
+      "parentId": "finance",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Chloe Martin, Financial Controller",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "people",
+      "name": "People & Workforce",
+      "description": "Recruits, develops and pays 4,800 employees and seasonal staff.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Fatima Zahra, Chief People Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "people-talent",
+      "name": "Talent Acquisition",
+      "description": "Recruitment of drivers, warehouse staff and specialists.",
+      "level": 1,
+      "parentId": "people",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Fatima Zahra, Chief People Officer",
+        "riskLevel": "high"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "people-learning",
+      "name": "Learning & Safety Training",
+      "description": "Certifications, forklift licences and safety induction.",
+      "level": 1,
+      "parentId": "people",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "low",
+        "owner": "Ben Carter, Learning Lead",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "people-payroll",
+      "name": "Payroll & Time",
+      "description": "Shift timekeeping, overtime and payroll across five countries.",
+      "level": 1,
+      "parentId": "people",
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "low",
+        "owner": "Fatima Zahra, Chief People Officer",
+        "riskLevel": "low"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology",
+      "name": "Technology & Data",
+      "description": "Runs the platforms, integrations and data that every capability depends on.",
+      "level": 0,
+      "parentId": null,
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Arjun Mehta, Chief Information Officer",
+        "riskLevel": "high"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology-integration",
+      "name": "Integration & EDI",
+      "description": "EDI, APIs and event streams with shippers, carriers and ports.",
+      "level": 1,
+      "parentId": "technology",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Arjun Mehta, Chief Information Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology-data",
+      "name": "Data & Analytics",
+      "description": "Data platform, master data and self-service reporting.",
+      "level": 1,
+      "parentId": "technology",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Leah Novak, Head of Data",
+        "riskLevel": "high"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology-data-master",
+      "name": "Master Data Management",
+      "description": "Golden records for customers, locations and products.",
+      "level": 2,
+      "parentId": "technology-data",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Leah Novak, Head of Data",
+        "riskLevel": "high"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology-data-bi",
+      "name": "Reporting & BI",
+      "description": "Operational dashboards and executive scorecards.",
+      "level": 2,
+      "parentId": "technology-data",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Leah Novak, Head of Data",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology-security",
+      "name": "Cybersecurity",
+      "description": "Identity, threat monitoring and incident response.",
+      "level": 1,
+      "parentId": "technology",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Ravi Shankar, Chief Information Security Officer",
+        "riskLevel": "high"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "technology-infrastructure",
+      "name": "Cloud Infrastructure",
+      "description": "Hosting, networks and end-user devices across all sites.",
+      "level": 1,
+      "parentId": "technology",
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Arjun Mehta, Chief Information Officer",
+        "riskLevel": "medium"
+      },
+      "capability_type": "supporting"
+    },
+    {
+      "id": "esg",
+      "name": "Sustainability Reporting",
+      "description": "Collects carbon and social data per shipment and publishes it to customers and regulators.",
+      "level": 0,
+      "parentId": null,
+      "capability_type": null,
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Ines Moreau, Head of Sustainability",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "esg-carbon",
+      "name": "Shipment Carbon Accounting",
+      "description": "Calculates emissions per parcel from fuel, charging and route data.",
+      "level": 1,
+      "parentId": "esg",
+      "capability_type": "",
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Ines Moreau, Head of Sustainability",
+        "riskLevel": "medium"
+      }
+    }
+  ],
+  "application_map": {
+    "name": "Northwind Application Landscape",
+    "description": "The 29 applications that support Northwind's business capabilities, grouped by technical domain.",
+    "domainDescriptions": {
+      "user-experience": "Frontend interfaces, design systems, and user interactions",
+      "application-services": "APIs, business logic, and integration services",
+      "data-storage": "Data management, storage solutions, and data services",
+      "security-identity": "Authentication, authorization, encryption, and compliance",
+      "devops-platform": "Development tools, CI/CD, observability, and infrastructure",
+      "ai-analytics": "Machine learning services and business intelligence",
+      "communication": "Notification systems, real-time communication, and collaboration"
+    }
+  },
+  "applications": [
+    {
+      "id": "app-portal",
+      "name": "Northwind Customer Portal",
+      "description": "Self-service quoting, booking and tracking for shippers.",
+      "domain": "user-experience",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "customer-sales-spot",
+        "order-capture",
+        "transport-visibility-tracking",
+        "customer-service",
+        "esg-carbon"
+      ],
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "critical",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Grace Adeyemi",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-driver",
+      "name": "Northwind Go Driver App",
+      "description": "Job lists, proof-of-delivery photos and navigation for drivers.",
+      "domain": "user-experience",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "fleet-drivers",
+        "transport-visibility-tracking"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Lucy Fernandes",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-booking-widget",
+      "name": "Shipper Booking Widget",
+      "description": "Embeddable booking form used on partner e-commerce sites.",
+      "domain": "user-experience",
+      "lifecycle": "Tolerate",
+      "capabilities": [
+        "order-capture",
+        "customer-sales-spot"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "low",
+        "owner": "Luis Ortega",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-design-system",
+      "name": "Harbour Design System",
+      "description": "Shared interface components for every customer and staff screen.",
+      "domain": "user-experience",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-infrastructure"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Arjun Mehta",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-orderhub",
+      "name": "OrderHub",
+      "description": "Order management for transport and warehouse orders.",
+      "domain": "application-services",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "order-capture",
+        "order-booking",
+        "warehouse-inbound"
+      ],
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "critical",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Jonas Weber",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-routewise",
+      "name": "RouteWise TMS",
+      "description": "Transport management: load building, routing and dispatch.",
+      "domain": "application-services",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "transport-planning-routes",
+        "transport-planning-consolidation",
+        "transport-carrier"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "critical",
+        "currentInvestment": "high",
+        "plannedInvestment": "high",
+        "owner": "Nadia Haddad",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-stockpoint",
+      "name": "StockPoint WMS",
+      "description": "Warehouse management across all 14 sites.",
+      "domain": "application-services",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "warehouse-inbound",
+        "warehouse-inventory",
+        "warehouse-fulfilment-picking",
+        "warehouse-fulfilment-returns"
+      ],
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "high",
+        "plannedInvestment": "medium",
+        "owner": "Anna Kowalski",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-dock",
+      "name": "DockSlot Scheduler",
+      "description": "Dock door appointments for inbound and outbound trucks.",
+      "domain": "application-services",
+      "lifecycle": "Tolerate",
+      "capabilities": [
+        "order-booking"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "low",
+        "owner": "Anna Kowalski",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-billing",
+      "name": "FreightBill Engine",
+      "description": "Shipment rating and invoicing with surcharge rules.",
+      "domain": "application-services",
+      "lifecycle": "Migrate",
+      "capabilities": [
+        "order-billing-rating",
+        "order-billing-disputes"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Elena Petrova",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-edi",
+      "name": "Partner EDI Gateway",
+      "description": "EDIFACT and X12 exchange with shippers and carriers.",
+      "domain": "application-services",
+      "lifecycle": "Migrate",
+      "capabilities": [
+        "technology-integration",
+        "order-capture",
+        "transport-carrier"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Arjun Mehta",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-rate-api",
+      "name": "Carrier Rate API",
+      "description": "Public API returning lane rates and transit times.",
+      "domain": "application-services",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "network-lanes",
+        "customer-sales-spot"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Sofia Lindqvist",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-erp",
+      "name": "Ledger ERP Finance",
+      "description": "General ledger, payables and fixed assets.",
+      "domain": "application-services",
+      "lifecycle": "Tolerate",
+      "capabilities": [
+        "finance-accounting",
+        "finance-payables"
+      ],
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "low",
+        "owner": "David Laurent",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-hr",
+      "name": "PeopleFirst HR",
+      "description": "HR records, recruitment and payroll for five countries.",
+      "domain": "application-services",
+      "lifecycle": "Tolerate",
+      "capabilities": [
+        "people-talent",
+        "people-payroll",
+        "people-learning"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "low",
+        "owner": "Fatima Zahra",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-fleetcare",
+      "name": "FleetCare Maintenance",
+      "description": "Work orders, inspections and parts for the workshop network.",
+      "domain": "application-services",
+      "lifecycle": "Eliminate",
+      "capabilities": [
+        "fleet-maintenance"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "none",
+        "owner": "Viktor Nilsen",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-lake",
+      "name": "Logistics Data Lake",
+      "description": "Central store for shipment, telematics and finance data.",
+      "domain": "data-storage",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-data",
+        "technology-data-bi"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Leah Novak",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-mdm",
+      "name": "Master Data Hub",
+      "description": "Golden records for customers, locations and products.",
+      "domain": "data-storage",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-data-master",
+        "customer-onboarding"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Leah Novak",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-archive",
+      "name": "POD Document Archive",
+      "description": "Proof-of-delivery scans and customs documents, kept for seven years.",
+      "domain": "data-storage",
+      "lifecycle": "Tolerate",
+      "capabilities": [
+        "transport-customs",
+        "customer-service"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "low",
+        "plannedInvestment": "low",
+        "owner": "Farid Rahimi",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-identity",
+      "name": "Northwind Identity",
+      "description": "Single sign-on and multi-factor authentication for staff and customers.",
+      "domain": "security-identity",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-security"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Ravi Shankar",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-screening",
+      "name": "Trade Screening Service",
+      "description": "Denied-party and sanctions screening on every cross-border order.",
+      "domain": "security-identity",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "transport-customs"
+      ],
+      "metrics": {
+        "maturity": 4,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Farid Rahimi",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-siem",
+      "name": "Threat Monitoring",
+      "description": "Security event monitoring and incident response runbooks.",
+      "domain": "security-identity",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-security"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Ravi Shankar",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-pipeline",
+      "name": "BuildLine CI/CD",
+      "description": "Build, test and deployment pipelines for in-house software.",
+      "domain": "devops-platform",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-infrastructure"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "medium",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Arjun Mehta",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-observability",
+      "name": "Observability Stack",
+      "description": "Logs, metrics and traces for every production service.",
+      "domain": "devops-platform",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "technology-infrastructure"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Arjun Mehta",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-telematics",
+      "name": "Fleet Telematics Platform",
+      "description": "Ingests GPS, engine and fuel data from 640 tractors.",
+      "domain": "devops-platform",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "fleet-telematics",
+        "transport-visibility-tracking",
+        "fleet-electrification"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Viktor Nilsen",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-forecast",
+      "name": "Demand Forecaster",
+      "description": "Weekly volume forecasts by lane and site for capacity planning.",
+      "domain": "ai-analytics",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "network-modelling-capacity",
+        "strategy-market"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Daniel Mensah",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-eta",
+      "name": "ETA Predictor",
+      "description": "Predicts arrival times from traffic, dwell and history.",
+      "domain": "ai-analytics",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "transport-visibility-eta"
+      ],
+      "metrics": {
+        "maturity": 1,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "high",
+        "owner": "Mei Tanaka",
+        "riskLevel": "high"
+      }
+    },
+    {
+      "id": "app-controltower",
+      "name": "Control Tower Dashboards",
+      "description": "Live operational dashboards for planners and site managers.",
+      "domain": "ai-analytics",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "transport-visibility",
+        "technology-data-bi"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "medium",
+        "plannedInvestment": "medium",
+        "owner": "Mei Tanaka",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-network-model",
+      "name": "NetPlan Modeller",
+      "description": "Network scenario and emissions modelling.",
+      "domain": "ai-analytics",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "network-modelling-hub",
+        "network-sustainability",
+        "network-modelling"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "critical",
+        "currentInvestment": "medium",
+        "plannedInvestment": "high",
+        "owner": "Priya Raman",
+        "riskLevel": "medium"
+      }
+    },
+    {
+      "id": "app-notify",
+      "name": "Shipment Notifications",
+      "description": "Email, SMS and webhook alerts for shipment milestones.",
+      "domain": "communication",
+      "lifecycle": "Invest",
+      "capabilities": [
+        "transport-visibility-tracking",
+        "customer-service"
+      ],
+      "metrics": {
+        "maturity": 3,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Grace Adeyemi",
+        "riskLevel": "low"
+      }
+    },
+    {
+      "id": "app-servicedesk",
+      "name": "Customer Service Desk",
+      "description": "Case management for enquiries, claims and complaints.",
+      "domain": "communication",
+      "lifecycle": "Migrate",
+      "capabilities": [
+        "customer-service",
+        "order-billing-disputes"
+      ],
+      "metrics": {
+        "maturity": 2,
+        "strategicImportance": "high",
+        "currentInvestment": "low",
+        "plannedInvestment": "medium",
+        "owner": "Grace Adeyemi",
+        "riskLevel": "medium"
+      }
+    }
+  ],
+  "maturity_trend": [
+    {
+      "quarter": "Q4 2024",
+      "business": 2.4,
+      "applications": 2.1
+    },
+    {
+      "quarter": "Q1 2025",
+      "business": 2.5,
+      "applications": 2.2
+    },
+    {
+      "quarter": "Q2 2025",
+      "business": 2.6,
+      "applications": 2.4
+    },
+    {
+      "quarter": "Q3 2025",
+      "business": 2.6,
+      "applications": 2.5
+    },
+    {
+      "quarter": "Q4 2025",
+      "business": 2.7,
+      "applications": 2.6
+    },
+    {
+      "quarter": "Q1 2026",
+      "business": 2.8,
+      "applications": 2.6
+    },
+    {
+      "quarter": "Q2 2026",
+      "business": 2.8,
+      "applications": 2.7
+    },
+    {
+      "quarter": "Q3 2026",
+      "business": 2.9,
+      "applications": 2.8
+    }
+  ]
+}

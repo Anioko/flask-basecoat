@@ -1,0 +1,59 @@
+{# Capability planning (Tier B page): the maturity gap of every capability below "Managed" against the target
+   "Optimized", as one Table with its priority, the current and target steps of the ramp, and the first initiatives.
+   Four section cards as in dashboard-01. Usage: {{ planning.capability_planning(data) }}. #}
+{% import 'basecoat/capability_map/_parts.html' as p %}
+{% import 'basecoat/capability_map/applications-by-capability.html' as apps %}
+{% import 'basecoat/index.html' as ui %}
+
+{% macro capability_planning(data, id='capability-planning') -%}
+{%- set caps = data.capabilities -%}
+{%- set variant = {'critical': 'destructive', 'high': 'default', 'medium': 'secondary', 'low': 'outline'} -%}
+{%- set order = {'critical': 0, 'high': 1, 'medium': 2, 'low': 3} -%}
+{%- set gaps = [] -%}
+{%- for c in caps if c.metrics.maturity < 4 -%}
+  {%- set gap = 5 - c.metrics.maturity -%}
+  {%- set priority = 'critical' if c.metrics.strategicImportance == 'critical' else ('high' if gap >= 3 else ('medium' if gap >= 2 else 'low')) -%}
+  {%- set _ = gaps.append({'cap': c, 'gap': gap, 'priority': priority, 'rank': order[priority]}) -%}
+{%- endfor -%}
+{%- set gaps = gaps|sort(attribute='rank') -%}
+{%- set avg = (caps|sum(attribute='metrics.maturity')) / (caps|length) -%}
+<div class="flex flex-col gap-4 md:gap-6" data-capmap="{{ id }}">
+  <div class="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    {{ apps.stat_card('Critical gaps', gaps|selectattr('priority', 'equalto', 'critical')|list|length, 'Critical', 'flame', 'Critical to the strategy and below Managed', 'Close these first') }}
+    {{ apps.stat_card('High priority gaps', gaps|selectattr('priority', 'equalto', 'high')|list|length, '3+ levels', 'triangle-alert', 'Three or more levels below target', 'Need new processes, people and tools') }}
+    {{ apps.stat_card('Total gap points', gaps|sum(attribute='gap'), gaps|length ~ ' gaps', 'target', 'Maturity levels to reach the target', 'The target state is 5, Optimized') }}
+    {{ apps.stat_card('Average maturity', '%.1f / 5'|format(avg), (avg / 5 * 100)|round|int ~ '%', 'gauge', 'Of the Optimized target', 'Across all ' ~ caps|length ~ ' capabilities') }}
+  </div>
+  <div class="flex flex-wrap items-end justify-between gap-3">
+    <div class="flex max-w-3xl flex-col gap-1">
+      <h2 class="text-lg font-semibold tracking-tight">Capability planning</h2>
+      <p class="text-sm text-muted-foreground">{{ gaps|length }} capabilities below Managed, most urgent first. Priority is critical for critical importance, otherwise it follows the size of the gap.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      {% call ui.button(variant='outline', size='sm') %}{{ lucide('download') }}Export to CSV{% endcall %}
+      {% call ui.button(size='sm') %}{{ lucide('file-text') }}Export to PDF{% endcall %}
+    </div>
+  </div>
+  <div class="flex flex-col gap-2">{{ p.legend() }}</div>
+  <div class="overflow-hidden rounded-lg border">
+    {% call ui.table_container() %}{% call ui.table(attrs={'aria-label': 'Capability gaps'}) %}
+      {% call ui.table_header(class='bg-muted') %}{% call ui.table_row() %}
+        {% for h in ['Capability', 'Type', 'Current', 'Target', 'Gap', 'Priority', 'Owner'] %}{{ ui.table_head(text=h, attrs={'scope': 'col'}) }}{% endfor %}
+      {% endcall %}{% endcall %}
+      {% call ui.table_body() %}
+        {% for g in gaps %}
+        {% call ui.table_row() %}
+          {% call ui.table_head(class='font-medium whitespace-normal', attrs={'scope': 'row'}) %}{{ g.cap.name }}{% endcall %}
+          {{ ui.table_cell(text=capability_type_label(g.cap)) }}
+          {% call ui.table_cell() %}<span class="flex items-center gap-2">{{ p.swatch(g.cap, fixed=true) }}<span class="whitespace-nowrap tabular-nums">{{ g.cap.metrics.maturity }}/5, {{ p.MATURITY[g.cap.metrics.maturity] }}</span></span>{% endcall %}
+          {% call ui.table_cell() %}<span class="flex items-center gap-2"><span class="{{ p.RAMP[5] }} size-4 shrink-0 rounded-sm border" role="presentation"></span><span class="whitespace-nowrap tabular-nums">5/5, Optimized</span></span>{% endcall %}
+          {% call ui.table_cell(class='tabular-nums') %}{{ g.gap }} {{ 'level' if g.gap == 1 else 'levels' }}{% endcall %}
+          {% call ui.table_cell() %}{{ ui.badge(text=g.priority|capitalize, variant=variant[g.priority]) }}{% endcall %}
+          {{ ui.table_cell(text=g.cap.metrics.owner or 'No owner. Assign one') }}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}{% endcall %}
+  </div>
+</div>
+{%- endmacro %}

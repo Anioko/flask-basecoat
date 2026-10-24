@@ -1,0 +1,67 @@
+{# Capability tree, C2: the same capabilities as an indented tree under the capability_type groups (Strategic,
+   Operational, Supporting, then "Type not set"). Each row is a disclosure button, the name (opens the detail Sheet),
+   the owner and the selected measure in words with its swatch. The table view lists every capability with its type.
+   Usage: {{ tree.capability_tree(data) }} with the same data as the capability map. #}
+{% import 'basecoat/capability_map/_parts.html' as p %}
+{% import 'basecoat/index.html' as ui %}
+
+{% macro row(c, caps, depth, sheet) -%}
+{%- set kids = capability_children(caps, c.id) -%}
+<li data-cap-tile="{{ c.id }}">
+  <div class="flex items-center gap-3 border-b py-1.5">
+    {% if kids %}{% call ui.button(variant='ghost', size='icon-xs', class=p.CHEVRON, attrs={'data-cap-toggle': c.id, 'aria-expanded': 'true' if depth == 0 else 'false', 'aria-label': 'Show sub-capabilities of ' ~ c.name}) %}{{ lucide('chevron-right', 'group-aria-expanded/button:hidden') }}{{ lucide('chevron-down', 'hidden group-aria-expanded/button:block') }}{% endcall %}{% else %}<span class="size-6 shrink-0"></span>{% endif %}
+    {{ p.swatch(c) }}
+    {% call ui.button(variant='link', class='h-auto min-w-0 flex-1 justify-start p-0 text-left whitespace-normal text-foreground ' ~ ('font-semibold' if depth == 0 else 'font-normal'), attrs={'data-fb-open': sheet, 'data-cap-open': c.id}) %}{{ c.name }}{% endcall %}
+    <span class="w-56 shrink-0 text-xs text-muted-foreground">{{ c.metrics.owner or 'No owner. Assign one' }}</span>
+    <span class="w-44 shrink-0 text-xs">{{ p.metric_text(c) }}</span>
+    {{ ui.badge(text='L' ~ c.level, variant='outline') }}
+  </div>
+  {% if kids %}
+  <ul class="ml-6 flex flex-col border-l pl-3" data-cap-children="{{ c.id }}"{% if depth > 0 %} hidden{% endif %}>
+    {% for k in kids %}{{ row(k, caps, depth + 1, sheet) }}{% endfor %}
+  </ul>
+  {% endif %}
+</li>
+{%- endmacro %}
+
+{% macro capability_tree(data, id='capability-tree') -%}
+{%- set caps = data.capabilities -%}
+{%- set groups = capability_groups(capability_roots(caps), data.map.typeDescriptions) -%}
+{%- set sheet = id ~ '-detail' -%}
+<div class="flex flex-col gap-4" data-capmap="{{ id }}">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div class="flex max-w-3xl flex-col gap-1">
+      <h2 class="text-lg font-semibold tracking-tight">{{ data.map.name }}</h2>
+      <p class="text-sm text-muted-foreground">{{ caps|length }} capabilities in a tree, grouped by capability type.</p>
+    </div>
+    {{ p.view_toggle('Tree', ('tree', 'Tree'), ('list', 'Table')) }}
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+    {{ p.metric_toggle() }}
+    {% call ui.button_group() %}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-expand-all': ''}) %}{{ lucide('chevrons-up-down') }}Expand all{% endcall %}
+      {% call ui.button(variant='outline', size='sm', attrs={'data-collapse-all': ''}) %}{{ lucide('minimize') }}Collapse all{% endcall %}
+    {% endcall %}
+  </div>
+  <div class="flex flex-col gap-2">{{ p.legend() }}</div>
+
+  <div class="flex flex-col gap-2" data-capmap-pane="tree">
+    <div class="overflow-x-auto rounded-lg" role="region" tabindex="0" aria-label="Capability tree, scroll horizontally" data-entelim-form="C2">
+      <div class="flex min-w-240 flex-col gap-4">
+        {% for g in groups %}
+        <section class="flex flex-col gap-2 rounded-lg border p-4" aria-labelledby="{{ id }}-grp-{{ g.key }}">
+          {{ p.group_heading(g, id) }}
+          {% if g['items'] %}<ul class="flex flex-col">{% for c in g['items'] %}{{ row(c, caps, 0, sheet) }}{% endfor %}</ul>{% else %}{{ p.empty_group(g) }}{% endif %}
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="text-xs text-muted-foreground">Scroll sideways on a narrow screen. Open a name for its detail.</p>
+  </div>
+  <div hidden data-capmap-pane="list">{{ p.capability_table(caps, 'Capability tree') }}</div>
+
+  <p class="sr-only" role="status" aria-live="polite" data-capmap-live></p>
+  {{ p.detail_sheet(sheet) }}
+  {{ p.data_script(data) }}
+</div>
+{%- endmacro %}

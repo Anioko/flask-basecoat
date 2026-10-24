@@ -1,0 +1,18 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Capability map · Flask-Basecoat{% endblock %}
+{% block body %}
+<main class="mx-auto flex max-w-4xl flex-col gap-6 p-6">
+  <div class="flex flex-col gap-1">
+    <h1 class="text-2xl font-semibold tracking-tight">Capability map</h1>
+    <p class="text-sm text-muted-foreground">The capability map family on the dashboard-01 frame. Capabilities are grouped by their capability_type: Strategic, Operational, Supporting, then Type not set.</p>
+  </div>
+  <div class="grid gap-3 sm:grid-cols-2">
+    {% for v in views %}
+    {% call ui.item(variant='outline', as_='a', href=url_for('basecoat_examples.capability', slug=v.slug)) %}
+      {% call ui.item_content() %}{{ ui.item_title(text=v.title) }}{{ ui.item_description(text='Tier ' ~ v.form) }}{% endcall %}
+    {% endcall %}
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
