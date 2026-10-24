@@ -9,7 +9,7 @@
 {%- set kids = capability_children(caps, c.id) -%}
 <li data-cap-tile="{{ c.id }}">
   <div class="flex items-center gap-3 border-b py-1.5">
-    {% if kids %}{% call ui.button(variant='ghost', size='icon-xs', class=p.CHEVRON, attrs={'data-cap-toggle': c.id, 'aria-expanded': 'true' if depth == 0 else 'false', 'aria-label': 'Show sub-capabilities of ' ~ c.name}) %}{{ lucide('chevron-right', 'group-aria-expanded/button:hidden') }}{{ lucide('chevron-down', 'hidden group-aria-expanded/button:block') }}{% endcall %}{% else %}<span class="size-6 shrink-0"></span>{% endif %}
+    {% if kids %}{% call ui.button(variant='ghost', size='icon-xs', class=p.CHEVRON, attrs={'data-cap-toggle': c.id, 'aria-expanded': 'false', 'aria-label': 'Show sub-capabilities of ' ~ c.name}) %}{{ lucide('chevron-right', 'group-aria-expanded/button:hidden') }}{{ lucide('chevron-down', 'hidden group-aria-expanded/button:block') }}{% endcall %}{% else %}<span class="size-6 shrink-0"></span>{% endif %}
     <span class="flex shrink-0 rounded-lg bg-muted p-1.5" role="presentation">{{ lucide(capability_icon(c), 'size-4') }}</span>
     {% call ui.button(variant='link', class='h-auto min-w-0 flex-1 justify-start p-0 text-left whitespace-normal text-foreground ' ~ ('font-semibold' if depth == 0 else 'font-normal'), attrs={'data-fb-open': sheet, 'data-cap-open': c.id}) %}{{ c.name }}{% endcall %}
     <span class="w-56 shrink-0 text-xs text-muted-foreground">{{ c.metrics.owner or 'No owner. Assign one' }}</span>
@@ -17,7 +17,7 @@
     {{ ui.badge(text='L' ~ c.level, variant='outline') }}
   </div>
   {% if kids %}
-  <ul class="ml-6 flex flex-col border-l pl-3" data-cap-children="{{ c.id }}"{% if depth > 0 %} hidden{% endif %}>
+  <ul class="ml-6 flex flex-col border-l pl-3" data-cap-children="{{ c.id }}" hidden>
     {% for k in kids %}{{ row(k, caps, depth + 1, sheet) }}{% endfor %}
   </ul>
   {% endif %}

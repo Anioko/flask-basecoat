@@ -28,7 +28,7 @@
       </div>
       <p class="flex items-center gap-2 text-xs text-muted-foreground">{{ lucide('user', 'size-3.5 shrink-0') }}<span class="truncate">{{ c.metrics.owner or 'No owner. Assign one' }}</span></p>
       {% if kids %}
-      {% call ui.button(variant='outline', size='sm', class='w-full', attrs={'data-cap-toggle': c.id, 'aria-expanded': 'true' if depth == 0 else 'false'}) %}
+      {% call ui.button(variant='outline', size='sm', class='w-full', attrs={'data-cap-toggle': c.id, 'aria-expanded': 'false'}) %}
         {{ lucide('chevron-right', 'group-aria-expanded/button:hidden') }}{{ lucide('chevron-down', 'hidden group-aria-expanded/button:block') }}
         <span class="group-aria-expanded/button:hidden">Show {{ kids|length }} sub-capabilities</span><span class="hidden group-aria-expanded/button:inline">Hide {{ kids|length }} sub-capabilities</span>
       {% endcall %}
@@ -36,7 +36,7 @@
     {% endcall %}
   {% endcall %}
   {% if kids %}
-  <div class="flex flex-col gap-3 ps-4" data-cap-children="{{ c.id }}"{% if depth > 0 %} hidden{% endif %}>
+  <div class="flex flex-col gap-3 ps-4" data-cap-children="{{ c.id }}" hidden>
     {% for k in kids %}{{ tile(k, caps, depth + 1, sheet) }}{% endfor %}
   </div>
   {% endif %}

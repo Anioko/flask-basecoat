@@ -182,6 +182,34 @@ def test_browser_metric_switch_changes_the_ramp_and_the_words(browser, base):
     pg.close()
 
 
+@pytest.mark.parametrize('slug', ['capability-map', 'capability-tree'])
+def test_browser_opens_collapsed_and_expand_all_opens_every_capability(browser, base, slug):
+    pg = page(browser, base, slug)
+    toggles = pg.locator('[data-cap-toggle]')
+    n = toggles.count()
+    assert n > 1
+    assert all(toggles.nth(i).get_attribute('aria-expanded') == 'false' for i in range(n))
+    assert pg.locator('[data-cap-children]:visible').count() == 0
+    assert pg.locator('[data-cap-tile] [data-ramp-chip]:visible').count() >= 1   # top-level chips are on the first screen
+    # one capability's own button opens only its subs
+    first = toggles.first
+    cid = first.get_attribute('data-cap-toggle')
+    first.click()
+    assert pg.locator(f'[data-cap-children="{cid}"]').is_visible()
+    assert pg.locator('[data-cap-children]:visible').count() == 1
+    # the heat switch keeps it open
+    pg.locator('[data-capmap-metric] [data-slot="toggle-group-item"]', has_text='Investment').click()
+    assert first.get_attribute('aria-expanded') == 'true' and pg.locator(f'[data-cap-children="{cid}"]').is_visible()
+    pg.locator('[data-capmap-metric] [data-slot="toggle-group-item"]', has_text='Maturity').click()
+    assert pg.locator('[data-cap-children]:visible').count() == 1
+    pg.locator('[data-expand-all]').click()
+    assert all(toggles.nth(i).get_attribute('aria-expanded') == 'true' for i in range(n))
+    assert pg.locator('[data-cap-children]:visible').count() == pg.locator('[data-cap-children]').count()
+    pg.locator('[data-collapse-all]').click()
+    assert pg.locator('[data-cap-children]:visible').count() == 0
+    pg.close()
+
+
 def test_browser_keyboard_opens_detail_and_toggles_a_tile(browser, base):
     pg = page(browser, base, 'capability-map')
     pg.locator('[data-cap-open="strategy"]').focus()
@@ -192,6 +220,9 @@ def test_browser_keyboard_opens_detail_and_toggles_a_tile(browser, base):
     pg.keyboard.press('Escape')
     cid = pg.locator('[data-cap-open]', has_text='Portfolio & Investment Planning').first.get_attribute('data-cap-open')
     btn = pg.locator(f'[data-cap-toggle="{cid}"]')
+    pg.locator('[data-expand-all]').click()   # sub-capabilities start collapsed; open them so the button is reachable
+    btn.click()
+    assert btn.get_attribute('aria-expanded') == 'false'
     btn.focus(); pg.keyboard.press('Enter')
     assert btn.get_attribute('aria-expanded') == 'true'
     pg.close()
