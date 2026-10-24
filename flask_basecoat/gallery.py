@@ -71,6 +71,30 @@ def block(name):
         abort(404)
 
 
+_GOLDEN = _HERE.parent / 'compliance' / 'golden' / 'out'
+
+
+@gallery_bp.route('/golden/<path:path>')
+def golden(path):
+    """The upstream React render of an example or block (compliance/golden/out), for side-by-side comparison."""
+    from flask import send_from_directory
+    if not _GOLDEN.exists():
+        abort(404)
+    return send_from_directory(str(_GOLDEN), path)
+
+
+@gallery_bp.route('/compare/<name>')
+def compare(name):
+    """Upstream golden page on the left, our page on the right, same viewport and theme."""
+    kind = 'blocks' if name in block_names() else 'components'
+    if not has_page(kind, name):
+        abort(404)
+    return render_template('basecoat/pages/compare.html', name=name, kind=kind,
+                           golden_url=url_for('basecoat_gallery.golden', path=(f'blocks/{name}.html' if kind == 'blocks' else f'{name}.html')),
+                           ours_url=url_for(f'basecoat_gallery.{"block" if kind == "blocks" else "component"}', name=name),
+                           components=component_names(), blocks=block_names())
+
+
 @gallery_bp.route('/gallery', methods=['GET', 'POST'])
 def gallery():
     """WTForms adapter demo: a real server-validated form rendered with the field macros."""

@@ -11,7 +11,8 @@
         {% call ui.button(variant='ghost', size='icon-sm', attrs={'data-theme-toggle': '', 'aria-label': 'Toggle theme'}) %}{{ lucide('sun', 'dark:hidden') }}{{ lucide('moon', 'hidden dark:block') }}{% endcall %}
       </div>
     </div>
-    <p class="max-w-2xl text-muted-foreground">Every shadcn/ui component and block, rendered by Jinja macros. Each page below is the upstream example, ported part for part.</p>
+    <p class="max-w-2xl text-muted-foreground">Every shadcn/ui component and block, rendered by Jinja macros. Each page below is the upstream example, ported part for part. Open a page, or compare it side by side with the upstream render at <code class="rounded bg-muted px-1 py-0.5 text-xs">/basecoat/compare/&lt;name&gt;</code>.</p>
+    <div>{{ ui.button(variant='secondary', size='sm', href=url_for('basecoat_gallery.compare', name='button'), text='Open the side-by-side comparison') }}</div>
   </header>
 
   <section class="flex flex-col gap-4">
