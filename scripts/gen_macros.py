@@ -99,6 +99,8 @@ def main():
             lines.append(f"{{% set {n} = {alias}.{n} %}}")
     lines.append("{% import 'basecoat/_example.html' as _ex %}{% set example = _ex.example %}{% set example_wrapper = _ex.example_wrapper %}")
     lines.append("{% import 'basecoat/_chart_spec.html' as _cs %}{% set chart_from_spec = _cs.chart_from_spec %}{% set chart_style = _cs.chart_style %}")
+    lines.append("{% import 'basecoat/harvey-ball.html' as _hb %}{% set harvey_ball = _hb.harvey_ball %}")
+    lines.append("{% import 'basecoat/document.html' as _doc %}{% set document = _doc.document %}{% set document_cover = _doc.document_cover %}{% set document_body = _doc.document_body %}{% set document_title_style = _doc.document_title_style %}")
     lines.append("{% import 'basecoat/wtforms.html' as _wt %}{% set render_field = _wt.render_field %}{% set render_form = _wt.render_form %}{% set field_errors = _wt.field_errors %}")
     (TEMPLATES / 'index.html').write_text('\n'.join(lines) + '\n', encoding='utf8')
     print(f'written {len(written)} macro files, kept {len(kept)}, {len(exports)} macros exported')

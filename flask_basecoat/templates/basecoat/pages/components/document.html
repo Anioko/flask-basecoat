@@ -1,0 +1,16 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Library addition (R17), not an upstream component: the document reading layout and its cover. The full document is
+   /examples/document/solution-document. #}
+{% block title %}document · Flask-Basecoat{% endblock %}
+{% block body %}
+{% call ui.document() %}
+  {{ ui.document_cover(title='Claims Platform Modernisation: Solution Document', organisation='Harbourline Insurance Group', date='24 October 2026', version='1.2', author='Amara Okafor, Lead Architect') }}
+  {% call ui.document_body() %}
+    <section class="space-y-6">
+      <h2 class="text-foreground text-2xl font-bold">Executive summary</h2>
+      <p class="text-foreground/80 leading-relaxed">Each top-level section starts a new page when the document prints or saves to PDF.</p>
+    </section>
+  {% endcall %}
+{% endcall %}
+{% endblock %}

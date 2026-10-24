@@ -1,0 +1,11 @@
+{# harvey-ball: a static 16px SVG for a comparison table cell (R20). Not a shadcn component: no chart runtime.
+   {{ ui.harvey_ball(75) }} draws three quarters; the accessible name is "75 per cent". Values: 0, 25, 50, 75, 100.
+   The ring and the wedge use the foreground token; the ring has the contrast a graphical object needs (3:1, WCAG 1.4.11),
+   which the border token does not reach. #}
+{% macro harvey_ball(value, class='', id=none, attrs={}) -%}
+{%- set b = harvey_ball_shape(value) -%}
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="{{ b.label }}" data-harvey-ball data-value="{{ b.value }}" class="{{ tw('inline-block size-4 shrink-0', class) }}"{% if id %} id="{{ id }}"{% endif %}>
+  <circle cx="8" cy="8" r="7" class="fill-background stroke-foreground" stroke-width="1"/>
+  {%- if b.wedge %}<path d="{{ b.wedge }}" class="fill-foreground stroke-foreground" stroke-width="1" stroke-linejoin="round"/>{% endif %}
+</svg>
+{%- endmacro %}

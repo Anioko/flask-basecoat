@@ -1,0 +1,28 @@
+{
+  "a4": {
+    "pages": 9,
+    "sections": {
+      "Executive summary": 2,
+      "Context and objectives": 3,
+      "Options considered": 4,
+      "Cost and evaluation": 5,
+      "Delivery plan": 6,
+      "Recommendation": 7,
+      "Risks": 8,
+      "Next steps": 9
+    }
+  },
+  "letter": {
+    "pages": 9,
+    "sections": {
+      "Executive summary": 2,
+      "Context and objectives": 3,
+      "Options considered": 4,
+      "Cost and evaluation": 5,
+      "Delivery plan": 6,
+      "Recommendation": 7,
+      "Risks": 8,
+      "Next steps": 9
+    }
+  }
+}

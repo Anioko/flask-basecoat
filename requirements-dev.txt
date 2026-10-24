@@ -52,3 +52,7 @@ honcho==1.1.0
 # Flask-Script is deprecated, use Flask CLI instead
 WTForms-SQLAlchemy==0.4.2
 selenium==4.51.0
+
+# Print golden (tests/test_print_golden.py): Chromium's PDF output, read back. The test skips when either is missing.
+playwright>=1.40
+pymupdf>=1.24

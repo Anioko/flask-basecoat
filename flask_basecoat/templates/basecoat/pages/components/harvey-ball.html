@@ -1,0 +1,19 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Library addition (R20), not an upstream component: a static 16px Harvey ball for comparison tables. #}
+{% block title %}harvey-ball · Flask-Basecoat{% endblock %}
+{% block body %}
+{% call ui.example_wrapper(class='lg:grid-cols-1') %}
+{% call ui.example(title='Values') %}<div class="flex flex-wrap items-center gap-6">{% for v in [0, 25, 50, 75, 100] %}<span class="flex items-center gap-2 text-sm">{{ ui.harvey_ball(v) }}{{ v }}</span>{% endfor %}</div>{% endcall %}
+{% call ui.example(title='In a comparison table') %}
+{% call ui.table_container() %}{% call ui.table() %}
+  {% call ui.table_header() %}{% call ui.table_row() %}{{ ui.table_head(text='Criterion') }}{{ ui.table_head(text='Option A', class='text-center') }}{{ ui.table_head(text='Option B', class='text-center') }}{% endcall %}{% endcall %}
+  {% call ui.table_body() %}
+    {% for name, a, b in [('Strategic fit', 25, 100), ('Delivery risk', 75, 50), ('Cost', 50, 75)] %}
+    {% call ui.table_row() %}{{ ui.table_cell(text=name, class='font-medium') }}{% call ui.table_cell(class='text-center') %}{{ ui.harvey_ball(a) }}{% endcall %}{% call ui.table_cell(class='text-center') %}{{ ui.harvey_ball(b) }}{% endcall %}{% endcall %}
+    {% endfor %}
+  {% endcall %}
+{% endcall %}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endblock %}

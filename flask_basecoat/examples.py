@@ -59,6 +59,13 @@ ORIGINAL = [
         'tags': ['Security', 'Auth', 'Forms'],
     },
     {
+        'id': 'solution-document',
+        'title': 'Solution Document',
+        'description': 'A ten-page solution document: cover, executive summary, options with Harvey balls, charts, recommendation, risks and next steps. Prints and saves to PDF in A4 or Letter.',
+        'endpoint': ('basecoat_examples.solution_document', {}),
+        'tags': ['Document', 'Print', 'Charts'],
+    },
+    {
         'id': 'notifications',
         'title': 'Notifications Center',
         'description': 'Centralized user notification feed with All/Unread/Mentions filter tabs, unread indicators, and mark-all-as-read.',
@@ -100,6 +107,63 @@ def two_factor():
 def notifications():
     """Notifications center screen."""
     return render_template('examples/notifications.html')
+
+
+DOCUMENT_TITLE = 'Claims Platform Modernisation: Solution Document'
+
+# Three-year cost by option, in pounds million (one-off build and migration, and running cost).
+DOCUMENT_COSTS = [
+    ('Option A', 1.2, 9.6),
+    ('Option B', 3.4, 7.8),
+    ('Option C', 5.1, 5.9),
+    ('Option D', 11.8, 4.6),
+]
+# Share of claims migrated at the end of each quarter, as planned and as forecast with today's team.
+DOCUMENT_DELIVERY = [
+    ('Q2 27', 5, 5), ('Q3 27', 20, 15), ('Q4 27', 40, 30), ('Q1 28', 60, 45), ('Q2 28', 80, 60), ('Q3 28', 95, 75), ('Q4 28', 100, 90),
+]
+
+
+def _document_specs():
+    """The two charts of the solution document: the bar and line chart specs with the document's data and value labels."""
+    import copy
+    from flask_basecoat.charts import load_spec
+    label = {'position': 'top', 'offset': 8, 'className': 'fill-foreground', 'fontSize': 11}
+    bar = copy.deepcopy(load_spec('chart-bar-multiple'))
+    bar['config'] = {'build': {'label': 'Build and migration', 'color': 'var(--chart-1)'},
+                     'run': {'label': 'Running cost', 'color': 'var(--chart-4)'}}
+    bar['data'] = [{'option': o, 'build': b, 'run': r} for o, b, r in DOCUMENT_COSTS]
+    bar['props'] = {'accessibilityLayer': True, 'margin': {'top': 20}}
+    bar['series'] = [dict(s, dataKey=k, fill=f'var(--color-{k})', labelList=[dict(label)])
+                     for s, k in zip(bar['series'], ('build', 'run'))]
+    bar['axes'][0] = {k: v for k, v in bar['axes'][0].items() if k != 'tickFormatter'}
+    bar['axes'][0]['dataKey'] = 'option'
+    legend = load_spec('chart-area-legend')['legend']
+    bar['legend'] = copy.deepcopy(legend)
+    line = copy.deepcopy(load_spec('chart-line-label'))
+    line['config'] = {'planned': {'label': 'Planned', 'color': 'var(--chart-5)'},
+                      'forecast': {'label': 'Forecast with today\'s team', 'color': 'var(--chart-2)'}}
+    line['data'] = [{'quarter': q, 'planned': p, 'forecast': f} for q, p, f in DOCUMENT_DELIVERY]
+    line['series'] = [dict(line['series'][0], dataKey='planned', stroke='var(--color-planned)', type='linear',
+                           dot={'fill': 'var(--color-planned)'}, labelList=[dict(label, offset=10)]),
+                      dict(line['series'][0], dataKey='forecast', stroke='var(--color-forecast)', type='linear',
+                           dot={'fill': 'var(--color-forecast)'}, labelList=[dict(label, position='bottom', offset=10)])]
+    line['axes'][0] = {k: v for k, v in line['axes'][0].items() if k != 'tickFormatter'}
+    line['axes'][0]['dataKey'] = 'quarter'
+    line['props'] = {'accessibilityLayer': True, 'margin': {'top': 24, 'bottom': 16, 'left': 12, 'right': 12}}
+    line['legend'] = copy.deepcopy(legend)
+    return bar, line
+
+
+@examples_bp.route('/document/solution-document')
+def solution_document():
+    """The solution document: the reading layout with a cover, printed through the print stylesheet (R17).
+    ``?size=letter`` selects US Letter, A4 is the default."""
+    from flask import request
+    bar, line = _document_specs()
+    return render_template('examples/document/solution-document.html', title=DOCUMENT_TITLE,
+                           page_size='letter' if request.args.get('size') == 'letter' else 'a4',
+                           cost_chart=bar, delivery_chart=line, costs=DOCUMENT_COSTS)
 
 
 @examples_bp.route('/dashboards/')

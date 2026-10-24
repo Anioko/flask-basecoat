@@ -1,0 +1,96 @@
+/* The print stylesheet (R17): a long-form document prints and saves to PDF as a document.
+   One file, in the library's CSS build. Nothing here applies on screen.
+
+   A document is the reading layout (ui.document: the blog detail column) and carries data-document. The page rules
+   below are named pages, so a page without a document prints as it always did.
+     <html class="print-letter">  US Letter; A4 is the default
+     <html style="--document-title: &quot;Title&quot;">  the running header (ui.document_title_style)
+   Colour is not set here: print takes the light tokens from tokens-print.css (generated), and Chromium keeps
+   backgrounds (print-color-adjust) so badges, chart fills and Harvey balls reach the PDF. */
+
+/* Sheet and margins. The margin boxes carry the running header and the footer; page 1 (the cover) carries neither. */
+@page document {
+  size: A4;
+  margin: 24mm 20mm 22mm;
+  @top-center { content: var(--document-title, ""); font: 500 8.5pt/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif); color: var(--muted-foreground); }
+  @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8.5pt/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif); color: var(--muted-foreground); }
+}
+@page document:first {
+  @top-center { content: none; }
+  @bottom-right { content: none; }
+}
+@page document-letter {
+  size: letter;
+  margin: 24mm 20mm 22mm;
+  @top-center { content: var(--document-title, ""); font: 500 8.5pt/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif); color: var(--muted-foreground); }
+  @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8.5pt/1 var(--font-sans, ui-sans-serif, system-ui, sans-serif); color: var(--muted-foreground); }
+}
+@page document-letter:first {
+  @top-center { content: none; }
+  @bottom-right { content: none; }
+}
+
+@media print {
+  html:has([data-document]) { page: document; }
+  html.print-letter:has([data-document]) { page: document-letter; }
+
+  /* Print reads on white paper in the light tokens, and keeps fills and backgrounds. */
+  html { color-scheme: light; font-size: 10.5pt; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Nothing interactive or navigational prints. */
+  nav, [role="navigation"], button, [role="button"], input, select, textarea,
+  [data-slot="button"], [data-slot="toggle-group"], [data-slot="toggle"],
+  [data-slot="sidebar"], [data-slot="sidebar-gap"], [data-slot="sidebar-container"], [data-slot="sidebar-trigger"], [data-slot="sidebar-rail"],
+  [data-slot="breadcrumb"], [data-slot="navigation-menu"], [data-slot="menubar"], [data-slot="pagination"],
+  [data-slot="toast"], [data-slot="toast-viewport"], [data-slot="sonner"], [data-fb-flash], [data-print="hide"] { display: none !important; }
+
+  /* Links print their text, with no address after it. */
+  a, a:visited { color: inherit; text-decoration: none; }
+  a[href]::after { content: none !important; }
+
+  /* The text column is the page between its margins, not the screen's max-w-4xl with padding. */
+  [data-document] { max-width: none; margin: 0; padding: 0; }
+  [data-document-body] { margin-top: 0; }
+
+  /* The cover is page 1. */
+  [data-document-cover] { break-after: page; padding-top: 55mm; }
+  [data-document-cover] [data-document-title] { font-size: 2.6rem; line-height: 1.15; }
+
+  /* Each top-level section starts a page; a heading stays with what follows it. */
+  [data-document] h2 { break-before: page; break-after: avoid; margin-top: 0; }
+  [data-document] h3, [data-document] h4 { break-after: avoid; }
+
+  /* Figures, charts, tables and cards stay whole on one page and never exceed the column. */
+  figure, [data-slot="chart"], [data-slot="card"], [data-slot="table-container"], table, svg, img { break-inside: avoid; max-width: 100%; }
+  /* A card keeps its ring but loses its drop shadow, so nothing is drawn outside the column. */
+  [data-slot="card"] { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent); }
+  [data-slot="table-container"] { overflow: visible; }
+  [data-slot="table"] { width: 100%; table-layout: auto; }
+  [data-slot="table-row"] { break-inside: avoid; }
+  [data-slot="table-head"], [data-slot="table-cell"] { white-space: normal; }
+  p, li { orphans: 3; widows: 3; }
+
+  /* A chart is drawn at the screen's width. In print its viewBox scales to the column instead of being cut off. */
+  [data-slot="chart"] .recharts-responsive-container,
+  [data-slot="chart"] .recharts-responsive-container > div,
+  [data-slot="chart"] .recharts-wrapper { width: 100% !important; height: 100% !important; }
+  [data-slot="chart"] svg.recharts-surface { width: 100%; height: 100%; }
+
+  /* Series stay apart in greyscale: a dash per line and area series, a hollow marker on every second series,
+     and an outline pattern per bar series. Colour is untouched; nothing here applies on screen.
+     The value as text comes from the chart's labelList, which print keeps. */
+  [data-slot="chart"] .recharts-line:nth-child(2) .recharts-line-curve,
+  [data-slot="chart"] .recharts-area:nth-child(2) .recharts-area-curve { stroke-dasharray: 7 4; }
+  [data-slot="chart"] .recharts-line:nth-child(3) .recharts-line-curve,
+  [data-slot="chart"] .recharts-area:nth-child(3) .recharts-area-curve { stroke-dasharray: 2 3; }
+  [data-slot="chart"] .recharts-line:nth-child(4) .recharts-line-curve,
+  [data-slot="chart"] .recharts-area:nth-child(4) .recharts-area-curve { stroke-dasharray: 10 3 2 3; }
+  [data-slot="chart"] .recharts-line:nth-child(5) .recharts-line-curve,
+  [data-slot="chart"] .recharts-area:nth-child(5) .recharts-area-curve { stroke-dasharray: 1 5; }
+  [data-slot="chart"] .recharts-line-dots:nth-child(even) .recharts-line-dot { fill: var(--background); stroke-width: 2; }
+  [data-slot="chart"] .recharts-bar:nth-child(2) .recharts-rectangle { stroke: var(--foreground); stroke-width: 1; }
+  [data-slot="chart"] .recharts-bar:nth-child(3) .recharts-rectangle { stroke: var(--foreground); stroke-width: 1; stroke-dasharray: 4 2; }
+  [data-slot="chart"] .recharts-bar:nth-child(4) .recharts-rectangle { stroke: var(--foreground); stroke-width: 1.5; stroke-dasharray: 1 2; }
+  [data-slot="chart"] .recharts-bar:nth-child(5) .recharts-rectangle { stroke: var(--foreground); stroke-width: 2; stroke-dasharray: 8 2 2 2; }
+}

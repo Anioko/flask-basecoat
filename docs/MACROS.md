@@ -1167,3 +1167,44 @@ From the upstream example:
 {% call ui.trace_title() %}
 ```
 
+## harvey_ball
+
+A Harvey ball for a comparison table cell (R20): a 16px inline SVG, no chart runtime. The ring and the wedge use the
+foreground token. Live example: `/basecoat/components/harvey-ball`.
+
+| Macro | Arguments | Renders |
+|---|---|---|
+| `ui.harvey_ball(value)` | `value`: 0, 25, 50, 75 or 100 (anything else raises `ValueError`); `class=`, `id=` | `<svg role="img" aria-label="75 per cent" data-harvey-ball data-value="75">` |
+
+```jinja
+{% call ui.table_cell(class='text-center') %}{{ ui.harvey_ball(75) }}{% endcall %}
+```
+
+## document
+
+The reading layout for long-form documents (R17): the blog detail screen's column, a cover, and the body that the
+print stylesheet (`app/assets/styles/print.css`, part of the library CSS build) turns into a PDF. Live example:
+`/examples/document/solution-document`; print it or save it as PDF.
+
+| Macro | Arguments | Renders |
+|---|---|---|
+| `ui.document()` | `class=`, `attrs=`; takes children | the blog detail column (`mx-auto max-w-4xl px-6 py-12`), marked `data-document` |
+| `ui.document_cover(title, organisation, date, version, author)` | all five required; `class=`, `id=`, `attrs=` | the title block on screen and page 1 in print: version badge, organisation, title (h1), author and date |
+| `ui.document_body()` | `class=`, `attrs=`; takes children | the article, marked `data-document-body`; every `h2` inside the document starts a page |
+| `ui.document_title_style(title)` | the title | the value of `<html style="...">` that sets `--document-title`, the running header in print |
+
+```jinja
+{% call ui.document() %}
+  {{ ui.document_cover(title='Claims Platform Modernisation', organisation='Harbourline', date='24 October 2026', version='1.2', author='Amara Okafor') }}
+  {% call ui.document_body() %}
+    <section class="space-y-6"><h2 class="text-foreground text-2xl font-bold">Executive summary</h2> ... </section>
+  {% endcall %}
+{% endcall %}
+```
+
+On the page: `<html class="print-a4">` or `<html class="print-letter">` (A4 is the default) and
+`<html style="{{ ui.document_title_style(title) }}">`. In print the running header is the title (not on page 1), the footer
+reads "Page n of m", each `h2` starts a page, charts, figures, tables and cards are kept whole and fit the column, the
+light tokens apply whatever the screen theme, navigation, sidebars, buttons and toasts are hidden, and links print their
+text only. Chart series stay apart in greyscale through a dash per line series, a hollow marker on every second line
+series and an outline per bar series; give each series a `labelList` so its value is also text.

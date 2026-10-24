@@ -10,6 +10,7 @@ from flask import Blueprint, url_for
 from jinja2 import ChoiceLoader, PackageLoader
 from markupsafe import Markup
 
+from .document import harvey_ball as _harvey_ball
 from .icons import svg as _lucide_svg
 from .slots import slot as _slot
 from .twmerge import merge as _merge
@@ -65,6 +66,7 @@ class Basecoat:
         app.jinja_env.globals.setdefault('lucide', lucide)
         app.jinja_env.globals.setdefault('slot', _slot)
         app.jinja_env.globals.setdefault('tw', tw)
+        app.jinja_env.globals.setdefault('harvey_ball_shape', _harvey_ball)
         from . import charts as _charts
         app.jinja_env.globals.setdefault('chart_spec', _charts.load_spec)
         app.jinja_env.globals.setdefault('chart_style_css', _charts.chart_style_css)
