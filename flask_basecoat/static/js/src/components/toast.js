@@ -38,7 +38,7 @@
       (opts.description ? `<div data-slot="toast-description" class="cn-toast-description text-muted-foreground"></div>` : '') +
       `</div>` +
       (opts.action ? `<button type="button" data-slot="toast-action" class="cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none cn-button-variant-outline cn-button-size-xs"></button>` : '') +
-      (opts.dismissible === false ? '' : `<button type="button" data-slot="toast-close" aria-label="Close" class="cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none cn-button-variant-ghost cn-button-size-icon-xs absolute top-2 right-2 opacity-0 group-hover/toast:opacity-100">${(window.FlaskBasecoatIcons && window.FlaskBasecoatIcons.x) || '×'}</button>`);
+      (opts.dismissible === false ? '' : `<button type="button" data-slot="toast-close" aria-label="Close" class="cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none cn-button-variant-ghost cn-button-size-icon-xs absolute top-2 right-2 opacity-0 group-hover/toast:opacity-100 group-focus-within/toast:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100">${(window.FlaskBasecoatIcons && window.FlaskBasecoatIcons.x) || '×'}</button>`);
     if (opts.title) FB.qs(el, '[data-slot="toast-title"]').textContent = opts.title;
     if (opts.description) FB.qs(el, '[data-slot="toast-description"]').textContent = opts.description;
     const actionBtn = FB.qs(el, '[data-slot="toast-action"]');

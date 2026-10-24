@@ -80,8 +80,8 @@ class FlashMessageBrowserTest(unittest.TestCase):
         self.assertIsNotNone(close_button)
         self.assertTrue(close_button.is_enabled())
         from selenium.webdriver.common.action_chains import ActionChains
-        ActionChains(self.driver).move_to_element(flash_message).perform()
-        # The button fades in on hover; wait for the transition instead of a fixed pause (slow CI machines).
+        # Hidden until the toast is hovered or focused; keyboard focus must reveal it (no hover on touch or keyboard).
+        self.driver.execute_script("arguments[0].focus()", close_button)
         WebDriverWait(self.driver, 5).until(lambda d: close_button.is_displayed())
         self.assertTrue(close_button.is_displayed())
 
