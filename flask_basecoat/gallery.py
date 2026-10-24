@@ -39,3 +39,9 @@ def gallery():
         sample_columns=sample_columns,
         sample_rows=sample_rows
     )
+
+
+@gallery_bp.route('/gallery/button')
+def gallery_button():
+    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
+    return render_template('basecoat/gallery_button.html', theme=theme)

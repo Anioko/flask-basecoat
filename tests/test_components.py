@@ -29,6 +29,8 @@ class ComponentsTestCase(unittest.TestCase):
         self.assertIn(b'Button', response.data)
         self.assertIn(b'Primary Button', response.data)
         self.assertIn(b'Secondary Button', response.data)
+        self.assertIn(b'Jinja macro', response.data)
+        self.assertIn(b'/basecoat/gallery/button', response.data)
 
     def test_card_component_page_renders(self):
         response = self.client.get('/docs/components/card')
