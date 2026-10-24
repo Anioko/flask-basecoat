@@ -43,6 +43,24 @@ def load_ours(kind, name):
         return r.get_data(as_text=True), None
 
 
+PORTALED = ('-content', '-overlay', '-viewport')
+
+
+def in_closed_portal(el):
+    """True when el sits inside closed floating content. React portals those parts only while open, so the
+    upstream static markup never contains them; ours keeps them in the DOM (hidden) for the runtime."""
+    node = el
+    while node is not None:
+        if isinstance(node.tag, str):
+            s = node.get('data-slot') or ''
+            if node.get('data-state') == 'closed' and s.endswith(PORTALED) and not s.startswith(('accordion', 'collapsible', 'trace', 'tabs')):
+                return True
+            if s == 'toast-viewport' or s == 'toast':
+                return True
+        node = node.getparent()
+    return False
+
+
 def reduce(doc_text):
     doc = lxml_html.fromstring(doc_text)
     out = []
@@ -51,6 +69,8 @@ def reduce(doc_text):
             continue
         slot = el.get('data-slot')
         if slot is None:
+            continue
+        if in_closed_portal(el):
             continue
         rec = {'tag': el.tag.lower(), 'slot': slot, 'classes': sorted(set((el.get('class') or '').split()))}
         for a in STATE_ATTRS:

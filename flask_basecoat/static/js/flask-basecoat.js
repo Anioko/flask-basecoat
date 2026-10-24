@@ -219,6 +219,58 @@
 })(window);
 
 
+/* ---- carousel ---- */
+/* Carousel: scroll-snap based slides with previous/next buttons, keyboard arrows and disabled state at the ends. */
+(function (FB) {
+  'use strict';
+
+  FB.register('carousel', {
+    init(root) {
+      const content = FB.qs(root, '[data-slot="carousel-content"]');
+      const track = content && (content.firstElementChild && content.firstElementChild.getAttribute('data-slot') !== 'carousel-item' ? content.firstElementChild : content);
+      const items = () => FB.qsa(root, '[data-slot="carousel-item"]');
+      const prev = FB.qs(root, '[data-slot="carousel-previous"]');
+      const next = FB.qs(root, '[data-slot="carousel-next"]');
+      if (!content || !items().length) return;
+      const vertical = root.getAttribute('data-orientation') === 'vertical';
+      const loop = root.hasAttribute('data-loop');
+      let index = 0;
+      const viewport = content;
+      viewport.style.overflow = 'hidden';
+      function go(i) {
+        const n = items().length;
+        if (loop) i = (i + n) % n; else i = Math.max(0, Math.min(n - 1, i));
+        index = i;
+        const el = items()[index];
+        const offset = vertical ? el.offsetTop - track.offsetTop : el.offsetLeft - track.offsetLeft;
+        track.style.transform = vertical ? `translate3d(0, -${offset}px, 0)` : `translate3d(-${offset}px, 0, 0)`;
+        track.style.transition = 'transform 300ms ease';
+        if (prev) prev.disabled = !loop && index === 0;
+        if (next) next.disabled = !loop && index >= n - 1;
+        items().forEach((it, k) => it.setAttribute('aria-hidden', String(k !== index)));
+        FB.emit(root, 'change', { index });
+      }
+      if (prev) prev.addEventListener('click', (e) => { e.preventDefault(); go(index - 1); });
+      if (next) next.addEventListener('click', (e) => { e.preventDefault(); go(index + 1); });
+      root.addEventListener('keydown', (e) => {
+        if (e.key === (vertical ? 'ArrowUp' : 'ArrowLeft')) { e.preventDefault(); go(index - 1); }
+        if (e.key === (vertical ? 'ArrowDown' : 'ArrowRight')) { e.preventDefault(); go(index + 1); }
+      });
+      let startX = 0, startY = 0;
+      viewport.addEventListener('pointerdown', (e) => { startX = e.clientX; startY = e.clientY; });
+      viewport.addEventListener('pointerup', (e) => {
+        const dx = e.clientX - startX, dy = e.clientY - startY;
+        const d = vertical ? dy : dx;
+        if (Math.abs(d) > 40) go(index + (d < 0 ? 1 : -1));
+      });
+      window.addEventListener('resize', () => go(index));
+      go(0);
+      root.fbGo = go;
+    },
+  });
+})(window.FlaskBasecoat);
+
+
 /* ---- dialog ---- */
 /* Dialog, Alert Dialog, Sheet and Drawer: modal layers.
    Markup (server-rendered): a display:contents wrapper [data-fb="dialog"] holding the trigger, overlay and content.
@@ -377,6 +429,54 @@
   }
   FB.register('collapsible', collapsible('collapsible'));
   FB.register('trace-collapsible', collapsible('trace-collapsible'));
+})(window.FlaskBasecoat);
+
+
+/* ---- input-otp ---- */
+/* Input OTP: a visually hidden input drives the slot cells; typing, paste, Backspace and arrow keys update the
+   active slot (data-active) and the rendered characters, with a fake caret in the active empty slot. */
+(function (FB) {
+  'use strict';
+
+  FB.register('input-otp', {
+    init(input) {
+      const container = input.closest('[data-input-otp-container]') || input.parentElement;
+      const slots = () => FB.qsa(container, '[data-slot="input-otp-slot"]');
+      const maxLength = Number(input.getAttribute('maxlength') || slots().length || 6);
+      input.setAttribute('maxlength', String(maxLength));
+      const pattern = input.getAttribute('pattern') ? new RegExp(input.getAttribute('pattern')) : null;
+      function render() {
+        const value = input.value;
+        const focused = document.activeElement === input;
+        const caret = Math.min(value.length, maxLength - 1);
+        slots().forEach((s, i) => {
+          const ch = value[i] || '';
+          let text = FB.qs(s, '[data-fb-otp-char]');
+          if (!text) { text = document.createElement('span'); text.setAttribute('data-fb-otp-char', ''); s.insertBefore(text, s.firstChild); }
+          text.textContent = ch;
+          const active = focused && (i === caret || (value.length === maxLength && i === maxLength - 1));
+          s.setAttribute('data-active', String(active));
+          let fake = FB.qs(s, '[data-fb-otp-caret]');
+          if (active && !ch) {
+            if (!fake) { fake = document.createElement('div'); fake.setAttribute('data-fb-otp-caret', ''); fake.className = 'pointer-events-none absolute inset-0 flex items-center justify-center'; fake.innerHTML = '<div class="h-4 w-px bg-foreground animate-caret-blink duration-1000"></div>'; s.appendChild(fake); }
+          } else if (fake) fake.remove();
+        });
+        input.setAttribute('data-input-otp-placeholder-shown', String(!value.length));
+        if (value.length === maxLength) FB.emit(input, 'complete', { value });
+      }
+      input.addEventListener('input', () => {
+        let v = input.value.replace(/\s+/g, '');
+        if (pattern) v = v.split('').filter((c) => pattern.test(c)).join('');
+        input.value = v.slice(0, maxLength);
+        render();
+        FB.emit(input, 'change', { value: input.value });
+      });
+      input.addEventListener('focus', render);
+      input.addEventListener('blur', render);
+      container.addEventListener('click', () => input.focus());
+      render();
+    },
+  });
 })(window.FlaskBasecoat);
 
 
@@ -543,6 +643,165 @@
 })(window.FlaskBasecoat);
 
 
+/* ---- misc ---- */
+/* Smaller behaviours: theme toggle, code block copy, resizable panels, navigation menu, message scroller,
+   progress animation, avatar image fallback, sonner compatibility alias. */
+(function (FB) {
+  'use strict';
+
+  /* Theme toggle: any element with data-theme-toggle flips the .dark class and remembers the choice. */
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-theme-toggle]');
+    if (!t) return;
+    e.preventDefault();
+    const dark = document.documentElement.classList.toggle('dark');
+    try { localStorage.setItem('flask-basecoat-theme', dark ? 'dark' : 'light'); } catch (err) { /* ignore */ }
+    FB.emit(document.documentElement, 'theme', { dark });
+  });
+
+  /* Code block copy button */
+  FB.register('code-block-copy-button', {
+    init(btn) {
+      btn.addEventListener('click', async () => {
+        const block = btn.closest('[data-slot="code-block"]');
+        const code = block && FB.qs(block, '[data-slot="code-block-code"], pre');
+        const text = code ? code.textContent : '';
+        try { await navigator.clipboard.writeText(text); } catch (err) { /* clipboard unavailable */ }
+        btn.setAttribute('data-copied', 'true');
+        setTimeout(() => btn.removeAttribute('data-copied'), 2000);
+      });
+    },
+  });
+
+  /* Avatar: hide the image and show the fallback when the image fails to load (Radix behaviour). */
+  FB.register('avatar', {
+    init(root) {
+      const img = FB.qs(root, '[data-slot="avatar-image"]');
+      const fallback = FB.qs(root, '[data-slot="avatar-fallback"]');
+      if (!img) return;
+      const loaded = () => { if (fallback) fallback.style.display = 'none'; img.style.display = ''; };
+      const failed = () => { img.style.display = 'none'; if (fallback) fallback.style.display = ''; };
+      if (img.complete) (img.naturalWidth ? loaded : failed)();
+      img.addEventListener('load', loaded);
+      img.addEventListener('error', failed);
+    },
+  });
+
+  /* Resizable panels: drag the handle to resize neighbouring panels (flex-basis percentages). */
+  FB.register('resizable-panel-group', {
+    init(group) {
+      const vertical = group.getAttribute('data-orientation') === 'vertical' || group.getAttribute('aria-orientation') === 'vertical';
+      const children = Array.from(group.children);
+      children.forEach((c) => { if (c.getAttribute('data-slot') === 'resizable-panel' && !c.style.flex) c.style.flex = `${Number(c.getAttribute('data-default-size') || 50)} 1 0px`; });
+      FB.qsa(group, ':scope > [data-slot="resizable-handle"]').forEach((handle) => {
+        const prev = handle.previousElementSibling, next = handle.nextElementSibling;
+        if (!prev || !next) return;
+        handle.setAttribute('aria-orientation', vertical ? 'vertical' : 'horizontal');
+        let start = 0, prevSize = 0, nextSize = 0, total = 0;
+        function sizes() { const r1 = prev.getBoundingClientRect(), r2 = next.getBoundingClientRect(); return vertical ? [r1.height, r2.height] : [r1.width, r2.width]; }
+        function applyPct(p1, p2) { prev.style.flex = `${p1} 1 0px`; next.style.flex = `${p2} 1 0px`; prev.setAttribute('data-size', p1.toFixed(1)); next.setAttribute('data-size', p2.toFixed(1)); }
+        handle.addEventListener('pointerdown', (e) => {
+          e.preventDefault(); handle.setPointerCapture(e.pointerId);
+          handle.setAttribute('data-separator', 'active'); handle.setAttribute('data-resize-handle-state', 'drag');
+          start = vertical ? e.clientY : e.clientX; [prevSize, nextSize] = sizes(); total = prevSize + nextSize;
+        });
+        handle.addEventListener('pointermove', (e) => {
+          if (handle.getAttribute('data-separator') !== 'active') return;
+          const d = (vertical ? e.clientY : e.clientX) - start;
+          const p = Math.min(total, Math.max(0, prevSize + d));
+          const groupSize = vertical ? group.getBoundingClientRect().height : group.getBoundingClientRect().width;
+          applyPct((p / groupSize) * 100, ((total - p) / groupSize) * 100);
+        });
+        const end = () => { handle.setAttribute('data-separator', 'inactive'); handle.removeAttribute('data-resize-handle-state'); };
+        handle.addEventListener('pointerup', end); handle.addEventListener('pointercancel', end);
+        handle.addEventListener('keydown', (e) => {
+          const step = e.shiftKey ? 10 : 1;
+          const keys = vertical ? { ArrowUp: -step, ArrowDown: step } : { ArrowLeft: -step, ArrowRight: step };
+          if (!(e.key in keys)) return;
+          e.preventDefault();
+          const [a, b] = sizes(); const g = vertical ? group.getBoundingClientRect().height : group.getBoundingClientRect().width;
+          const pa = (a / g) * 100 + keys[e.key], pb = (b / g) * 100 - keys[e.key];
+          if (pa >= 0 && pb >= 0) applyPct(pa, pb);
+        });
+      });
+    },
+  });
+
+  /* Navigation menu: triggers open their content panel below; hover and focus switch between items. */
+  FB.register('navigation-menu', {
+    init(nav) {
+      const items = FB.qsa(nav, '[data-slot="navigation-menu-item"]');
+      const viewport = FB.qs(nav, '[data-slot="navigation-menu-viewport"]');
+      let openItem = null, timer = 0;
+      items.forEach((item) => {
+        const trigger = FB.qs(item, '[data-slot="navigation-menu-trigger"]');
+        const content = FB.qs(item, '[data-slot="navigation-menu-content"]');
+        if (!trigger || !content) return;
+        trigger.setAttribute('aria-controls', FB.ensureId(content, 'navigation-menu-content'));
+        content.setAttribute('data-floating', '');
+        content.setAttribute('data-popper-var', 'navigation-menu');
+        const open = () => {
+          clearTimeout(timer);
+          if (openItem && openItem !== item) closeItem(openItem);
+          openItem = item;
+          FB.setState(trigger, 'open'); trigger.setAttribute('aria-expanded', 'true'); FB.setState(content, 'open');
+          if (viewport) { FB.setState(viewport, 'open'); viewport.style.setProperty('--radix-navigation-menu-viewport-width', `${content.offsetWidth}px`); viewport.style.setProperty('--radix-navigation-menu-viewport-height', `${content.offsetHeight}px`); }
+          FB.float(trigger, content, { side: 'bottom', align: 'start', sideOffset: 8 });
+          nav.fbLayer = { content, trigger, modal: false, onDismiss: () => closeItem(item) };
+          FB.pushLayer(nav.fbLayer);
+        };
+        const closeItem = (it) => {
+          const t = FB.qs(it, '[data-slot="navigation-menu-trigger"]'), c = FB.qs(it, '[data-slot="navigation-menu-content"]');
+          if (t) { FB.setState(t, 'closed'); t.setAttribute('aria-expanded', 'false'); }
+          if (c) FB.setState(c, 'closed');
+          if (viewport && openItem === it) FB.setState(viewport, 'closed');
+          if (openItem === it) openItem = null;
+          if (nav.fbLayer) { FB.removeLayer(nav.fbLayer); nav.fbLayer = null; }
+        };
+        const scheduleClose = () => { clearTimeout(timer); timer = setTimeout(() => openItem === item && closeItem(item), 150); };
+        trigger.addEventListener('click', (e) => { e.preventDefault(); openItem === item ? closeItem(item) : open(); });
+        trigger.addEventListener('pointerenter', () => { clearTimeout(timer); timer = setTimeout(open, 150); });
+        trigger.addEventListener('pointerleave', scheduleClose);
+        content.addEventListener('pointerenter', () => clearTimeout(timer));
+        content.addEventListener('pointerleave', scheduleClose);
+        trigger.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); FB.focusFirst(content); } });
+        content.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeItem(item); trigger.focus(); } });
+      });
+      const links = () => FB.qsa(nav, '[data-slot="navigation-menu-trigger"], [data-slot="navigation-menu-link"]').filter((l) => !l.closest('[data-slot="navigation-menu-content"]'));
+      const navKey = FB.roving(links, { orientation: 'horizontal', loop: false, typeahead: false });
+      nav.addEventListener('keydown', (e) => { if (!e.target.closest('[data-slot="navigation-menu-content"]')) navKey(e); });
+    },
+  });
+
+  /* Message scroller: keeps a chat log pinned to the bottom and shows a scroll-to-bottom button when scrolled up. */
+  FB.register('message-scroller', {
+    init(root) {
+      const viewport = FB.qs(root, '[data-slot="message-scroller-viewport"]');
+      const button = FB.qs(root, '[data-slot="message-scroller-button"]');
+      if (!viewport) return;
+      const atBottom = () => viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < 8;
+      const update = () => { const bottom = atBottom(); root.toggleAttribute('data-pending-scroll', !bottom); if (button) { button.setAttribute('data-active', String(!bottom)); button.toggleAttribute('inert', bottom); } };
+      viewport.addEventListener('scroll', update);
+      if (button) button.addEventListener('click', () => viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' }));
+      new MutationObserver(() => { if (!root.hasAttribute('data-pending-scroll')) viewport.scrollTop = viewport.scrollHeight; update(); }).observe(viewport, { childList: true, subtree: true });
+      viewport.scrollTop = viewport.scrollHeight; update();
+    },
+  });
+
+  /* Progress: set value via FlaskBasecoat.progress(el, value) or data-value changes. */
+  FB.progress = function (el, value, max) {
+    const indicator = FB.qs(el, '[data-slot="progress-indicator"]');
+    max = max || Number(el.getAttribute('data-max') || 100);
+    el.setAttribute('aria-valuenow', String(value)); el.setAttribute('data-value', String(value)); el.setAttribute('data-max', String(max));
+    el.setAttribute('data-state', value >= max ? 'complete' : 'loading');
+    if (indicator) { indicator.setAttribute('data-state', el.getAttribute('data-state')); indicator.setAttribute('data-value', String(value)); indicator.style.transform = `translateX(-${100 - (value / max) * 100}%)`; }
+  };
+
+  /* Sonner compatibility */
+  window.sonner = window.sonner || { toast: (...a) => FB.toast(...a) };
+})(window.FlaskBasecoat);
+
+
 /* ---- popover ---- */
 /* Popover, Hover Card and Tooltip: non-modal floating layers anchored to a trigger.
    Popover opens on click (dismiss on outside/Escape, focus moves into the content).
@@ -688,6 +947,188 @@
 })(window.FlaskBasecoat);
 
 
+/* ---- sidebar ---- */
+/* Sidebar: expanded/collapsed state on the sidebar root (offcanvas or icon mode), trigger and rail toggles,
+   keyboard shortcut Ctrl/Cmd+B, state remembered in a cookie like upstream, and a mobile sheet below 768px. */
+(function (FB) {
+  'use strict';
+
+  const COOKIE = 'sidebar_state';
+  const MOBILE = 768;
+
+  FB.register('sidebar-wrapper', {
+    init(wrapper) {
+      const sidebars = FB.qsa(wrapper, '[data-slot="sidebar"]').filter((s) => s.closest('[data-slot="sidebar-wrapper"]') === wrapper);
+      const sidebar = sidebars[0];
+      if (!sidebar) return;
+      const collapsible = sidebar.getAttribute('data-collapsible-mode') || (sidebar.hasAttribute('data-collapsible') ? 'offcanvas' : 'none');
+      let open = sidebar.getAttribute('data-state') !== 'collapsed';
+      const match = document.cookie.match(new RegExp(`(?:^|; )${COOKIE}=(true|false)`));
+      if (match) open = match[1] === 'true';
+      let mobileOpen = false;
+      const isMobile = () => window.innerWidth < MOBILE;
+
+      function apply() {
+        if (collapsible === 'none') return;
+        sidebar.setAttribute('data-state', open ? 'expanded' : 'collapsed');
+        sidebar.setAttribute('data-collapsible', open ? '' : collapsible);
+        FB.qsa(wrapper, '[data-slot="sidebar-trigger"]').forEach((t) => t.setAttribute('aria-expanded', String(open)));
+        FB.emit(wrapper, 'sidebar', { open });
+      }
+      function toggle() {
+        if (isMobile()) { mobileOpen = !mobileOpen; applyMobile(); return; }
+        open = !open;
+        document.cookie = `${COOKIE}=${open}; path=/; max-age=${60 * 60 * 24 * 7}`;
+        apply();
+      }
+      // Mobile: the sidebar content is shown inside a sheet-like overlay on small screens.
+      let mobileSheet = null;
+      function applyMobile() {
+        if (!mobileSheet) {
+          mobileSheet = document.createElement('div');
+          mobileSheet.setAttribute('data-fb-sidebar-mobile', '');
+          mobileSheet.className = 'fixed inset-0 z-50 hidden';
+          mobileSheet.innerHTML = '<div data-slot="sheet-overlay" data-state="open" class="cn-sheet-overlay fixed inset-0 z-50 bg-black/50"></div>' +
+            '<div data-slot="sheet-content" data-state="open" data-side="left" role="dialog" aria-modal="true" data-sidebar="sidebar" data-mobile="true" class="cn-sheet-content fixed inset-y-0 left-0 z-50 flex h-full w-(--sidebar-width) flex-col bg-sidebar p-0 text-sidebar-foreground"><div class="flex h-full w-full flex-col" data-fb-mobile-slot></div></div>';
+          mobileSheet.style.setProperty('--sidebar-width', '18rem');
+          document.body.appendChild(mobileSheet);
+          mobileSheet.firstElementChild.addEventListener('click', () => { mobileOpen = false; applyMobile(); });
+        }
+        const slot = FB.qs(mobileSheet, '[data-fb-mobile-slot]');
+        const inner = FB.qs(sidebar, '[data-slot="sidebar-inner"]');
+        if (mobileOpen) {
+          mobileSheet.classList.remove('hidden');
+          if (inner && inner.parentNode !== slot) { inner.fbHome = inner.parentNode; slot.appendChild(inner); }
+          FB.lockScroll();
+          FB.pushLayer(mobileSheet.fbLayer = { content: mobileSheet.lastElementChild, modal: true, onDismiss: () => { mobileOpen = false; applyMobile(); } });
+        } else {
+          mobileSheet.classList.add('hidden');
+          if (inner && inner.fbHome) { inner.fbHome.appendChild(inner); }
+          FB.unlockScroll();
+          if (mobileSheet.fbLayer) { FB.removeLayer(mobileSheet.fbLayer); mobileSheet.fbLayer = null; }
+        }
+      }
+      wrapper.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-slot="sidebar-trigger"], [data-slot="sidebar-rail"]');
+        if (t && wrapper.contains(t)) { e.preventDefault(); toggle(); }
+      });
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') { e.preventDefault(); toggle(); }
+      });
+      // Menu buttons marked data-active reflect the current page; links with the current path get it too.
+      FB.qsa(wrapper, '[data-slot="sidebar-menu-button"][href], [data-slot="sidebar-menu-sub-button"][href]').forEach((a) => {
+        try {
+          const url = new URL(a.getAttribute('href'), location.href);
+          if (url.pathname === location.pathname && a.getAttribute('data-active') === null) a.setAttribute('data-active', 'true');
+        } catch (e) { /* ignore */ }
+      });
+      // Collapsible groups inside the sidebar use the generic collapsible module.
+      apply();
+      wrapper.fbToggle = toggle;
+    },
+  });
+})(window.FlaskBasecoat);
+
+
+/* ---- slider ---- */
+/* Slider: pointer and keyboard control of one or more thumbs; range and thumb positions are written as inline
+   styles the way Radix does (left/right or bottom/top percentages), and the value is mirrored into hidden inputs. */
+(function (FB) {
+  'use strict';
+
+  FB.register('slider', {
+    init(root) {
+      const track = FB.qs(root, '[data-slot="slider-track"]');
+      const range = FB.qs(root, '[data-slot="slider-range"]');
+      const thumbs = FB.qsa(root, '[data-slot="slider-thumb"]');
+      if (!track || !thumbs.length) return;
+      const vertical = root.getAttribute('data-orientation') === 'vertical';
+      const min = Number(thumbs[0].getAttribute('aria-valuemin') || root.getAttribute('data-min') || 0);
+      const max = Number(thumbs[0].getAttribute('aria-valuemax') || root.getAttribute('data-max') || 100);
+      const step = Number(root.getAttribute('data-step') || 1);
+      const disabled = root.getAttribute('aria-disabled') === 'true' || root.hasAttribute('data-disabled');
+      const name = root.getAttribute('data-name') || root.getAttribute('name');
+      const values = thumbs.map((t, i) => {
+        const v = t.getAttribute('aria-valuenow') ?? (root.getAttribute('data-value') || '').split(',')[i];
+        return v !== null && v !== undefined && v !== '' ? Number(v) : min;
+      });
+      const inputs = name ? thumbs.map(() => { const i = document.createElement('input'); i.type = 'hidden'; i.name = name; root.appendChild(i); return i; }) : [];
+
+      function pct(v) { return ((v - min) / (max - min)) * 100; }
+      function render() {
+        thumbs.forEach((t, i) => {
+          t.setAttribute('aria-valuenow', String(values[i]));
+          t.setAttribute('aria-valuemin', String(min));
+          t.setAttribute('aria-valuemax', String(max));
+          t.style.display = '';
+          const p = pct(values[i]);
+          t.parentElement.style.position = 'absolute';
+          if (vertical) { t.parentElement.style.bottom = `calc(${p}% - var(--thumb-size, 0px))`; t.parentElement.style.left = ''; }
+          else { t.parentElement.style.left = `calc(${p}% + var(--thumb-offset, 0px))`; t.parentElement.style.bottom = ''; }
+          t.parentElement.style.transform = vertical ? 'translateY(50%)' : 'translateX(-50%)';
+          if (inputs[i]) inputs[i].value = String(values[i]);
+        });
+        if (range) {
+          const lo = values.length > 1 ? Math.min(...values) : min;
+          const hi = Math.max(...values);
+          if (vertical) { range.style.bottom = `${pct(lo)}%`; range.style.top = `${100 - pct(hi)}%`; }
+          else { range.style.left = `${pct(lo)}%`; range.style.right = `${100 - pct(hi)}%`; }
+        }
+        root.setAttribute('data-value', values.join(','));
+      }
+      // Radix wraps each thumb in a positioned span; create it when the server did not.
+      thumbs.forEach((t) => {
+        if (!t.parentElement.hasAttribute('data-fb-thumb')) {
+          const wrap = document.createElement('span');
+          wrap.setAttribute('data-fb-thumb', '');
+          wrap.style.transform = 'var(--radix-slider-thumb-transform)';
+          wrap.style.position = 'absolute';
+          t.parentNode.insertBefore(wrap, t);
+          wrap.appendChild(t);
+        }
+      });
+      function snap(v) { const s = Math.round((v - min) / step) * step + min; return Math.min(max, Math.max(min, Number(s.toFixed(6)))); }
+      function valueFromPointer(e) {
+        const r = track.getBoundingClientRect();
+        const ratio = vertical ? 1 - (e.clientY - r.top) / r.height : (e.clientX - r.left) / r.width;
+        return snap(min + Math.min(1, Math.max(0, ratio)) * (max - min));
+      }
+      function setValue(i, v) {
+        v = snap(v);
+        if (values.length > 1) {
+          if (i > 0) v = Math.max(v, values[i - 1]);
+          if (i < values.length - 1) v = Math.min(v, values[i + 1]);
+        }
+        if (values[i] === v) return;
+        values[i] = v; render();
+        FB.emit(root, 'change', { value: values.slice() });
+      }
+      let active = -1;
+      root.addEventListener('pointerdown', (e) => {
+        if (disabled || e.button !== 0) return;
+        e.preventDefault();
+        const v = valueFromPointer(e);
+        let best = 0; thumbs.forEach((t, i) => { if (Math.abs(values[i] - v) < Math.abs(values[best] - v)) best = i; });
+        active = best; setValue(active, v); thumbs[active].focus();
+        root.setPointerCapture && root.setPointerCapture(e.pointerId);
+      });
+      root.addEventListener('pointermove', (e) => { if (active >= 0) setValue(active, valueFromPointer(e)); });
+      root.addEventListener('pointerup', () => { active = -1; });
+      root.addEventListener('pointercancel', () => { active = -1; });
+      thumbs.forEach((t, i) => t.addEventListener('keydown', (e) => {
+        if (disabled) return;
+        const big = (max - min) / 10;
+        const map = { ArrowRight: step, ArrowUp: step, ArrowLeft: -step, ArrowDown: -step, PageUp: big, PageDown: -big };
+        if (e.key in map) { e.preventDefault(); setValue(i, values[i] + map[e.key] * (e.shiftKey ? 10 : 1)); }
+        else if (e.key === 'Home') { e.preventDefault(); setValue(i, min); }
+        else if (e.key === 'End') { e.preventDefault(); setValue(i, max); }
+      }));
+      render();
+    },
+  });
+})(window.FlaskBasecoat);
+
+
 /* ---- tabs ---- */
 /* Tabs: role=tablist with arrow-key navigation (automatic activation), data-state active/inactive on triggers and panels. */
 (function (FB) {
@@ -732,6 +1173,80 @@
       list.addEventListener('click', (e) => { const t = e.target.closest('[data-slot="tabs-trigger"]'); if (t && !t.disabled) activate(t, false); });
       list.addEventListener('keydown', (e) => { if (nav(e)) { const t = document.activeElement; if (t && t.matches('[data-slot="tabs-trigger"]')) activate(t, false); } });
     },
+  });
+})(window.FlaskBasecoat);
+
+
+/* ---- toast ---- */
+/* Toasts (Sonner-style): FlaskBasecoat.toast({title, description, variant, action, duration}) stacks toasts in a
+   viewport in the bottom-right corner; flashes rendered server-side as [data-fb-flash] are promoted on load.
+   Each toast is a data-slot="toast" element styled by the upstream cn-toast recipe. */
+(function (FB) {
+  'use strict';
+
+  let viewport = null;
+  function getViewport() {
+    if (viewport) return viewport;
+    viewport = document.querySelector('[data-slot="toast-viewport"]');
+    if (!viewport) {
+      viewport = document.createElement('div');
+      viewport.setAttribute('data-slot', 'toast-viewport');
+      viewport.setAttribute('tabindex', '-1');
+      viewport.className = 'pointer-events-none fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-sm outline-none sm:right-4 sm:left-auto sm:mx-0 sm:w-full';
+      document.body.appendChild(viewport);
+    }
+    return viewport;
+  }
+  const ICONS = {
+    success: 'circle-check', info: 'info', warning: 'triangle-alert', error: 'octagon-x', loading: 'loader-circle',
+  };
+  function toast(opts) {
+    opts = typeof opts === 'string' ? { title: opts } : (opts || {});
+    const vp = getViewport();
+    const el = document.createElement('div');
+    el.setAttribute('data-slot', 'toast');
+    el.setAttribute('role', opts.variant === 'error' ? 'alert' : 'status');
+    el.setAttribute('aria-live', 'polite');
+    el.setAttribute('data-type', opts.variant || 'default');
+    el.setAttribute('data-state', 'open');
+    el.className = 'cn-toast group/toast pointer-events-auto relative mt-3 flex w-full items-center gap-3 border bg-popover p-4 text-popover-foreground shadow-lg outline-none select-none data-[type=error]:text-destructive';
+    const icon = opts.icon || (window.FlaskBasecoatIcons && window.FlaskBasecoatIcons[ICONS[opts.variant]]) || '';
+    el.innerHTML =
+      (icon ? `<div data-slot="toast-icon" class="cn-toast-icon flex shrink-0 items-center justify-center [&_svg]:size-4">${icon}</div>` : '') +
+      `<div data-slot="toast-content" class="cn-toast-content flex flex-1 flex-col gap-0.5 text-sm">` +
+      (opts.title ? `<div data-slot="toast-title" class="cn-toast-title font-medium"></div>` : '') +
+      (opts.description ? `<div data-slot="toast-description" class="cn-toast-description text-muted-foreground"></div>` : '') +
+      `</div>` +
+      (opts.action ? `<button type="button" data-slot="toast-action" class="cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none cn-button-variant-outline cn-button-size-xs"></button>` : '') +
+      (opts.dismissible === false ? '' : `<button type="button" data-slot="toast-close" aria-label="Close" class="cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none cn-button-variant-ghost cn-button-size-icon-xs absolute top-2 right-2 opacity-0 group-hover/toast:opacity-100">${(window.FlaskBasecoatIcons && window.FlaskBasecoatIcons.x) || '×'}</button>`);
+    if (opts.title) FB.qs(el, '[data-slot="toast-title"]').textContent = opts.title;
+    if (opts.description) FB.qs(el, '[data-slot="toast-description"]').textContent = opts.description;
+    const actionBtn = FB.qs(el, '[data-slot="toast-action"]');
+    if (actionBtn) { actionBtn.textContent = opts.action.label; actionBtn.addEventListener('click', () => { opts.action.onClick && opts.action.onClick(); dismiss(); }); }
+    const closeBtn = FB.qs(el, '[data-slot="toast-close"]');
+    if (closeBtn) closeBtn.addEventListener('click', dismiss);
+    vp.appendChild(el);
+    let timer = opts.duration === Infinity ? 0 : setTimeout(dismiss, opts.duration || 4000);
+    el.addEventListener('pointerenter', () => { clearTimeout(timer); });
+    el.addEventListener('pointerleave', () => { if (opts.duration !== Infinity) timer = setTimeout(dismiss, 2000); });
+    function dismiss() {
+      clearTimeout(timer);
+      el.setAttribute('data-state', 'closed');
+      el.setAttribute('data-fb-animating', '');
+      setTimeout(() => el.remove(), 220);
+      FB.emit(vp, 'toast-dismiss', { id: el.id });
+    }
+    return { element: el, dismiss };
+  }
+  FB.toast = toast;
+  ['success', 'info', 'warning', 'error', 'loading'].forEach((v) => { toast[v] = (title, opts) => toast(Object.assign({ title, variant: v }, opts || {})); });
+
+  // Server-rendered flash messages: <template data-fb-flash data-variant="success">text</template>
+  document.addEventListener('DOMContentLoaded', () => {
+    FB.qsa(document, '[data-fb-flash]').forEach((t) => {
+      toast({ title: t.getAttribute('data-title') || (t.content ? t.content.textContent.trim() : t.textContent.trim()), description: t.getAttribute('data-description') || undefined, variant: t.getAttribute('data-variant') || 'default' });
+      t.remove();
+    });
   });
 })(window.FlaskBasecoat);
 
