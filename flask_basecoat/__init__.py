@@ -1,7 +1,7 @@
 """
 flask_basecoat: Canonical shadcn/ui-aligned Jinja macros wrapping Basecoat UI.
 """
-from flask import Blueprint, url_for
+from flask import Blueprint, current_app, url_for
 from markupsafe import Markup
 from jinja2 import ChoiceLoader, PackageLoader
 
@@ -14,6 +14,11 @@ basecoat_bp = Blueprint(
     static_folder='static',
     static_url_path='/static/basecoat'
 )
+
+
+def _render_docs(source):
+    """Render a registry entry's docs source (Jinja) in the current app, keeping its trailing newline."""
+    return Markup(current_app.jinja_env.from_string(source + '\n').render())
 
 
 class Basecoat:
@@ -44,6 +49,11 @@ class Basecoat:
             return {
                 'basecoat': self
             }
+
+        # Registry entries drive the gallery index and the docs component pages
+        from .gallery_registry import get_entry
+        app.add_template_global(get_entry, 'basecoat_entry')
+        app.add_template_global(_render_docs, 'basecoat_render_docs')
 
         # Register component gallery blueprint in debug/test/enabled environments
         if app.config.get('BASECOAT_GALLERY_ENABLED', False) or app.debug or app.testing:
