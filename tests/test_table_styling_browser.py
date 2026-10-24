@@ -18,12 +18,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from .live_server import TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD, TEST_SERVER_BASE_URL
+from .live_server import TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD, TEST_SERVER_BASE_URL, ensure_server
 
 
 @pytest.fixture
 def driver():
-    """Create a Chrome WebDriver instance"""
+    """Create a Chrome WebDriver instance and ensure live server database is ready"""
+    # Ensure live server is running and database tables exist
+    server = ensure_server()
+    server.ensure_database()
+
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
