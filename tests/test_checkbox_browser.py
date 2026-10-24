@@ -4,25 +4,12 @@ from pathlib import Path
 
 import pytest
 from PIL import Image, ImageChops
-from playwright.sync_api import sync_playwright
 
-from .live_server import TEST_SERVER_BASE_URL, ensure_server
+from .live_server import TEST_SERVER_BASE_URL
 
 SNAPSHOT_DIR = Path(__file__).parent / "snapshots"
 MAX_DIFF_RATIO = 0.005
 URL = f"{TEST_SERVER_BASE_URL}/basecoat/gallery/checkbox"
-
-
-@pytest.fixture(scope="module")
-def browser():
-    ensure_server()
-    with sync_playwright() as p:
-        try:
-            b = p.chromium.launch(headless=True)
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"Chromium not available: {exc}")
-        yield b
-        b.close()
 
 
 @pytest.fixture
