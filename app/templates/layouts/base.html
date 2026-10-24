@@ -40,6 +40,9 @@
           {{ nav.render_nav(current_user) }}
         {% endblock %}
 
+        {# Spacer to push content below fixed nav #}
+        <div class="h-14"></div>
+
         {% include 'partials/_flashes.html' %}
         {# When extended, the content block contains all the html of the webpage #}
         {% block content %}

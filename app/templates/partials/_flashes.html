@@ -3,10 +3,10 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="{% if category == 'error' %}alert-destructive{% else %}alert{% endif %} flash-message message relative">
+                    <div class="{% if category == 'error' %}alert-destructive{% else %}alert{% endif %} flash-message message relative z-40">
                         <div class="flex items-start justify-between">
                             <h2 class="flex-1">{{ message }}</h2>
-                            <button class="close ml-4 text-2xl leading-none opacity-50 hover:opacity-100" aria-label="Close">&times;</button>
+                            <button class="close ml-4 text-2xl leading-none opacity-50 hover:opacity-100 shrink-0" aria-label="Close">&times;</button>
                         </div>
                     </div>
                 {% endfor %}
