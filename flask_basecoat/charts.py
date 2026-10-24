@@ -224,7 +224,9 @@ def runtime_spec(recipe):
 def load_spec(name):
     """The shipped spec of an upstream chart (flask_basecoat/data/charts/<name>.json)."""
     path = DATA_DIR / f'{name}.json'
-    return json.loads(path.read_text(encoding='utf8'))
+    spec = json.loads(path.read_text(encoding='utf8'))
+    spec.setdefault('chart', name)  # the pinned chart id the spec was copied from; the page check (B9) reads it
+    return spec
 
 
 def chart_style_css(chart_id, config):
