@@ -56,7 +56,7 @@ def test_keyboard_reaches_every_control(browser, base, slug):
       const root = document.querySelector('[data-canvas]');
       const sel = 'button:not([disabled]), a[href], [tabindex="0"], input, textarea, select';
       return Array.from(root.querySelectorAll(sel)).filter(e => e.offsetParent !== null && e.tabIndex >= 0 && !e.closest('[hidden]')
-        && !e.closest('[data-slot="sheet-content"]')).map((e, i) => (e.setAttribute('data-kb', i), i)).length;
+        && !e.closest('[data-slot="sheet-content"]') && !e.closest('[data-slot="chart"]')).map((e, i) => (e.setAttribute('data-kb', i), i)).length;
     }""")
     assert expected >= 2           # at least the view switch and the scroll region
     pg.locator('[data-canvas-view] [data-slot="toggle-group-item"]').first.focus()

@@ -41,6 +41,27 @@
     </div>
   </section>
 
+  {% if canvases %}
+  <section class="flex flex-col gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-xl font-semibold tracking-tight">Strategy canvases <span class="text-muted-foreground">({{ canvases|length }})</span></h2>
+      {{ ui.button(variant='secondary', size='sm', href=url_for('basecoat_examples.canvas_index'), text='All canvases') }}
+    </div>
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {% for c in canvases %}{{ ui.button(variant='outline', size='sm', href=url_for('basecoat_examples.canvas', slug=c.slug), text=c.title, class='justify-start') }}{% endfor %}
+    </div>
+  </section>
+  <section class="flex flex-col gap-4">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-xl font-semibold tracking-tight">Capability map <span class="text-muted-foreground">({{ capability_views|length }})</span></h2>
+      {{ ui.button(variant='secondary', size='sm', href=url_for('basecoat_examples.capability_index'), text='All views') }}
+    </div>
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {% for v in capability_views %}{{ ui.button(variant='outline', size='sm', href=url_for('basecoat_examples.capability', slug=v.slug), text=v.title, class='justify-start') }}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
   {% if chart_groups %}
   <section class="flex flex-col gap-4">
     <div class="flex flex-wrap items-center justify-between gap-2">

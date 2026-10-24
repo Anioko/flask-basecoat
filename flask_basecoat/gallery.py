@@ -79,7 +79,12 @@ class DemoForm(Form):
 def index():
     comps = [{'name': n, 'ready': has_page('components', n)} for n in component_names()]
     blocks = [{'name': n, 'ready': has_page('blocks', n)} for n in block_names()]
-    return render_template('basecoat/pages/index.html', components=comps, blocks=blocks, chart_groups=chart_groups())
+    from flask import current_app
+    from flask_basecoat import canvases as _canvases
+    examples = 'basecoat_examples' in current_app.blueprints   # the canvas and capability examples live in the examples blueprint
+    return render_template('basecoat/pages/index.html', components=comps, blocks=blocks, chart_groups=chart_groups(),
+                           canvases=_canvases.available() if examples else [],
+                           capability_views=[dict(slug=s, title=ti, form=f) for s, ti, f in _canvases.CAPABILITY])
 
 
 @gallery_bp.route('/charts/')

@@ -416,7 +416,7 @@ COLLECT_JS = r"""() => {
   const opaque = (v) => { const m = /\/\s*([\d.]+%?)\s*\)$/.exec(v) || /^rgba\([^)]*,\s*([\d.]+)\)$/.exec(v); return m ? v.replace(/\s*\/\s*[\d.]+%?\s*\)$/, ')').replace(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)$/, 'rgb($1, $2, $3)') : v; };
   const alpha = (v) => { const m = /\/\s*([\d.]+)(%?)\s*\)$/.exec(v) || /^rgba\([^)]*,\s*([\d.]+)\)$/.exec(v); if (!m) return 1; return m[2] === '%' ? +m[1] / 100 : +m[1]; };
   const root = getComputedStyle(document.documentElement);
-  const names = new Set([...document.styleSheets].flatMap(s => { try { return [...s.cssRules]; } catch (e) { return []; } }).flatMap(function walk(r) { return r.cssRules ? [...r.cssRules].flatMap(walk) : (r.style ? [...r.style].filter(n => n.startsWith('--')) : []); }));
+  const names = new Set([...document.styleSheets].flatMap(s => { try { return [...s.cssRules]; } catch (e) { return []; } }).flatMap(function walk(r) { return [...(r.style ? [...r.style].filter(n => n.startsWith('--')) : []), ...(r.cssRules ? [...r.cssRules].flatMap(walk) : [])]; }));
   const tokens = [[0, 0, 0], [255, 255, 255]];
   for (const n of names) { const v = root.getPropertyValue(n).trim(); if (/^(oklch|oklab|rgb|hsl|#|lab|lch|color)/.test(v)) { const c = rgb(opaque(v)); if (c[3] === 255) tokens.push(c.slice(0, 3)); } }
   const near = (c) => tokens.some(t => Math.abs(t[0] - c[0]) <= 3 && Math.abs(t[1] - c[1]) <= 3 && Math.abs(t[2] - c[2]) <= 3);
