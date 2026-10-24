@@ -426,6 +426,9 @@ def slot(name, kw=None, class_='', id=None, attrs=None):
     if name == 'sidebar' and kw.get('collapsible') == 'none':
         for k in ('data-state', 'data-collapsible', 'data-variant', 'data-side'):
             a.pop(k, None)
+    if name == 'sidebar' and kw.get('collapsible') in ('icon', 'offcanvas'):
+        # Upstream keeps the mode in React props; data-collapsible only holds it while collapsed, so sidebar.js reads it here.
+        a['data-collapsible-mode'] = kw['collapsible']
     always = set(ALWAYS_DATA.get(name, []))
     mirrored = {d[5:] for d in rec.get('data_attrs', []) if d.startswith('data-')}
     as_for_attrs = as_slot_for(name, kw)
