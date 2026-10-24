@@ -100,7 +100,7 @@ def test_peer_disabled_label_is_dimmed_and_not_clickable_to_focus(page):
     assert float(opacity) == 0.5 and float(normal) == 1.0
     cursor = page.evaluate("getComputedStyle(document.querySelector('label[for=disabled-input]')).cursor")
     assert cursor == "not-allowed"
-    page.locator("label[for=disabled-input]").click()
+    page.locator("label[for=disabled-input]").click(force=True)
     assert page.evaluate("document.activeElement.id") != "disabled-input"
 
 
