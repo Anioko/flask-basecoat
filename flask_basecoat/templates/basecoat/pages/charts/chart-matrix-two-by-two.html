@@ -1,0 +1,57 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# The two-by-two matrix (ruling R18): value against cost for ten options, a Tier C form on the one chart renderer.
+   Recharts 3.8 ScatterChart, Scatter, ZAxis, ReferenceLine and ReferenceArea; the oracle is
+   compliance/golden/charts/extra/chart-matrix-two-by-two.tsx.
+   The form region is one `data-entelim-form` region with a name, tabindex 0 and its own horizontal scroll: at 390px
+   wide the plot keeps its square and scrolls, it is never stacked. The "View" toggle group swaps the chart for a table
+   listing every point (name, both values, bubble size and quadrant), read from the same spec. #}
+{% block title %}chart-matrix-two-by-two · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="chart-matrix-two-by-two">{% endblock %}
+{% macro card() -%}
+{%- set spec = chart_spec('chart-matrix-two-by-two') -%}
+{%- set m = chart_matrix_rows(spec) -%}
+{% call ui.card(size='default') %}
+  {% call ui.card_header() %}
+    {{ ui.card_title(text='Matrix - Value against Cost') }}
+    {{ ui.card_description(text='Ten options, split at a cost of 200 and a value of 50') }}
+    {% call ui.card_action() %}
+      {% call ui.toggle_group(type='single', variant='outline', size='sm', spacing='2', attrs={'aria-label': 'View', 'data-chart-view': 'chart-matrix-two-by-two'}) %}
+        {{ ui.toggle_group_item(text='Chart', value='chart', variant='outline', size='sm', spacing='2', pressed=true) }}
+        {{ ui.toggle_group_item(text='Table', value='table', variant='outline', size='sm', spacing='2') }}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+  {% call ui.card_content() %}
+    <div data-chart-view-panel="chart-matrix-two-by-two" data-chart-view-value="chart">
+      <div data-entelim-form="matrix" role="region" aria-label="Value against cost matrix" tabindex="0" class="overflow-x-auto">
+        {{ ui.chart_from_spec(spec, id='matrix-two-by-two', class='aspect-auto h-[544px] w-[560px]') }}
+      </div>
+    </div>
+    <div data-chart-view-panel="chart-matrix-two-by-two" data-chart-view-value="table" hidden>
+      {% call ui.table_container() %}{% call ui.table() %}
+        {{ ui.table_caption(text='Every option with its cost, value, effort and quadrant') }}
+        {% call ui.table_header() %}{% call ui.table_row() %}
+          {{ ui.table_head(text='Option') }}
+          {% call ui.table_head() %}<div class="text-right">{{ m.columns[0] }}</div>{% endcall %}
+          {% call ui.table_head() %}<div class="text-right">{{ m.columns[1] }}</div>{% endcall %}
+          {% call ui.table_head() %}<div class="text-right">{{ m.columns[2] }}</div>{% endcall %}
+          {{ ui.table_head(text='Quadrant') }}
+        {% endcall %}{% endcall %}
+        {% call ui.table_body() %}
+          {% for r in m.rows %}{% call ui.table_row() %}
+            {{ ui.table_cell(text=r.name, class='font-medium') }}
+            {% call ui.table_cell() %}<div class="text-right tabular-nums">{{ r.x }}</div>{% endcall %}
+            {% call ui.table_cell() %}<div class="text-right tabular-nums">{{ r.y }}</div>{% endcall %}
+            {% call ui.table_cell() %}<div class="text-right tabular-nums">{{ r.size }}</div>{% endcall %}
+            {{ ui.table_cell(text=r.quadrant) }}
+          {% endcall %}{% endfor %}
+        {% endcall %}
+      {% endcall %}{% endcall %}
+    </div>
+  {% endcall %}
+  {% call ui.card_footer(class='flex-col items-start gap-2 text-sm') %}<div class="leading-none text-muted-foreground">Bubble size shows effort in person-weeks</div>{% endcall %}
+{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div class="p-4 sm:p-6"><div class="mx-auto w-full max-w-2xl"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div></div>{% endblock %}

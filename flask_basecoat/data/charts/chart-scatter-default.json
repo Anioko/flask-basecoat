@@ -1,0 +1,94 @@
+{
+ "type": "scatter",
+ "component": "ScatterChart",
+ "config": {
+  "value": {
+   "label": "Value",
+   "color": "var(--chart-1)"
+  }
+ },
+ "data": [
+  {
+   "cost": 60,
+   "value": 82
+  },
+  {
+   "cost": 90,
+   "value": 68
+  },
+  {
+   "cost": 150,
+   "value": 74
+  },
+  {
+   "cost": 280,
+   "value": 88
+  },
+  {
+   "cost": 300,
+   "value": 76
+  },
+  {
+   "cost": 250,
+   "value": 62
+  },
+  {
+   "cost": 30,
+   "value": 22
+  },
+  {
+   "cost": 70,
+   "value": 35
+  },
+  {
+   "cost": 280,
+   "value": 30
+  },
+  {
+   "cost": 220,
+   "value": 18
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true,
+  "margin": {
+   "left": 12,
+   "right": 12
+  }
+ },
+ "series": [
+  {
+   "component": "Scatter",
+   "fill": "var(--color-value)"
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "type": "number",
+   "dataKey": "cost",
+   "name": "Cost",
+   "tickLine": false,
+   "axisLine": false,
+   "tickMargin": 8
+  },
+  {
+   "component": "YAxis",
+   "type": "number",
+   "dataKey": "value",
+   "name": "Value",
+   "tickLine": false,
+   "axisLine": false,
+   "tickMargin": 8
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid"
+ },
+ "tooltip": {
+  "cursor": false,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

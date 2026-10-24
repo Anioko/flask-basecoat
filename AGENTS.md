@@ -14,7 +14,7 @@ Every page starts from one shadcn original that the library renders and checks a
 | Sign in / sign up | `login-01` … `login-05`, `signup-01` … `signup-05` | `/basecoat/blocks/<name>` |
 | A different sidebar or navigation | `sidebar-01` … `sidebar-16` | `/basecoat/blocks/<name>` |
 | A single component pattern (form field, dialog, table, empty state …) | the component's upstream example | `/basecoat/components/<name>` and `docs/MACROS.md` |
-| A chart | one of the 70 upstream charts | `/basecoat/charts/` and `/basecoat/charts/<name>` |
+| A chart | one of the 70 upstream charts, or for a scatter, a two-by-two matrix (R18) or a cost bridge (R19) the matching spec in `/basecoat/charts/` | `/basecoat/charts/` and `/basecoat/charts/<name>` |
 
 Write the original in the page: `<meta name="shadcn-nearest" content="dashboard-01">` in the `head` block.
 

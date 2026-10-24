@@ -8,6 +8,7 @@ import pytest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 GOLDEN_CHARTS = ROOT / 'compliance' / 'golden' / 'out' / 'charts'
 CHART_NAMES = sorted(p.stem for p in GOLDEN_CHARTS.glob('chart-*.html') if not p.name.endswith('.hover.html'))
+EXTRA_CHARTS = ('chart-scatter-default', 'chart-matrix-two-by-two', 'chart-bar-waterfall')  # no shadcn original (R18, R19)
 FULL_WIDTH = {'chart-area-interactive', 'chart-bar-interactive', 'chart-line-interactive'}
 
 SPEC = {
@@ -70,15 +71,15 @@ def test_charts_index_groups_every_chart(client):
     r = client.get('/basecoat/charts/')
     assert r.status_code == 200
     body = r.get_data(as_text=True)
-    for group in ('area', 'bar', 'line', 'pie', 'radar', 'radial', 'tooltip'):
+    for group in ('area', 'bar', 'line', 'pie', 'radar', 'radial', 'tooltip', 'scatter', 'matrix'):
         assert f'id="{group}"' in body, group
-    for name in CHART_NAMES:
+    for name in CHART_NAMES + list(EXTRA_CHARTS):
         assert f'/basecoat/charts/{name}"' in body, name
     # full-width charts span the row of the 3-column grid
     for name in FULL_WIDTH:
         block = body[:body.index(f'/basecoat/charts/{name}"')]
         assert block.rfind('md:col-span-2 lg:col-span-3') > block.rfind('<section'), name
-    assert body.count('data-slot="chart"') == 70
+    assert body.count('data-slot="chart"') == 70 + len(EXTRA_CHARTS)  # the 70 upstream charts, then the scatter, matrix and bridge
 
 
 def test_gallery_index_has_a_charts_section(client):

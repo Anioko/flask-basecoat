@@ -1,13 +1,13 @@
 {% extends 'basecoat/pages/_layout.html' %}
 {% import 'basecoat/index.html' as ui %}
 {% block title %}Charts · Flask-Basecoat{% endblock %}
-{% set group_titles = {'area': 'Area Charts', 'bar': 'Bar Charts', 'line': 'Line Charts', 'pie': 'Pie Charts', 'radar': 'Radar Charts', 'radial': 'Radial Charts', 'tooltip': 'Tooltips'} %}
+{% set group_titles = {'area': 'Area Charts', 'bar': 'Bar Charts', 'line': 'Line Charts', 'pie': 'Pie Charts', 'radar': 'Radar Charts', 'radial': 'Radial Charts', 'tooltip': 'Tooltips', 'scatter': 'Scatter Charts', 'matrix': 'Matrices'} %}
 {% block body %}
 <div class="mx-auto flex w-full max-w-7xl flex-col gap-10 p-4 sm:p-6 lg:p-8">
   <header class="flex flex-wrap items-end justify-between gap-4">
     <div class="grid gap-1">
       <h1 class="text-2xl font-semibold tracking-tight">Charts</h1>
-      <p class="text-sm text-muted-foreground">Area, bar, line, pie, radar and radial charts drawn from a chart spec, with the tooltips and legends of the shadcn/ui charts.</p>
+      <p class="text-sm text-muted-foreground">Area, bar, line, pie, radar and radial charts drawn from a chart spec, with the tooltips and legends of the shadcn/ui charts, and the scatter chart, two-by-two matrix and cost bridge that have no shadcn original.</p>
     </div>
     <nav class="flex flex-wrap gap-2" aria-label="Chart groups">
       {% for group, items in chart_groups %}{{ ui.button(variant='outline', size='sm', href='#' ~ group, text=group_titles.get(group, group)) }}{% endfor %}

@@ -70,6 +70,8 @@ class Basecoat:
         app.jinja_env.globals.setdefault('chart_style_css', _charts.chart_style_css)
         app.jinja_env.globals.setdefault('chart_spec_json', _charts.spec_json)
         app.jinja_env.globals.setdefault('chart_uid', _charts.chart_uid)
+        app.jinja_env.globals.setdefault('chart_matrix_rows', _charts.matrix_rows)
+        app.jinja_env.globals.setdefault('chart_bridge_rows', _charts.bridge_rows)
 
         @app.context_processor
         def inject_basecoat():

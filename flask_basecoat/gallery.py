@@ -38,7 +38,12 @@ def block_names():
     return sorted(p.stem for p in pages.glob('*.html'))
 
 
-CHART_GROUPS = ['area', 'bar', 'line', 'pie', 'radar', 'radial', 'tooltip']
+CHART_GROUPS = ['area', 'bar', 'line', 'pie', 'radar', 'radial', 'tooltip', 'scatter', 'matrix']
+# Charts with no shadcn original (R18 scatter and matrix, R19 cost bridge), after the 70 upstream ones. They are checked
+# against Recharts oracles in compliance/golden/charts/extra, taken into compliance/golden/out/charts-extra.
+EXTRA_CHARTS = ('chart-scatter-default', 'chart-matrix-two-by-two', 'chart-bar-waterfall')
+# Wider than a column of the 3-column grid: they span the row like the upstream interactive charts.
+WIDE_CHARTS = {'chart-matrix-two-by-two', 'chart-bar-waterfall'}
 _CHARTS_APP = _HERE.parent / 'compliance' / 'upstream' / 'shadcn' / 'charts-app' / 'charts.tsx'
 
 
@@ -54,7 +59,7 @@ def chart_names():
 
 def chart_groups():
     """[(group, [{'name', 'full_width'}])] in upstream order; full-width charts span the row."""
-    full = {'chart-area-interactive', 'chart-bar-interactive', 'chart-line-interactive'}
+    full = {'chart-area-interactive', 'chart-bar-interactive', 'chart-line-interactive'} | WIDE_CHARTS
     groups = {g: [] for g in CHART_GROUPS}
     for n in chart_names():
         g = n.split('-')[1]
@@ -131,7 +136,8 @@ def compare(name):
         kind = 'blocks' if name in block_names() else 'components'
     if not has_page(kind, name):
         abort(404)
-    golden_path = {'blocks': f'blocks/{name}.html', 'charts': f'charts/{name}.html'}.get(kind, f'{name}.html')
+    charts_dir = 'charts-extra' if name in EXTRA_CHARTS else 'charts'
+    golden_path = {'blocks': f'blocks/{name}.html', 'charts': f'{charts_dir}/{name}.html'}.get(kind, f'{name}.html')
     view = {'blocks': 'block', 'charts': 'chart'}.get(kind, 'component')
     return render_template('basecoat/pages/compare.html', name=name, kind=kind,
                            golden_url=url_for('basecoat_gallery.golden', path=golden_path),

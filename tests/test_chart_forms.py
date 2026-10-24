@@ -313,3 +313,263 @@ def test_view_toggle_swaps_the_chart_panel_and_the_table_panel(server, browser):
         page.wait_for_function("() => document.querySelector('svg.recharts-surface')?.getBoundingClientRect().width > 400")
     finally:
         page.close()
+
+
+# ---------------------------------------------------------------- the three charts of R18 and R19, on their pages
+
+import re
+import subprocess
+import sys
+
+from flask_basecoat.charts import bridge_rows, load_spec, matrix_rows
+
+PAGE_NAMES = ('chart-scatter-default', 'chart-matrix-two-by-two', 'chart-bar-waterfall')
+COLOUR_JS = """(v) => { const cv = document.createElement('canvas'); cv.width = cv.height = 1; const cx = cv.getContext('2d', { willReadFrequently: true });
+  cx.fillStyle = '#000'; cx.fillStyle = v; cx.fillRect(0, 0, 1, 1); return [...cx.getImageData(0, 0, 1, 1).data].slice(0, 3) }"""
+
+
+def luminance(rgb):
+    lin = [(c / 255 / 12.92) if c / 255 <= 0.03928 else ((c / 255 + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def contrast(a, b):
+    hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+@pytest.fixture
+def chart_page(server, browser):
+    """chart_page(name, width=1440, theme='light') -> the gallery page of a chart, drawn."""
+    base, _ = server
+    pages = []
+
+    def go(name, width=1440, theme='light'):
+        page = browser.new_page(viewport={'width': width, 'height': 1000})
+        pages.append(page)
+        page.goto(f'{base}/basecoat/charts/{name}?theme={theme}')
+        page.wait_for_function("() => { const s = document.querySelector('svg.recharts-surface'); return s && s.getBoundingClientRect().width > 0 }")
+        page.wait_for_timeout(150)
+        return page
+
+    yield go
+    for pg in pages:
+        pg.close()
+
+
+def plot_of(page):
+    return page.evaluate(PLOT_JS)
+
+
+# ---- the two-by-two matrix (R18)
+
+def test_matrix_spec_is_ten_options_with_both_values_and_a_size():
+    spec = load_spec('chart-matrix-two-by-two')
+    assert spec['component'] == 'ScatterChart' and len(spec['data']) == 10
+    assert len({d['option'] for d in spec['data']}) == 10
+    assert all({'option', 'cost', 'value', 'effort'} <= set(d) for d in spec['data'])
+    assert {a['component'] for a in spec['axes']} == {'XAxis', 'YAxis', 'ZAxis'}
+
+
+def test_matrix_table_lists_every_point_with_both_values(chart_page):
+    spec = load_spec('chart-matrix-two-by-two')
+    page = chart_page('chart-matrix-two-by-two')
+    assert not page.locator('table[data-slot=table]').is_visible()  # the chart is the default view
+    page.locator('[data-slot=toggle-group-item]', has_text='Table').click()
+    assert page.locator('table[data-slot=table]').is_visible() and not page.locator('svg.recharts-surface').is_visible()
+    header = page.locator('table[data-slot=table] thead th').all_inner_texts()
+    assert header == ['Option', 'Cost to deliver ($ thousands)', 'Value to the business (score)', 'Effort (person-weeks)', 'Quadrant']
+    rows = [[c.strip() for c in r] for r in page.locator('table[data-slot=table] tbody tr').evaluate_all("(trs) => trs.map((tr) => [...tr.children].map((c) => c.textContent))")]
+    assert len(rows) == len(spec['data']) == 10
+    for d, row in zip(spec['data'], rows):
+        assert row[:4] == [d['option'], str(d['cost']), str(d['value']), str(d['effort'])]
+    # the table and the chart name the same points with the same values
+    page.locator('[data-slot=toggle-group-item]', has_text='Chart').click()
+    page.wait_for_function("() => document.querySelector('svg.recharts-surface')?.getBoundingClientRect().width > 100")
+    labels = page.locator('.recharts-scatter-symbol').evaluate_all("(gs) => gs.map((g) => g.getAttribute('aria-label'))")
+    for d, label in zip(spec['data'], labels):
+        assert label == f"{d['option']}: Cost {d['cost']}, Value {d['value']}, Effort (person-weeks) {d['effort']}"
+
+
+def test_matrix_quadrants_follow_the_thresholds():
+    spec = load_spec('chart-matrix-two-by-two')
+    rows = {r['name']: r['quadrant'] for r in matrix_rows(spec)['rows']}
+    assert rows['SSO rollout'] == 'Quick wins' and rows['Data lake'] == 'Major projects'
+    assert rows['Wiki cleanup'] == 'Fill-ins' and rows['Custom BI suite'] == 'Reconsider'
+    assert set(rows.values()) == {'Quick wins', 'Major projects', 'Fill-ins', 'Reconsider'}
+
+
+@pytest.mark.parametrize('theme', ['light', 'dark'])
+def test_matrix_quadrant_labels_are_on_a_chart_tint_at_a_tenth_with_readable_text(chart_page, theme):
+    page = chart_page('chart-matrix-two-by-two', theme=theme)
+    areas = page.evaluate(ATTRS_JS, 'path.recharts-reference-area-rect')
+    assert [a['fill'] for a in areas] == ['var(--chart-2)', 'var(--chart-1)', 'var(--chart-4)', 'var(--chart-5)']
+    assert {a['fill-opacity'] for a in areas} == {'0.1'}
+    texts = page.locator('g.recharts-zIndex-layer_2000 > text.recharts-label').evaluate_all("(ts) => ts.slice(0, 4).map((t) => t.textContent)")
+    assert texts == ['Quick wins', 'Major projects', 'Fill-ins', 'Reconsider']
+    plot = plot_of(page)
+    bg = page.evaluate(COLOUR_JS, page.evaluate("getComputedStyle(document.querySelector('[data-slot=card]')).backgroundColor"))
+    text_rgb = page.evaluate(COLOUR_JS, page.evaluate("getComputedStyle(document.querySelector('g.recharts-zIndex-layer_2000 > text.recharts-label')).fill"))
+    for area in areas:
+        token = page.evaluate(COLOUR_JS, page.evaluate("(v) => getComputedStyle(document.documentElement).getPropertyValue(v.slice(4, -1))", area['fill']))
+        tinted = [round(0.1 * t + 0.9 * b) for t, b in zip(token, bg)]
+        assert contrast(text_rgb, tinted) >= 4.5, (area['fill'], contrast(text_rgb, tinted))
+        # the tint is a label band, not a wash over the quadrant: under a tenth of the plot's height
+        assert float(area['height']) < plot['height'] * 0.1
+    # the plot background itself is untinted: no background rectangle, and the only fills in the plot are the four bands
+    assert page.locator('.recharts-cartesian-grid-bg').count() == 0
+    assert page.evaluate("document.querySelectorAll('svg.recharts-surface rect[fill]').length") == 0
+
+
+def test_matrix_has_a_square_plot_a_threshold_line_on_each_axis_and_axis_titles_in_words(chart_page):
+    page = chart_page('chart-matrix-two-by-two')
+    plot = plot_of(page)
+    assert plot['width'] == pytest.approx(plot['height'], abs=1)
+    lines = page.evaluate(ATTRS_JS, '.recharts-reference-line-line')
+    assert len(lines) == 2
+    vertical = next(line for line in lines if line['x1'] == line['x2'])
+    horizontal = next(line for line in lines if line['y1'] == line['y2'])
+    assert float(vertical['x1']) == pytest.approx(plot['x'] + plot['width'] * 200 / 400, abs=0.5)    # cost threshold 200
+    assert float(horizontal['y1']) == pytest.approx(plot['y'] + plot['height'] * (1 - 50 / 100), abs=0.5)  # value threshold 50
+    titles = page.locator('g.recharts-zIndex-layer_2000 > text.recharts-label').evaluate_all("(ts) => ts.slice(4).map((t) => t.textContent)")
+    assert titles == ['Cost to deliver ($ thousands)', 'Value to the business (score)']
+
+
+def test_matrix_labels_every_point_and_sizes_the_bubbles_from_effort(chart_page):
+    spec = load_spec('chart-matrix-two-by-two')
+    page = chart_page('chart-matrix-two-by-two')
+    drawn = page.locator('g.recharts-label-list text').evaluate_all("(ts) => ts.map((t) => t.textContent)")
+    assert drawn == [d['option'] for d in spec['data']]
+    pts = page.evaluate(SYMBOLS_JS)
+    widths = [p['w'] for p in pts]
+    by_effort = sorted(range(10), key=lambda i: spec['data'][i]['effort'])
+    assert [widths[i] for i in by_effort] == sorted(widths)
+    assert max(widths) > 2 * min(widths)
+
+
+def test_matrix_tooltip_shows_the_name_and_both_values(chart_page):
+    spec = load_spec('chart-matrix-two-by-two')
+    page = chart_page('chart-matrix-two-by-two')
+    page.locator('.recharts-scatter-symbol').nth(2).hover()
+    tip = page.locator('.recharts-tooltip-wrapper .cn-chart-tooltip')
+    tip.wait_for()
+    d = spec['data'][2]
+    assert tip.inner_text().split('\n')[0] == d['option']
+    assert re.findall(r'\d+', tip.inner_text()) == [str(d['cost']), str(d['value']), str(d['effort'])]
+
+
+def test_matrix_at_390_keeps_its_square_and_scrolls_inside_a_named_region(chart_page):
+    page = chart_page('chart-matrix-two-by-two', width=390)
+    region = page.locator('[data-entelim-form]')
+    assert region.get_attribute('role') == 'region' and region.get_attribute('aria-label') == 'Value against cost matrix'
+    assert region.get_attribute('tabindex') == '0'
+    assert page.evaluate("getComputedStyle(document.querySelector('[data-entelim-form]')).overflowX") == 'auto'
+    assert page.evaluate("(() => { const r = document.querySelector('[data-entelim-form]'); return r.scrollWidth > r.clientWidth })()")
+    plot = plot_of(page)
+    assert plot['width'] == pytest.approx(plot['height'], abs=1) and plot['width'] > 400  # the plot keeps its size, it does not shrink or stack
+    assert page.evaluate("document.documentElement.scrollWidth - window.innerWidth") <= 1  # the page itself does not scroll sideways
+    assert page.locator('[data-entelim-form]').count() == 1
+
+
+# ---- the cost bridge (R19)
+
+def test_bridge_steps_and_the_total_equal_the_sum_of_their_steps():
+    spec = load_spec('chart-bar-waterfall')
+    b = bridge_rows(spec)
+    assert [(r['step'], r['kind'], r['change'], r['total']) for r in b['rows']] == [
+        ('Current cost', 'total', None, 4800), ('Licences', 'fall', -900, 3900), ('Hosting', 'fall', -700, 3200),
+        ('Support', 'fall', -500, 2700), ('Migration', 'rise', 650, 3350), ('Three-year total', 'total', None, 3350)]
+    assert [r['label'] for r in b['rows']] == ['$4,800k', '-$900k', '-$700k', '-$500k', '+$650k', '$3,350k']
+    steps = [r['change'] for r in b['rows'] if r['change'] is not None]
+    assert b['rows'][0]['total'] + sum(steps) == b['rows'][-1]['total'] == 3350
+    assert b['consistent'] and b['summary'] == 'Starts at 4,800, falls by 2,100, rises by 650 and ends at 3,350'
+    # the data the chart draws: the base is the lower edge of each floating bar, a bar's length is its step
+    rows = {d['step']: d for d in spec['data']}
+    assert [rows[s]['base'] for s in ('Licences', 'Hosting', 'Support', 'Migration')] == [3900, 3200, 2700, 2700]
+    assert [rows[s]['fall'] for s in ('Licences', 'Hosting', 'Support')] == [900, 700, 500] and rows['Migration']['rise'] == 650
+    assert rows['Current cost']['total'] == 4800 and rows['Three-year total']['total'] == 3350
+
+
+def test_bridge_bars_are_drawn_at_the_values_of_their_steps(chart_page):
+    spec = load_spec('chart-bar-waterfall')
+    page = chart_page('chart-bar-waterfall')
+    plot = plot_of(page)
+    rects = page.evaluate("""() => [...document.querySelectorAll('g.recharts-bar')].map((g) => [...g.querySelectorAll('path.recharts-rectangle')].map((p) => ({
+      fill: p.getAttribute('fill'), x: +p.getAttribute('x'), y: +p.getAttribute('y'), h: +p.getAttribute('height') })))""")
+    base, fall, rise, total = rects
+    assert [r['fill'] for r in base] == ['transparent'] * 5 or all(r['fill'] == 'transparent' for r in base)
+    assert {r['fill'] for r in fall} == {'var(--color-fall)'} and {r['fill'] for r in rise} == {'var(--color-rise)'} and {r['fill'] for r in total} == {'var(--color-total)'}
+    assert (len(fall), len(rise), len(total)) == (3, 1, 2)
+    bottom = plot['y'] + plot['height']
+    per_unit = total[0]['h'] / 4800                       # pixels per $ thousand, from the first total
+    assert total[0]['y'] == pytest.approx(bottom - 4800 * per_unit, abs=0.6)
+    assert total[1]['h'] == pytest.approx(3350 * per_unit, abs=0.6)
+    for bar, (top, size) in zip(fall + rise, [(4800, 900), (3900, 700), (3200, 500), (3350, 650)]):
+        assert bar['h'] == pytest.approx(size * per_unit, abs=0.6)
+        assert bar['y'] == pytest.approx(bottom - top * per_unit, abs=0.6)
+    drawn = page.locator('g.recharts-label-list text').evaluate_all("(ts) => ts.map((t) => t.textContent)")
+    assert drawn == ['-$900k', '-$700k', '-$500k', '+$650k', '$4,800k', '$3,350k']
+    # the connectors sit at the running total after each step
+    lines = page.evaluate(ATTRS_JS, '.recharts-reference-line-line')
+    assert len(lines) == 5
+    assert [round((bottom - float(line['y1'])) / per_unit) for line in lines] == [4800, 3900, 3200, 2700, 3350]
+    assert all(line['y1'] == line['y2'] and line['stroke'] == 'var(--muted-foreground)' for line in lines)
+    assert spec['config']['fall']['color'] == 'var(--chart-5)' and spec['config']['rise']['color'] == 'var(--chart-2)' and spec['config']['total']['color'] == 'var(--primary)'
+
+
+def test_bridge_colours_are_tokens_and_the_base_is_in_no_tooltip_legend_or_table(chart_page):
+    page = chart_page('chart-bar-waterfall')
+    css = page.evaluate("document.querySelector('[data-slot=chart] > style').textContent")
+    assert '--color-fall: var(--chart-5)' in css and '--color-rise: var(--chart-2)' in css and '--color-total: var(--primary)' in css
+    assert '--color-base' not in css
+    legend = page.locator('.recharts-legend-wrapper').inner_text().split()
+    assert legend == ['Decrease', 'Increase', 'Total']
+    page.locator('g.recharts-bar').nth(1).locator('path.recharts-rectangle').nth(1).hover()  # the Hosting fall
+    tip = page.locator('.recharts-tooltip-wrapper .cn-chart-tooltip')
+    tip.wait_for()
+    assert tip.inner_text().split() == ['Hosting', 'Decrease', '700']
+    header = page.locator('table[data-slot=table] thead th').all_inner_texts()
+    assert header == ['Step', 'Change', 'Running total']
+    rows = page.locator('table[data-slot=table] tbody tr').evaluate_all("(trs) => trs.map((tr) => [...tr.children].map((c) => c.textContent.trim()))")
+    assert rows == [['Current cost', '$4,800k', '4,800'], ['Licences', '-$900k', '3,900'], ['Hosting', '-$700k', '3,200'], ['Support', '-$500k', '2,700'],
+                    ['Migration', '+$650k', '3,350'], ['Three-year total', '$3,350k', '3,350']]
+
+
+def test_bridge_reads_at_390(chart_page):
+    page = chart_page('chart-bar-waterfall', width=390)
+    assert page.evaluate("document.documentElement.scrollWidth - window.innerWidth") <= 1
+    labels = page.locator('.recharts-xAxis-tick-labels tspan').evaluate_all("(ts) => ts.map((t) => t.textContent)")
+    assert labels == ['Current cost', 'Licences', 'Hosting', 'Support', 'Migration', 'Three-year total']  # interval 0: every step is named
+
+
+# ---- the plain scatter chart, the gallery and the page check
+
+def test_plain_scatter_draws_ten_points_at_the_implicit_size(chart_page):
+    page = chart_page('chart-scatter-default')
+    pts = page.evaluate(SYMBOLS_JS)
+    assert len(pts) == 10 and {p['d'] for p in pts} == {'M4.514,0A4.514,4.514,0,1,1,-4.514,0A4.514,4.514,0,1,1,4.514,0'}
+    assert page.locator('.recharts-reference-line, .recharts-reference-area').count() == 0
+
+
+def test_gallery_lists_the_three_charts_and_compares_them_with_their_oracles(server):
+    import urllib.request
+    base, _ = server
+    index = urllib.request.urlopen(f'{base}/basecoat/charts/').read().decode()
+    for name in PAGE_NAMES:
+        assert f'/basecoat/charts/{name}"' in index
+        assert f'/basecoat/compare/{name}' in index
+        oracle = urllib.request.urlopen(f'{base}/basecoat/golden/charts-extra/{name}.html')
+        assert oracle.status == 200
+        assert b'recharts-surface' in oracle.read()
+        assert urllib.request.urlopen(f'{base}/basecoat/compare/{name}').status == 200
+    assert 'id="scatter"' in index and 'id="matrix"' in index
+    assert index.count('md:col-span-2 lg:col-span-3') >= 3 + 2  # the three upstream full-width charts and the matrix and the bridge
+
+
+@pytest.mark.parametrize('name', PAGE_NAMES)
+def test_check_page_prints_shadcn_composed_in_the_browser(server, name):
+    base, _ = server
+    out = subprocess.run([sys.executable, str(ROOT / 'compliance/scripts/check_page.py'), f'{base}/basecoat/charts/{name}', '--nearest', name, '--browser'],
+                         capture_output=True, text=True, cwd=ROOT, timeout=240).stdout
+    assert 'content fidelity: 100.0%' in out, out
+    assert out.strip().splitlines()[-1] == 'SHADCN COMPOSED', out

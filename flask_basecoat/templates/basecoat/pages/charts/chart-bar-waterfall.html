@@ -1,0 +1,40 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# The cost bridge (ruling R19): a stacked BarChart whose first series is a transparent base carrying each step's offset
+   (excluded from the tooltip, legend and table), then falls in chart-5, rises in chart-2 and totals in the primary, a
+   signed LabelList on each bar and dashed ReferenceLine connectors. The oracle is
+   compliance/golden/charts/extra/chart-bar-waterfall.tsx. The table under the chart lists every step.
+   The bridge keeps a width of 560px so that the six step names and their signed values do not run into each other; on a
+   phone it scrolls inside its named region. #}
+{% block title %}chart-bar-waterfall · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="chart-bar-waterfall">{% endblock %}
+{% macro card() -%}
+{%- set spec = chart_spec('chart-bar-waterfall') -%}
+{%- set b = chart_bridge_rows(spec) -%}
+{% call ui.card(size='default') %}
+  {% call ui.card_header() %}{{ ui.card_title(text='Bar Chart - Waterfall') }}{{ ui.card_description(text='Three-year cost of the current estate to the target, $ thousands') }}{% endcall %}
+  {% call ui.card_content() %}
+    <div role="region" aria-label="Cost bridge" tabindex="0" class="overflow-x-auto">
+      {{ ui.chart_from_spec(spec, id='bar-waterfall', class='min-w-[560px]') }}
+    </div>
+    {% call ui.table_container(class='mt-4') %}{% call ui.table() %}
+      {{ ui.table_caption(text='Every step of the bridge') }}
+      {% call ui.table_header() %}{% call ui.table_row() %}
+        {{ ui.table_head(text='Step') }}
+        {% call ui.table_head() %}<div class="text-right">Change</div>{% endcall %}
+        {% call ui.table_head() %}<div class="text-right">Running total</div>{% endcall %}
+      {% endcall %}{% endcall %}
+      {% call ui.table_body() %}
+        {% for r in b.rows %}{% call ui.table_row() %}
+          {{ ui.table_cell(text=r.step, class='font-medium') }}
+          {% call ui.table_cell() %}<div class="text-right tabular-nums">{{ r.label }}</div>{% endcall %}
+          {% call ui.table_cell() %}<div class="text-right tabular-nums">{{ '{:,}'.format(r.total) }}</div>{% endcall %}
+        {% endcall %}{% endfor %}
+      {% endcall %}
+    {% endcall %}{% endcall %}
+  {% endcall %}
+  {% call ui.card_footer(class='flex-col items-start gap-2 text-sm') %}<div class="leading-none text-muted-foreground">{{ b.summary }}</div>{% endcall %}
+{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div class="p-4 sm:p-6"><div class="mx-auto w-full max-w-2xl"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div></div>{% endblock %}
