@@ -24,18 +24,7 @@
             document.documentElement.classList.toggle('dark');
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-trigger').forEach(btn => {
-                btn.className = "tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:text-foreground";
-            });
-            const activeTab = document.getElementById(`tab-content-${tabId}`);
-            const activeBtn = document.getElementById(`tab-trigger-${tabId}`);
-            if (activeTab) activeTab.classList.remove('hidden');
-            if (activeBtn) {
-                activeBtn.className = "tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md bg-background border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap text-foreground shadow-xs transition-all";
-            }
-        }
+
     </script>
 </head>
 <body class="min-h-full bg-background text-foreground antialiased font-sans">
@@ -85,41 +74,45 @@
                 </div>
             </div>
 
-            {# Tabs Navigation (Personal, Account, Security, Notifications) #}
-            <div class="space-y-6">
-                <div class="bg-muted text-muted-foreground h-9 rounded-lg p-[3px] grid w-full grid-cols-4">
+            {# Tabs Navigation (Personal, Account, Security, Notifications) via Basecoat native Tabs #}
+            <div class="tabs space-y-6" data-slot="tabs">
+                <div role="tablist" class="bg-muted text-muted-foreground h-9 rounded-lg p-[3px] grid w-full grid-cols-4">
                     <button
-                        id="tab-trigger-personal"
-                        type="button"
-                        onclick="switchTab('personal')"
-                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md bg-background px-2 py-1 text-sm font-medium whitespace-nowrap text-foreground shadow-xs transition-all">
+                        role="tab"
+                        aria-selected="true"
+                        aria-controls="tab-content-personal"
+                        tabindex="0"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
                         Personal
                     </button>
                     <button
-                        id="tab-trigger-account"
-                        type="button"
-                        onclick="switchTab('account')"
-                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:text-foreground">
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="tab-content-account"
+                        tabindex="-1"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
                         Account
                     </button>
                     <button
-                        id="tab-trigger-security"
-                        type="button"
-                        onclick="switchTab('security')"
-                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:text-foreground">
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="tab-content-security"
+                        tabindex="-1"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
                         Security
                     </button>
                     <button
-                        id="tab-trigger-notifications"
-                        type="button"
-                        onclick="switchTab('notifications')"
-                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all hover:text-foreground">
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="tab-content-notifications"
+                        tabindex="-1"
+                        class="tab-trigger inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium whitespace-nowrap transition-all aria-selected:bg-background aria-selected:text-foreground aria-selected:shadow-xs text-muted-foreground hover:text-foreground">
                         Notifications
                     </button>
                 </div>
 
                 {# Tab 1: Personal Information #}
-                <div id="tab-content-personal" class="tab-content space-y-6">
+                <div id="tab-content-personal" role="tabpanel" class="tab-content space-y-6">
                     <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
                         <div class="space-y-1">
                             <h2 class="text-base font-semibold leading-normal">Personal Information</h2>
@@ -166,7 +159,7 @@
                 </div>
 
                 {# Tab 2: Account Settings #}
-                <div id="tab-content-account" class="tab-content hidden space-y-6">
+                <div id="tab-content-account" role="tabpanel" hidden class="tab-content space-y-6">
                     <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
                         <div class="space-y-1">
                             <h2 class="text-base font-semibold leading-normal">Account Preferences</h2>
@@ -174,8 +167,8 @@
                         </div>
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div class="space-y-2">
-                                <label class="text-sm font-medium">Language</label>
-                                <select class="h-9 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">
+                                <label class="text-sm font-medium" for="language">Language</label>
+                                <select id="language" class="h-9 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">
                                     <option>English (United States)</option>
                                     <option>Spanish (Español)</option>
                                     <option>French (Français)</option>
@@ -183,8 +176,8 @@
                                 </select>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-sm font-medium">Timezone</label>
-                                <select class="h-9 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">
+                                <label class="text-sm font-medium" for="timezone">Timezone</label>
+                                <select id="timezone" class="h-9 w-full rounded-md border border-input bg-background px-2.5 py-1 text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring">
                                     <option>Pacific Standard Time (PST - UTC-8)</option>
                                     <option>Eastern Standard Time (EST - UTC-5)</option>
                                     <option>UTC (Coordinated Universal Time)</option>
@@ -202,7 +195,7 @@
                 </div>
 
                 {# Tab 3: Security #}
-                <div id="tab-content-security" class="tab-content hidden space-y-6">
+                <div id="tab-content-security" role="tabpanel" hidden class="tab-content space-y-6">
                     <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
                         <div class="space-y-1">
                             <h2 class="text-base font-semibold leading-normal">Security & Authentication</h2>
@@ -223,7 +216,7 @@
                 </div>
 
                 {# Tab 4: Notifications #}
-                <div id="tab-content-notifications" class="tab-content hidden space-y-6">
+                <div id="tab-content-notifications" role="tabpanel" hidden class="tab-content space-y-6">
                     <div class="rounded-xl bg-card border border-border ring-1 ring-foreground/10 p-6 shadow-xs space-y-6">
                         <div class="space-y-1">
                             <h2 class="text-base font-semibold leading-normal">Notification Preferences</h2>
