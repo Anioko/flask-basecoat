@@ -50,10 +50,14 @@ def check_tokens():
     css = (ROOT / 'flask_basecoat/static/css/flask-basecoat.min.css').read_text(encoding='utf8')
 
     def norm(v):
-        v = v.strip().replace(' ', '')
-        v = re.sub(r'(\d+(?:\.\d+)?)%', lambda m: str(float(m.group(1)) / 100).rstrip('0').rstrip('.'), v)
-        v = re.sub(r'(?<![\d.])0?\.(\d+)', r'0.\1', v)
-        return v
+        """Canonical form: the minifier writes `oklch(57.7% .245 27.325)` for upstream's `oklch(0.577 0.245 27.325)`."""
+        def num(m):
+            s = m.group(0)
+            value = float(s[:-1]) / 100 if s.endswith('%') else float(s)
+            return f'{value:.6g}'
+        v = re.sub(r'\s*/\s*', '/', v.strip())
+        v = re.sub(r'\d*\.?\d+%?', num, v)
+        return re.sub(r'\s+', ' ', v)
 
     problems = []
     for mode, selector in (('light', ':root'), ('dark', '.dark')):
