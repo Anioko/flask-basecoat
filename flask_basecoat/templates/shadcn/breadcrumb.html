@@ -1,0 +1,74 @@
+{# shadcn breadcrumb macros - exact class parity with shadcn/ui breadcrumb.tsx #}
+
+{% macro breadcrumb(content='') %}
+<nav aria-label="breadcrumb" data-slot="breadcrumb">
+    {{- content|safe -}}
+</nav>
+{%- endmacro -%}
+
+{% macro breadcrumb_list(content='', class='') %}
+<ol
+    class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5 {{ class }}"
+    data-slot="breadcrumb-list"
+>
+    {{- content|safe -}}
+</ol>
+{%- endmacro -%}
+
+{% macro breadcrumb_item(content='', class='') %}
+<li
+    class="inline-flex items-center gap-1.5 {{ class }}"
+    data-slot="breadcrumb-item"
+>
+    {{- content|safe -}}
+</li>
+{%- endmacro -%}
+
+{% macro breadcrumb_link(content='', href='#', class='') %}
+<a
+    href="{{ href }}"
+    class="hover:text-foreground transition-colors {{ class }}"
+    data-slot="breadcrumb-link"
+>
+    {{- content|safe -}}
+</a>
+{%- endmacro -%}
+
+{% macro breadcrumb_page(content='', class='') %}
+<span
+    role="link"
+    aria-disabled="true"
+    aria-current="page"
+    class="text-foreground font-normal {{ class }}"
+    data-slot="breadcrumb-page"
+>
+    {{- content|safe -}}
+</span>
+{%- endmacro -%}
+
+{% macro breadcrumb_separator(content='', class='') %}
+<li
+    role="presentation"
+    aria-hidden="true"
+    class="[&>svg]:size-3.5 {{ class }}"
+    data-slot="breadcrumb-separator"
+>
+    {% if content %}
+        {{- content|safe -}}
+    {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    {% endif %}
+</li>
+{%- endmacro -%}
+
+{% macro breadcrumb_ellipsis(class='') %}
+<span
+    role="presentation"
+    aria-hidden="true"
+    class="flex size-9 items-center justify-center {{ class }}"
+    data-slot="breadcrumb-ellipsis"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    <span class="sr-only">More</span>
+</span>
+{%- endmacro -%}
