@@ -421,6 +421,9 @@ All 21 unit and integration tests verify:
 - WTForms rendering and server validation feedback.
 - Extension blueprint registration and ChoiceLoader setup.
 
+Browser tests start a live server on the port in the `TEST_SERVER_PORT` environment variable (default `5100`).
+To run two suites on one host, give each its own port, e.g. `TEST_SERVER_PORT=5107 pytest tests`.
+
 ---
 
 ## 🚀 Running the Development Server & Gallery
