@@ -327,6 +327,8 @@
       else if (it.component === 'Line') it.points = linePoints(it, model);
     });
 
+    model.references = NS.reference ? NS.reference.build(chart, model) : [];
+
     // tooltip axis
     model.tooltipAxis = catAxis;
     model.tooltipTicks = catAxis.tooltipTicks;
@@ -543,8 +545,12 @@
       else if (it.component === 'Line') renderLine(chart, m, it, layers, labelsLater, active);
     });
 
+    // reference lines and areas (their labels go to the label layer before the axes' own)
+    if (NS.reference) NS.reference.render(chart, m, layers);
+
     // axes, in spec order
     spec.axes.forEach((raw, i) => {
+      if (raw.component === 'ZAxis') return; // a virtual axis: it draws nothing
       const axis = raw.component === 'XAxis' ? m.xAxis : m.yAxis;
       if (axis.implicit || axis.hide) return;
       renderCartesianAxis(chart, m, axis, layers);
