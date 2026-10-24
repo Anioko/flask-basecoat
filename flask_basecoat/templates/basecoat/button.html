@@ -45,6 +45,6 @@
     data-slot="button"
     {%- if disabled %} disabled{% endif %}
 >
-    {{- content -}}
+    {{- content|safe -}}
 </button>
 {%- endmacro -%}
