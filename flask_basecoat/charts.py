@@ -3,13 +3,18 @@
 A spec is a JSON object (a Python dict in a template or view)::
 
     {
-      "component": "AreaChart" | "BarChart" | "LineChart" | "PieChart" | "RadarChart" | "RadialBarChart",
+      "component": "AreaChart" | "BarChart" | "LineChart" | "PieChart" | "RadarChart" | "RadialBarChart" | "ScatterChart",
       "config": {"desktop": {"label": "Desktop", "color": "var(--chart-1)"}},  # ChartConfig, also feeds <style>
       "data": [{"month": "January", "desktop": 186}, ...],
       "props": {"margin": {"left": 12, "right": 12}, "layout": "vertical", "stackOffset": "expand", ...},
       "series": [{"component": "Area", "dataKey": "desktop", "type": "natural", "fill": "var(--color-desktop)",
                   "labelList": [...], "labels": [...], "cells": [...], ...}],
-      "axes": [{"component": "XAxis", "dataKey": "month", "tickFormatter": {"$fn": "slice", "start": 0, "end": 3}}],
+      "axes": [{"component": "XAxis", "dataKey": "month", "tickFormatter": {"$fn": "slice", "start": 0, "end": 3},
+                "label": {"value": "Month", "position": "insideBottom", "offset": 0}}],       # also YAxis, and ZAxis (scatter)
+      "references": [{"component": "ReferenceLine", "x": 200, "stroke": "var(--muted-foreground)"},
+                     {"component": "ReferenceLine", "segment": [{"x": "A", "y": 10}, {"x": "B", "y": 10}]},
+                     {"component": "ReferenceArea", "x1": 0, "x2": 200, "y1": 94, "y2": 100, "fill": "var(--chart-2)", "fillOpacity": 0.1,
+                      "label": {"value": "Quick wins", "position": "insideTopLeft"}}],  # Recharts' ReferenceLine and ReferenceArea
       "grid": {"component": "CartesianGrid", "vertical": false} | null,
       "tooltip": {"cursor": false, "indicator": "line", "hideLabel": true, ...} | null,
       "legend": {"nameKey": "browser", "className": "..."} | null,
@@ -45,6 +50,7 @@ FORMATTERS = {
     'localeDate': 'new Date(value).toLocaleDateString(locale, options): tickFormatter, labelFormatter',
     'configLabel': 'chartConfig[value]?.label: tickFormatter, LabelList formatter',
     'configLabelOfFirstDataKey': 'chartConfig[payload[0].dataKey].label: tooltip labelFormatter',
+    'payloadField': 'payload?.[0]?.payload[key]: tooltip labelFormatter showing a field of the hovered row (the name of a scatter point)',
     'unitValue': 'tooltip formatter: label, value and unit (wrap=true puts them in a min-w-[130px] row)',
     'unitValueWithTotal': 'tooltip formatter: swatch, label, value and unit, plus a Total row after index `after`',
     'centerText': 'Label content: <text> centred on the polar view box, one <tspan> per line',
@@ -240,6 +246,56 @@ def chart_style_css(chart_id, config):
             lines.append(f'  --color-{key}: {color};' if color else '')  # Array.join renders null as ''
         blocks.append(f'\n{prefix} [data-chart={chart_id}] {{\n' + '\n'.join(lines) + '\n}\n')
     return '\n'.join(blocks)
+
+
+def _axis(spec, component):
+    return next(a for a in spec['axes'] if a['component'] == component)
+
+
+def matrix_rows(spec):
+    """The Table view of a two-by-two matrix (a ScatterChart with a ReferenceLine on each axis): one row per point.
+
+    Returns {'columns': [x name, y name, size name or None], 'rows': [{'name', 'x', 'y', 'size', 'quadrant'}]}. The
+    quadrant is read from the ReferenceAreas that label the four corners, so the table never disagrees with the chart.
+    """
+    x, y = _axis(spec, 'XAxis'), _axis(spec, 'YAxis')
+    zs = [a for a in spec['axes'] if a['component'] == 'ZAxis']
+    z = zs[0] if zs else None
+    lines = [r for r in spec.get('references', []) if r['component'] == 'ReferenceLine']
+    x_split = next(r['x'] for r in lines if 'x' in r)
+    y_split = next(r['y'] for r in lines if 'y' in r)
+    names = {(r['x1'] >= x_split, r['y1'] >= y_split): r['label']['value'] for r in spec['references'] if r['component'] == 'ReferenceArea'}
+    name_key = spec['series'][0]['labelList'][0]['dataKey']
+    rows = [{'name': d[name_key], 'x': d[x['dataKey']], 'y': d[y['dataKey']], 'size': d[z['dataKey']] if z else None,
+             'quadrant': names[(d[x['dataKey']] >= x_split, d[y['dataKey']] >= y_split)]} for d in spec['data']]
+    return {'columns': [x['label']['value'], y['label']['value'], z['name'] if z else None], 'rows': rows}
+
+
+def bridge_rows(spec):
+    """The Table view of a cost bridge (a stacked BarChart with a transparent base): one row per step.
+
+    The base series (tooltipType "none") is left out. Returns {'rows': [{'step', 'kind', 'change', 'total', 'label'}]}
+    where change is the signed amount of a step (negative for a fall) or None for a total, and total is the running
+    total after the step. `summary` says the same in a sentence, from the first total to the last, and `consistent` is
+    True when the last total equals the first plus every change (what a bridge promises).
+    """
+    bars = [s for s in spec['series'] if s['component'] == 'Bar' and s.get('tooltipType') != 'none']
+    fall, rise, total = (next(b['dataKey'] for b in bars if b['dataKey'] == k) for k in ('fall', 'rise', 'total'))
+    step_key = _axis(spec, 'XAxis')['dataKey']
+    rows, running = [], 0
+    for d in spec['data']:
+        if d.get(total) is not None:
+            running, change, kind = d[total], None, 'total'
+        else:
+            change = (d.get(rise) or 0) - (d.get(fall) or 0)
+            running += change
+            kind = 'rise' if change > 0 else 'fall'
+        rows.append({'step': d[step_key], 'kind': kind, 'change': change, 'total': running, 'label': d['label']})
+    first, last = rows[0]['total'], rows[-1]['total']
+    falls = -sum(r['change'] for r in rows if r['change'] and r['change'] < 0)
+    rises = sum(r['change'] for r in rows if r['change'] and r['change'] > 0)
+    summary = f'Starts at {first:,}, falls by {falls:,}, rises by {rises:,} and ends at {last:,}'
+    return {'rows': rows, 'summary': summary, 'consistent': first - falls + rises == last}
 
 
 def chart_uid():

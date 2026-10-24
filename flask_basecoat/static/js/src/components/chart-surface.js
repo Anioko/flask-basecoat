@@ -119,6 +119,7 @@
     const formatter = fn(props.formatter, ctx);
     if (formatter) label = formatter(label);
     const attrs = svgProps(props);
+    if (props.style && typeof props.style === 'object') attrs.style = props.style; // svgPropertiesAndEvents keeps `style`
     let pos;
     if (isPolarVB(vb)) {
       if (props.position === 'insideStart' || props.position === 'insideEnd' || props.position === 'end') {
@@ -200,6 +201,7 @@
     Bar: { activeBar: false, background: false, hide: false, label: false, legendType: 'rect', minPointSize: 0, zIndex: Z.bar },
     Area: { activeDot: true, connectNulls: false, dot: false, fill: '#3182bd', fillOpacity: 0.6, hide: false, legendType: 'line', stroke: '#3182bd', strokeWidth: 1, type: 'linear', label: false, zIndex: Z.area },
     Line: { activeDot: true, connectNulls: false, dot: true, fill: '#fff', hide: false, label: false, legendType: 'line', stroke: '#3182bd', strokeWidth: 1, zIndex: Z.line, type: 'linear' },
+    Scatter: { hide: false, label: false, legendType: 'circle', line: false, lineJointType: 'linear', lineType: 'joint', shape: 'circle', zIndex: Z.scatter },
     Pie: { cx: '50%', cy: '50%', dataKey: 'value', endAngle: 360, fill: '#808080', hide: false, innerRadius: 0, label: false, labelLine: true, legendType: 'rect', minAngle: 0, nameKey: 'name', outerRadius: '80%', paddingAngle: 0, rootTabIndex: 0, startAngle: 0, stroke: '#fff', zIndex: Z.area },
     Radar: { activeDot: true, dot: false, hide: false, label: false, legendType: 'rect', zIndex: Z.area },
     RadialBar: { background: false, cornerIsExternal: false, cornerRadius: 0, forceCornerRadius: false, hide: false, label: false, legendType: 'rect', minPointSize: 0, zIndex: Z.bar },
@@ -220,6 +222,7 @@
     items.forEach((it) => {
       const p = it.props;
       if (it.component === 'Bar') out.push({ inactive: p.hide, dataKey: p.dataKey, type: p.legendType, color: p.fill, value: tooltipNameProp(p.name, p.dataKey), payload: p });
+      else if (it.component === 'Scatter') out.push({ inactive: p.hide, dataKey: p.dataKey, type: p.legendType, color: p.fill, value: tooltipNameProp(p.name, p.dataKey), payload: p });
       else if (it.component === 'Area' || it.component === 'Line' || it.component === 'Radar') out.push({ inactive: p.hide, dataKey: p.dataKey, type: p.legendType, color: legendColor(p.stroke, p.fill), value: tooltipNameProp(p.name, p.dataKey), payload: p });
       else if (it.component === 'Pie') {
         it.data.forEach((entry, i) => {
@@ -249,7 +252,7 @@
     const stackOffset = props.stackOffset || 'none';
     const items = spec.series.map((s, idx) => {
       const p = Object.assign({}, SERIES_DEFAULTS[s.component], resolveProps(s, ctx));
-      return { component: s.component, props: p, dataKey: p.dataKey, stackId: p.stackId == null ? undefined : String(p.stackId), id: `${s.component.toLowerCase()}-${idx}`, spec: s, index: idx };
+      return { component: s.component, props: p, dataKey: p.dataKey, stackId: p.stackId == null ? undefined : String(p.stackId), id: `${s.component.toLowerCase()}-${idx}`, domId: `recharts-${s.component.toLowerCase()}-${chart.uid}-${idx}`, spec: s, index: idx };
     });
     const hasBar = items.some((i) => i.component === 'Bar');
 
@@ -320,12 +323,16 @@
     }
 
     // per item geometry
+    if (items.some((i) => i.component === 'Scatter')) model.zAxis = NS.scatter.zAxisOf(chart);
     items.forEach((it) => {
       if (it.props.hide) return;
-      if (it.component === 'Bar') it.rects = barRects(it, model, barPositions, stackGroups);
+      if (it.component === 'Scatter') it.points = NS.scatter.points(chart, model, it, model.zAxis);
+      else if (it.component === 'Bar') it.rects = barRects(it, model, barPositions, stackGroups);
       else if (it.component === 'Area') Object.assign(it, areaPoints(it, model, stackGroups));
       else if (it.component === 'Line') it.points = linePoints(it, model);
     });
+
+    model.references = NS.reference ? NS.reference.build(chart, model) : [];
 
     // tooltip axis
     model.tooltipAxis = catAxis;
@@ -538,13 +545,18 @@
     // series
     m.items.forEach((it) => {
       if (it.props.hide) return;
-      if (it.component === 'Bar') renderBar(chart, m, it, layers, labelsLater, active);
+      if (it.component === 'Scatter') NS.scatter.render(chart, m, it, layers, labelsLater);
+      else if (it.component === 'Bar') renderBar(chart, m, it, layers, labelsLater, active);
       else if (it.component === 'Area') renderArea(chart, m, it, layers, labelsLater, active);
       else if (it.component === 'Line') renderLine(chart, m, it, layers, labelsLater, active);
     });
 
+    // reference lines and areas (their labels go to the label layer before the axes' own)
+    if (NS.reference) NS.reference.render(chart, m, layers);
+
     // axes, in spec order
     spec.axes.forEach((raw, i) => {
+      if (raw.component === 'ZAxis') return; // a virtual axis: it draws nothing
       const axis = raw.component === 'XAxis' ? m.xAxis : m.yAxis;
       if (axis.implicit || axis.hide) return;
       renderCartesianAxis(chart, m, axis, layers);
@@ -647,6 +659,12 @@
       return h('g', { class: 'recharts-layer recharts-cartesian-axis-tick-label' }, [el]);
     });
     if (labels.length) layers[Z.label].push(h('g', { class: `recharts-cartesian-axis-tick-labels recharts-${typeName}-tick-labels` }, labels));
+    // CartesianAxis `label`: a Label inside the axis' own box (x, y, width, height), after the tick labels
+    if (axis.label) {
+      const lp = typeof axis.label === 'object' ? axis.label : { value: axis.label };
+      const labelEl = Label(Object.assign({}, lp, { viewBox: { x, y, width, height, lowerWidth: width, upperWidth: width } }), chart.ctx);
+      if (labelEl) layers[Z.label].push(labelEl);
+    }
     const axisLine = axis.axisLine ? (() => {
       const lp = Object.assign({}, svgProps(Object.assign({}, axis, { x, y, width, height })), svgProps(typeof axis.axisLine === 'object' ? axis.axisLine : {}), { fill: 'none' });
       delete lp.className;

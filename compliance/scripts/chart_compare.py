@@ -25,6 +25,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 GOLDEN = ROOT / 'compliance/golden/out'
 CHARTS = GOLDEN / 'charts'
+EXTRA = GOLDEN / 'charts-extra'  # the Recharts oracles of the forms shadcn has no original for (R18, R19)
 
 TOLERANCE_PX = 0.5
 NUMERIC_ATTRS = ['x', 'y', 'width', 'height', 'cx', 'cy', 'r', 'x1', 'y1', 'x2', 'y2', 'rx', 'ry']
@@ -101,6 +102,11 @@ def wrappers_of(doc_text):
     return [el for el in doc.iter() if isinstance(el.tag, str) and 'recharts-wrapper' in (el.get('class') or '').split()]
 
 
+# Attributes our page adds to an element of the golden, on purpose: ruling R9 (accessibility outranks copying the original).
+# A scatter point is a focusable image with a name, which Recharts' own markup does not give it (it has no keyboard layer).
+ADDED_FOR_ACCESSIBILITY = {('g', 'recharts-scatter-symbol'): {'role'}}
+
+
 def compare_records(g, o, where):
     problems = []
     if g['tag'] != o['tag'] or g['classes'] != o['classes']:
@@ -108,9 +114,10 @@ def compare_records(g, o, where):
         return problems
     if g['text'] != o['text']:
         problems.append(f'{where} <{g["tag"]}>: text golden={g["text"]!r} ours={o["text"]!r}')
+    added = next((v for (tag, cls), v in ADDED_FOR_ACCESSIBILITY.items() if g['tag'] == tag and cls in g['classes']), set())
     for a in sorted(set(g['attrs']) | set(o['attrs'])):
         gv, ov = g['attrs'].get(a), o['attrs'].get(a)
-        if gv == ov:
+        if gv == ov or (a in added and gv is None):
             continue
         if gv is None or ov is None:
             problems.append(f'{where} <{g["tag"]}>: {a} golden={gv!r} ours={ov!r}')

@@ -1,0 +1,12 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# A plain scatter chart on the library's one chart renderer (ruling R18): the ScatterChart, Scatter, XAxis and YAxis of
+   Recharts 3.8, drawn like the shadcn charts. shadcn has no scatter original; the Recharts oracle is
+   compliance/golden/charts/extra/chart-scatter-default.tsx and its render compliance/golden/out/charts-extra/. #}
+{% block title %}chart-scatter-default · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="chart-scatter-default">{% endblock %}
+{% macro card() -%}
+{% call ui.card(size='default') %}{% call ui.card_header() %}{% call ui.card_title() %}Scatter Chart{% endcall %}{% call ui.card_description() %}Delivery cost against value, ten options{% endcall %}{% endcall %}{% call ui.card_content() %}{{ ui.chart_from_spec(chart_spec('chart-scatter-default'), id='scatter-default') }}{% endcall %}{% call ui.card_footer(class='flex-col items-start gap-2 text-sm') %}<div class="leading-none text-muted-foreground">Cost in thousands of dollars, value as a score out of 100</div>{% endcall %}{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div class="p-4 sm:p-6"><div class="mx-auto w-full max-w-sm"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div></div>{% endblock %}

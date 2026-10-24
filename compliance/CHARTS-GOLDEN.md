@@ -116,3 +116,24 @@ relative to 2024-06-30 and `onMedia` for upstream's `useIsMobile` effect (7 days
   slots: [...], rechartsClasses: [...],     // distinct data-slot values and recharts-* classes in the page
   hover: { x, y, kind, target, axis, scrollY, tooltipSelector, slots } | null }
 ```
+
+## Charts with no shadcn original (R18, R19)
+
+shadcn has no scatter chart, two-by-two matrix or waterfall, so there is no upstream page to take the golden from. The
+oracle is Recharts 3.8 itself: `charts/extra/chart-scatter-default.tsx`, `chart-matrix-two-by-two.tsx` and
+`chart-bar-waterfall.tsx` are written like the upstream charts (shadcn Card, ChartContainer, ChartTooltip, Recharts
+elements) and rendered by the same harness at the same viewport:
+
+```
+node charts/build.mjs && python charts/render_charts.py --extra [name ...]
+```
+
+into `out/charts-extra/<name>.html` and `<name>.hover.html`, with their own `manifest.json` (the hover point is also
+given relative to the chart surface, because our gallery page frames the chart differently from the harness). The
+70-chart set in `out/charts` is not touched. The frame is 384px for the plain scatter and 672px (`max-w-2xl`) for the
+matrix and the bridge.
+
+`python compliance/scripts/chart_diff.py chart-matrix-two-by-two [--hover]` compares our page with its oracle (DOM,
+classes, geometry within 0.5px, tooltip). The only attribute our markup adds is `role="img"` on a scatter point
+(`ADDED_FOR_ACCESSIBILITY` in `chart_compare.py`, ruling R9). `check_page.py` takes the oracle as the page's nearest
+original (`--nearest chart-matrix-two-by-two`). The specs are generated from the same data by `scripts/gen_chart_forms.py`.

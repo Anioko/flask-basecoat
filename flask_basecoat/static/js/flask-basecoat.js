@@ -455,7 +455,8 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 /* ---- chart-d3 ---- */
 /* Chart geometry primitives: a port of the parts of d3-path 3.1, d3-shape 3.2, d3-scale 4 and d3-array 3
    that Recharts 3.8 draws with (paths rounded to 3 digits, the linear/natural/monotone/step curves, line and
-   area generators, stacks with the none/expand/sign offsets, band/point/linear scales and linear ticks).
+   area generators, stacks with the none/expand/sign offsets, band/point/linear scales, linear ticks and the seven
+   filled symbols).
    d3 is ISC-licensed (Copyright 2010-2023 Mike Bostock). Exposed on window.FlaskBasecoatChart.d3. */
 (function () {
   'use strict';
@@ -476,8 +477,60 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       this._x1 = +x; this._y1 = +y;
       this._ += 'C' + this._r(+x1) + ',' + this._r(+y1) + ',' + this._r(+x2) + ',' + this._r(+y2) + ',' + this._r(this._x1) + ',' + this._r(this._y1);
     },
+    rect(x, y, w, h) { this._x0 = this._x1 = +x; this._y0 = this._y1 = +y; this._ += 'M' + this._r(this._x0) + ',' + this._r(this._y0) + 'h' + this._r(+w) + 'v' + this._r(+h) + 'h' + this._r(-w) + 'Z'; },
+    /* arc(0, 0, r, 0, tau) from (r, 0): the only arc a symbol draws (a full circle, as two half arcs) */
+    circle(r) {
+      this._ += 'M' + this._r(r) + ',0A' + this._r(r) + ',' + this._r(r) + ',0,1,1,' + this._r(-r) + ',0A' + this._r(r) + ',' + this._r(r) + ',0,1,1,' + this._r(r) + ',0';
+    },
     toString() { return this._; },
   };
+
+  /* ---- symbols (d3-shape 3.2 symbol/*.js, the seven that are drawn filled; Recharts' Symbols uses them) ---- */
+  const SQRT3 = Math.sqrt(3), TAU = 2 * Math.PI;
+  const STAR = (() => { const kr = Math.sin(Math.PI / 10) / Math.sin(7 * Math.PI / 10); return { ka: 0.89081309152928522810, kx: Math.sin(TAU / 10) * kr, ky: -Math.cos(TAU / 10) * kr }; })();
+  const WYE = { c: -0.5, s: SQRT3 / 2, k: 1 / Math.sqrt(12) };
+  const SYMBOLS = {
+    circle(p, size) { p.circle(Math.sqrt(size / Math.PI)); },
+    cross(p, size) {
+      const r = Math.sqrt(size / 5) / 2;
+      [[-3 * r, -r], [-r, -r], [-r, -3 * r], [r, -3 * r], [r, -r], [3 * r, -r], [3 * r, r], [r, r], [r, 3 * r], [-r, 3 * r], [-r, r], [-3 * r, r]].forEach((q, i) => (i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])));
+      p.closePath();
+    },
+    diamond(p, size) {
+      const tan30 = Math.sqrt(1 / 3);
+      const y = Math.sqrt(size / (tan30 * 2)), x = y * tan30;
+      p.moveTo(0, -y); p.lineTo(x, 0); p.lineTo(0, y); p.lineTo(-x, 0); p.closePath();
+    },
+    square(p, size) { const w = Math.sqrt(size), x = -w / 2; p.rect(x, x, w, w); },
+    star(p, size) {
+      const r = Math.sqrt(size * STAR.ka), x = STAR.kx * r, y = STAR.ky * r;
+      p.moveTo(0, -r); p.lineTo(x, y);
+      for (let i = 1; i < 5; ++i) {
+        const a = TAU * i / 5, c = Math.cos(a), s = Math.sin(a);
+        p.lineTo(s * r, -c * r); p.lineTo(c * x - s * y, s * x + c * y);
+      }
+      p.closePath();
+    },
+    triangle(p, size) {
+      const y = -Math.sqrt(size / (SQRT3 * 3));
+      p.moveTo(0, y * 2); p.lineTo(-SQRT3 * y, -y); p.lineTo(SQRT3 * y, -y); p.closePath();
+    },
+    wye(p, size) {
+      const { c, s, k } = WYE;
+      const r = Math.sqrt(size / ((k / 2 + 1) * 3));
+      const x0 = r / 2, y0 = r * k, x1 = x0, y1 = r * k + r, x2 = -x1, y2 = y1;
+      p.moveTo(x0, y0); p.lineTo(x1, y1); p.lineTo(x2, y2);
+      p.lineTo(c * x0 - s * y0, s * x0 + c * y0); p.lineTo(c * x1 - s * y1, s * x1 + c * y1); p.lineTo(c * x2 - s * y2, s * x2 + c * y2);
+      p.lineTo(c * x0 + s * y0, c * y0 - s * x0); p.lineTo(c * x1 + s * y1, c * y1 - s * x1); p.lineTo(c * x2 + s * y2, c * y2 - s * x2);
+      p.closePath();
+    },
+  };
+  /* symbol(type, area): the path string d3 draws, rounded to 3 digits; an unknown type is a circle, as in Recharts. */
+  function symbol(type, size) {
+    const p = new Path(3);
+    (SYMBOLS[type] || SYMBOLS.circle)(p, size == null ? 64 : +size);
+    return p.toString() || null;
+  }
 
   /* ---- curves ---- */
   function Linear(context) { this._context = context; }
@@ -843,7 +896,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     return scale;
   }
 
-  NS.d3 = { Path, curveFactory, line, area, stack, band, point, linear, ticks };
+  NS.d3 = { Path, curveFactory, line, area, stack, band, point, linear, ticks, symbol };
 })();
 
 
@@ -860,6 +913,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
      localeDate {locale, options}             new Date(value).toLocaleDateString(locale, options)
      configLabel                              chartConfig[value]?.label
      configLabelOfFirstDataKey                (_, payload) => chartConfig[payload[0].dataKey].label
+     payloadField {key}                       (_, payload) => payload?.[0]?.payload[key]: a point's own field (its name)
    Tooltip row formatters       return HTML nodes for one tooltip row: (value, name, item, index, payload)
      unitValue {unit, wrap}                   label + value + unit ("kcal"), in a wrapper div when wrap is true
      unitValueWithTotal {unit, keys, after}   unitValue plus a "Total" row after the row with index `after`
@@ -901,6 +955,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     localeDate: (o) => (value) => new Date(value).toLocaleDateString(o.locale || 'en-US', o.options || {}),
     configLabel: (o, ctx) => (value) => { const c = ctx.config[value]; return c ? c.label : undefined; },
     configLabelOfFirstDataKey: (o, ctx) => (_, payload) => { const k = payload && payload[0] && payload[0].dataKey; return ctx.config[k].label; },
+    payloadField: (o) => (_, payload) => (payload && payload[0] && payload[0].payload ? payload[0].payload[o.key] : undefined),
   };
 
   /* Tooltip row formatters return a DocumentFragment (HTML). */
@@ -1454,6 +1509,165 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 })();
 
 
+/* ---- chart-reference ---- */
+/* Chart reference elements: a port of Recharts 3.8's ReferenceLine and ReferenceArea (cartesian/ReferenceLine.tsx,
+   cartesian/ReferenceArea.tsx, util/scale/RechartsScale.ts, util/scale/CartesianScaleHelper.ts).
+
+   A spec lists them in `references`, in the order they appear in the chart's JSX:
+     {"component": "ReferenceLine", "x": 200 | "y": 50 | "segment": [{"x": "Jan", "y": 4800}, {"x": "Feb", "y": 4800}],
+      "stroke", "strokeDasharray", "ifOverflow", "position", "label", ...every other prop}
+     {"component": "ReferenceArea", "x1", "x2", "y1", "y2", "fill", "fillOpacity", "stroke", "ifOverflow", "label", ...}
+   Coordinates are data values of the first X and Y axis, as in Recharts. A line is drawn at zIndex 400 and an area at
+   zIndex 100; their labels (a Label prop, as an object) are drawn at the label layer, 2000. */
+(function () {
+  'use strict';
+  const NS = (window.FlaskBasecoatChart = window.FlaskBasecoatChart || {});
+
+  function I() { return NS.internal; }
+
+  const LINE_DEFAULTS = { ifOverflow: 'discard', xAxisId: 0, yAxisId: 0, fill: 'none', label: false, stroke: '#ccc', fillOpacity: 1, strokeWidth: 1, position: 'middle' };
+  const AREA_DEFAULTS = { ifOverflow: 'discard', xAxisId: 0, yAxisId: 0, radius: 0, fill: '#ccc', label: false, fillOpacity: 0.5, stroke: 'none', strokeWidth: 1 };
+
+  /* RechartsScale: map() with the band position, isInRange(), rangeMin()/rangeMax() over an axis scale. */
+  function scaleOf(axis) {
+    const sc = axis && axis.scale;
+    if (!sc) return null;
+    const r = sc.range();
+    const range = [Math.min(r[0], r[1]), Math.max(r[0], r[1])];
+    return {
+      rangeMin: () => range[0],
+      rangeMax: () => range[1],
+      isInRange(v) { return v >= range[0] && v <= range[1]; },
+      map(input, position) {
+        let base = sc(input);
+        if (base == null) return undefined;
+        if (sc.bandwidth && position) {
+          const bw = sc.bandwidth();
+          if (position === 'middle') base += bw / 2; else if (position === 'end') base += bw;
+        }
+        return base;
+      },
+    };
+  }
+
+  /* CartesianScaleHelperImpl.mapWithFallback for one segment end. */
+  function mapWithFallback(xs, ys, value, position, fallback) {
+    const fx = fallback === 'rangeMin' ? xs.rangeMin() : fallback === 'rangeMax' ? xs.rangeMax() : 0;
+    const fy = fallback === 'rangeMin' ? ys.rangeMin() : fallback === 'rangeMax' ? ys.rangeMax() : 0;
+    const x = xs.map(value.x, position), y = ys.map(value.y, position);
+    return { x: x != null ? x : fx, y: y != null ? y : fy };
+  }
+
+  /* ReferenceLine getEndPoints: [{x, y}, {x, y}] in pixels, or null when the line is not drawn. */
+  function lineEndPoints(xs, ys, vb, props, xAxis, yAxis) {
+    const { isNumOrStr, isWellBehaved } = I();
+    const { x, y, segment, ifOverflow, position } = props;
+    if (isNumOrStr(y)) {
+      const coord = ys.map(y, position);
+      if (!isWellBehaved(coord)) return null;
+      if (ifOverflow === 'discard' && !ys.isInRange(coord)) return null;
+      const points = [{ x: vb.x + vb.width, y: coord }, { x: vb.x, y: coord }];
+      return yAxis.orientation === 'left' ? points.reverse() : points;
+    }
+    if (isNumOrStr(x)) {
+      const coord = xs.map(x, position);
+      if (!isWellBehaved(coord)) return null;
+      if (ifOverflow === 'discard' && !xs.isInRange(coord)) return null;
+      const points = [{ x: coord, y: vb.y + vb.height }, { x: coord, y: vb.y }];
+      return xAxis.orientation === 'top' ? points.reverse() : points;
+    }
+    if (segment != null && segment.length === 2) {
+      const points = [mapWithFallback(xs, ys, segment[0], position, 'rangeMin'), mapWithFallback(xs, ys, segment[1], position, 'rangeMax')];
+      if (ifOverflow === 'discard' && points.some((p) => !(xs.isInRange(p.x) && ys.isInRange(p.y)))) return null;
+      return points;
+    }
+    return null;
+  }
+
+  /* util/CartesianUtils rectWithPoints */
+  function rectWithPoints(p1, p2) {
+    return { x: Math.min(p1.x, p2.x), y: Math.min(p1.y, p2.y), width: Math.abs(p2.x - p1.x), height: Math.abs(p2.y - p1.y) };
+  }
+
+  /* ReferenceArea getRect: {x, y, width, height} in pixels, or null when the area is not drawn. */
+  function areaRect(xs, ys, props, has) {
+    const p1 = {
+      x: has.x1 ? (xs.map(props.x1, 'start') != null ? xs.map(props.x1, 'start') : null) : xs.rangeMin(),
+      y: has.y1 ? (ys.map(props.y1, 'start') != null ? ys.map(props.y1, 'start') : null) : ys.rangeMin(),
+    };
+    const p2 = {
+      x: has.x2 ? (xs.map(props.x2, 'end') != null ? xs.map(props.x2, 'end') : null) : xs.rangeMax(),
+      y: has.y2 ? (ys.map(props.y2, 'end') != null ? ys.map(props.y2, 'end') : null) : ys.rangeMax(),
+    };
+    const inRange = (p) => (p.x == null || xs.isInRange(p.x)) && (p.y == null || ys.isInRange(p.y));
+    if (props.ifOverflow === 'discard' && (!inRange(p1) || !inRange(p2))) return null;
+    return rectWithPoints(p1, p2);
+  }
+
+  /* The pixel geometry of every reference of the spec, from the resolved axes of the model. */
+  function build(chart, m) {
+    const refs = chart.spec.references || [];
+    if (!refs.length) return [];
+    const { isNumOrStr } = I();
+    const S = NS.surface;
+    const xs = scaleOf(m.xAxis), ys = scaleOf(m.yAxis);
+    if (!xs || !ys) return [];
+    const vb = { x: m.offset.left, y: m.offset.top, width: m.offset.width, height: m.offset.height };
+    return refs.map((raw) => {
+      const isLine = raw.component === 'ReferenceLine';
+      const props = Object.assign({}, S.resolveProps(raw, chart.ctx));
+      const withDefaults = Object.assign({}, props);
+      Object.keys(isLine ? LINE_DEFAULTS : AREA_DEFAULTS).forEach((k) => { if (withDefaults[k] === undefined) withDefaults[k] = (isLine ? LINE_DEFAULTS : AREA_DEFAULTS)[k]; });
+      if (isLine) {
+        const pts = lineEndPoints(xs, ys, vb, withDefaults, m.xAxis, m.yAxis);
+        if (!pts || pts[0] == null || pts[1] == null) return { kind: 'line', props: withDefaults, hidden: true };
+        const [p1, p2] = pts;
+        return { kind: 'line', props: withDefaults, x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, rect: rectWithPoints(p1, p2) };
+      }
+      const has = { x1: isNumOrStr(props.x1), x2: isNumOrStr(props.x2), y1: isNumOrStr(props.y1), y2: isNumOrStr(props.y2) };
+      if (!has.x1 && !has.x2 && !has.y1 && !has.y2) return { kind: 'area', props: withDefaults, hidden: true };
+      const rect = areaRect(xs, ys, withDefaults, has);
+      return rect ? { kind: 'area', props: withDefaults, rect } : { kind: 'area', props: withDefaults, hidden: true };
+    });
+  }
+
+  function labelOf(chart, ref) {
+    const label = ref.props.label;
+    if (!label || label === true) return null;
+    const rect = ref.rect;
+    const viewBox = { x: rect.x, y: rect.y, width: rect.width, height: rect.height, lowerWidth: rect.width, upperWidth: rect.width };
+    const lp = typeof label === 'object' ? label : { value: label };
+    return NS.surface.Label(Object.assign({}, lp, { viewBox }), chart.ctx);
+  }
+
+  function render(chart, m, layers) {
+    const { h, svgProps, A, Rectangle } = I();
+    const S = NS.surface;
+    (m.references || []).forEach((ref) => {
+      if (ref.hidden) return;
+      const p = ref.props;
+      const base = svgProps(p);
+      const clipPath = p.ifOverflow === 'hidden' ? `url(#${chart.clipId})` : undefined;
+      let shape;
+      if (ref.kind === 'line') {
+        const { isWellBehaved } = I();
+        if (![ref.x1, ref.y1, ref.x2, ref.y2].every(isWellBehaved)) return;
+        shape = h('line', Object.assign(A(Object.assign({ clipPath }, base)), { x1: ref.x1, y1: ref.y1, x2: ref.x2, y2: ref.y2, class: 'recharts-reference-line-line' }));
+        layers[S.Z.line].push(h('g', { class: ['recharts-layer', 'recharts-reference-line', p.className].filter(Boolean).join(' ') }, [shape]));
+      } else {
+        const rp = Object.assign({ clipPath }, base, ref.rect, { className: 'recharts-reference-area-rect' });
+        shape = Rectangle(rp);
+        layers[S.Z.area].push(h('g', { class: ['recharts-layer', 'recharts-reference-area', p.className].filter(Boolean).join(' ') }, [shape]));
+      }
+      const label = labelOf(chart, ref);
+      if (label) layers[S.Z.label].push(label);
+    });
+  }
+
+  NS.reference = { build, render, scaleOf, lineEndPoints, areaRect };
+})();
+
+
 /* ---- chart-render ---- */
 /* Chart renderer: draws a declarative chart spec into the same DOM Recharts 3.8 produces inside shadcn's
    ChartContainer (recharts-responsive-container > recharts-wrapper > svg.recharts-surface with the z-index
@@ -1725,6 +1939,8 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     if (transforms.length) textProps.transform = transforms.join(' ');
     const fill = String(p.fill).includes('url') ? '#808080' : p.fill;
     const attrs = Object.assign(A(textProps), { x, y, class: ['recharts-text', p.className].filter(Boolean).join(' '), 'text-anchor': p.textAnchor, fill });
+    // a style object is serialised as React does ("text-anchor: middle;"); an axis label's style is the one use
+    if (p.style && typeof p.style === 'object') attrs.style = Object.keys(p.style).map((k) => `${k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}: ${p.style[k]};`).join(' ');
     return h('text', attrs, lines.map((line, i) => h('tspan', { x, dy: i === 0 ? startDy : p.lineHeight }, [txt(line.words.join(p.breakAll ? '' : ' '))])));
   }
   function stripUndef(o) { const out = {}; for (const k of Object.keys(o)) if (o[k] !== undefined) out[k] = o[k]; return out; }
@@ -2163,7 +2379,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       return isWellBehaved(sc) ? { coordinate: sc + off, value: entry, index, offset: off } : null;
     }).filter(Boolean);
     // combineAxisTicks (axis labels, grid, polar grid)
-    const userTicks = axis.ticksProp || niceTicks;
+    const userTicks = axis.ticks || niceTicks; // the ticks set by the user win over the nice ones (combineAxisTicks)
     if (userTicks) axis.ticks_ = mk(userTicks, offset, (e) => (duplicateDomain ? duplicateDomain.indexOf(e) : e));
     else if (isCat && categoricalDomain) axis.ticks_ = mk(categoricalDomain, offset);
     else if (scale.ticks) axis.ticks_ = mk(scale.ticks(axis.tickCount), offset);
@@ -2295,6 +2511,145 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
 })();
 
 
+/* ---- chart-scatter ---- */
+/* ScatterChart: a port of Recharts 3.8's Scatter (cartesian/Scatter.tsx, util/ScatterUtils.tsx, shape/Symbols.tsx)
+   and ZAxis (cartesian/ZAxis.tsx). Both axes are number axes of the chart; a ZAxis is a virtual axis that maps a data
+   value to the symbol's area. A spec draws it as
+
+     "component": "ScatterChart",
+     "series": [{"component": "Scatter", "fill": "var(--color-value)", "shape": "circle", "labelList": [...]}],
+     "axes": [{"component": "XAxis", "type": "number", "dataKey": "cost", "name": "Cost"}, {... YAxis}, {"component": "ZAxis", "dataKey": "effort", "range": [60, 400], "name": "Effort"}]
+
+   The tooltip of a scatter chart is an item tooltip: it lists the x value, the y value and the z value of the point under
+   the pointer (Recharts' tooltipPayload), not the values of a category.
+
+   Beyond Recharts (ruling R9, accessibility outranks the original): each point is a focusable image with a label that
+   names it and gives its values; one point is in the tab order, the arrow keys, Home and End move between points, and
+   the tooltip follows the focus. */
+(function () {
+  'use strict';
+  const NS = (window.FlaskBasecoatChart = window.FlaskBasecoatChart || {});
+
+  function I() { return NS.internal; }
+
+  const IMPLICIT_Z = { domain: [0, 'auto'], range: [64, 64], scale: 'auto', type: 'number', name: '', unit: '' };
+
+  /* The ZAxis of the spec with its scale: domain [0, 'auto'] over the data, mapped onto `range` (the symbol area). */
+  function zAxisOf(chart) {
+    const { isNil, isNum, isWellBehaved, getValue, d3 } = Object.assign({}, I(), { d3: NS.d3 });
+    const raw = chart.spec.axes.find((a) => a.component === 'ZAxis');
+    if (!raw) return null;
+    const z = Object.assign({}, IMPLICIT_Z, NS.surface.resolveProps(raw, chart.ctx));
+    const values = chart.ctx.data.map((d) => (isNil(z.dataKey) ? undefined : getValue(d, z.dataKey))).filter((v) => isWellBehaved(Number(v)) && v !== null && v !== '');
+    const nums = values.map(Number);
+    const dataDomain = nums.length ? [Math.min(...nums), Math.max(...nums)] : undefined;
+    let domain = dataDomain;
+    if (dataDomain && Array.isArray(z.domain) && z.domain.length === 2) {
+      const lo = z.domain[0] === 'auto' ? dataDomain[0] : isNum(z.domain[0]) ? z.domain[0] : dataDomain[0];
+      const hi = z.domain[1] === 'auto' ? dataDomain[1] : isNum(z.domain[1]) ? z.domain[1] : dataDomain[1];
+      domain = [Math.min(lo, dataDomain[0]), Math.max(hi, dataDomain[1])];
+    }
+    z.scale = domain ? d3.linear(domain, z.range) : null;
+    return z;
+  }
+
+  /* computeScatterPoints */
+  function points(chart, m, it, zAxis) {
+    const { isNil, getValue, bandSizeOfAxis } = I();
+    const { xAxis, yAxis } = m;
+    const cells = it.spec.cells;
+    const xKey = isNil(xAxis.dataKey) ? it.dataKey : xAxis.dataKey;
+    const yKey = isNil(yAxis.dataKey) ? it.dataKey : yAxis.dataKey;
+    const zKey = zAxis && zAxis.dataKey;
+    const defaultZ = (zAxis ? zAxis.range : IMPLICIT_Z.range)[0];
+    const xBand = xAxis.scale.bandwidth ? xAxis.scale.bandwidth() : 0;
+    const yBand = yAxis.scale.bandwidth ? yAxis.scale.bandwidth() : 0;
+    const entryOf = (axis, key) => ({ name: isNil(axis.dataKey) ? it.props.name : axis.name || String(axis.dataKey), unit: axis.unit || '', dataKey: key, type: it.props.tooltipType });
+    return m.data.map((entry, index) => {
+      const x = getValue(entry, xKey);
+      const y = getValue(entry, yKey);
+      const z = (!isNil(zKey) && getValue(entry, zKey)) || '-';
+      const tooltipPayload = [Object.assign(entryOf(xAxis, xKey), { value: x, payload: entry }), Object.assign(entryOf(yAxis, yKey), { value: y, payload: entry })];
+      if (z !== '-' && zAxis != null) tooltipPayload.push({ name: zAxis.name || zAxis.dataKey, unit: zAxis.unit || '', value: z, payload: entry, dataKey: zKey, type: it.props.tooltipType });
+      const cx = cateCoord(xAxis, xAxis.itemTicks, xBand, entry, index, xKey);
+      const cy = cateCoord(yAxis, yAxis.itemTicks, yBand, entry, index, yKey);
+      const size = z !== '-' && zAxis != null && zAxis.scale ? zAxis.scale(z) : defaultZ;
+      const radius = size == null ? 0 : Math.sqrt(Math.max(size, 0) / Math.PI);
+      return Object.assign({}, entry, {
+        cx, cy, x: cx == null ? undefined : cx - radius, y: cy == null ? undefined : cy - radius, width: 2 * radius, height: 2 * radius, size,
+        node: { x, y, z }, tooltipPayload, tooltipPosition: { x: cx, y: cy }, payload: entry,
+      }, cells && cells[index] ? NS.surface.resolveProps(cells[index], m) : {});
+    });
+  }
+
+  /* getCateCoordinateOfLine, as the line chart's helper in chart-surface.js has it */
+  function cateCoord(axis, ticks, bandSize, entry, index, dataKey) {
+    const { isNil, getValue, isNum } = I();
+    if (axis.type === 'category') {
+      if (!axis.allowDuplicatedCategory && axis.dataKey && !isNil(entry[axis.dataKey])) {
+        const t = ticks.find((tk) => tk.value === entry[axis.dataKey]);
+        if (t) return t.coordinate + bandSize / 2;
+      }
+      return ticks[index] ? ticks[index].coordinate + bandSize / 2 : null;
+    }
+    const sc = axis.scale(getValue(entry, !isNil(dataKey) ? dataKey : axis.dataKey));
+    return isNum(sc) ? sc : null;
+  }
+
+  /* The text a screen reader hears for one point: its name (the label list's data key) and every tooltip value. */
+  function pointLabel(it, pt) {
+    const key = ((it.spec.labelList || [])[0] || {}).dataKey;
+    const name = key && pt.payload ? pt.payload[key] : null;
+    const values = pt.tooltipPayload.map((e) => `${e.name} ${typeof e.value === 'number' ? e.value.toLocaleString() : e.value}${e.unit || ''}`).join(', ');
+    return name ? `${name}: ${values}` : values;
+  }
+
+  function render(chart, m, it, layers, labelsLater) {
+    const { h, svgProps, A, Shape } = I();
+    const S = NS.surface;
+    const p = it.props;
+    const pts = it.points || [];
+    if (!pts.length) return;
+    const id = it.domId;
+    const base = svgProps(S.seriesSvgProps(it));
+    delete base.id;
+    const shape = typeof p.shape === 'string' ? p.shape : 'circle';
+    const symbols = pts.map((pt, i) => {
+      const sp = Object.assign({}, base, svgProps(pt), { 'data-recharts-item-id': id });
+      let path = null;
+      if (typeof sp.cx === 'number' && typeof sp.cy === 'number' && typeof pt.size === 'number') {
+        const attrs = A(sp);
+        attrs.class = 'recharts-symbols';
+        attrs.transform = `translate(${sp.cx}, ${sp.cy})`;
+        attrs.d = NS.d3.symbol(shape, pt.size);
+        path = h('path', attrs);
+      }
+      const gAttrs = { class: 'recharts-layer recharts-scatter-symbol', 'data-recharts-item-index': i, 'data-recharts-item-id': id };
+      if (chart.accessibilityLayer()) Object.assign(gAttrs, { role: 'img', 'aria-label': pointLabel(it, pt), tabindex: i === chart.scatterFocus(it) ? 0 : -1 });
+      return h('g', gAttrs, [h('g', { class: 'recharts-layer recharts-shape' }, [path])]);
+    });
+    layers[S.Z.scatter].push(h('g', { class: ['recharts-layer', 'recharts-scatter', p.className].filter(Boolean).join(' '), id }, [
+      h('g', { class: 'recharts-layer' }, [h('g', { class: 'recharts-layer' }, symbols)]),
+    ]));
+    const entries = pts.map((pt) => {
+      const vb = { x: pt.x == null ? 0 : pt.x, y: pt.y == null ? 0 : pt.y, width: pt.width, height: pt.height, lowerWidth: pt.width, upperWidth: pt.width };
+      return Object.assign({}, vb, { value: undefined, payload: pt.payload, viewBox: vb, parentViewBox: { x: m.offset.left, y: m.offset.top, width: m.offset.width, height: m.offset.height }, fill: undefined });
+    });
+    (it.spec.labelList || []).forEach((ll) => labelsLater.push(S.LabelList(ll, entries, chart.ctx)));
+  }
+
+  /* The payload Recharts' item tooltip shows for point `index` of scatter item `it` (combineTooltipPayload). */
+  function itemPayload(it, index) {
+    const pt = it.points[index];
+    const p = it.props;
+    const settings = { stroke: p.stroke, strokeWidth: p.strokeWidth, fill: p.fill, nameKey: undefined, dataKey: p.dataKey, name: NS.surface.tooltipNameProp(p.name, p.dataKey), hide: p.hide, type: p.tooltipType, color: p.fill, unit: '' };
+    return pt.tooltipPayload.map((e) => Object.assign({}, settings, e, { payload: e.payload }));
+  }
+
+  NS.scatter = { zAxisOf, points, render, itemPayload, pointLabel, IMPLICIT_Z };
+})();
+
+
 /* ---- chart-surface ---- */
 /* Chart surface: turns a chart spec plus the measured container size and the tooltip state into the element
    tree Recharts renders (svg.recharts-surface with its z-index layers), the tooltip model and the legend model.
@@ -2417,6 +2772,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     const formatter = fn(props.formatter, ctx);
     if (formatter) label = formatter(label);
     const attrs = svgProps(props);
+    if (props.style && typeof props.style === 'object') attrs.style = props.style; // svgPropertiesAndEvents keeps `style`
     let pos;
     if (isPolarVB(vb)) {
       if (props.position === 'insideStart' || props.position === 'insideEnd' || props.position === 'end') {
@@ -2498,6 +2854,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     Bar: { activeBar: false, background: false, hide: false, label: false, legendType: 'rect', minPointSize: 0, zIndex: Z.bar },
     Area: { activeDot: true, connectNulls: false, dot: false, fill: '#3182bd', fillOpacity: 0.6, hide: false, legendType: 'line', stroke: '#3182bd', strokeWidth: 1, type: 'linear', label: false, zIndex: Z.area },
     Line: { activeDot: true, connectNulls: false, dot: true, fill: '#fff', hide: false, label: false, legendType: 'line', stroke: '#3182bd', strokeWidth: 1, zIndex: Z.line, type: 'linear' },
+    Scatter: { hide: false, label: false, legendType: 'circle', line: false, lineJointType: 'linear', lineType: 'joint', shape: 'circle', zIndex: Z.scatter },
     Pie: { cx: '50%', cy: '50%', dataKey: 'value', endAngle: 360, fill: '#808080', hide: false, innerRadius: 0, label: false, labelLine: true, legendType: 'rect', minAngle: 0, nameKey: 'name', outerRadius: '80%', paddingAngle: 0, rootTabIndex: 0, startAngle: 0, stroke: '#fff', zIndex: Z.area },
     Radar: { activeDot: true, dot: false, hide: false, label: false, legendType: 'rect', zIndex: Z.area },
     RadialBar: { background: false, cornerIsExternal: false, cornerRadius: 0, forceCornerRadius: false, hide: false, label: false, legendType: 'rect', minPointSize: 0, zIndex: Z.bar },
@@ -2518,6 +2875,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     items.forEach((it) => {
       const p = it.props;
       if (it.component === 'Bar') out.push({ inactive: p.hide, dataKey: p.dataKey, type: p.legendType, color: p.fill, value: tooltipNameProp(p.name, p.dataKey), payload: p });
+      else if (it.component === 'Scatter') out.push({ inactive: p.hide, dataKey: p.dataKey, type: p.legendType, color: p.fill, value: tooltipNameProp(p.name, p.dataKey), payload: p });
       else if (it.component === 'Area' || it.component === 'Line' || it.component === 'Radar') out.push({ inactive: p.hide, dataKey: p.dataKey, type: p.legendType, color: legendColor(p.stroke, p.fill), value: tooltipNameProp(p.name, p.dataKey), payload: p });
       else if (it.component === 'Pie') {
         it.data.forEach((entry, i) => {
@@ -2547,7 +2905,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     const stackOffset = props.stackOffset || 'none';
     const items = spec.series.map((s, idx) => {
       const p = Object.assign({}, SERIES_DEFAULTS[s.component], resolveProps(s, ctx));
-      return { component: s.component, props: p, dataKey: p.dataKey, stackId: p.stackId == null ? undefined : String(p.stackId), id: `${s.component.toLowerCase()}-${idx}`, spec: s, index: idx };
+      return { component: s.component, props: p, dataKey: p.dataKey, stackId: p.stackId == null ? undefined : String(p.stackId), id: `${s.component.toLowerCase()}-${idx}`, domId: `recharts-${s.component.toLowerCase()}-${chart.uid}-${idx}`, spec: s, index: idx };
     });
     const hasBar = items.some((i) => i.component === 'Bar');
 
@@ -2618,12 +2976,16 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     }
 
     // per item geometry
+    if (items.some((i) => i.component === 'Scatter')) model.zAxis = NS.scatter.zAxisOf(chart);
     items.forEach((it) => {
       if (it.props.hide) return;
-      if (it.component === 'Bar') it.rects = barRects(it, model, barPositions, stackGroups);
+      if (it.component === 'Scatter') it.points = NS.scatter.points(chart, model, it, model.zAxis);
+      else if (it.component === 'Bar') it.rects = barRects(it, model, barPositions, stackGroups);
       else if (it.component === 'Area') Object.assign(it, areaPoints(it, model, stackGroups));
       else if (it.component === 'Line') it.points = linePoints(it, model);
     });
+
+    model.references = NS.reference ? NS.reference.build(chart, model) : [];
 
     // tooltip axis
     model.tooltipAxis = catAxis;
@@ -2836,13 +3198,18 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
     // series
     m.items.forEach((it) => {
       if (it.props.hide) return;
-      if (it.component === 'Bar') renderBar(chart, m, it, layers, labelsLater, active);
+      if (it.component === 'Scatter') NS.scatter.render(chart, m, it, layers, labelsLater);
+      else if (it.component === 'Bar') renderBar(chart, m, it, layers, labelsLater, active);
       else if (it.component === 'Area') renderArea(chart, m, it, layers, labelsLater, active);
       else if (it.component === 'Line') renderLine(chart, m, it, layers, labelsLater, active);
     });
 
+    // reference lines and areas (their labels go to the label layer before the axes' own)
+    if (NS.reference) NS.reference.render(chart, m, layers);
+
     // axes, in spec order
     spec.axes.forEach((raw, i) => {
+      if (raw.component === 'ZAxis') return; // a virtual axis: it draws nothing
       const axis = raw.component === 'XAxis' ? m.xAxis : m.yAxis;
       if (axis.implicit || axis.hide) return;
       renderCartesianAxis(chart, m, axis, layers);
@@ -2945,6 +3312,12 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       return h('g', { class: 'recharts-layer recharts-cartesian-axis-tick-label' }, [el]);
     });
     if (labels.length) layers[Z.label].push(h('g', { class: `recharts-cartesian-axis-tick-labels recharts-${typeName}-tick-labels` }, labels));
+    // CartesianAxis `label`: a Label inside the axis' own box (x, y, width, height), after the tick labels
+    if (axis.label) {
+      const lp = typeof axis.label === 'object' ? axis.label : { value: axis.label };
+      const labelEl = Label(Object.assign({}, lp, { viewBox: { x, y, width, height, lowerWidth: width, upperWidth: width } }), chart.ctx);
+      if (labelEl) layers[Z.label].push(labelEl);
+    }
     const axisLine = axis.axisLine ? (() => {
       const lp = Object.assign({}, svgProps(Object.assign({}, axis, { x, y, width, height })), svgProps(typeof axis.axisLine === 'object' ? axis.axisLine : {}), { fill: 'none' });
       delete lp.className;
@@ -3181,7 +3554,12 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
    Interactive charts: an element with data-chart-control="<the chart's data-chart value>" and data-chart-state="<name>"
    sets that state value from its basecoat:change event (select, single toggle group) or from data-chart-value on
    click (buttons), then the chart redraws; the other controls bound to the same state show the new value.
-   spec.onMedia sets state from a media query (upstream useIsMobile effects). */
+   spec.onMedia sets state from a media query (upstream useIsMobile effects).
+
+   Views: a single ToggleGroup with data-chart-view="<the chart's data-chart value>" swaps panels. A panel is any element
+   with data-chart-view-panel="<the same value>" and data-chart-view-value="<an item's value>"; the panels whose value is
+   not the pressed item's are hidden (the matrix's "View" toggle: Chart and Table). One view is always chosen: pressing the
+   pressed item again keeps it. */
 (function (FB) {
   'use strict';
   const NS = (window.FlaskBasecoatChart = window.FlaskBasecoatChart || {});
@@ -3435,8 +3813,8 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       wrapper.addEventListener('mouseleave', () => this.onLeave());
       // accessibility layer: focus shows the first category, arrows move, Enter toggles, blur hides
       this.kb = { active: false, index: null };
-      wrapper.addEventListener('focusin', (e) => { if (e.target === this.svg) this.onFocus(); });
-      wrapper.addEventListener('focusout', (e) => { if (e.target === this.svg) this.onBlur(); });
+      wrapper.addEventListener('focusin', (e) => { if (e.target === this.svg) this.onFocus(); else this.onPointFocus(e); });
+      wrapper.addEventListener('focusout', (e) => { if (e.target === this.svg) this.onBlur(); else this.onPointBlur(e); });
       wrapper.addEventListener('keydown', (e) => this.onKey(e));
       wrapper.addEventListener('touchmove', (e) => { if (e.touches[0]) this.onMove(e.touches[0], e); }, { passive: true });
       this.size = { width: 0, height: 0 };
@@ -3475,7 +3853,49 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       this.active = this.resolveActive();
       this.draw();
     }
+    /* Scatter points: each is a focusable image; one is in the tab order (the roving point), the arrow keys, Home and End
+       move between points, and the tooltip follows the focus. */
+    scatterItem() { return this.model && this.model.items ? this.model.items.find((i) => i.component === 'Scatter' && i.points && !i.props.hide) : null; }
+    scatterFocus() { return this.scatterRoving || 0; }
+    pointIndexOf(el) {
+      const g = el && el.closest ? el.closest('[data-recharts-item-index]') : null;
+      return g && this.spec.component === 'ScatterChart' ? Number(g.getAttribute('data-recharts-item-index')) : null;
+    }
+    onPointFocus(e) {
+      const i = this.pointIndexOf(e.target);
+      if (i == null || !this.accessibilityLayer() || this.redrawing) return;
+      if (this.kb.active && this.kb.index === i) return;
+      this.scatterRoving = i;
+      this.kb = { active: true, index: i };
+      this.active = this.resolveActive();
+      this.draw();
+    }
+    onPointBlur(e) {
+      if (this.pointIndexOf(e.target) == null || this.redrawing) return; // not while draw() swaps the svg under the focus
+      const to = e.relatedTarget && this.pointIndexOf(e.relatedTarget);
+      if (to != null && this.svg && this.svg.contains(e.relatedTarget)) return; // moving to another point
+      this.kb = { active: false, index: this.kb.index };
+      this.active = this.resolveActive();
+      this.draw();
+    }
+    onPointKey(e) {
+      const it = this.scatterItem();
+      const from = this.pointIndexOf(e.target);
+      if (!it || from == null) return false;
+      const n = it.points.length;
+      const next = { ArrowRight: from + 1, ArrowDown: from + 1, ArrowLeft: from - 1, ArrowUp: from - 1, Home: 0, End: n - 1 }[e.key];
+      if (next === undefined) return false;
+      e.preventDefault();
+      const to = Math.max(0, Math.min(n - 1, next));
+      this.scatterRoving = to;
+      this.pendingFocus = to;
+      this.kb = { active: true, index: to };
+      this.active = this.resolveActive();
+      this.draw();
+      return true;
+    }
     onKey(e) {
+      if (this.spec.component === 'ScatterChart') { this.onPointKey(e); return; }
       if (!this.accessibilityLayer() || !this.spec.tooltip || this.tooltipEventType() !== 'axis' || !this.model) return;
       const key = e.key;
       if (key !== 'ArrowRight' && key !== 'ArrowLeft' && key !== 'Enter') return;
@@ -3571,7 +3991,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const svgAttrs = {};
       if (polar) { svgAttrs.cx = m.props.cx; svgAttrs.cy = m.props.cy; }
       const access = this.spec.props && this.spec.props.accessibilityLayer === false ? false : true;
-      if (access) { svgAttrs.role = 'application'; svgAttrs.tabindex = 0; }
+      if (access) { svgAttrs.role = 'application'; if (this.spec.component !== 'ScatterChart') svgAttrs.tabindex = 0; } // a scatter chart's points are the tab stops
       Object.assign(svgAttrs, { class: 'recharts-surface', width: m.width, height: m.height, viewBox: `0 0 ${m.width} ${m.height}`, style: 'width: 100%; height: 100%; display: block;' });
       const off = m.offset;
       const kids = [h('title', {}, []), h('desc', {}, [])];
@@ -3585,9 +4005,15 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const svg = I.toDom(svgNode);
       const old = this.wrapper.querySelector(':scope > svg.recharts-surface');
       const hadFocus = old && document.activeElement === old;
+      const focusedPoint = this.pendingFocus != null ? this.pendingFocus : (old && old.contains(document.activeElement) ? this.pointIndexOf(document.activeElement) : null);
+      this.pendingFocus = null;
       this.svg = svg;
-      if (old) old.replaceWith(svg); else this.wrapper.appendChild(svg);
-      if (hadFocus) svg.focus({ preventScroll: true });
+      this.redrawing = true;
+      try {
+        if (old) old.replaceWith(svg); else this.wrapper.appendChild(svg);
+        if (hadFocus) svg.focus({ preventScroll: true });
+        if (focusedPoint != null) { const g = svg.querySelector(`[data-recharts-item-index="${focusedPoint}"]`); if (g) g.focus({ preventScroll: true }); }
+      } finally { this.redrawing = false; }
       this.drawTooltip();
     }
 
@@ -3596,6 +4022,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const t = this.spec.tooltip || {};
       if (this.spec.component === 'PieChart') return t.shared === true ? 'axis' : 'item';
       if (this.spec.component === 'RadarChart') return 'axis';
+      if (this.spec.component === 'ScatterChart') return 'item';
       if (this.spec.component === 'RadialBarChart') return t.shared === false ? 'item' : 'axis';
       return t.shared === false ? 'item' : 'axis';
     }
@@ -3637,6 +4064,10 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const m = this.model;
       if (this.tooltipEventType() === 'item') {
         if (!itemTarget) return null;
+        if (m.kind === 'cartesian') {
+          const sc = m.items.find((i) => i.component === 'Scatter' && i.domId === itemTarget.id);
+          return sc ? this.scatterActive(sc, itemTarget.index, pointer, itemTarget) : null;
+        }
         const it = m.items.find((i) => `recharts-pie-${this.uid}-${i.index}` === itemTarget.id);
         if (!it || !it.sectors[itemTarget.index]) return null;
         const sector = it.sectors[itemTarget.index];
@@ -3696,6 +4127,7 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       const m = this.model;
       if (!m || !this.spec.tooltip) return null;
       if (this.tooltipEventType() === 'item') {
+        if (m.kind === 'cartesian') { const sc = this.scatterItem(); return sc ? this.scatterActive(sc, index, pointer, null) : null; }
         const it = m.items[0];
         if (!it || !it.sectors || !it.sectors[index]) return null;
         return { pointer, itemIndex: index, graphicalItem: it.id, index, coordinate: it.sectors[index].tooltipPosition, payload: this.itemPayload(it, index), cursor: false };
@@ -3707,6 +4139,12 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       else coordinate = { x: 0, y: 0 };
       const a = this.finishAxisActive(index, coordinate, pointer);
       return a;
+    }
+
+    scatterActive(it, index, pointer, itemTarget) {
+      const pt = it.points && it.points[index];
+      if (!pt || pt.cx == null || pt.cy == null) return null;
+      return { pointer, itemTarget, itemIndex: index, graphicalItem: it.id, index, coordinate: pt.tooltipPosition, payload: NS.scatter.itemPayload(it, index), cursor: false };
     }
 
     itemPayload(it, index) {
@@ -3795,6 +4233,19 @@ window.FlaskBasecoatIcons = {"check": "<svg xmlns=\"http://www.w3.org/2000/svg\"
       root.fbRedraw = () => root.fbChart.render();
       const id = root.getAttribute('data-chart');
       if (id) {
+        document.addEventListener('basecoat:change', (e) => {
+          const group = e.target.closest && e.target.closest(`[data-chart-view="${id}"]`);
+          if (!group) return;
+          const panels = Array.from(document.querySelectorAll(`[data-chart-view-panel="${id}"]`));
+          let value = e.detail.value;
+          if (Array.isArray(value)) value = value.length ? value[0] : '';
+          if (value === '') { // the pressed item was pressed again: put it back
+            const shown = panels.find((p) => !p.hidden);
+            if (shown && group.fbSetValue) group.fbSetValue(shown.getAttribute('data-chart-view-value'));
+            return;
+          }
+          panels.forEach((p) => { p.hidden = p.getAttribute('data-chart-view-value') !== value; });
+        });
         // Controls sharing one state (a ToggleGroup and a Select both bound to `timeRange`, as upstream) follow each
         // other: the value chosen in one is shown by the others, without them emitting a change of their own.
         let syncing = false;

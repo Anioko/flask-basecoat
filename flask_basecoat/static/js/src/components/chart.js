@@ -14,7 +14,12 @@
    Interactive charts: an element with data-chart-control="<the chart's data-chart value>" and data-chart-state="<name>"
    sets that state value from its basecoat:change event (select, single toggle group) or from data-chart-value on
    click (buttons), then the chart redraws; the other controls bound to the same state show the new value.
-   spec.onMedia sets state from a media query (upstream useIsMobile effects). */
+   spec.onMedia sets state from a media query (upstream useIsMobile effects).
+
+   Views: a single ToggleGroup with data-chart-view="<the chart's data-chart value>" swaps panels. A panel is any element
+   with data-chart-view-panel="<the same value>" and data-chart-view-value="<an item's value>"; the panels whose value is
+   not the pressed item's are hidden (the matrix's "View" toggle: Chart and Table). One view is always chosen: pressing the
+   pressed item again keeps it. */
 (function (FB) {
   'use strict';
   const NS = (window.FlaskBasecoatChart = window.FlaskBasecoatChart || {});
@@ -268,8 +273,8 @@
       wrapper.addEventListener('mouseleave', () => this.onLeave());
       // accessibility layer: focus shows the first category, arrows move, Enter toggles, blur hides
       this.kb = { active: false, index: null };
-      wrapper.addEventListener('focusin', (e) => { if (e.target === this.svg) this.onFocus(); });
-      wrapper.addEventListener('focusout', (e) => { if (e.target === this.svg) this.onBlur(); });
+      wrapper.addEventListener('focusin', (e) => { if (e.target === this.svg) this.onFocus(); else this.onPointFocus(e); });
+      wrapper.addEventListener('focusout', (e) => { if (e.target === this.svg) this.onBlur(); else this.onPointBlur(e); });
       wrapper.addEventListener('keydown', (e) => this.onKey(e));
       wrapper.addEventListener('touchmove', (e) => { if (e.touches[0]) this.onMove(e.touches[0], e); }, { passive: true });
       this.size = { width: 0, height: 0 };
@@ -308,7 +313,49 @@
       this.active = this.resolveActive();
       this.draw();
     }
+    /* Scatter points: each is a focusable image; one is in the tab order (the roving point), the arrow keys, Home and End
+       move between points, and the tooltip follows the focus. */
+    scatterItem() { return this.model && this.model.items ? this.model.items.find((i) => i.component === 'Scatter' && i.points && !i.props.hide) : null; }
+    scatterFocus() { return this.scatterRoving || 0; }
+    pointIndexOf(el) {
+      const g = el && el.closest ? el.closest('[data-recharts-item-index]') : null;
+      return g && this.spec.component === 'ScatterChart' ? Number(g.getAttribute('data-recharts-item-index')) : null;
+    }
+    onPointFocus(e) {
+      const i = this.pointIndexOf(e.target);
+      if (i == null || !this.accessibilityLayer() || this.redrawing) return;
+      if (this.kb.active && this.kb.index === i) return;
+      this.scatterRoving = i;
+      this.kb = { active: true, index: i };
+      this.active = this.resolveActive();
+      this.draw();
+    }
+    onPointBlur(e) {
+      if (this.pointIndexOf(e.target) == null || this.redrawing) return; // not while draw() swaps the svg under the focus
+      const to = e.relatedTarget && this.pointIndexOf(e.relatedTarget);
+      if (to != null && this.svg && this.svg.contains(e.relatedTarget)) return; // moving to another point
+      this.kb = { active: false, index: this.kb.index };
+      this.active = this.resolveActive();
+      this.draw();
+    }
+    onPointKey(e) {
+      const it = this.scatterItem();
+      const from = this.pointIndexOf(e.target);
+      if (!it || from == null) return false;
+      const n = it.points.length;
+      const next = { ArrowRight: from + 1, ArrowDown: from + 1, ArrowLeft: from - 1, ArrowUp: from - 1, Home: 0, End: n - 1 }[e.key];
+      if (next === undefined) return false;
+      e.preventDefault();
+      const to = Math.max(0, Math.min(n - 1, next));
+      this.scatterRoving = to;
+      this.pendingFocus = to;
+      this.kb = { active: true, index: to };
+      this.active = this.resolveActive();
+      this.draw();
+      return true;
+    }
     onKey(e) {
+      if (this.spec.component === 'ScatterChart') { this.onPointKey(e); return; }
       if (!this.accessibilityLayer() || !this.spec.tooltip || this.tooltipEventType() !== 'axis' || !this.model) return;
       const key = e.key;
       if (key !== 'ArrowRight' && key !== 'ArrowLeft' && key !== 'Enter') return;
@@ -404,7 +451,7 @@
       const svgAttrs = {};
       if (polar) { svgAttrs.cx = m.props.cx; svgAttrs.cy = m.props.cy; }
       const access = this.spec.props && this.spec.props.accessibilityLayer === false ? false : true;
-      if (access) { svgAttrs.role = 'application'; svgAttrs.tabindex = 0; }
+      if (access) { svgAttrs.role = 'application'; if (this.spec.component !== 'ScatterChart') svgAttrs.tabindex = 0; } // a scatter chart's points are the tab stops
       Object.assign(svgAttrs, { class: 'recharts-surface', width: m.width, height: m.height, viewBox: `0 0 ${m.width} ${m.height}`, style: 'width: 100%; height: 100%; display: block;' });
       const off = m.offset;
       const kids = [h('title', {}, []), h('desc', {}, [])];
@@ -418,9 +465,15 @@
       const svg = I.toDom(svgNode);
       const old = this.wrapper.querySelector(':scope > svg.recharts-surface');
       const hadFocus = old && document.activeElement === old;
+      const focusedPoint = this.pendingFocus != null ? this.pendingFocus : (old && old.contains(document.activeElement) ? this.pointIndexOf(document.activeElement) : null);
+      this.pendingFocus = null;
       this.svg = svg;
-      if (old) old.replaceWith(svg); else this.wrapper.appendChild(svg);
-      if (hadFocus) svg.focus({ preventScroll: true });
+      this.redrawing = true;
+      try {
+        if (old) old.replaceWith(svg); else this.wrapper.appendChild(svg);
+        if (hadFocus) svg.focus({ preventScroll: true });
+        if (focusedPoint != null) { const g = svg.querySelector(`[data-recharts-item-index="${focusedPoint}"]`); if (g) g.focus({ preventScroll: true }); }
+      } finally { this.redrawing = false; }
       this.drawTooltip();
     }
 
@@ -429,6 +482,7 @@
       const t = this.spec.tooltip || {};
       if (this.spec.component === 'PieChart') return t.shared === true ? 'axis' : 'item';
       if (this.spec.component === 'RadarChart') return 'axis';
+      if (this.spec.component === 'ScatterChart') return 'item';
       if (this.spec.component === 'RadialBarChart') return t.shared === false ? 'item' : 'axis';
       return t.shared === false ? 'item' : 'axis';
     }
@@ -470,6 +524,10 @@
       const m = this.model;
       if (this.tooltipEventType() === 'item') {
         if (!itemTarget) return null;
+        if (m.kind === 'cartesian') {
+          const sc = m.items.find((i) => i.component === 'Scatter' && i.domId === itemTarget.id);
+          return sc ? this.scatterActive(sc, itemTarget.index, pointer, itemTarget) : null;
+        }
         const it = m.items.find((i) => `recharts-pie-${this.uid}-${i.index}` === itemTarget.id);
         if (!it || !it.sectors[itemTarget.index]) return null;
         const sector = it.sectors[itemTarget.index];
@@ -529,6 +587,7 @@
       const m = this.model;
       if (!m || !this.spec.tooltip) return null;
       if (this.tooltipEventType() === 'item') {
+        if (m.kind === 'cartesian') { const sc = this.scatterItem(); return sc ? this.scatterActive(sc, index, pointer, null) : null; }
         const it = m.items[0];
         if (!it || !it.sectors || !it.sectors[index]) return null;
         return { pointer, itemIndex: index, graphicalItem: it.id, index, coordinate: it.sectors[index].tooltipPosition, payload: this.itemPayload(it, index), cursor: false };
@@ -540,6 +599,12 @@
       else coordinate = { x: 0, y: 0 };
       const a = this.finishAxisActive(index, coordinate, pointer);
       return a;
+    }
+
+    scatterActive(it, index, pointer, itemTarget) {
+      const pt = it.points && it.points[index];
+      if (!pt || pt.cx == null || pt.cy == null) return null;
+      return { pointer, itemTarget, itemIndex: index, graphicalItem: it.id, index, coordinate: pt.tooltipPosition, payload: NS.scatter.itemPayload(it, index), cursor: false };
     }
 
     itemPayload(it, index) {
@@ -628,6 +693,19 @@
       root.fbRedraw = () => root.fbChart.render();
       const id = root.getAttribute('data-chart');
       if (id) {
+        document.addEventListener('basecoat:change', (e) => {
+          const group = e.target.closest && e.target.closest(`[data-chart-view="${id}"]`);
+          if (!group) return;
+          const panels = Array.from(document.querySelectorAll(`[data-chart-view-panel="${id}"]`));
+          let value = e.detail.value;
+          if (Array.isArray(value)) value = value.length ? value[0] : '';
+          if (value === '') { // the pressed item was pressed again: put it back
+            const shown = panels.find((p) => !p.hidden);
+            if (shown && group.fbSetValue) group.fbSetValue(shown.getAttribute('data-chart-view-value'));
+            return;
+          }
+          panels.forEach((p) => { p.hidden = p.getAttribute('data-chart-view-value') !== value; });
+        });
         // Controls sharing one state (a ToggleGroup and a Select both bound to `timeRange`, as upstream) follow each
         // other: the value chosen in one is shown by the others, without them emitting a change of their own.
         let syncing = false;

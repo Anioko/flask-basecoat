@@ -1,6 +1,7 @@
 /* Chart geometry primitives: a port of the parts of d3-path 3.1, d3-shape 3.2, d3-scale 4 and d3-array 3
    that Recharts 3.8 draws with (paths rounded to 3 digits, the linear/natural/monotone/step curves, line and
-   area generators, stacks with the none/expand/sign offsets, band/point/linear scales and linear ticks).
+   area generators, stacks with the none/expand/sign offsets, band/point/linear scales, linear ticks and the seven
+   filled symbols).
    d3 is ISC-licensed (Copyright 2010-2023 Mike Bostock). Exposed on window.FlaskBasecoatChart.d3. */
 (function () {
   'use strict';
@@ -21,8 +22,60 @@
       this._x1 = +x; this._y1 = +y;
       this._ += 'C' + this._r(+x1) + ',' + this._r(+y1) + ',' + this._r(+x2) + ',' + this._r(+y2) + ',' + this._r(this._x1) + ',' + this._r(this._y1);
     },
+    rect(x, y, w, h) { this._x0 = this._x1 = +x; this._y0 = this._y1 = +y; this._ += 'M' + this._r(this._x0) + ',' + this._r(this._y0) + 'h' + this._r(+w) + 'v' + this._r(+h) + 'h' + this._r(-w) + 'Z'; },
+    /* arc(0, 0, r, 0, tau) from (r, 0): the only arc a symbol draws (a full circle, as two half arcs) */
+    circle(r) {
+      this._ += 'M' + this._r(r) + ',0A' + this._r(r) + ',' + this._r(r) + ',0,1,1,' + this._r(-r) + ',0A' + this._r(r) + ',' + this._r(r) + ',0,1,1,' + this._r(r) + ',0';
+    },
     toString() { return this._; },
   };
+
+  /* ---- symbols (d3-shape 3.2 symbol/*.js, the seven that are drawn filled; Recharts' Symbols uses them) ---- */
+  const SQRT3 = Math.sqrt(3), TAU = 2 * Math.PI;
+  const STAR = (() => { const kr = Math.sin(Math.PI / 10) / Math.sin(7 * Math.PI / 10); return { ka: 0.89081309152928522810, kx: Math.sin(TAU / 10) * kr, ky: -Math.cos(TAU / 10) * kr }; })();
+  const WYE = { c: -0.5, s: SQRT3 / 2, k: 1 / Math.sqrt(12) };
+  const SYMBOLS = {
+    circle(p, size) { p.circle(Math.sqrt(size / Math.PI)); },
+    cross(p, size) {
+      const r = Math.sqrt(size / 5) / 2;
+      [[-3 * r, -r], [-r, -r], [-r, -3 * r], [r, -3 * r], [r, -r], [3 * r, -r], [3 * r, r], [r, r], [r, 3 * r], [-r, 3 * r], [-r, r], [-3 * r, r]].forEach((q, i) => (i ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1])));
+      p.closePath();
+    },
+    diamond(p, size) {
+      const tan30 = Math.sqrt(1 / 3);
+      const y = Math.sqrt(size / (tan30 * 2)), x = y * tan30;
+      p.moveTo(0, -y); p.lineTo(x, 0); p.lineTo(0, y); p.lineTo(-x, 0); p.closePath();
+    },
+    square(p, size) { const w = Math.sqrt(size), x = -w / 2; p.rect(x, x, w, w); },
+    star(p, size) {
+      const r = Math.sqrt(size * STAR.ka), x = STAR.kx * r, y = STAR.ky * r;
+      p.moveTo(0, -r); p.lineTo(x, y);
+      for (let i = 1; i < 5; ++i) {
+        const a = TAU * i / 5, c = Math.cos(a), s = Math.sin(a);
+        p.lineTo(s * r, -c * r); p.lineTo(c * x - s * y, s * x + c * y);
+      }
+      p.closePath();
+    },
+    triangle(p, size) {
+      const y = -Math.sqrt(size / (SQRT3 * 3));
+      p.moveTo(0, y * 2); p.lineTo(-SQRT3 * y, -y); p.lineTo(SQRT3 * y, -y); p.closePath();
+    },
+    wye(p, size) {
+      const { c, s, k } = WYE;
+      const r = Math.sqrt(size / ((k / 2 + 1) * 3));
+      const x0 = r / 2, y0 = r * k, x1 = x0, y1 = r * k + r, x2 = -x1, y2 = y1;
+      p.moveTo(x0, y0); p.lineTo(x1, y1); p.lineTo(x2, y2);
+      p.lineTo(c * x0 - s * y0, s * x0 + c * y0); p.lineTo(c * x1 - s * y1, s * x1 + c * y1); p.lineTo(c * x2 - s * y2, s * x2 + c * y2);
+      p.lineTo(c * x0 + s * y0, c * y0 - s * x0); p.lineTo(c * x1 + s * y1, c * y1 - s * x1); p.lineTo(c * x2 + s * y2, c * y2 - s * x2);
+      p.closePath();
+    },
+  };
+  /* symbol(type, area): the path string d3 draws, rounded to 3 digits; an unknown type is a circle, as in Recharts. */
+  function symbol(type, size) {
+    const p = new Path(3);
+    (SYMBOLS[type] || SYMBOLS.circle)(p, size == null ? 64 : +size);
+    return p.toString() || null;
+  }
 
   /* ---- curves ---- */
   function Linear(context) { this._context = context; }
@@ -388,5 +441,5 @@
     return scale;
   }
 
-  NS.d3 = { Path, curveFactory, line, area, stack, band, point, linear, ticks };
+  NS.d3 = { Path, curveFactory, line, area, stack, band, point, linear, ticks, symbol };
 })();

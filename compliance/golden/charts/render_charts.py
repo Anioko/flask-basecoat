@@ -27,7 +27,11 @@ Canonical hover point (replayed by check_runtime from the manifest):
   radar             halfway from the chart centre towards the second angle-axis tick (the second polygon
                     vertex when the chart has no angle axis).
 
-Usage (from anywhere):  python compliance/golden/charts/render_charts.py [name ...]
+--extra renders the oracle charts in charts/extra (the forms shadcn has no original for: R18 matrix and scatter,
+R19 cost bridge) instead, into out/charts-extra with their own manifest, so the 70-chart set stays as it is. A chart
+with item tooltips (scatter) is hovered on its third symbol.
+
+Usage (from anywhere):  python compliance/golden/charts/render_charts.py [--extra] [name ...]
 Prerequisites: node charts/build.mjs (bundle.js) and the golden stylesheet (npm run css) in compliance/golden.
 """
 import functools
@@ -44,7 +48,9 @@ HERE = pathlib.Path(__file__).resolve().parent
 GOLDEN = HERE.parent
 OUT = GOLDEN / 'out'
 OUT_CHARTS = OUT / 'charts'
+OUT_EXTRA = OUT / 'charts-extra'
 CHART_SRC = GOLDEN.parent / 'upstream' / 'shadcn' / 'charts'
+EXTRA_SRC = HERE / 'extra'
 VIEWPORT = {'width': 1280, 'height': 900}
 TOOLTIP_SELECTOR = '.recharts-tooltip-wrapper .cn-chart-tooltip'
 
@@ -228,7 +234,19 @@ def sweep(page, plot, axis):
     return segs, fixed
 
 
+# Centre of the third scatter symbol (an item tooltip chart has no categories to sweep).
+SCATTER_JS = """() => {
+  const el = document.querySelectorAll('[data-slot=chart] .recharts-scatter-symbol')[2];
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2, target: 'symbol[2]' };
+}"""
+
+
 def hover_point(page):
+    if page.evaluate("!!document.querySelector('[data-slot=chart] .recharts-scatter')"):
+        pt = page.evaluate(SCATTER_JS)
+        return (dict(pt, kind='scatter') if pt else None), None
     kind = page.evaluate(POLAR_KIND_JS)
     if kind in ('pie', 'radial'):
         pt = page.evaluate(SECTOR_JS, kind)
@@ -267,7 +285,8 @@ def load(page, base, name):
 def has_tooltip(name):
     if name in BLOCK_CHARTS:
         return True
-    src = (CHART_SRC / f'{name}.tsx').read_text(encoding='utf-8')
+    path = EXTRA_SRC / f'{name}.tsx'
+    src = (path if path.exists() else CHART_SRC / f'{name}.tsx').read_text(encoding='utf-8')
     return re.search(r'<ChartTooltip(?!Content)\b', src) is not None
 
 
@@ -343,9 +362,11 @@ def render_block_chart(page, base, name, conf):
 
 def main(argv):
     from playwright.sync_api import sync_playwright
-    only = set(argv)
-    OUT_CHARTS.mkdir(parents=True, exist_ok=True)
-    mpath = OUT_CHARTS / 'manifest.json'
+    extra = '--extra' in argv
+    only = {a for a in argv if a != '--extra'}
+    out_dir = OUT_EXTRA if extra else OUT_CHARTS
+    out_dir.mkdir(parents=True, exist_ok=True)
+    mpath = out_dir / 'manifest.json'
     manifest = json.loads(mpath.read_text(encoding='utf-8')) if (only and mpath.exists()) else {}
     srv = serve()
     base = f'http://127.0.0.1:{srv.server_address[1]}'
@@ -359,7 +380,7 @@ def main(argv):
         page.on('console', lambda m: m.type == 'error' and console.append(f'console.error: {m.text}'))
 
         # The `chart` component example: body is the example wrapper, as the SSR goldens have it.
-        if not only or 'chart' in only:
+        if not extra and (not only or 'chart' in only):
             try:
                 console.clear()
                 load(page, base, 'chart')
@@ -371,7 +392,7 @@ def main(argv):
                 errors.append(f'chart: {e}')
                 print(f'chart: ERROR {e}')
 
-        for name, conf in BLOCK_CHARTS.items():
+        for name, conf in ({} if extra else BLOCK_CHARTS).items():
             if only and name not in only:
                 continue
             try:
@@ -389,19 +410,19 @@ def main(argv):
                 print(f'{name}: ERROR {manifest[name]["error"]}')
 
         page.goto(f'{base}/charts/harness.html?name=chart', wait_until='load')
-        registry = page.evaluate('window.__charts')
+        registry = page.evaluate('window.__extraCharts' if extra else 'window.__charts')
         names = [n for n in registry if not only or n in only]
         for name in names:
             meta = registry[name]
-            entry = {'group': meta['group'], 'fullWidth': meta['fullWidth']}
+            entry = {'group': meta['group'], 'fullWidth': meta.get('fullWidth', False)}
             try:
                 console.clear()
                 load(page, base, name)
                 frame = '[data-chart-frame]'
                 info = page.evaluate(INFO_JS, frame)
                 body = page.evaluate(f"document.querySelector('{frame}').outerHTML")
-                golden_name = f'charts/{name}'
-                (OUT_CHARTS / f'{name}.html').write_text(wrap(golden_name, body, '../golden.css'), encoding='utf-8', newline='\n')
+                golden_name = f'{out_dir.name}/{name}'
+                (out_dir / f'{name}.html').write_text(wrap(golden_name, body, '../golden.css'), encoding='utf-8', newline='\n')
                 entry.update(width=info['width'], height=info['height'], surface=info['surface'],
                              slots=info['slots'], rechartsClasses=info['rechartsClasses'], hover=None)
                 status = 'rendered'
@@ -421,12 +442,15 @@ def main(argv):
                         raise RuntimeError(f'tooltip did not appear at {x},{y}')
                     wait_stable(page, quiet_ms=300, confirm_ms=300)
                     hbody = page.evaluate(f"document.querySelector('{frame}').outerHTML")
-                    (OUT_CHARTS / f'{name}.hover.html').write_text(
+                    (out_dir / f'{name}.hover.html').write_text(
                         wrap(golden_name + '.hover', hbody, '../golden.css'), encoding='utf-8', newline='\n')
                     hinfo = page.evaluate(INFO_JS, frame)
                     entry['hover'] = {'x': x, 'y': y, 'kind': pt['kind'], 'target': pt.get('target'),
                                       'axis': pt.get('axis'), 'scrollY': 0,
                                       'tooltipSelector': TOOLTIP_SELECTOR, 'slots': hinfo['slots']}
+                    if extra:  # our page frames the chart differently: the point is also given relative to the chart surface
+                        sr = page.evaluate(SURFACE_JS)
+                        entry['hover'].update(relativeTo='surface', dx=round(x - sr['left'], 1), dy=round(y - sr['top'], 1))
                     if note:
                         entry['hover']['note'] = note
                     status = 'rendered+hover'

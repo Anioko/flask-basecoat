@@ -10,6 +10,7 @@
      localeDate {locale, options}             new Date(value).toLocaleDateString(locale, options)
      configLabel                              chartConfig[value]?.label
      configLabelOfFirstDataKey                (_, payload) => chartConfig[payload[0].dataKey].label
+     payloadField {key}                       (_, payload) => payload?.[0]?.payload[key]: a point's own field (its name)
    Tooltip row formatters       return HTML nodes for one tooltip row: (value, name, item, index, payload)
      unitValue {unit, wrap}                   label + value + unit ("kcal"), in a wrapper div when wrap is true
      unitValueWithTotal {unit, keys, after}   unitValue plus a "Total" row after the row with index `after`
@@ -51,6 +52,7 @@
     localeDate: (o) => (value) => new Date(value).toLocaleDateString(o.locale || 'en-US', o.options || {}),
     configLabel: (o, ctx) => (value) => { const c = ctx.config[value]; return c ? c.label : undefined; },
     configLabelOfFirstDataKey: (o, ctx) => (_, payload) => { const k = payload && payload[0] && payload[0].dataKey; return ctx.config[k].label; },
+    payloadField: (o) => (_, payload) => (payload && payload[0] && payload[0].payload ? payload[0].payload[o.key] : undefined),
   };
 
   /* Tooltip row formatters return a DocumentFragment (HTML). */

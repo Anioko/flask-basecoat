@@ -1,0 +1,235 @@
+{
+ "type": "bar",
+ "component": "BarChart",
+ "config": {
+  "base": {
+   "label": "Base"
+  },
+  "fall": {
+   "label": "Decrease",
+   "color": "var(--chart-5)"
+  },
+  "rise": {
+   "label": "Increase",
+   "color": "var(--chart-2)"
+  },
+  "total": {
+   "label": "Total",
+   "color": "var(--primary)"
+  }
+ },
+ "data": [
+  {
+   "step": "Current cost",
+   "base": 0,
+   "fall": null,
+   "rise": null,
+   "total": 4800,
+   "label": "$4,800k"
+  },
+  {
+   "step": "Licences",
+   "base": 3900,
+   "fall": 900,
+   "rise": null,
+   "total": null,
+   "label": "-$900k"
+  },
+  {
+   "step": "Hosting",
+   "base": 3200,
+   "fall": 700,
+   "rise": null,
+   "total": null,
+   "label": "-$700k"
+  },
+  {
+   "step": "Support",
+   "base": 2700,
+   "fall": 500,
+   "rise": null,
+   "total": null,
+   "label": "-$500k"
+  },
+  {
+   "step": "Migration",
+   "base": 2700,
+   "fall": null,
+   "rise": 650,
+   "total": null,
+   "label": "+$650k"
+  },
+  {
+   "step": "Three-year total",
+   "base": 0,
+   "fall": null,
+   "rise": null,
+   "total": 3350,
+   "label": "$3,350k"
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true
+ },
+ "series": [
+  {
+   "component": "Bar",
+   "dataKey": "base",
+   "stackId": "a",
+   "fill": "transparent",
+   "legendType": "none",
+   "tooltipType": "none"
+  },
+  {
+   "component": "Bar",
+   "dataKey": "fall",
+   "stackId": "a",
+   "fill": "var(--color-fall)",
+   "stroke": "var(--muted-foreground)",
+   "strokeWidth": 1,
+   "labelList": [
+    {
+     "dataKey": "label",
+     "position": "top",
+     "offset": 8,
+     "className": "fill-foreground",
+     "fontSize": 12
+    }
+   ]
+  },
+  {
+   "component": "Bar",
+   "dataKey": "rise",
+   "stackId": "a",
+   "fill": "var(--color-rise)",
+   "stroke": "var(--muted-foreground)",
+   "strokeWidth": 1,
+   "labelList": [
+    {
+     "dataKey": "label",
+     "position": "top",
+     "offset": 8,
+     "className": "fill-foreground",
+     "fontSize": 12
+    }
+   ]
+  },
+  {
+   "component": "Bar",
+   "dataKey": "total",
+   "stackId": "a",
+   "fill": "var(--color-total)",
+   "stroke": "var(--muted-foreground)",
+   "strokeWidth": 1,
+   "labelList": [
+    {
+     "dataKey": "label",
+     "position": "top",
+     "offset": 8,
+     "className": "fill-foreground",
+     "fontSize": 12
+    }
+   ]
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "dataKey": "step",
+   "tickLine": false,
+   "tickMargin": 10,
+   "axisLine": false,
+   "interval": 0
+  },
+  {
+   "component": "YAxis",
+   "tickLine": false,
+   "axisLine": false,
+   "tickMargin": 8
+  }
+ ],
+ "references": [
+  {
+   "component": "ReferenceLine",
+   "segment": [
+    {
+     "x": "Current cost",
+     "y": 4800
+    },
+    {
+     "x": "Licences",
+     "y": 4800
+    }
+   ],
+   "stroke": "var(--muted-foreground)",
+   "strokeDasharray": "3 3"
+  },
+  {
+   "component": "ReferenceLine",
+   "segment": [
+    {
+     "x": "Licences",
+     "y": 3900
+    },
+    {
+     "x": "Hosting",
+     "y": 3900
+    }
+   ],
+   "stroke": "var(--muted-foreground)",
+   "strokeDasharray": "3 3"
+  },
+  {
+   "component": "ReferenceLine",
+   "segment": [
+    {
+     "x": "Hosting",
+     "y": 3200
+    },
+    {
+     "x": "Support",
+     "y": 3200
+    }
+   ],
+   "stroke": "var(--muted-foreground)",
+   "strokeDasharray": "3 3"
+  },
+  {
+   "component": "ReferenceLine",
+   "segment": [
+    {
+     "x": "Support",
+     "y": 2700
+    },
+    {
+     "x": "Migration",
+     "y": 2700
+    }
+   ],
+   "stroke": "var(--muted-foreground)",
+   "strokeDasharray": "3 3"
+  },
+  {
+   "component": "ReferenceLine",
+   "segment": [
+    {
+     "x": "Migration",
+     "y": 3350
+    },
+    {
+     "x": "Three-year total",
+     "y": 3350
+    }
+   ],
+   "stroke": "var(--muted-foreground)",
+   "strokeDasharray": "3 3"
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {},
+ "legend": {},
+ "labels": []
+}

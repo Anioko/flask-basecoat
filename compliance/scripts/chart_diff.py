@@ -9,7 +9,7 @@ import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from chart_compare import CHARTS, GOLDEN, ChartBrowser, compare_tooltips, compare_wrappers, reduce_wrapper, wrappers_of  # noqa: E402
+from chart_compare import CHARTS, EXTRA, GOLDEN, ChartBrowser, compare_tooltips, compare_wrappers, reduce_wrapper, wrappers_of  # noqa: E402
 
 
 def main(argv):
@@ -20,18 +20,24 @@ def main(argv):
         argv = [a for a in argv if a != str(save)]
     names = [a for a in argv if not a.startswith('--')]
     manifest = json.loads((CHARTS / 'manifest.json').read_text(encoding='utf8'))
+    manifest.update(json.loads((EXTRA / 'manifest.json').read_text(encoding='utf8')) if (EXTRA / 'manifest.json').exists() else {})
     b = ChartBrowser()
     try:
         for name in names:
             path = '/basecoat/components/chart' if name == 'chart' else f'/basecoat/charts/{name}'
-            gfile = GOLDEN / 'chart.html' if name == 'chart' else CHARTS / f'{name}.html'
+            home = EXTRA if (EXTRA / f'{name}.html').exists() else CHARTS
+            gfile = GOLDEN / 'chart.html' if name == 'chart' else home / f'{name}.html'
             status, ours = b.load(path)
             if hover:
                 h = manifest[name]['hover']
-                b.page.mouse.move(h['x'], h['y'])
+                if h.get('relativeTo') == 'surface':  # our page frames the chart differently from the harness
+                    box = b.page.locator('[data-slot=chart] svg.recharts-surface').first.bounding_box()
+                    b.page.mouse.move(box['x'] + h['dx'], box['y'] + h['dy'])
+                else:
+                    b.page.mouse.move(h['x'], h['y'])
                 b.page.wait_for_timeout(250)
                 ours = b.page.content()
-                gfile = CHARTS / f'{name}.hover.html'
+                gfile = home / f'{name}.hover.html'
             gold = gfile.read_text(encoding='utf8')
             if save:
                 save.mkdir(parents=True, exist_ok=True)

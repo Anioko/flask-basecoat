@@ -268,6 +268,8 @@
     if (transforms.length) textProps.transform = transforms.join(' ');
     const fill = String(p.fill).includes('url') ? '#808080' : p.fill;
     const attrs = Object.assign(A(textProps), { x, y, class: ['recharts-text', p.className].filter(Boolean).join(' '), 'text-anchor': p.textAnchor, fill });
+    // a style object is serialised as React does ("text-anchor: middle;"); an axis label's style is the one use
+    if (p.style && typeof p.style === 'object') attrs.style = Object.keys(p.style).map((k) => `${k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}: ${p.style[k]};`).join(' ');
     return h('text', attrs, lines.map((line, i) => h('tspan', { x, dy: i === 0 ? startDy : p.lineHeight }, [txt(line.words.join(p.breakAll ? '' : ' '))])));
   }
   function stripUndef(o) { const out = {}; for (const k of Object.keys(o)) if (o[k] !== undefined) out[k] = o[k]; return out; }
@@ -706,7 +708,7 @@
       return isWellBehaved(sc) ? { coordinate: sc + off, value: entry, index, offset: off } : null;
     }).filter(Boolean);
     // combineAxisTicks (axis labels, grid, polar grid)
-    const userTicks = axis.ticksProp || niceTicks;
+    const userTicks = axis.ticks || niceTicks; // the ticks set by the user win over the nice ones (combineAxisTicks)
     if (userTicks) axis.ticks_ = mk(userTicks, offset, (e) => (duplicateDomain ? duplicateDomain.indexOf(e) : e));
     else if (isCat && categoricalDomain) axis.ticks_ = mk(categoricalDomain, offset);
     else if (scale.ticks) axis.ticks_ = mk(scale.ticks(axis.tickCount), offset);
