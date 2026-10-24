@@ -1,14 +1,10 @@
 {% from 'basecoat/button.html' import button %}
 {% from 'basecoat/badge.html' import badge %}
-{% from 'basecoat/card.html' import card %}
+{% from 'basecoat/card.html' import card, card_header, card_title, card_description, card_content %}
 {% from 'basecoat/form.html' import render_field, render_form %}
-{% from 'basecoat/table.html' import table %}
+{% from 'basecoat/table.html' import data_table %}
 {% from 'basecoat/empty_state.html' import empty_state %}
-{% from 'basecoat/dialog.html' import dialog %}
-{% from 'basecoat/dropdown.html' import dropdown, dropdown_item %}
-{% from 'basecoat/tabs.html' import tabs, tab_panel %}
 {% from 'basecoat/toast.html' import toast_container %}
-{% from 'basecoat/skeleton.html' import skeleton, skeleton_table %}
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
@@ -76,10 +72,10 @@
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">2. Badges</h2>
             <div class="flex flex-wrap items-center gap-2">
-                {{ badge(text='Default', variant='default') }}
-                {{ badge(text='Secondary', variant='secondary') }}
-                {{ badge(text='Destructive', variant='destructive') }}
-                {{ badge(text='Outline', variant='outline') }}
+                {{ badge(content='Default', variant='default') }}
+                {{ badge(content='Secondary', variant='secondary') }}
+                {{ badge(content='Destructive', variant='destructive') }}
+                {{ badge(content='Outline', variant='outline') }}
             </div>
         </section>
 
@@ -87,12 +83,24 @@
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">3. Cards</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {% call card(title='Architecture Overview', description='Real-time estate health and metric summary.') %}
-                    <p class="text-sm text-muted-foreground">The architecture register tracks all operational nodes, APIs, and micro-services across the cluster.</p>
+                {% call card() %}
+                    {% call card_header() %}
+                        {{ card_title(content='Architecture Overview') }}
+                        {{ card_description(content='Real-time estate health and metric summary.') }}
+                    {% endcall %}
+                    {% call card_content() %}
+                        <p class="text-sm text-muted-foreground">The architecture register tracks all operational nodes, APIs, and micro-services across the cluster.</p>
+                    {% endcall %}
                 {% endcall %}
 
-                {% call card(title='Security Boundary', description='IAM policies and role enforcement.') %}
-                    <p class="text-sm text-muted-foreground">Zero-trust permissions enforced through JWT claim verification and session token inspection.</p>
+                {% call card() %}
+                    {% call card_header() %}
+                        {{ card_title(content='Security Boundary') }}
+                        {{ card_description(content='IAM policies and role enforcement.') }}
+                    {% endcall %}
+                    {% call card_content() %}
+                        <p class="text-sm text-muted-foreground">Zero-trust permissions enforced through JWT claim verification and session token inspection.</p>
+                    {% endcall %}
                 {% endcall %}
             </div>
         </section>
@@ -100,17 +108,23 @@
         {# Section 4: WTForms Adapter & Form Controls #}
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">4. Form Fields & WTForms Adapter</h2>
-            {% call card(title='WTForms Validation Demo', description='Submit invalid data to view shadcn validation error states and ring highlights.') %}
-                <form action="{{ url_for('basecoat_gallery.gallery') }}" method="POST" class="space-y-4">
-                    {{ render_field(form.name) }}
-                    {{ render_field(form.email) }}
-                    {{ render_field(form.role) }}
-                    {{ render_field(form.bio) }}
-                    {{ render_field(form.terms) }}
-                    <div class="pt-2">
-                        {{ button(content='Submit Form', type='submit', variant='default') }}
-                    </div>
-                </form>
+            {% call card() %}
+                {% call card_header() %}
+                    {{ card_title(content='WTForms Validation Demo') }}
+                    {{ card_description(content='Submit invalid data to view shadcn validation error states and ring highlights.') }}
+                {% endcall %}
+                {% call card_content() %}
+                    <form action="{{ url_for('basecoat_gallery.gallery') }}" method="POST" class="space-y-4">
+                        {{ render_field(form.name) }}
+                        {{ render_field(form.email) }}
+                        {{ render_field(form.role) }}
+                        {{ render_field(form.bio) }}
+                        {{ render_field(form.terms) }}
+                        <div class="pt-2">
+                            {{ button(content='Submit Form', type='submit', variant='default') }}
+                        </div>
+                    </form>
+                {% endcall %}
             {% endcall %}
         </section>
 
@@ -119,14 +133,15 @@
             <h2 class="text-xl font-semibold tracking-tight">5. Table & Empty State</h2>
             <div class="space-y-4">
                 <h3 class="text-sm font-medium text-muted-foreground">Table with Live Records:</h3>
-                {{ table(columns=sample_columns, rows=sample_rows) }}
+                {{ data_table(columns=sample_columns, rows=sample_rows) }}
 
                 <h3 class="text-sm font-medium text-muted-foreground mt-6">Table with Empty State:</h3>
-                {{ table(columns=sample_columns, rows=[], empty_title='No Services Registered', empty_description='Register a new service to view its operational health.') }}
+                {{ data_table(columns=sample_columns, rows=[], empty_title='No Services Registered', empty_description='Register a new service to view its operational health.') }}
             </div>
         </section>
 
-        {# Section 6: Dialog (Modal) #}
+        {# Section 6: Dialog (Modal) - Temporarily disabled due to API changes #}
+        {#
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">6. Dialog (Modal)</h2>
             <div class="flex items-center gap-4">
@@ -140,8 +155,10 @@
                 {% endcall %}
             </div>
         </section>
+        #}
 
-        {# Section 7: Dropdown #}
+        {# Section 7: Dropdown - Temporarily disabled due to API changes #}
+        {#
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">7. Dropdown Menu</h2>
             <div>
@@ -158,8 +175,10 @@
                 ) }}
             </div>
         </section>
+        #}
 
-        {# Section 8: Tabs #}
+        {# Section 8: Tabs - Temporarily disabled due to API changes #}
+        {#
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">8. Tabs</h2>
             {% call tabs(tabs_list=[('overview', 'Overview'), ('metrics', 'Metrics'), ('audit', 'Audit Trail')], default_tab='overview', id='demo-tabs') %}
@@ -173,9 +192,11 @@
                     <p class="text-sm text-foreground">Audit trail panel content: Last modified by Lead Engineer 4 minutes ago.</p>
                 {% endcall %}
             {% endcall %}
+        #}
         </section>
 
-        {# Section 9: Skeletons #}
+        {# Section 9: Skeletons - Temporarily disabled due to API changes #}
+        {#
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">9. Skeleton Loading States</h2>
             <div class="space-y-3">
@@ -187,6 +208,7 @@
                 </div>
             </div>
         </section>
+        #}
     </div>
 </body>
 </html>

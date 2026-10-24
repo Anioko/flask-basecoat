@@ -9,7 +9,11 @@
         data-slot="table"
         class="w-full caption-bottom text-sm {{ class }}"
     >
-        {{- content|safe -}}
+        {%- if caller is defined -%}
+            {{- caller() -}}
+        {%- else -%}
+            {{- content|safe -}}
+        {%- endif -%}
     </table>
 </div>
 {%- endmacro -%}
@@ -19,7 +23,11 @@
     data-slot="table-header"
     class="[&_tr]:border-b {{ class }}"
 >
-    {{- content|safe -}}
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
 </thead>
 {%- endmacro -%}
 
@@ -28,7 +36,11 @@
     data-slot="table-body"
     class="[&_tr:last-child]:border-0 {{ class }}"
 >
-    {{- content|safe -}}
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
 </tbody>
 {%- endmacro -%}
 
@@ -37,7 +49,11 @@
     data-slot="table-footer"
     class="bg-muted/50 border-t font-medium [&>tr]:last:border-b-0 {{ class }}"
 >
-    {{- content|safe -}}
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
 </tfoot>
 {%- endmacro -%}
 
@@ -46,7 +62,11 @@
     data-slot="table-row"
     class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors {{ class }}"
 >
-    {{- content|safe -}}
+    {%- if caller is defined -%}
+        {{- caller() -}}
+    {%- else -%}
+        {{- content|safe -}}
+    {%- endif -%}
 </tr>
 {%- endmacro -%}
 
@@ -75,4 +95,36 @@
 >
     {{- content|safe -}}
 </caption>
+{%- endmacro -%}
+
+{# Helper macro to build a complete table from columns and rows #}
+{% macro data_table(columns=[], rows=[], empty_title='', empty_description='', class='') %}
+{% if rows %}
+{% call table(class=class) %}
+    {% call table_header() %}
+        {% call table_row() %}
+            {% for column in columns %}
+                {{ table_head(content=column) }}
+            {% endfor %}
+        {% endcall %}
+    {% endcall %}
+    {% call table_body() %}
+        {% for row in rows %}
+            {% call table_row() %}
+                {% for cell in row %}
+                    {{ table_cell(content=cell) }}
+                {% endfor %}
+            {% endcall %}
+        {% endfor %}
+    {% endcall %}
+{% endcall %}
+{% else %}
+    {# Show empty state if there are no rows #}
+    {% if empty_title or empty_description %}
+        {% from 'basecoat/empty_state.html' import empty_state %}
+        {{ empty_state(title=empty_title, description=empty_description) }}
+    {% else %}
+        <div class="text-center text-muted-foreground py-8">No data available</div>
+    {% endif %}
+{% endif %}
 {%- endmacro -%}
