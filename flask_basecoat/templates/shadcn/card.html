@@ -1,0 +1,64 @@
+{# shadcn card macros - exact class parity with shadcn/ui card.tsx #}
+
+{% macro card(content='', class='') %}
+<div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm {{ class }}"
+    data-slot="card"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_header(content='', class='') %}
+<div
+    class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 {{ class }}"
+    data-slot="card-header"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_title(content='', class='') %}
+<div
+    class="leading-none font-semibold {{ class }}"
+    data-slot="card-title"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_description(content='', class='') %}
+<div
+    class="text-muted-foreground text-sm {{ class }}"
+    data-slot="card-description"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_action(content='', class='') %}
+<div
+    class="col-start-2 row-span-2 row-start-1 self-start justify-self-end {{ class }}"
+    data-slot="card-action"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_content(content='', class='') %}
+<div
+    class="px-6 {{ class }}"
+    data-slot="card-content"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}
+
+{% macro card_footer(content='', class='') %}
+<div
+    class="flex items-center px-6 [.border-t]:pt-6 {{ class }}"
+    data-slot="card-footer"
+>
+    {{- content|safe -}}
+</div>
+{%- endmacro -%}

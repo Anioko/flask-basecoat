@@ -249,6 +249,68 @@ def test_badge_parity():
             f"Badge variant={variant_name}: data-slot mismatch"
 
 
+# ===== Card Tests =====
+
+def test_card_parity():
+    """Test card macros match shadcn card.tsx exactly."""
+    tsx_path = COMPONENTS_PATH / "card.tsx"
+    tsx_content = tsx_path.read_text()
+
+    elements = parse_simple_component(tsx_content, "card")
+    assert len(elements) > 0, "Failed to parse card.tsx"
+
+    # Expected components
+    expected = {
+        'Card': 'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm',
+        'CardHeader': '@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
+        'CardTitle': 'leading-none font-semibold',
+        'CardDescription': 'text-muted-foreground text-sm',
+        'CardAction': 'col-start-2 row-span-2 row-start-1 self-start justify-self-end',
+        'CardContent': 'px-6',
+        'CardFooter': 'flex items-center px-6 [.border-t]:pt-6',
+    }
+
+    for elem in elements:
+        if elem['name'] in expected:
+            expected_classes = normalize_classes(expected[elem['name']])
+            actual_classes = normalize_classes(elem['classes'])
+
+            assert actual_classes == expected_classes, \
+                f"{elem['name']}: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+
+    # Now test rendering the macros
+    macro_map = {
+        'Card': 'card',
+        'CardHeader': 'card_header',
+        'CardTitle': 'card_title',
+        'CardDescription': 'card_description',
+        'CardAction': 'card_action',
+        'CardContent': 'card_content',
+        'CardFooter': 'card_footer',
+    }
+
+    for comp_name, macro_name in macro_map.items():
+        if comp_name in expected:
+            html = render_macro('card.html', macro_name=macro_name, content='Test')
+            # Parse the macro call dynamically
+            env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
+            template_str = "{% from 'card.html' import " + macro_name + " %}{{ " + macro_name + "(content='Test') }}"
+            template = env.from_string(template_str)
+            html = template.render()
+
+            actual_classes = normalize_classes(' '.join(extract_classes_from_html(html)))
+            expected_classes = normalize_classes(expected[comp_name])
+            actual_slot = extract_data_slot_from_html(html)
+            expected_slot = comp_name.lower().replace('card', 'card-') if comp_name != 'Card' else 'card'
+            expected_slot = expected_slot.rstrip('-')
+
+            assert actual_classes == expected_classes, \
+                f"{comp_name} macro: classes mismatch.\nExpected: {expected_classes}\nActual: {actual_classes}"
+
+            assert actual_slot == expected_slot, \
+                f"{comp_name} macro: data-slot mismatch. Expected: {expected_slot}, Actual: {actual_slot}"
+
+
 if __name__ == '__main__':
     # Run tests
     pytest.main([__file__, '-v'])
