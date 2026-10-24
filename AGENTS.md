@@ -72,6 +72,37 @@ A page is shadcn when the page check prints `SHADCN COMPOSED` at 100% content fi
 and the rule; fix the page, never the check. The check passes every shadcn original the library ships (dashboard-01,
 the 10 login and sign-up blocks, the 16 sidebar blocks) and fails each kind of departure (`tests/test_check_page.py`).
 
+## 6. Forms shadcn has no original for (Tier C)
+
+Diagrams, matrices, timelines, boards and canvases have no shadcn page to copy. They keep the form people recognise
+(a business model canvas has nine boxes, a SWOT four quadrants, a kanban columns of cards) and build every part inside
+it from macros.
+
+- Use the family that exists: `basecoat/canvas/` (14 strategy canvases), `basecoat/capability_map/`, the board (one
+  board only, ruling R12) and the diagram parts (one diagram engine, ruling R15). Never draw a second one.
+- Mark the form with one `data-entelim-form` region: `role="region"` with a name, `tabindex="0"`, `overflow-x-auto`,
+  geometry only through `--x --y --w --h --col --row`, and a "View" ToggleGroup with a list or table alternative.
+- On a phone the form keeps its shape and scrolls; it never stacks into one column.
+- One card per entry, never a block of bulleted text. Each entry is one record.
+- Colour carries meaning, from tokens only (ruling R16): an ordered measure (maturity, risk) uses the primary ramp
+  with the value written beside it and a legend; zones may take a low-opacity chart tint on their header; no saturated
+  fill behind text.
+- `check_page.py` applies the Tier C conditions automatically when the page has a `data-entelim-form` region.
+
+## 7. Words, empty states and overlays
+
+- Every box, section and field shows a one-line description of what belongs there. An empty one says what is missing
+  and offers the next action; "Nothing here yet", "No data" and "N/A" are never shown.
+- Tooltips only name icon-only buttons, expand codes and give a disabled button's reason. A hover card previews a
+  linked record. A popover holds a short task in place. A dialog confirms a decision with consequences; a sheet edits
+  a record with the page still in view. Never a native alert, confirm or `title` tooltip.
+
+## 8. When the library does not settle something
+
+Stop and report it; never decide it in the page. Rulings on gaps are recorded in `docs/LIBRARY-RULINGS.md`: read it
+before building, and quote the ruling a page relies on in its report. Accessibility outranks copying an original
+(ruling R9): a serious or critical finding is fixed even when shadcn's own example has it.
+
 ## What the library itself proves
 
 `python scripts/shadcn_compliance.py --browser` compares every component example, block and chart with the pinned
