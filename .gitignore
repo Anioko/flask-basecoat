@@ -20,3 +20,6 @@ dump.rdb
 *.egg-info/
 .pytest_cache/
 .coverage
+
+# Installed packages: run npm install; never committed
+node_modules/
