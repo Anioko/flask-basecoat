@@ -34,3 +34,7 @@ compliance/golden/charts/bundle.js
 
 # Local browser-automation screenshots and logs
 .playwright-mcp/
+
+# Local tool installs and stray screenshots
+node-v*/
+/*.png
