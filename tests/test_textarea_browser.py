@@ -62,7 +62,7 @@ def test_gallery_reachable_from_index(page):
 
 def test_tab_order_skips_disabled_and_shows_focus_ring(page):
     page.goto(URL)
-    page.focus("#size-rows-6")
+    page.focus("#size-large")
     page.keyboard.press("Tab")
     # the disabled textarea is skipped
     assert page.evaluate("document.activeElement.id") == "state-readonly"

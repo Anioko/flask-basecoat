@@ -1,6 +1,7 @@
 {# shadcn textarea macro - exact class parity with shadcn/ui textarea.tsx.
    Initial text: pass content='...' (or value='...') or use {% call textarea() %}...{% endcall %}.
-   Size: shadcn grows with its text (field-sizing-content, min-h-16); rows sets an explicit height.
+   Size: shadcn grows with its text (field-sizing-content, min-h-16); pass class='min-h-32' for a taller box.
+   rows is forwarded as the attribute, but field-sizing-content makes browsers size to the text instead.
    States: disabled, readonly, required, invalid (aria-invalid drives the destructive ring classes).
    Pair with a visible label (for=id) or aria_label; link help or error text with aria_describedby. #}
 {% macro textarea(
