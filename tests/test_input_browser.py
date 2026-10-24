@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 from axe_playwright_python.sync_playwright import Axe
 from PIL import Image
-from playwright.sync_api import sync_playwright
 
 from tests.live_server import TEST_SERVER_BASE_URL
 
@@ -15,22 +14,13 @@ SNAP_DIR = Path(__file__).parent / "snapshots"
 MAX_DIFF = 0.005  # 0.5 per cent of pixels
 
 
-@pytest.fixture(scope="module")
-def browser():
-    with sync_playwright() as p:
-        b = p.chromium.launch()
-        yield b
-        b.close()
-
-
 @pytest.fixture
-def page(browser):
-    ctx = browser.new_context(viewport={"width": 900, "height": 1000}, reduced_motion="reduce")
-    pg = ctx.new_page()
-    pg.goto(URL)
-    pg.wait_for_selector("#gallery-input")
-    yield pg
-    ctx.close()
+def page(page):
+    page.set_viewport_size({"width": 900, "height": 1000})
+    page.emulate_media(reduced_motion="reduce")
+    page.goto(URL)
+    page.wait_for_selector("#gallery-input")
+    return page
 
 
 def set_theme(page, theme):
@@ -66,12 +56,11 @@ def test_gallery_input_axe_no_serious(page, theme):
     assert not bad, [(v["id"], v["impact"], [n["target"] for n in v["nodes"]]) for v in bad]
 
 
-def test_gallery_index_links_to_input(browser):
-    pg = browser.new_page()
+def test_gallery_index_links_to_input(page):
+    pg = page
     pg.goto(f"{TEST_SERVER_BASE_URL}/basecoat/gallery")
     pg.click("nav[aria-label='Component pages'] >> text=Input")
     assert pg.url == URL
-    pg.close()
 
 
 def test_keyboard_focus_and_typing(page):
