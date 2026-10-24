@@ -125,8 +125,9 @@ def run(targets, width, out_json):
         browser = p.chromium.launch()
         # The golden pages are React's static render (pre-hydration). Our pages are compared without their
         # runtime so both sides are the server output; behaviour is covered by check_runtime.py.
-        ctx = browser.new_context(viewport={'width': width, 'height': 900}, device_scale_factor=1, java_script_enabled=False)
+        ctx = browser.new_context(viewport={'width': width, 'height': 900}, device_scale_factor=1)
         page = ctx.new_page()
+        page.route(lambda url: 'flask-basecoat.js' in url, lambda route: route.abort())
         for kind, name in targets:
             gpath = f'/golden/{"blocks/" if kind == "blocks" else ""}{name}.html'
             opath = f'/basecoat/{kind}/{name}'

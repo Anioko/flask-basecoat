@@ -52,7 +52,11 @@ whether it does.
 ```
 python compliance/scripts/check_dom.py <name>        # DOM parity with the golden markup
 python compliance/scripts/check_recipes.py <name>    # every data-slot carries its recipe classes
+python compliance/scripts/check_styles.py <name>     # computed styles against the golden page (Chromium, light + dark)
+python compliance/scripts/check_a11y.py <name>       # axe: no findings beyond upstream's
+python compliance/scripts/check_runtime.py <name>    # no script errors; popups, tabs, toggles behave like Radix
 python -m pytest tests/test_shadcn_components.py -k <name> -q
 ```
 
-A component is done when all three pass. Report the actual output, not a summary of it.
+A component is done when all of them pass. `python scripts/shadcn_compliance.py --browser` runs everything
+and writes `compliance/REPORT.json`. Report the actual output, not a summary of it.
