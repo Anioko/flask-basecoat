@@ -1,0 +1,54 @@
+{# shadcn button macro - exact class parity with shadcn/ui button.tsx #}
+{% macro button(
+    content='',
+    variant='default',
+    size='default',
+    type='button',
+    disabled=false,
+    class='',
+    **attrs
+) %}
+{%- set base_classes = "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive" -%}
+
+{%- if variant == 'default' -%}
+    {%- set variant_classes = "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90" -%}
+{%- elif variant == 'destructive' -%}
+    {%- set variant_classes = "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60" -%}
+{%- elif variant == 'outline' -%}
+    {%- set variant_classes = "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50" -%}
+{%- elif variant == 'secondary' -%}
+    {%- set variant_classes = "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80" -%}
+{%- elif variant == 'ghost' -%}
+    {%- set variant_classes = "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50" -%}
+{%- elif variant == 'link' -%}
+    {%- set variant_classes = "text-primary underline-offset-4 hover:underline" -%}
+{%- else -%}
+    {%- set variant_classes = "" -%}
+{%- endif -%}
+
+{%- if size == 'default' -%}
+    {%- set size_classes = "h-9 px-4 py-2 has-[>svg]:px-3" -%}
+{%- elif size == 'sm' -%}
+    {%- set size_classes = "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5" -%}
+{%- elif size == 'lg' -%}
+    {%- set size_classes = "h-10 rounded-md px-6 has-[>svg]:px-4" -%}
+{%- elif size == 'icon' -%}
+    {%- set size_classes = "size-9" -%}
+{%- else -%}
+    {%- set size_classes = "" -%}
+{%- endif -%}
+
+{%- set all_classes = [base_classes, variant_classes, size_classes, class]|reject('equalto', '')|join(' ') -%}
+
+<button
+    type="{{ type }}"
+    class="{{ all_classes }}"
+    data-slot="button"
+    {%- if disabled %} disabled{% endif %}
+    {%- for key, value in attrs.items() %}
+    {{ key }}="{{ value }}"
+    {%- endfor %}
+>
+    {{- content -}}
+</button>
+{%- endmacro -%}
