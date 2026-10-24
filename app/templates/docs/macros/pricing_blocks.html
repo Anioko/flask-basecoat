@@ -1,107 +1,121 @@
+{# Pricing block previews built from the card, badge, button, table and accordion macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
 {% macro pricing_plan_card(plan, data, layout='classic') -%}
-<article class="pricing-plan{% if plan.get('highlighted') %} is-highlighted{% endif %}" data-layout="{{ layout }}">
-  {% if plan.get('badge') %}
-  <span class="pricing-plan__badge">{{ plan['badge'] }}</span>
-  {% endif %}
-  <h3 class="pricing-plan__title">{{ plan['name'] }}</h3>
-  {% if plan.get('description') %}
-  <p class="pricing-plan__description">{{ plan['description'] }}</p>
-  {% endif %}
-  <div class="pricing-plan__price">
+{% set highlighted = plan.get('highlighted') %}
+{% call ui.card(class=tw('flex h-full flex-col', 'border-primary shadow-lg' if highlighted else ''), attrs={'data-layout': layout}) %}
+  {% call ui.card_header() %}
+    {{ ui.card_title(text=plan['name']) }}
+    {% if plan.get('description') %}{{ ui.card_description(text=plan['description']) }}{% endif %}
+    {% if plan.get('badge') %}{% call ui.card_action() %}{{ ui.badge(text=plan['badge'], variant=('default' if highlighted else 'secondary')) }}{% endcall %}{% endif %}
+  {% endcall %}
+  {% call ui.card_content(class='flex flex-1 flex-col gap-4') %}
     {% set active_cycle = (data.get('billing_toggle') or {}).get('active') %}
     {% set yearly_label = plan.get('price_yearly') if plan.get('price_yearly') else None %}
-    {% if active_cycle == 'yearly' and yearly_label %}
-    <span class="pricing-plan__amount">{{ yearly_label }}</span>
-    {% elif plan.get('price') %}
-    <span class="pricing-plan__amount">{{ plan['price'] }}</span>
-    {% else %}
-    <span class="pricing-plan__amount">Custom</span>
+    <p class="flex items-baseline gap-1">
+      {% if active_cycle == 'yearly' and yearly_label %}
+      <span class="text-3xl font-semibold tracking-tight">{{ yearly_label }}</span>
+      {% elif plan.get('price') %}
+      <span class="text-3xl font-semibold tracking-tight">{{ plan['price'] }}</span>
+      {% else %}
+      <span class="text-3xl font-semibold tracking-tight">Custom</span>
+      {% endif %}
+      {% if plan.get('period') %}<span class="text-sm text-muted-foreground">/{{ plan['period'] }}</span>{% endif %}
+    </p>
+    {% if plan.get('meta') %}<p class="text-sm text-muted-foreground">{{ plan['meta'] }}</p>{% endif %}
+    {% if plan.get('features') %}
+    <ul class="grid gap-2 text-sm">
+      {% for feature in plan['features'] %}
+      <li class="flex items-start gap-2">{{ lucide('check', 'mt-0.5 size-4 shrink-0 text-primary') }}<span>{{ feature }}</span></li>
+      {% endfor %}
+    </ul>
     {% endif %}
-    {% if plan.get('period') %}
-    <span class="pricing-plan__period">/{{ plan['period'] }}</span>
-    {% endif %}
-  </div>
-  {% if plan.get('meta') %}
-  <p class="pricing-plan__meta">{{ plan['meta'] }}</p>
-  {% endif %}
-  {% if plan.get('features') %}
-  <ul class="pricing-plan__features">
-    {% for feature in plan['features'] %}
-    <li>{{ feature }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+  {% endcall %}
   {% if plan.get('cta') %}
-  <div class="pricing-plan__actions">
-    <a class="btn btn-{{ plan['cta'].get('style', 'primary') }} w-full" href="{{ plan['cta'].get('url', '#') }}">{{ plan['cta'].get('label', 'Select plan') }}</a>
-  </div>
+  {% call ui.card_footer() %}
+    {{ ui.button(text=plan['cta'].get('label', 'Select plan'), variant=d.variant_for(plan['cta'].get('style', 'primary')), href=plan['cta'].get('url', '#'), class='w-full') }}
+  {% endcall %}
   {% endif %}
-</article>
+{% endcall %}
 {%- endmacro %}
 
 {% macro pricing_feature_matrix(matrix, plans, comparisons) -%}
-<section class="pricing-comparison" aria-label="Plan comparison">
-  <header class="pricing-comparison__header">
-    {% for plan in plans %}
-    <div class="pricing-comparison__plan{% if plan.get('highlighted') %} is-highlighted{% endif %}">
-      {% if plan.get('badge') %}<span class="pricing-plan__badge">{{ plan['badge'] }}</span>{% endif %}
-      <h3>{{ plan['name'] }}</h3>
-      <p class="pricing-plan__amount">{{ plan.get('price', 'Custom') }}{% if plan.get('period') %}<span class="pricing-plan__period">/{{ plan['period'] }}</span>{% endif %}</p>
-    </div>
-    {% endfor %}
-  </header>
-  <div class="pricing-comparison__body">
-    {% for row in matrix %}
-    <div class="pricing-comparison__row">
-      <p class="pricing-comparison__feature">{{ row['label'] }}</p>
-      {% for value in row['tiers'] %}
-      <div class="pricing-comparison__value">
-        {% if value is sameas False %}
-        <span class="pricing-icon pricing-icon--no" aria-hidden="true">✕</span>
-        {% elif value is sameas True %}
-        <span class="pricing-icon pricing-icon--yes" aria-hidden="true">✔</span>
-        {% else %}
-        <span>{{ value }}</span>
-        {% endif %}
-      </div>
+{% call ui.table_container(class='rounded-xl border') %}
+  {% call ui.table(attrs={'aria-label': 'Plan comparison'}) %}
+    {% call ui.table_header() %}
+      {% call ui.table_row() %}
+        {{ ui.table_head(text='Feature') }}
+        {% for plan in plans %}
+        {% call ui.table_head(class='text-center') %}
+          <div class="flex flex-col items-center gap-1 py-2">
+            {% if plan.get('badge') %}{{ ui.badge(text=plan['badge'], variant=('default' if plan.get('highlighted') else 'secondary')) }}{% endif %}
+            <span class="font-semibold text-foreground">{{ plan['name'] }}</span>
+            <span class="text-xs font-normal text-muted-foreground">{{ plan.get('price', 'Custom') }}{% if plan.get('period') %}/{{ plan['period'] }}{% endif %}</span>
+          </div>
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.table_body() %}
+      {% for row in matrix %}
+      {% call ui.table_row() %}
+        {{ ui.table_cell(text=row['label'], class='font-medium') }}
+        {% for value in row['tiers'] %}
+        {% call ui.table_cell(class='text-center') %}
+          {% if value is sameas False %}{{ lucide('x', 'mx-auto size-4 text-muted-foreground') }}<span class="sr-only">Not included</span>
+          {% elif value is sameas True %}{{ lucide('check', 'mx-auto size-4 text-primary') }}<span class="sr-only">Included</span>
+          {% else %}<span>{{ value }}</span>{% endif %}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
       {% endfor %}
-    </div>
-    {% endfor %}
-  </div>
-  {% if comparisons %}
-  <footer class="pricing-comparison__footer">
-    {% for comparison in comparisons %}
-    <a class="btn btn-{{ comparison['cta'].get('style', 'primary') }}" href="{{ comparison['cta'].get('url', '#') }}">{{ comparison['cta'].get('label', 'Select') }}</a>
-    {% endfor %}
-  </footer>
-  {% endif %}
-</section>
+    {% endcall %}
+    {% if comparisons %}
+    {% call ui.table_footer() %}
+      {% call ui.table_row() %}
+        {{ ui.table_cell() }}
+        {% for comparison in comparisons %}
+        {% call ui.table_cell(class='text-center') %}
+          {{ ui.button(text=comparison['cta'].get('label', 'Select'), variant=d.variant_for(comparison['cta'].get('style', 'primary')), size='sm', href=comparison['cta'].get('url', '#')) }}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+    {% endif %}
+  {% endcall %}
+{% endcall %}
 {%- endmacro %}
 
 {% macro pricing_sidebar(sidebar) -%}
-<aside class="pricing-sidebar">
-  <h3 class="pricing-sidebar__title">{{ sidebar['title'] }}</h3>
-  <ul class="pricing-sidebar__list">
-    {% for item in sidebar.get('items', []) %}
-    <li>
-      <h4>{{ item['label'] }}</h4>
-      <p>{{ item['detail'] }}</p>
-    </li>
-    {% endfor %}
-  </ul>
-</aside>
+{% call ui.card(class='bg-muted/40') %}
+  {% call ui.card_header() %}{{ ui.card_title(text=sidebar['title']) }}{% endcall %}
+  {% call ui.card_content() %}
+    <ul class="grid gap-4">
+      {% for item in sidebar.get('items', []) %}
+      <li class="flex gap-3">
+        {{ lucide('circle-check', 'mt-0.5 size-4 shrink-0 text-primary') }}
+        <div>
+          <p class="text-sm font-medium">{{ item['label'] }}</p>
+          <p class="text-sm text-muted-foreground">{{ item['detail'] }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endcall %}
+{% endcall %}
 {%- endmacro %}
 
 {% macro pricing_faq(faq_items) -%}
-<section class="pricing-faq" aria-label="Pricing FAQs">
-  <h3>Frequently asked questions</h3>
-  <div class="pricing-faq__grid">
+<section class="flex flex-col gap-4" aria-label="Pricing FAQs">
+  <h3 class="text-lg font-semibold tracking-tight">Frequently asked questions</h3>
+  {% call ui.accordion(class='rounded-lg border px-4') %}
     {% for item in faq_items %}
-    <article>
-      <h4>{{ item['question'] }}</h4>
-      <p>{{ item['answer'] }}</p>
-    </article>
+    {% call ui.accordion_item() %}
+      <h4 class="flex">{% call ui.accordion_trigger(open=loop.first) %}{{ item['question'] }}{{ ui.accordion_trigger_icon() }}{% endcall %}</h4>
+      {% call ui.accordion_content(open=loop.first) %}<div class="pb-4 text-muted-foreground">{{ item['answer'] }}</div>{% endcall %}
+    {% endcall %}
     {% endfor %}
-  </div>
+  {% endcall %}
 </section>
 {%- endmacro %}

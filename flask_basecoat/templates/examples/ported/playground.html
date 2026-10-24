@@ -1,0 +1,329 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Playground · Flask-Basecoat{% endblock %}
+{% set presets = ['Grammatical Standard English', 'Summarize for a 2nd grader', 'Text to command', 'Q&A', 'English to other languages', 'Parse unstructured data', 'Classification', 'Natural language to Python', 'Explain code', 'Chat'] %}
+{% set types = ['GPT-3', 'Codex'] %}
+{% set models = [
+  {'name': 'text-davinci-003', 'type': 'GPT-3', 'description': 'Most capable GPT-3 model. Can do any task the other models can do, often with higher quality, longer output and better instruction-following. Also supports inserting completions within text.', 'strengths': 'Complex intent, cause and effect, creative generation, search, summarization for audience'},
+  {'name': 'text-curie-001', 'type': 'GPT-3', 'description': 'Very capable, but faster and lower cost than Davinci.', 'strengths': 'Language translation, complex classification, sentiment, summarization'},
+  {'name': 'text-babbage-001', 'type': 'GPT-3', 'description': 'Capable of straightforward tasks, very fast, and lower cost.', 'strengths': 'Moderate classification, semantic search'},
+  {'name': 'text-ada-001', 'type': 'GPT-3', 'description': 'Capable of very simple tasks, usually the fastest model in the GPT-3 series, and lowest cost.', 'strengths': 'Parsing text, simple classification, address correction, keywords'},
+  {'name': 'code-davinci-002', 'type': 'Codex', 'description': 'Most capable Codex model. Particularly good at translating natural language to code. In addition to completing code, also supports inserting completions within code.', 'strengths': ''},
+  {'name': 'code-cushman-001', 'type': 'Codex', 'description': 'Almost as capable as Davinci Codex, but slightly faster. This speed advantage may make it preferable for real-time applications.', 'strengths': 'Real-time application where low-latency is preferable'},
+] %}
+{% set check_class = 'cn-command-item-indicator ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100' %}
+
+{#- Search box at the top of a command list. -#}
+{% macro command_search(placeholder) -%}
+{% call ui.command_input_wrapper() %}
+  {% call ui.input_group(class='cn-command-input-group') %}
+    {{ ui.command_input(attrs={'placeholder': placeholder, 'value': '', 'aria-label': placeholder}) }}
+    {% call ui.input_group_addon(align='inline-start') %}{{ lucide('search', 'cn-command-input-icon') }}{% endcall %}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{#- A command group with its heading, as cmdk renders it. -#}
+{% macro command_group_with(heading='') -%}
+{%- set body = caller() -%}
+{% call ui.command_group() %}{% if heading %}<div cmdk-group-heading="" aria-hidden="true">{{ heading }}</div>{% endif %}<div cmdk-group-items="" role="group"{% if heading %} aria-label="{{ heading }}"{% endif %}>{{ body }}</div>{% endcall %}
+{%- endmacro %}
+
+{#- Slider with its label, value read-out and explanatory hover card (temperature, maximum length, top P). -#}
+{% macro setting_slider(sid, label, max, step, value, help) -%}
+<div class="grid gap-2 pt-2">
+  {% call ui.hover_card() %}
+    {% call ui.hover_card_trigger(tag='div', as_=none, class='grid gap-4', attrs={'data-open-delay': '200'}) %}
+      <div class="flex items-center justify-between">
+        {{ ui.label(text=label, for_=sid) }}
+        <span id="{{ sid }}-value" class="text-muted-foreground hover:border-border w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm">{{ value }}</span>
+      </div>
+      {% call ui.slider(id=sid, attrs={'data-step': step, 'data-slider-output': sid ~ '-value', 'aria-label': label}) %}
+        {% call ui.slider_track() %}{{ ui.slider_range() }}{% endcall %}
+        <span data-fb-thumb class="top-1/2 -translate-y-1/2" style="position:absolute;transform:translateX(-50%)">{{ ui.slider_thumb(min=0, max=max, value=value, attrs={'aria-label': label}) }}</span>
+      {% endcall %}
+    {% endcall %}
+    {{ ui.hover_card_content(text=help, side='left', align='start', class='w-[260px] text-sm') }}
+  {% endcall %}
+</div>
+{%- endmacro %}
+
+{#- Prompt actions under every editor: submit and history. -#}
+{% macro prompt_actions() -%}
+<div class="flex items-center gap-2">
+  {{ ui.button(text='Submit', attrs={'data-playground-submit': ''}) }}
+  {% call ui.button(variant='secondary') %}<span class="sr-only">Show history</span>{{ lucide('rotate-ccw') }}{% endcall %}
+</div>
+{%- endmacro %}
+
+{% block body %}
+<div>
+  <div class="flex flex-col items-start justify-between gap-2 p-4 py-4 sm:flex-row sm:items-center sm:gap-0 md:h-16">
+    <h2 class="text-lg font-semibold">Playground</h2>
+    <div class="ml-auto flex w-full gap-2 sm:justify-end">
+      {# Preset selector #}
+      {% call ui.popover() %}
+        {% call ui.popover_trigger(variant='outline', role='combobox', aria_label='Load a preset...', class='flex-1 justify-between md:max-w-[200px] lg:max-w-[300px]', attrs={'id': 'preset-trigger'}) %}<span data-preset-label>Load a preset...</span>{{ lucide('chevrons-up-down', 'opacity-50') }}{% endcall %}
+        {% call ui.popover_content(class='w-[300px] p-0', attrs={'id': 'preset-popover'}) %}
+          {% call ui.command(attrs={'id': 'preset-command'}) %}
+            {{ command_search('Search presets...') }}
+            {% call ui.command_list() %}
+              {{ ui.command_empty(text='No presets found.') }}
+              {% call command_group_with('Examples') %}
+                {% for preset in presets %}{% call ui.command_item(attrs={'data-value': preset, 'data-preset': ''}) %}<span>{{ preset }}</span>{{ lucide('check', check_class) }}{% endcall %}{% endfor %}
+              {% endcall %}
+              {{ ui.command_separator() }}
+              {% call command_group_with() %}{% call ui.command_item(attrs={'data-value': 'More examples'}) %}More examples{% endcall %}{% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+
+      {# Save preset #}
+      {% call ui.dialog() %}
+        {{ ui.dialog_trigger(text='Save', variant='secondary') }}
+        {{ ui.dialog_overlay() }}
+        {% call ui.dialog_content() %}
+          {% call ui.dialog_header() %}
+            {{ ui.dialog_title(text='Save preset') }}
+            {{ ui.dialog_description(text='This will save the current playground state as a preset which you can access later or share with others.') }}
+          {% endcall %}
+          <div class="grid gap-6 py-4">
+            <div class="grid gap-3">
+              {{ ui.label(text='Name', for_='name') }}
+              {{ ui.input(id='name', attrs={'autofocus': true}) }}
+            </div>
+            <div class="grid gap-3">
+              {{ ui.label(text='Description', for_='description') }}
+              {% call ui.textarea(id='description') %}{% endcall %}
+            </div>
+          </div>
+          {% call ui.dialog_footer() %}{{ ui.dialog_close(text='Save', variant='default', size='default', attrs={'type': 'submit'}) }}{% endcall %}
+          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+        {% endcall %}
+      {% endcall %}
+
+      <div class="hidden gap-2 md:flex">
+        {# View code #}
+        {% call ui.dialog() %}
+          {{ ui.dialog_trigger(text='View code', variant='secondary') }}
+          {{ ui.dialog_overlay() }}
+          {% call ui.dialog_content() %}
+            {% call ui.dialog_header() %}
+              {{ ui.dialog_title(text='View code') }}
+              {{ ui.dialog_description(text='You can use the following code to start integrating your current prompt and settings into your application.') }}
+            {% endcall %}
+            <div class="grid gap-4">
+              <div class="rounded-md bg-black p-6">
+                <pre><code class="grid gap-1 text-sm text-white [&_span]:h-4"><span><span class="text-chart-1 font-semibold">import</span> os</span><span><span class="text-chart-1 font-semibold">import</span> openai</span><span></span><span>openai.api_key = os.getenv(<span class="text-white/70">&quot;OPENAI_API_KEY&quot;</span>)</span><span></span><span>response = openai.Completion.create(</span><span> model=<span class="text-white/70">&quot;davinci&quot;</span>,</span><span> prompt=<span class="text-chart-2">&quot;&quot;</span>,</span><span> temperature=<span class="text-chart-2">0.9</span>,</span><span> max_tokens=<span class="text-chart-2">5</span>,</span><span> top_p=<span class="text-chart-2">1</span>,</span><span> frequency_penalty=<span class="text-chart-2">0</span>,</span><span> presence_penalty=<span class="text-white/70">0</span>,</span><span>)</span></code></pre>
+              </div>
+              <div>
+                <p class="text-muted-foreground text-sm">Your API Key can be found here. You should use environment variables or a secret management tool to expose your key to your applications.</p>
+              </div>
+            </div>
+            {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+          {% endcall %}
+        {% endcall %}
+
+        {# Share preset #}
+        {% call ui.popover() %}
+          {{ ui.popover_trigger(text='Share', variant='secondary') }}
+          {% call ui.popover_content(align='end', class='flex w-[520px] flex-col gap-4') %}
+            <div class="flex flex-col gap-1 text-center sm:text-left">
+              <h3 class="text-lg font-semibold">Share preset</h3>
+              <p class="text-muted-foreground text-sm">Anyone who has this link and an OpenAI account will be able to view this.</p>
+            </div>
+            <div class="relative flex-1">
+              {{ ui.label(text='Link', for_='link', class='sr-only') }}
+              {{ ui.input(id='link', readonly=true, class='h-9 pr-10', attrs={'value': 'https://platform.openai.com/playground/p/7bbKYQvsVkNmVb8NGcdUOLae?model=text-davinci-003'}) }}
+              {% call ui.button(type='submit', size='icon', variant='ghost', class='absolute top-1 right-1 size-7', attrs={'data-copy-link': ''}) %}<span class="sr-only">Copy</span>{{ lucide('copy', 'size-3.5') }}{% endcall %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+
+      {# Preset actions #}
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(variant='secondary', size='icon') %}<span class="sr-only">Actions</span>{{ lucide('ellipsis') }}{% endcall %}
+        {% call ui.dropdown_menu_content(align='end') %}
+          {{ ui.dropdown_menu_item(text='Content filter preferences', attrs={'data-open': 'content-filter-dialog'}) }}
+          {{ ui.dropdown_menu_separator() }}
+          {{ ui.dropdown_menu_item(text='Delete preset', class='text-destructive', attrs={'data-open': 'delete-preset-dialog'}) }}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.dialog() %}
+        {{ ui.dialog_overlay() }}
+        {% call ui.dialog_content(id='content-filter-dialog') %}
+          {% call ui.dialog_header() %}
+            {{ ui.dialog_title(text='Content filter preferences') }}
+            {{ ui.dialog_description(text="The content filter flags text that may violate our content policy. It's powered by our moderation endpoint which is free to use to moderate your OpenAI API traffic. Learn more.") }}
+          {% endcall %}
+          <div class="py-6">
+            <h4 class="text-muted-foreground text-sm">Playground Warnings</h4>
+            <div class="flex items-start justify-between gap-4 pt-3">
+              {% call ui.switch(size='default', checked=true, id='show', name='show') %}{{ ui.switch_thumb(checked=true) }}{% endcall %}
+              {% call ui.label(for_='show', class='grid gap-1 font-normal') %}<span class="font-semibold">Show a warning when content is flagged</span><span class="text-muted-foreground text-sm">A warning will be shown when sexual, hateful, violent or self-harm content is detected.</span>{% endcall %}
+            </div>
+          </div>
+          {% call ui.dialog_footer() %}{{ ui.dialog_close(text='Close', variant='secondary', size='default') }}{% endcall %}
+          {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.alert_dialog() %}
+        {{ ui.alert_dialog_overlay() }}
+        {% call ui.alert_dialog_content(size='default', id='delete-preset-dialog') %}
+          {% call ui.alert_dialog_header() %}
+            {{ ui.alert_dialog_title(text='Are you absolutely sure?') }}
+            {{ ui.alert_dialog_description(text="This action cannot be undone. This preset will no longer be accessible by you or others you've shared it with.") }}
+          {% endcall %}
+          {% call ui.alert_dialog_footer() %}
+            {{ ui.alert_dialog_cancel(text='Cancel') }}
+            {{ ui.button(text='Delete', variant='destructive', attrs={'data-delete-preset': ''}) }}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    </div>
+  </div>
+  {{ ui.separator() }}
+  {% call ui.tabs(class='flex h-[calc(100vh-4.5rem)] flex-1 flex-col') %}
+    <div class="flex flex-1 flex-col p-4">
+      <div class="grid flex-1 items-stretch gap-6 md:grid-cols-[1fr_200px]">
+        <div class="hidden flex-col gap-6 sm:flex md:order-2">
+          <div class="grid gap-3">
+            {% call ui.hover_card() %}
+              {{ ui.hover_card_trigger(text='Mode', tag='span', as_=none, class='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70', attrs={'data-open-delay': '200', 'tabindex': '0'}) }}
+              {{ ui.hover_card_content(text='Choose the interface that best suits your task. You can provide: a simple prompt to complete, starting and ending text to insert a completion within, or some text with instructions to edit it.', side='left', class='w-[320px] text-sm') }}
+            {% endcall %}
+            {% call ui.tabs_list(class='grid w-full grid-cols-3') %}
+              {% call ui.tabs_trigger(active=true, attrs={'data-value': 'complete'}) %}<span class="sr-only">Complete</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="h-5 w-5" aria-hidden="true"><rect x="4" y="3" width="12" height="2" rx="1" fill="currentColor"></rect><rect x="4" y="7" width="12" height="2" rx="1" fill="currentColor"></rect><rect x="4" y="11" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="4" y="15" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="8.5" y="11" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="8.5" y="15" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="13" y="11" width="3" height="2" rx="1" fill="currentColor"></rect></svg>{% endcall %}
+              {% call ui.tabs_trigger(attrs={'data-value': 'insert'}) %}<span class="sr-only">Insert</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="h-5 w-5" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.491 7.769a.888.888 0 0 1 .287.648.888.888 0 0 1-.287.648l-3.916 3.667a1.013 1.013 0 0 1-.692.268c-.26 0-.509-.097-.692-.268L5.275 9.065A.886.886 0 0 1 5 8.42a.889.889 0 0 1 .287-.64c.181-.17.427-.267.683-.269.257-.002.504.09.69.258L8.903 9.87V3.917c0-.243.103-.477.287-.649.183-.171.432-.268.692-.268.26 0 .509.097.692.268a.888.888 0 0 1 .287.649V9.87l2.245-2.102c.183-.172.432-.269.692-.269.26 0 .508.097.692.269Z" fill="currentColor"></path><rect x="4" y="15" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="8.5" y="15" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="13" y="15" width="3" height="2" rx="1" fill="currentColor"></rect></svg>{% endcall %}
+              {% call ui.tabs_trigger(attrs={'data-value': 'edit'}) %}<span class="sr-only">Edit</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="h-5 w-5" aria-hidden="true"><rect x="4" y="3" width="12" height="2" rx="1" fill="currentColor"></rect><rect x="4" y="7" width="12" height="2" rx="1" fill="currentColor"></rect><rect x="4" y="11" width="3" height="2" rx="1" fill="currentColor"></rect><rect x="4" y="15" width="4" height="2" rx="1" fill="currentColor"></rect><rect x="8.5" y="11" width="3" height="2" rx="1" fill="currentColor"></rect><path d="M17.154 11.346a1.182 1.182 0 0 0-1.671 0L11 15.829V17.5h1.671l4.483-4.483a1.182 1.182 0 0 0 0-1.671Z" fill="currentColor"></path></svg>{% endcall %}
+            {% endcall %}
+          </div>
+
+          {# Model selector #}
+          <div class="grid gap-3">
+            {% call ui.hover_card() %}
+              {{ ui.hover_card_trigger(text='Model', tag='label', as_=none, class='flex items-center gap-2 text-sm leading-none font-medium select-none', attrs={'for': 'model', 'data-open-delay': '200'}) }}
+              {{ ui.hover_card_content(text='The model which will generate the completion. Some models are suitable for natural language tasks, others specialize in code. Learn more.', side='left', align='start', class='w-[260px] text-sm') }}
+            {% endcall %}
+            {% call ui.popover() %}
+              {% call ui.popover_trigger(variant='outline', role='combobox', aria_label='Select a model', class='w-full justify-between', attrs={'id': 'model'}) %}<span data-model-label>text-davinci-003</span>{{ lucide('chevrons-up-down', 'text-muted-foreground') }}{% endcall %}
+              {% call ui.popover_content(align='end', class='w-[250px] overflow-visible p-0', attrs={'id': 'model-popover'}) %}
+                <div id="model-peek" class="bg-popover text-popover-foreground absolute top-0 right-full mr-2 hidden min-h-[280px] w-64 rounded-md border p-4 shadow-md lg:block">
+                  <div class="grid gap-2">
+                    <h4 class="leading-none font-medium" data-peek-name>{{ models[0].name }}</h4>
+                    <div class="text-muted-foreground text-sm" data-peek-description>{{ models[0].description }}</div>
+                    <div class="mt-4 grid gap-2" data-peek-strengths-block>
+                      <h5 class="text-sm leading-none font-medium">Strengths</h5>
+                      <ul class="text-muted-foreground text-sm" data-peek-strengths>{{ models[0].strengths }}</ul>
+                    </div>
+                  </div>
+                </div>
+                {% call ui.command(attrs={'id': 'model-command'}) %}
+                  {% call ui.command_list(class='max-h-[400px]') %}
+                    {{ command_search('Search Models...') }}
+                    {{ ui.command_empty(text='No Models found.') }}
+                    {% for type in types %}
+                    {% call command_group_with(type) %}
+                      {% for m in models if m.type == type %}{% call ui.command_item(class='data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground', attrs={'data-value': m.name, 'data-model': '', 'data-description': m.description, 'data-strengths': m.strengths, 'data-checked': 'true' if loop.first and type == 'GPT-3' else 'false'}) %}<span>{{ m.name }}</span>{{ lucide('check', check_class) }}{% endcall %}{% endfor %}
+                    {% endcall %}
+                    {% endfor %}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+          </div>
+
+          {{ setting_slider('temperature', 'Temperature', 1, '0.1', '0.56', 'Controls randomness: lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.') }}
+          {{ setting_slider('maxlength', 'Maximum Length', 4000, '10', '256', 'The maximum number of tokens to generate. Requests can use up to 2,048 or 4,000 tokens, shared between prompt and completion. The exact limit varies by model.') }}
+          {{ setting_slider('top-p', 'Top P', 1, '0.1', '0.9', 'Control diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered.') }}
+        </div>
+
+        <div class="flex flex-1 flex-col *:data-[slot=tab-content]:flex-1 md:order-1">
+          {% call ui.tabs_content(active=true, class='mt-0 border-0 p-0', attrs={'data-value': 'complete'}) %}
+            <div class="flex h-full flex-col gap-4">
+              {% call ui.textarea(class='flex-1 p-4', attrs={'placeholder': 'Write a tagline for an ice cream shop', 'aria-label': 'Prompt'}) %}{% endcall %}
+              {{ prompt_actions() }}
+            </div>
+          {% endcall %}
+          {% call ui.tabs_content(class='mt-0 flex flex-col gap-4 border-0 p-0', attrs={'data-value': 'insert'}) %}
+            <div class="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
+              {% call ui.textarea(class='h-full p-4', attrs={'placeholder': "We're writing to [inset]. Congrats from OpenAI!", 'aria-label': 'Prompt'}) %}{% endcall %}
+              <div class="bg-muted rounded-md border"></div>
+            </div>
+            {{ prompt_actions() }}
+          {% endcall %}
+          {% call ui.tabs_content(class='mt-0 flex flex-col gap-4 border-0 p-0', attrs={'data-value': 'edit'}) %}
+            <div class="grid h-full gap-6 lg:grid-cols-2">
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-1 flex-col gap-2">
+                  {{ ui.label(text='Input', for_='input', class='sr-only') }}
+                  {% call ui.textarea(id='input', class='flex-1 p-4', attrs={'placeholder': 'We is going to the market.'}) %}{% endcall %}
+                </div>
+                <div class="flex flex-col gap-2">
+                  {{ ui.label(text='Instructions', for_='instructions') }}
+                  {% call ui.textarea(id='instructions', attrs={'placeholder': 'Fix the grammar.'}) %}{% endcall %}
+                </div>
+              </div>
+              <div class="bg-muted rounded-md border"></div>
+            </div>
+            {{ prompt_actions() }}
+          {% endcall %}
+        </div>
+      </div>
+    </div>
+  {% endcall %}
+</div>
+<script>
+  (function () {
+    function select(listSel, item) {
+      document.querySelectorAll(listSel).forEach(function (i) { i.setAttribute('data-checked', String(i === item)); });
+    }
+    document.addEventListener('basecoat:select', function (e) {
+      var root = e.target, item = e.detail && e.detail.item;
+      // Preset and model pickers: the chosen item gets the check, its name goes on the trigger, the popover closes.
+      if (root.id === 'preset-command' && item && item.hasAttribute('data-preset')) {
+        select('#preset-command [data-preset]', item);
+        document.querySelector('[data-preset-label]').textContent = item.getAttribute('data-value');
+        var pp = document.getElementById('preset-popover'); if (pp.fbClose) pp.fbClose();
+      } else if (root.id === 'model-command' && item) {
+        select('#model-command [data-model]', item);
+        document.querySelector('[data-model-label]').textContent = item.getAttribute('data-value');
+        var mp = document.getElementById('model-popover'); if (mp.fbClose) mp.fbClose();
+      } else if (root.matches && root.matches('[data-open]')) {
+        // Menu items that open the content filter dialog or the delete confirmation.
+        var target = document.getElementById(root.getAttribute('data-open'));
+        if (target && target.fbOpen) setTimeout(function () { target.fbOpen(); }, 0);
+      }
+    });
+    // The model description panel follows the highlighted model, like the upstream peek card.
+    var peek = document.getElementById('model-peek');
+    new MutationObserver(function (muts) {
+      muts.forEach(function (m) {
+        var el = m.target;
+        if (!el.matches('[data-model]') || el.getAttribute('aria-selected') !== 'true') return;
+        peek.querySelector('[data-peek-name]').textContent = el.getAttribute('data-value');
+        peek.querySelector('[data-peek-description]').textContent = el.getAttribute('data-description');
+        var s = el.getAttribute('data-strengths');
+        peek.querySelector('[data-peek-strengths-block]').hidden = !s;
+        peek.querySelector('[data-peek-strengths]').textContent = s;
+      });
+    }).observe(document.getElementById('model-command'), { attributes: true, subtree: true, attributeFilter: ['aria-selected'] });
+    // Slider read-outs mirror the runtime's change event.
+    document.querySelectorAll('[data-slider-output]').forEach(function (slider) {
+      var out = document.getElementById(slider.getAttribute('data-slider-output'));
+      slider.addEventListener('basecoat:change', function (e) { if (out && e.detail && e.detail.value) out.textContent = e.detail.value[0]; });
+    });
+    document.addEventListener('click', function (e) {
+      var del = e.target.closest('[data-delete-preset]');
+      if (del) {
+        var dlg = document.getElementById('delete-preset-dialog'); if (dlg.fbClose) dlg.fbClose();
+        var FB = window.FlaskBasecoat; if (FB && FB.toast) FB.toast.success('This preset has been deleted.');
+      }
+      var copy = e.target.closest('[data-copy-link]');
+      if (copy && navigator.clipboard) { e.preventDefault(); navigator.clipboard.writeText(document.getElementById('link').value).catch(function () {}); }
+    });
+  })();
+</script>
+{% endblock %}

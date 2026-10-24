@@ -1,0 +1,42 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Application Screen Examples · Flask-Basecoat{% endblock %}
+{% block body %}
+<div class="mx-auto w-full max-w-6xl space-y-10 p-6 md:p-12">
+  <header class="flex flex-col gap-4 border-b border-border pb-8 md:flex-row md:items-center md:justify-between">
+    <div>
+      <div class="mb-2 flex items-center gap-2">
+        {{ ui.badge(text='Built with Flask-Basecoat', variant='secondary') }}
+        <span class="text-xs text-muted-foreground">Jinja2 &amp; Flask-Basecoat</span>
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight">Application Screen Examples</h1>
+      <p class="mt-1 max-w-xl text-sm text-muted-foreground">
+        Complete application screens built from the shadcn/ui components as Jinja macros: dashboards, mail, chat, commerce, content and marketing pages. Every screen follows the theme in light and dark mode.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      {% call ui.button(variant='outline', href='/basecoat/') %}{{ lucide('layout-grid') }} Component Gallery{% endcall %}
+      {% call ui.button(variant='outline', attrs={'data-theme-toggle': true}) %}{{ lucide('moon', 'dark:hidden') }}{{ lucide('sun', 'hidden dark:block') }} Toggle Dark Mode{% endcall %}
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for ex in examples %}
+    {% call ui.card(class='flex flex-col transition-colors hover:border-primary/50') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text=ex.title) }}
+        {{ ui.card_description(text=ex.description) }}
+      {% endcall %}
+      {% call ui.card_content(class='flex-1') %}
+        <div class="flex flex-wrap gap-1.5">
+          {% for tag in ex.tags %}{{ ui.badge(text=tag, variant='secondary') }}{% endfor %}
+        </div>
+      {% endcall %}
+      {% call ui.card_footer() %}
+        {% call ui.button(href=ex.href, class='w-full') %}View Screen Demo {{ lucide('arrow-right') }}{% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

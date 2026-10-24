@@ -1,90 +1,109 @@
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% set data = variant.data or {} %}
 {% set versions = data.versions or [] %}
 {% set nav_groups = data.nav_main or [] %}
 {% set breadcrumbs = data.breadcrumbs or [] %}
 {% set cards = data.cards or [] %}
 {% set canvas = data.canvas or {} %}
-<section class="docs-section">
-  <div class="docs-preview docs-preview--sidebar-01" data-preview data-block="sidebar-01">
-    <aside class="sidebar-01__aside">
-      <div class="sidebar-01__controls">
-        <button class="sidebar-01__version" type="button" aria-haspopup="listbox">
-          <span class="sidebar-01__version-label">{{ versions[0] if versions else 'v1.0.1' }}</span>
-          <span class="sidebar-01__version-meta">Version</span>
-          <span class="sidebar-01__version-icon">▾</span>
-        </button>
-        <div class="sidebar-01__search" role="search">
-          <span class="sidebar-01__search-icon" aria-hidden="true">⌕</span>
-          <input class="sidebar-01__search-input" type="search" placeholder="Search docs..." aria-label="Search documentation" />
-          <kbd class="sidebar-01__search-hint">⌘K</kbd>
-        </div>
-      </div>
-      <nav class="sidebar-01__nav" aria-label="Primary">
+{% call d.preview(class='p-0 overflow-hidden sm:p-0', attrs={'data-block': 'sidebar-01'}) %}
+  <div class="flex min-h-[36rem] w-full bg-background text-foreground" style="--sidebar-width: 16rem">
+    {% call ui.sidebar(collapsible='none', class='h-auto border-r') %}
+      {% call ui.sidebar_header() %}
+        {% call ui.sidebar_menu() %}
+          {% call ui.sidebar_menu_item() %}
+            {% call ui.dropdown_menu() %}
+              {% call ui.dropdown_menu_trigger(as_='sidebar-menu-button', size='lg', attrs={'aria-label': 'Select version'}) %}
+                <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">{{ lucide('gallery-vertical-end') }}</div>
+                <div class="flex flex-col gap-0.5 leading-none">
+                  <span class="font-medium">Documentation</span>
+                  <span class="text-xs">v{{ versions[0] if versions else '1.0.1' }}</span>
+                </div>
+                {{ lucide('chevrons-up-down', 'ml-auto') }}
+              {% endcall %}
+              {% call ui.dropdown_menu_content(align='start', class='w-(--radix-dropdown-menu-trigger-width)') %}
+                {% for version in versions %}
+                {% call ui.dropdown_menu_item() %}v{{ version }}{% if loop.first %}{{ lucide('check', 'ml-auto') }}{% endif %}{% endcall %}
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        <form class="relative" role="search" onsubmit="return false">
+          {{ ui.label(text='Search documentation', for_='sidebar-01-search', class='sr-only') }}
+          {{ ui.sidebar_input(id='sidebar-01-search', type='search', class='pl-8', attrs={'placeholder': 'Search the docs...'}) }}
+          {{ lucide('search', 'pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none') }}
+          {{ ui.kbd(text='⌘K', class='absolute top-1/2 right-2 -translate-y-1/2') }}
+        </form>
+      {% endcall %}
+      {% call ui.sidebar_content() %}
         {% for group in nav_groups %}
-        <section class="sidebar-01__group">
-          <p class="sidebar-01__group-label">{{ group.title }}</p>
-          <ul class="sidebar-01__menu">
-            {% for item in group["items"] %}
-            <li>
-              <a class="sidebar-01__link{% if item.is_active %} is-active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
+        {% call ui.sidebar_group() %}
+          {{ ui.sidebar_group_label(text=group.title) }}
+          {% call ui.sidebar_group_content() %}
+            {% call ui.sidebar_menu() %}
+              {% for item in group["items"] %}
+              {% call ui.sidebar_menu_item() %}
+                {{ ui.sidebar_menu_button(text=item.title, href=item.url, active=item.is_active) }}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
         {% endfor %}
-      </nav>
-    </aside>
-    <section class="sidebar-01__main">
-      <header class="sidebar-01__main-header">
-        <button class="sidebar-01__trigger" type="button" aria-label="Toggle sidebar">
-          <span class="sidebar-01__trigger-icon">☰</span>
-        </button>
-        <div class="sidebar-01__breadcrumb" role="navigation" aria-label="Breadcrumb">
-          {% for crumb in breadcrumbs %}
-            {% if crumb.url %}
-            <a class="sidebar-01__breadcrumb-link" href="{{ crumb.url }}">{{ crumb.label }}</a>
-            {% if not loop.last %}<span class="sidebar-01__breadcrumb-sep">/</span>{% endif %}
-            {% else %}
-            <span class="sidebar-01__breadcrumb-current">{{ crumb.label }}</span>
-            {% endif %}
+      {% endcall %}
+    {% endcall %}
+    <div class="flex min-w-0 flex-1 flex-col">
+      <header class="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        {% call ui.button(variant='ghost', size='icon-sm', class='-ml-1', attrs={'aria-label': 'Toggle sidebar'}) %}{{ lucide('panel-left') }}{% endcall %}
+        {{ ui.separator(orientation='vertical', class='mr-2 data-vertical:h-4 data-vertical:self-auto') }}
+        {% call ui.breadcrumb(attrs={'aria-label': 'Breadcrumb'}) %}
+          {% call ui.breadcrumb_list() %}
+            {% for crumb in breadcrumbs %}
+            {% call ui.breadcrumb_item(class=('hidden md:block' if not loop.last else '')) %}
+              {% if crumb.url and not loop.last %}{{ ui.breadcrumb_link(text=crumb.label, href=crumb.url) }}{% else %}{{ ui.breadcrumb_page(text=crumb.label) }}{% endif %}
+            {% endcall %}
+            {% if not loop.last %}{% call ui.breadcrumb_separator(class='hidden md:block') %}{{ lucide('chevron-right') }}{% endcall %}{% endif %}
+            {% endfor %}
+          {% endcall %}
+        {% endcall %}
+      </header>
+      <div class="flex flex-1 flex-col gap-4 p-4">
+        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+          {% for card in cards %}
+          <div class="flex aspect-video flex-col justify-end rounded-xl bg-muted/50 p-4">
+            <p class="text-sm font-medium">{{ card.title }}</p>
+            <p class="text-xs text-muted-foreground">{{ card['copy'] }}</p>
+          </div>
           {% endfor %}
         </div>
-      </header>
-      <div class="sidebar-01__grid">
-        {% for card in cards %}
-        <article class="sidebar-01__card">
-          <p class="sidebar-01__card-label">{{ card.title }}</p>
-          <p class="sidebar-01__card-copy">{{ card['copy'] }}</p>
-        </article>
-        {% endfor %}
-      </div>
-      <div class="sidebar-01__canvas">
-        <div class="sidebar-01__canvas-header">
-          <h3>{{ canvas.title or 'Platform delivery timeline' }}</h3>
-          <p>{{ canvas['copy'] if 'copy' in canvas else 'Upcoming milestones for the documentation platform.' }}</p>
-        </div>
-        <div class="sidebar-01__canvas-body">
-          <div class="sidebar-01__timeline">
-            {% for milestone in canvas.timeline or [] %}
-            <div class="sidebar-01__timeline-item">
-              <span class="sidebar-01__timeline-dot" aria-hidden="true"></span>
-              <div>
-                <p class="sidebar-01__timeline-title">{{ milestone.title }}</p>
-                <p class="sidebar-01__timeline-meta">{{ milestone.meta }}</p>
-              </div>
-            </div>
-            {% endfor %}
+        <div class="flex flex-1 flex-col gap-4 rounded-xl bg-muted/50 p-4 md:min-h-min">
+          <div>
+            <h3 class="text-base font-semibold">{{ canvas.title or 'Platform delivery timeline' }}</h3>
+            <p class="text-sm text-muted-foreground">{{ canvas['copy'] if 'copy' in canvas else 'Upcoming milestones for the documentation platform.' }}</p>
           </div>
-          <div class="sidebar-01__activity">
-            {% for activity in canvas.activity or [] %}
-            <div class="sidebar-01__activity-row">
-              <span class="sidebar-01__activity-label">{{ activity.label }}</span>
-              <span class="sidebar-01__activity-value">{{ activity.value }}</span>
-            </div>
-            {% endfor %}
+          <div class="grid gap-4 lg:grid-cols-[2fr_1fr]">
+            <ol class="flex flex-col gap-3 border-l pl-4">
+              {% for milestone in canvas.timeline or [] %}
+              <li class="relative">
+                <span class="absolute -left-[1.3rem] top-1.5 size-2.5 rounded-full border-2 border-background bg-primary" aria-hidden="true"></span>
+                <p class="text-sm font-medium">{{ milestone.title }}</p>
+                <p class="text-xs text-muted-foreground">{{ milestone.meta }}</p>
+              </li>
+              {% endfor %}
+            </ol>
+            {% call ui.card(size='sm') %}
+              {% call ui.card_content() %}
+                <dl class="grid gap-2 text-sm">
+                  {% for activity in canvas.activity or [] %}
+                  <div class="flex items-center justify-between gap-4"><dt class="text-muted-foreground">{{ activity.label }}</dt><dd class="font-semibold tabular-nums">{{ activity.value }}</dd></div>
+                  {% endfor %}
+                </dl>
+              {% endcall %}
+            {% endcall %}
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
-</section>
+{% endcall %}

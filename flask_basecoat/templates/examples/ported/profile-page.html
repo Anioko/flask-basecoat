@@ -1,0 +1,120 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}John Doe{% endblock %}
+{% block body %}
+{% macro setting_row(label, text) -%}
+<div class="flex items-center justify-between">
+  <div class="space-y-1">{{ ui.label(text=label, class='text-base') }}<p class="text-muted-foreground text-sm">{{ text }}</p></div>
+  {{ caller() }}
+</div>
+{%- endmacro %}
+{% macro text_field(id, label, value, type='text') -%}
+<div class="space-y-2">{{ ui.label(text=label, for_=id) }}{{ ui.input(id=id, name=id, type=type, value=value) }}</div>
+{%- endmacro %}
+{% set ok_badge = 'border-primary/20 bg-primary/10 text-primary' %}
+<div class="mx-auto max-w-4xl space-y-6 px-4 py-10">
+  {% call ui.card() %}{% call ui.card_content() %}
+    <div class="flex flex-col items-start gap-6 md:flex-row md:items-center">
+      <div class="relative">
+        {% call ui.avatar(class='h-24 w-24') %}{{ ui.avatar_fallback(text='JD', class='text-2xl') }}{% endcall %}
+        {% call ui.button(size='icon', variant='outline', class='absolute -right-2 -bottom-2 h-8 w-8 rounded-full', attrs={'aria-label': 'Change photo'}) %}{{ lucide('camera') }}{% endcall %}
+      </div>
+      <div class="flex-1 space-y-2">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center">
+          <h1 class="text-2xl font-bold">John Doe</h1>
+          {{ ui.badge(text='Pro Member', variant='secondary') }}
+        </div>
+        <p class="text-muted-foreground">Senior Product Designer</p>
+        <div class="text-muted-foreground flex flex-wrap gap-4 text-sm">
+          <div class="flex items-center gap-1">{{ lucide('mail', 'size-4') }}john.doe@example.com</div>
+          <div class="flex items-center gap-1">{{ lucide('map-pin', 'size-4') }}San Francisco, CA</div>
+          <div class="flex items-center gap-1">{{ lucide('calendar', 'size-4') }}Joined March 2023</div>
+        </div>
+      </div>
+      {{ ui.button(text='Edit Profile', variant='default') }}
+    </div>
+  {% endcall %}{% endcall %}
+
+  {% call ui.tabs(class='space-y-6') %}
+    {% call ui.tabs_list(class='grid w-full grid-cols-4') %}
+      {{ ui.tabs_trigger(text='Personal', active=true, attrs={'data-value': 'personal'}) }}
+      {{ ui.tabs_trigger(text='Account', attrs={'data-value': 'account'}) }}
+      {{ ui.tabs_trigger(text='Security', attrs={'data-value': 'security'}) }}
+      {{ ui.tabs_trigger(text='Notifications', attrs={'data-value': 'notifications'}) }}
+    {% endcall %}
+
+    {% call ui.tabs_content(active=true, class='space-y-6', attrs={'data-value': 'personal'}) %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Personal Information') }}{{ ui.card_description(text='Update your personal details and profile information.') }}{% endcall %}
+        {% call ui.card_content(class='space-y-6') %}
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {{ text_field('firstName', 'First Name', 'John') }}
+            {{ text_field('lastName', 'Last Name', 'Doe') }}
+            {{ text_field('email', 'Email', 'john.doe@example.com', 'email') }}
+            {{ text_field('phone', 'Phone', '+1 (555) 123-4567') }}
+            {{ text_field('jobTitle', 'Job Title', 'Senior Product Designer') }}
+            {{ text_field('company', 'Company', 'Acme Inc.') }}
+          </div>
+          <div class="space-y-2">
+            {{ ui.label(text='Bio', for_='bio') }}
+            {{ ui.textarea(id='bio', name='bio', rows=4, placeholder='Tell us about yourself...', text='Passionate product designer with 8+ years of experience creating user-centered digital experiences. I love solving complex problems and turning ideas into beautiful, functional products.') }}
+          </div>
+          {{ text_field('location', 'Location', 'San Francisco, CA') }}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+
+    {% call ui.tabs_content(class='space-y-6', attrs={'data-value': 'account'}) %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Account Settings') }}{{ ui.card_description(text='Manage your account preferences and subscription.') }}{% endcall %}
+        {% call ui.card_content(class='space-y-6') %}
+          {% call setting_row('Account Status', 'Your account is currently active') %}{{ ui.badge(text='Active', variant='outline', class=ok_badge) }}{% endcall %}
+          {{ ui.separator() }}
+          {% call setting_row('Subscription Plan', 'Pro Plan - $29/month') %}{{ ui.button(text='Manage Subscription', variant='outline') }}{% endcall %}
+          {{ ui.separator() }}
+          {% call setting_row('Account Visibility', 'Make your profile visible to other users') %}{{ ui.switch(checked=true, attrs={'aria-label': 'Account Visibility'}) }}{% endcall %}
+          {{ ui.separator() }}
+          {% call setting_row('Data Export', 'Download a copy of your data') %}{{ ui.button(text='Export Data', variant='outline') }}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.card(class='border-destructive/50') %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Danger Zone', class='text-destructive') }}{{ ui.card_description(text='Irreversible and destructive actions') }}{% endcall %}
+        {% call ui.card_content() %}
+          {% call setting_row('Delete Account', 'Permanently delete your account and all data') %}{% call ui.button(variant='destructive') %}{{ lucide('trash-2', 'mr-2 h-4 w-4') }}Delete Account{% endcall %}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+
+    {% call ui.tabs_content(class='space-y-6', attrs={'data-value': 'security'}) %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Security Settings') }}{{ ui.card_description(text='Manage your account security and authentication.') }}{% endcall %}
+        {% call ui.card_content(class='space-y-6') %}
+          <div class="space-y-4">
+            {% call setting_row('Password', 'Last changed 3 months ago') %}{% call ui.button(variant='outline') %}{{ lucide('key', 'mr-2 h-4 w-4') }}Change Password{% endcall %}{% endcall %}
+            {{ ui.separator() }}
+            {% call setting_row('Two-Factor Authentication', 'Add an extra layer of security to your account') %}<div class="flex items-center gap-2">{{ ui.badge(text='Enabled', variant='outline', class=ok_badge) }}{{ ui.button(text='Configure', variant='outline', size='sm') }}</div>{% endcall %}
+            {{ ui.separator() }}
+            {% call setting_row('Login Notifications', 'Get notified when someone logs into your account') %}{{ ui.switch(checked=true, attrs={'aria-label': 'Login Notifications'}) }}{% endcall %}
+            {{ ui.separator() }}
+            {% call setting_row('Active Sessions', 'Manage devices that are logged into your account') %}{% call ui.button(variant='outline') %}{{ lucide('shield', 'mr-2 h-4 w-4') }}View Sessions{% endcall %}{% endcall %}
+          </div>
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+
+    {% call ui.tabs_content(class='space-y-6', attrs={'data-value': 'notifications'}) %}
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Notification Preferences') }}{{ ui.card_description(text='Choose what notifications you want to receive.') }}{% endcall %}
+        {% call ui.card_content(class='space-y-6') %}
+          <div class="space-y-4">
+            {% for label, text, on, disabled in [('Email Notifications', 'Receive notifications via email', true, false), ('Push Notifications', 'Receive push notifications in your browser', false, false), ('Marketing Emails', 'Receive emails about new features and updates', true, false), ('Weekly Summary', 'Get a weekly summary of your activity', true, false), ('Security Alerts', 'Important security notifications (always enabled)', true, true)] %}
+            {% if not loop.first %}{{ ui.separator() }}{% endif %}
+            {% call setting_row(label, text) %}{{ ui.switch(checked=on, disabled=disabled, attrs={'aria-label': label}) }}{% endcall %}
+            {% endfor %}
+          </div>
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+</div>
+{% endblock %}

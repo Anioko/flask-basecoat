@@ -9,7 +9,7 @@ HeroData = Dict[str, object]
 
 _HERO_DEFAULT: HeroData = {
     "eyebrow": "Introducing",
-    "headline": "Build faster with Basecoat UI",
+    "headline": "Build faster with Flask-Basecoat",
     "description": "Production-grade shadcn/ui blocks that accelerate product delivery for Flask teams.",
     "layout": "centered",
     "actions": [],
@@ -19,7 +19,7 @@ _HERO_BLUEPRINTS: Dict[str, HeroData] = {
     "hero-01": {
         "layout": "centered",
         "headline": "Ship product journeys in days, not months",
-        "description": "Pre-built shadcn/ui blocks with Basecoat styling eliminate the design-to-development handoff for Flask teams.",
+        "description": "Pre-built shadcn/ui blocks with Flask-Basecoat styling eliminate the design-to-development handoff for Flask teams.",
         "actions": [
             {"label": "Browse blocks", "style": "primary"},
             {"label": "View documentation", "style": "secondary"},
@@ -37,7 +37,7 @@ _HERO_BLUEPRINTS: Dict[str, HeroData] = {
     },
     "hero-02": {
         "layout": "split",
-        "eyebrow": "Basecoat Design System",
+        "eyebrow": "Flask-Basecoat Design System",
         "headline": "Compose experiences that scale",
         "description": "Unify marketing, onboarding, and in-product flows with consistent tokens and validated patterns.",
         "actions": [

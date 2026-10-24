@@ -1,0 +1,33 @@
+{# Shared pieces for the marketing screens (coming soon, contact, course, help center, pricing, placeholders). #}
+{% import 'basecoat/index.html' as ui %}
+
+{#- Brand marks drawn with the Lucide outline geometry (the Lucide set no longer ships brand icons). -#}
+{% macro brand_icon(name, class='') -%}
+{%- set paths = {
+  'facebook': '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>',
+  'twitter': '<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>',
+  'linkedin': '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle>',
+} -%}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-{{ name }} {{ class }}" aria-hidden="true">{{ paths[name] | safe }}</svg>
+{%- endmacro %}
+
+{#- The screen the collection shows while a template is still being designed. -#}
+{% macro coming_soon_empty() -%}
+<div class="bg-background">
+  {% call ui.empty(class='gap-6 rounded-lg border-dashed p-6 md:p-12') %}
+    {% call ui.empty_header(class='gap-2') %}
+      {% call ui.empty_icon(variant='icon', class='mb-2') %}{{ lucide('loader-circle', '-ms-1 size-4 animate-spin') }}{% endcall %}
+    {% endcall %}
+    {{ ui.empty_title(text='Coming Soon') }}
+    {{ ui.empty_description(text='This example is currently under development and will be shipped as soon as possible.') }}
+  {% endcall %}
+</div>
+{%- endmacro %}
+
+{#- A pricing feature row: check when included, cross when not. -#}
+{% macro feature_row(feature) -%}
+<li class="flex items-center text-sm">
+  {%- if feature.included %}{{ lucide('circle-check', 'mr-2 h-4 w-4 flex-shrink-0 text-primary') }}{% else %}{{ lucide('circle-x', 'mr-2 h-4 w-4 flex-shrink-0 text-destructive') }}{% endif -%}
+  {{ feature.text }}
+</li>
+{%- endmacro %}

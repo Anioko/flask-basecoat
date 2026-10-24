@@ -1,74 +1,109 @@
+"""Extension wiring: blueprints, asset tags, the WTForms demo and the example screens."""
 import unittest
+
 from flask import Flask
+
 from flask_basecoat import Basecoat
 
 
+def make():
+    app = Flask(__name__)
+    app.config.update(SECRET_KEY='test-secret', BASECOAT_GALLERY_ENABLED=True, WTF_CSRF_ENABLED=False)
+    Basecoat(app)
+    return app
+
+
 class BasecoatExtensionTestCase(unittest.TestCase):
-    def test_extension_init_and_gallery_endpoint(self):
-        app = Flask(__name__)
-        app.config['SECRET_KEY'] = 'test-secret'
-        app.config['BASECOAT_GALLERY_ENABLED'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        
-        basecoat = Basecoat(app)
-        
-        # Verify blueprints
+    def test_extension_registers_blueprints_and_globals(self):
+        app = make()
         self.assertIn('basecoat', app.blueprints)
         self.assertIn('basecoat_gallery', app.blueprints)
-        
-        # Test client GET /basecoat/gallery
-        client = app.test_client()
-        response = client.get('/basecoat/gallery')
-        self.assertEqual(response.status_code, 200)
-        
-        html = response.get_data(as_text=True)
-        self.assertIn('Basecoat UI Component Gallery', html)
-        self.assertIn('btn btn-primary', html)
-        self.assertIn('badge badge-primary', html)
-        self.assertIn('Confirm Action', html)
+        self.assertIn('basecoat_examples', app.blueprints)
+        self.assertIn('lucide', app.jinja_env.globals)
+        self.assertIn('slot', app.jinja_env.globals)
+        self.assertIn('tw', app.jinja_env.globals)
+        with app.test_request_context():
+            self.assertIn("flask-basecoat.min.css", Basecoat(app).css())
+            self.assertIn('flask-basecoat.js', Basecoat(app).js())
+
+    def test_gallery_index_and_forms_page(self):
+        client = make().test_client()
+        r = client.get('/basecoat/')
+        self.assertEqual(r.status_code, 200)
+        html = r.get_data(as_text=True)
+        self.assertIn('class="style-vega', html)
+        self.assertIn('>button<', html)
+        self.assertIn('>sidebar-07<', html)
+        r = client.get('/basecoat/gallery')
+        self.assertEqual(r.status_code, 200)
+        html = r.get_data(as_text=True)
+        self.assertIn('data-slot="field"', html)
+        self.assertIn('data-slot="input"', html)
+        self.assertIn('Create account', html)
 
     def test_gallery_form_submission_success(self):
-        app = Flask(__name__)
-        app.config['SECRET_KEY'] = 'test-secret'
-        app.config['BASECOAT_GALLERY_ENABLED'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        
-        Basecoat(app)
-        client = app.test_client()
-        
-        # Valid POST
-        response = client.post('/basecoat/gallery', data={
-            'name': 'Jane Developer',
-            'email': 'jane@example.com',
-            'role': 'lead',
-            'bio': 'Full-stack lead',
-            'terms': 'y'
+        client = make().test_client()
+        r = client.post('/basecoat/gallery', data={
+            'name': 'Jane Developer', 'email': 'jane@example.com', 'role': 'lead', 'bio': 'Full-stack lead', 'terms': 'y',
         }, follow_redirects=True)
-        
-        self.assertEqual(response.status_code, 200)
-        html = response.get_data(as_text=True)
+        self.assertEqual(r.status_code, 200)
+        html = r.get_data(as_text=True)
         self.assertIn('Demo form submitted successfully', html)
+        self.assertIn('data-fb-flash', html)
 
     def test_gallery_form_submission_validation_error(self):
-        app = Flask(__name__)
-        app.config['SECRET_KEY'] = 'test-secret'
-        app.config['BASECOAT_GALLERY_ENABLED'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        
-        Basecoat(app)
-        client = app.test_client()
-        
-        # Invalid POST (missing email, short name)
-        response = client.post('/basecoat/gallery', data={
-            'name': 'a',
-            'email': 'invalid'
-        })
-        
-        self.assertEqual(response.status_code, 200)
-        html = response.get_data(as_text=True)
-        self.assertIn('border-destructive', html)
+        client = make().test_client()
+        r = client.post('/basecoat/gallery', data={'name': 'a', 'email': 'invalid'})
+        self.assertEqual(r.status_code, 200)
+        html = r.get_data(as_text=True)
+        self.assertIn('aria-invalid="true"', html)
+        self.assertIn('data-slot="field-error"', html)
         self.assertIn('Please correct the validation errors', html)
 
+    def test_examples_endpoints(self):
+        client = make().test_client()
+        for path, needles in {
+            '/examples/': ['style-vega'],
+            '/examples/authentication': ['Acme Inc'],
+            '/examples/admin-dashboard': ['Total Revenue'],
+            '/examples/tasks': ['TASK-8782'],
+            '/examples/pricing-tables': ['Most Popular'],
+            '/examples/dashboards/marketing': ['Key insights'],
+            '/examples/two-factor': ['style-vega'],
+            '/examples/notifications': ['style-vega'],
+        }.items():
+            r = client.get(path)
+            self.assertEqual(r.status_code, 200, path)
+            html = r.get_data(as_text=True)
+            for n in needles:
+                self.assertIn(n, html, path)
+            self.assertNotIn('cdn.jsdelivr.net', html, path)
+            self.assertNotIn('data-lucide', html, path)
+            self.assertNotIn('btn btn-', html, path)
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_earlier_example_addresses_redirect_to_their_ports(self):
+        from flask_basecoat.examples import MOVED
+        client = make().test_client()
+        for old, new in MOVED.items():
+            r = client.get(f'/examples/{old}')
+            self.assertEqual(r.status_code, 301, old)
+            self.assertTrue(r.headers['Location'].endswith(f'/examples/{new}'), old)
+            self.assertEqual(client.get(f'/examples/{new}').status_code, 200, new)
+
+    def test_index_lists_every_screen(self):
+        from flask_basecoat.examples import ported_examples
+        html = make().test_client().get('/examples/').get_data(as_text=True)
+        for meta in ported_examples():
+            self.assertIn(f'/examples/{meta["id"]}"', html, meta['id'])
+
+    def test_examples_use_only_tokens_and_macros(self):
+        import pathlib
+        import re
+        root = pathlib.Path(__file__).resolve().parents[1] / 'flask_basecoat' / 'templates' / 'examples'
+        palette = re.compile(r'\b(?:bg|text|border|ring)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3}\b|#[0-9a-fA-F]{6}\b')
+        offenders = {}
+        for f in root.glob('**/*.html'):
+            hits = palette.findall(f.read_text(encoding='utf8'))
+            if hits:
+                offenders[f.name] = hits[:5]
+        self.assertEqual(offenders, {})

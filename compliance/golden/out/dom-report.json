@@ -1,0 +1,778 @@
+[
+  {
+    "name": "accordion",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 102,
+    "our_elements": 102,
+    "problems": []
+  },
+  {
+    "name": "alert",
+    "kind": "components",
+    "status": "fail",
+    "golden_elements": 70,
+    "our_elements": 70,
+    "problems": [
+      "#28 alert: data-variant golden=None ours='destructive'",
+      "#31 alert: data-variant golden=None ours='destructive'"
+    ]
+  },
+  {
+    "name": "alert-dialog",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 19,
+    "our_elements": 19,
+    "problems": []
+  },
+  {
+    "name": "aspect-ratio",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 13,
+    "our_elements": 13,
+    "problems": []
+  },
+  {
+    "name": "attachment",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 415,
+    "our_elements": 415,
+    "problems": []
+  },
+  {
+    "name": "avatar",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 147,
+    "our_elements": 147,
+    "problems": []
+  },
+  {
+    "name": "badge",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 61,
+    "our_elements": 61,
+    "problems": []
+  },
+  {
+    "name": "breadcrumb",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 44,
+    "our_elements": 44,
+    "problems": []
+  },
+  {
+    "name": "bubble",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 128,
+    "our_elements": 128,
+    "problems": []
+  },
+  {
+    "name": "button",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 137,
+    "our_elements": 137,
+    "problems": []
+  },
+  {
+    "name": "button-group",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 138,
+    "our_elements": 138,
+    "problems": []
+  },
+  {
+    "name": "calendar",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 547,
+    "our_elements": 547,
+    "problems": []
+  },
+  {
+    "name": "card",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 118,
+    "our_elements": 118,
+    "problems": []
+  },
+  {
+    "name": "carousel",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 64,
+    "our_elements": 64,
+    "problems": []
+  },
+  {
+    "name": "chart",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 55,
+    "our_elements": 55,
+    "problems": []
+  },
+  {
+    "name": "checkbox",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 93,
+    "our_elements": 93,
+    "problems": []
+  },
+  {
+    "name": "code-block",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 920,
+    "our_elements": 920,
+    "problems": []
+  },
+  {
+    "name": "collapsible",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 49,
+    "our_elements": 49,
+    "problems": []
+  },
+  {
+    "name": "combobox",
+    "kind": "components",
+    "status": "fail",
+    "golden_elements": 149,
+    "our_elements": 149,
+    "problems": [
+      "#67 combobox-trigger: data-state golden=None ours='closed'"
+    ]
+  },
+  {
+    "name": "command",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 48,
+    "our_elements": 48,
+    "problems": []
+  },
+  {
+    "name": "context-menu",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 37,
+    "our_elements": 37,
+    "problems": []
+  },
+  {
+    "name": "dialog",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 16,
+    "our_elements": 16,
+    "problems": []
+  },
+  {
+    "name": "direction",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 6,
+    "our_elements": 6,
+    "problems": []
+  },
+  {
+    "name": "drawer",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 10,
+    "our_elements": 10,
+    "problems": []
+  },
+  {
+    "name": "dropdown-menu",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 45,
+    "our_elements": 45,
+    "problems": []
+  },
+  {
+    "name": "empty",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 66,
+    "our_elements": 66,
+    "problems": []
+  },
+  {
+    "name": "field",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 471,
+    "our_elements": 471,
+    "problems": []
+  },
+  {
+    "name": "form",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 16,
+    "our_elements": 16,
+    "problems": []
+  },
+  {
+    "name": "hover-card",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 10,
+    "our_elements": 10,
+    "problems": []
+  },
+  {
+    "name": "input",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 90,
+    "our_elements": 90,
+    "problems": []
+  },
+  {
+    "name": "input-group",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 258,
+    "our_elements": 258,
+    "problems": []
+  },
+  {
+    "name": "input-otp",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 124,
+    "our_elements": 124,
+    "problems": []
+  },
+  {
+    "name": "item",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 745,
+    "our_elements": 745,
+    "problems": []
+  },
+  {
+    "name": "kbd",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 45,
+    "our_elements": 45,
+    "problems": []
+  },
+  {
+    "name": "label",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 21,
+    "our_elements": 21,
+    "problems": []
+  },
+  {
+    "name": "marker",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 77,
+    "our_elements": 77,
+    "problems": []
+  },
+  {
+    "name": "menubar",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 53,
+    "our_elements": 53,
+    "problems": []
+  },
+  {
+    "name": "message",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 266,
+    "our_elements": 266,
+    "problems": []
+  },
+  {
+    "name": "message-scroller",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 18,
+    "our_elements": 18,
+    "problems": []
+  },
+  {
+    "name": "native-select",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 73,
+    "our_elements": 73,
+    "problems": []
+  },
+  {
+    "name": "navigation-menu",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 23,
+    "our_elements": 23,
+    "problems": []
+  },
+  {
+    "name": "pagination",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 43,
+    "our_elements": 43,
+    "problems": []
+  },
+  {
+    "name": "popover",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 15,
+    "our_elements": 15,
+    "problems": []
+  },
+  {
+    "name": "progress",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 62,
+    "our_elements": 62,
+    "problems": []
+  },
+  {
+    "name": "questionnaire",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 286,
+    "our_elements": 286,
+    "problems": []
+  },
+  {
+    "name": "radio-group",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 94,
+    "our_elements": 94,
+    "problems": []
+  },
+  {
+    "name": "resizable",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 35,
+    "our_elements": 35,
+    "problems": []
+  },
+  {
+    "name": "scroll-area",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 59,
+    "our_elements": 59,
+    "problems": []
+  },
+  {
+    "name": "select",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 80,
+    "our_elements": 80,
+    "problems": []
+  },
+  {
+    "name": "separator",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 16,
+    "our_elements": 16,
+    "problems": []
+  },
+  {
+    "name": "sheet",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 13,
+    "our_elements": 13,
+    "problems": []
+  },
+  {
+    "name": "sidebar",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 88,
+    "our_elements": 88,
+    "problems": []
+  },
+  {
+    "name": "skeleton",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 37,
+    "our_elements": 37,
+    "problems": []
+  },
+  {
+    "name": "slider",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 46,
+    "our_elements": 46,
+    "problems": []
+  },
+  {
+    "name": "sonner",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 7,
+    "our_elements": 7,
+    "problems": []
+  },
+  {
+    "name": "spinner",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 45,
+    "our_elements": 45,
+    "problems": []
+  },
+  {
+    "name": "switch",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 37,
+    "our_elements": 37,
+    "problems": []
+  },
+  {
+    "name": "table",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 181,
+    "our_elements": 181,
+    "problems": []
+  },
+  {
+    "name": "tabs",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 110,
+    "our_elements": 110,
+    "problems": []
+  },
+  {
+    "name": "textarea",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 23,
+    "our_elements": 23,
+    "problems": []
+  },
+  {
+    "name": "toast",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 4,
+    "our_elements": 4,
+    "problems": []
+  },
+  {
+    "name": "toggle",
+    "kind": "components",
+    "status": "fail",
+    "golden_elements": 47,
+    "our_elements": 47,
+    "problems": [
+      "#8 toggle: data-variant golden=None ours='outline'",
+      "#9 toggle: data-variant golden=None ours='outline'",
+      "#12 toggle: data-variant golden=None ours='outline'",
+      "#12 toggle: data-size golden=None ours='sm'",
+      "#13 toggle: data-variant golden=None ours='outline'",
+      "#14 toggle: data-variant golden=None ours='outline'",
+      "#14 toggle: data-size golden=None ours='lg'",
+      "#18 toggle: data-variant golden=None ours='outline'",
+      "#18 toggle: data-size golden=None ours='sm'",
+      "#20 toggle: data-variant golden=None ours='outline'",
+      "#22 toggle: data-variant golden=None ours='outline'",
+      "#22 toggle: data-size golden=None ours='lg'",
+      "#26 toggle: data-variant golden=None ours='outline'",
+      "#26 toggle: data-size golden=None ours='sm'",
+      "#28 toggle: data-variant golden=None ours='outline'",
+      "#30 toggle: data-variant golden=None ours='outline'",
+      "#30 toggle: data-size golden=None ours='lg'",
+      "#34 toggle: data-variant golden=None ours='outline'",
+      "#34 toggle: data-size golden=None ours='sm'",
+      "#36 toggle: data-variant golden=None ours='outline'",
+      "#38 toggle: data-variant golden=None ours='outline'",
+      "#38 toggle: data-size golden=None ours='lg'",
+      "#42 toggle: data-variant golden=None ours='outline'",
+      "#46 toggle: data-variant golden=None ours='outline'"
+    ]
+  },
+  {
+    "name": "toggle-group",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 107,
+    "our_elements": 107,
+    "problems": []
+  },
+  {
+    "name": "tooltip",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 29,
+    "our_elements": 29,
+    "problems": []
+  },
+  {
+    "name": "trace",
+    "kind": "components",
+    "status": "pass",
+    "golden_elements": 204,
+    "our_elements": 204,
+    "problems": []
+  },
+  {
+    "name": "dashboard-01",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 348,
+    "our_elements": 348,
+    "problems": []
+  },
+  {
+    "name": "login-01",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 16,
+    "our_elements": 16,
+    "problems": []
+  },
+  {
+    "name": "login-02",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 15,
+    "our_elements": 15,
+    "problems": []
+  },
+  {
+    "name": "login-03",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 22,
+    "our_elements": 22,
+    "problems": []
+  },
+  {
+    "name": "login-04",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 20,
+    "our_elements": 20,
+    "problems": []
+  },
+  {
+    "name": "login-05",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 14,
+    "our_elements": 14,
+    "problems": []
+  },
+  {
+    "name": "sidebar-01",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 91,
+    "our_elements": 91,
+    "problems": []
+  },
+  {
+    "name": "sidebar-02",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 107,
+    "our_elements": 107,
+    "problems": []
+  },
+  {
+    "name": "sidebar-03",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 90,
+    "our_elements": 90,
+    "problems": []
+  },
+  {
+    "name": "sidebar-04",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 89,
+    "our_elements": 89,
+    "problems": []
+  },
+  {
+    "name": "sidebar-05",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 72,
+    "our_elements": 72,
+    "problems": []
+  },
+  {
+    "name": "sidebar-06",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 39,
+    "our_elements": 39,
+    "problems": []
+  },
+  {
+    "name": "sidebar-07",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 63,
+    "our_elements": 63,
+    "problems": []
+  },
+  {
+    "name": "sidebar-08",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 73,
+    "our_elements": 73,
+    "problems": []
+  },
+  {
+    "name": "sidebar-09",
+    "kind": "blocks",
+    "status": "fail",
+    "golden_elements": 49,
+    "our_elements": 49,
+    "problems": [
+      "#30 sidebar: data-state golden=None ours='expanded'",
+      "#30 sidebar: data-variant golden=None ours='sidebar'",
+      "#30 sidebar: data-side golden=None ours='left'",
+      "#30 sidebar: data-collapsible golden=None ours=''"
+    ]
+  },
+  {
+    "name": "sidebar-10",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 113,
+    "our_elements": 113,
+    "problems": []
+  },
+  {
+    "name": "sidebar-11",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 69,
+    "our_elements": 69,
+    "problems": []
+  },
+  {
+    "name": "sidebar-12",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 86,
+    "our_elements": 86,
+    "problems": []
+  },
+  {
+    "name": "sidebar-13",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 1,
+    "our_elements": 1,
+    "problems": []
+  },
+  {
+    "name": "sidebar-14",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 87,
+    "our_elements": 87,
+    "problems": []
+  },
+  {
+    "name": "sidebar-15",
+    "kind": "blocks",
+    "status": "fail",
+    "golden_elements": 185,
+    "our_elements": 185,
+    "problems": [
+      "#111 sidebar: data-state golden=None ours='expanded'",
+      "#111 sidebar: data-variant golden=None ours='sidebar'",
+      "#111 sidebar: data-side golden=None ours='left'",
+      "#111 sidebar: data-collapsible golden=None ours=''"
+    ]
+  },
+  {
+    "name": "sidebar-16",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 75,
+    "our_elements": 75,
+    "problems": []
+  },
+  {
+    "name": "signup-01",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 26,
+    "our_elements": 26,
+    "problems": []
+  },
+  {
+    "name": "signup-02",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 24,
+    "our_elements": 24,
+    "problems": []
+  },
+  {
+    "name": "signup-03",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 25,
+    "our_elements": 25,
+    "problems": []
+  },
+  {
+    "name": "signup-04",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 27,
+    "our_elements": 27,
+    "problems": []
+  },
+  {
+    "name": "signup-05",
+    "kind": "blocks",
+    "status": "pass",
+    "golden_elements": 14,
+    "our_elements": 14,
+    "problems": []
+  }
+]

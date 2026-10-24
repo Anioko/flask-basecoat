@@ -1,0 +1,194 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_admin.html' as admin %}
+{% block title %}Payment Admin Dashboard{% endblock %}
+{% set cash_flow = [
+  {'month': 'Jan', 'value': 45}, {'month': 'Feb', 'value': 52}, {'month': 'Mar', 'value': 48}, {'month': 'Apr', 'value': 58},
+  {'month': 'May', 'value': 55}, {'month': 'Jun', 'value': 62}, {'month': 'Jul', 'value': 65}, {'month': 'Aug', 'value': 68},
+  {'month': 'Sep', 'value': 70}, {'month': 'Oct', 'value': 72}, {'month': 'Nov', 'value': 75}, {'month': 'Dec', 'value': 78}] %}
+{% set invoices = [
+  ('BF826438-0001', 'Robert Baratheon', 'Paid', '5/30/14', '7/11/19', '$928.41'),
+  ('ECF17C97-0017', 'Arlene McCoy', 'Overdue by 1 day', '6/21/19', '9/23/16', '$396.84'),
+  ('FAD83817-0017', 'Devon Lane', 'Due in 14 days', '7/11/19', '3/4/16', '$490.51'),
+  ('FAD83817-0017', 'Ronald Richards', 'Partially Paid', '4/21/12', '5/27/15', '$601.13'),
+  ('FD10AC76-0017', 'Bessie Cooper', 'Due in 14 days', '8/30/14', '9/18/16', '$450.54'),
+  ('ECF17C97-0016', 'Robert Fox', 'Overdue by 1 day', '8/21/15', '7/27/13', '$169.43'),
+  ('FAD83817-0016', 'Guy Hawkins', 'Paid', '1/31/14', '5/19/12', '$948.55'),
+  ('BF826438-0001', 'Courtney Henry', 'Partially Paid', '5/19/12', '12/10/13', '$293.01'),
+  ('BF826438-0001', 'Jerome Bell', 'Due in 14 days', '10/6/13', '9/4/12', '$219.78'),
+  ('FD10AC76-0017', 'Dianne Russell', 'Paid', '12/4/17', '4/4/18', '$767.50'),
+] %}
+{% set sidebar_items = [
+  ('chart-column', 'Dashboard', false, false), ('message-square', 'Discuss', false, true), ('credit-card', 'Subscription', false, false),
+  ('users', 'Contact', false, false), ('diamond', 'CRM', false, false), ('shopping-cart', 'Sales', false, false),
+  ('file-text', 'Invoice', true, false), ('mail', 'Email Marketing', false, true), ('settings', 'Settings', false, false)] %}
+{% set badge_variant = {'Paid': 'default', 'Partially Paid': 'secondary', 'Due in 14 days': 'outline'} %}
+
+{% macro sidebar_content(prefix) -%}
+  <div class="border-b border-sidebar-border p-6">
+    <div class="flex items-center gap-3">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary"><div class="h-4 w-4 rounded-full bg-sidebar-primary-foreground"></div></div>
+      <span class="text-lg font-semibold text-sidebar-foreground">Dashboard</span>
+    </div>
+  </div>
+  <div class="border-b border-sidebar-border p-4">
+    {{ admin.search_input('Search', class='border-sidebar-border bg-sidebar-accent pl-10 text-sidebar-foreground placeholder:text-muted-foreground', id=prefix ~ '-search') }}
+  </div>
+  <nav class="flex-1 p-4">
+    <ul class="space-y-2">
+      {% for icon, label, active, sub in sidebar_items %}
+      <li>
+        <div class="flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors {{ 'bg-sidebar-accent text-sidebar-accent-foreground' if active else 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground' }}">
+          <div class="flex items-center gap-3">{{ lucide(icon, 'h-5 w-5') }}<span class="font-medium">{{ label }}</span></div>
+          {% if sub %}{{ lucide('chevron-down', 'h-4 w-4') }}{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <div class="border-t border-sidebar-border p-4">
+    <div class="flex items-center gap-3">
+      {% call ui.avatar(class='h-10 w-10') %}{{ ui.avatar_fallback(text='DS') }}{% endcall %}
+      <div class="flex-1">
+        <div class="text-sm font-medium text-sidebar-foreground">Darrell Steward</div>
+        <div class="text-xs text-muted-foreground">darrell@example.com</div>
+      </div>
+      {{ lucide('ellipsis', 'h-4 w-4 text-muted-foreground') }}
+    </div>
+  </div>
+{%- endmacro %}
+
+{% block body %}
+<div class="flex h-screen bg-background">
+  <div class="dark hidden w-64 flex-col bg-sidebar text-sidebar-foreground md:flex">
+    {{ sidebar_content('desktop') }}
+  </div>
+
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <header class="border-b p-4 md:p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          {% call ui.sheet() %}
+            {% call ui.sheet_trigger(variant='ghost', size='sm', class='md:hidden', attrs={'aria-label': 'Open menu'}) %}{{ lucide('menu', 'h-5 w-5') }}{% endcall %}
+            {{ ui.sheet_overlay() }}
+            {% call ui.sheet_content(side='left', class='dark w-64 bg-sidebar p-0 text-sidebar-foreground') %}
+              {{ ui.sheet_title(text='Navigation', class='sr-only') }}
+              {{ sidebar_content('mobile') }}
+              {% call ui.sheet_close(variant='ghost', size='icon-sm', class='cn-sheet-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+            {% endcall %}
+          {% endcall %}
+          <h1 class="text-xl font-semibold md:text-2xl">Invoice</h1>
+        </div>
+        {{ admin.select_box('invoice-period', [('30days', 'Last 30 Days'), ('60days', 'Last 60 Days'), ('90days', 'Last 90 Days')], selected='30days', class='w-32 md:w-40', attrs={'aria-label': 'Period'}) }}
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-auto p-4 md:p-6">
+      <div class="mb-6 grid grid-cols-1 gap-4 md:mb-8 md:gap-6 xl:grid-cols-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:col-span-3">
+          {% for tone, label, value, change in [(1, 'Total Invoices', '$152.9k', '+15.0 /month'), (2, 'Paid Invoices', '$109.3k', '+10.47 /month'), (3, 'Pending Invoices', '$43k', '+0.78 /month')] %}
+          {% call ui.card() %}{% call ui.card_content(class='p-4 md:p-6') %}
+            <div class="mb-2 flex items-center gap-3"><div class="h-2 w-2 rounded-full bg-chart-{{ tone }}"></div><span class="text-sm text-muted-foreground">{{ label }}</span></div>
+            <div class="mb-1 text-2xl font-bold text-foreground md:text-3xl">{{ value }}</div>
+            <div class="text-sm text-muted-foreground">{{ change }}</div>
+          {% endcall %}{% endcall %}
+          {% endfor %}
+        </div>
+
+        {% call ui.card() %}
+          {% call ui.card_header(class='pb-3') %}
+            {% call ui.card_title(class='flex items-center gap-2 text-sm font-medium text-muted-foreground') %}Total Receivables {{ lucide('info', 'h-4 w-4') }}{% endcall %}
+          {% endcall %}
+          {% call ui.card_content(class='pt-0') %}
+            <div class="mb-2 text-xs text-muted-foreground">Total Unpaid Invoices $43,078</div>
+            <div class="mb-4 h-2 w-full rounded-full bg-muted"><div class="h-2 rounded-full bg-primary" style="width: 62%"></div></div>
+            <div class="mb-3 text-xs text-muted-foreground">CURRENT/OVERDUE</div>
+            <div class="flex justify-between">
+              <div><div class="text-lg font-semibold">$109.1k</div></div>
+              <div><div class="text-lg font-semibold">$65k</div></div>
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+
+      <div class="mb-6 grid grid-cols-1 gap-4 md:mb-8 md:gap-6 xl:grid-cols-4">
+        {% call ui.card(class='xl:col-span-3') %}
+          {% call ui.card_header(class='pb-3') %}
+            <div class="flex items-center justify-between">
+              {% call ui.card_title(class='flex items-center gap-2 text-base font-semibold md:text-lg') %}Cash Flow {{ lucide('info', 'h-4 w-4 text-muted-foreground') }}{% endcall %}
+              {{ lucide('ellipsis', 'h-5 w-5 text-muted-foreground') }}
+            </div>
+          {% endcall %}
+          {% call ui.card_content() %}
+            <div class="mb-4 h-48 md:h-64">
+              {{ admin.chart('area', cash_flow, [{'key': 'value', 'label': 'Value', 'color': 'var(--primary)'}], x='month', y_axis=true, class='aspect-auto h-full w-full', label='Cash flow by month') }}
+            </div>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}{% call ui.card_content(class='p-4 md:p-6') %}
+          <div class="mb-2 text-xs text-muted-foreground">Cash as on 04/01/2019</div>
+          <div class="mb-4 text-xl font-bold text-foreground md:text-2xl">$691.9k</div>
+          <div class="space-y-3">
+            <div><div class="mb-1 text-xs text-muted-foreground">Incoming</div><div class="text-lg font-semibold">$106.6k</div></div>
+            <div><div class="mb-1 text-xs text-destructive">Outgoing</div><div class="text-lg font-semibold">$798.5k</div></div>
+          </div>
+        {% endcall %}{% endcall %}
+      </div>
+
+      {% call ui.card() %}
+        {% call ui.card_header(class='pb-3') %}
+          <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            {% call ui.card_title(class='flex items-center gap-2 text-base font-semibold md:text-lg') %}All Invoices {{ lucide('info', 'h-4 w-4 text-muted-foreground') }}{% endcall %}
+            <div class="flex items-center gap-2">
+              {% call ui.button(class='text-sm') %}{{ lucide('plus', 'mr-2 h-4 w-4') }}<span class="hidden sm:inline">New Invoice</span><span class="sm:hidden">New</span>{% endcall %}
+              {{ lucide('ellipsis', 'h-5 w-5 text-muted-foreground') }}
+            </div>
+          </div>
+        {% endcall %}
+        {% call ui.card_content(class='p-0') %}
+          {% call ui.table_container(class='overflow-x-auto') %}
+            {% call ui.table(class='w-full min-w-[800px]') %}
+              {% call ui.table_header(class='border-b bg-muted') %}{% call ui.table_row() %}
+                {% for h in ['Invoice Number', 'Customer Name', 'Status', 'Date', 'Due Date', 'Amount', 'Download'] %}{{ ui.table_head(text=h, class='p-3 text-left text-xs font-medium text-muted-foreground md:p-4 md:text-sm') }}{% endfor %}
+              {% endcall %}{% endcall %}
+              {% call ui.table_body() %}
+                {% for id, customer, status, date, due, amount in invoices %}
+                {% call ui.table_row(class='border-b hover:bg-muted') %}
+                  {% call ui.table_cell(class='p-3 md:p-4') %}<span class="text-sm font-medium text-primary underline-offset-4 hover:underline">{{ id }}</span>{% endcall %}
+                  {{ ui.table_cell(text=customer, class='p-3 text-sm md:p-4') }}
+                  {% call ui.table_cell(class='p-3 md:p-4') %}{{ ui.badge(text=status, variant=badge_variant.get(status, 'destructive')) }}{% endcall %}
+                  {{ ui.table_cell(text=date, class='p-3 text-sm text-muted-foreground md:p-4') }}
+                  {{ ui.table_cell(text=due, class='p-3 text-sm text-muted-foreground md:p-4') }}
+                  {{ ui.table_cell(text=amount, class='p-3 text-sm font-medium text-foreground md:p-4') }}
+                  {% call ui.table_cell(class='p-3 md:p-4') %}
+                    <div class="flex items-center gap-1">
+                      {% call ui.button(variant='ghost', size='sm', attrs={'aria-label': 'Download ' ~ id}) %}{{ lucide('download', 'h-4 w-4') }}{% endcall %}
+                      {% call ui.button(variant='ghost', size='sm', attrs={'aria-label': 'Delete ' ~ id}) %}{{ lucide('trash-2', 'h-4 w-4') }}{% endcall %}
+                    </div>
+                  {% endcall %}
+                {% endcall %}
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+
+          <div class="flex flex-col items-center justify-between gap-4 border-t p-4 sm:flex-row">
+            {% call ui.button(variant='ghost', class='flex items-center gap-2 text-sm') %}{{ lucide('chevron-left', 'h-4 w-4') }}Previous{% endcall %}
+            <div class="flex items-center gap-1 md:gap-2">
+              {{ ui.button(text='1', variant='default', size='sm', attrs={'aria-current': 'page'}) }}
+              {{ ui.button(text='2', variant='ghost', size='sm') }}
+              {{ ui.button(text='3', variant='ghost', size='sm') }}
+              <span class="hidden text-muted-foreground sm:inline">...</span>
+              {{ ui.button(text='8', variant='ghost', size='sm', class='hidden sm:inline-flex') }}
+              {{ ui.button(text='9', variant='ghost', size='sm', class='hidden sm:inline-flex') }}
+              {{ ui.button(text='10', variant='ghost', size='sm') }}
+            </div>
+            {% call ui.button(variant='ghost', class='flex items-center gap-2 text-sm') %}Next{{ lucide('chevron-right', 'h-4 w-4') }}{% endcall %}
+          </div>
+        {% endcall %}
+      {% endcall %}
+    </main>
+  </div>
+</div>
+{% endblock %}

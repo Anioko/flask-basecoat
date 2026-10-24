@@ -1,0 +1,199 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Course Detail Page · Flask-Basecoat{% endblock %}
+{% set lessons = [
+  {'id': 1, 'title': 'Introduction to Usability Testing', 'duration': '0:23', 'active': true},
+  {'id': 2, 'title': 'Usability Tests: Goals and More', 'duration': '0:11', 'active': false},
+  {'id': 3, 'title': 'Creating Usability Testing Scenarios', 'duration': '7:32', 'active': false},
+  {'id': 4, 'title': 'Analyzing Usability Test Results', 'duration': '6:34', 'active': false},
+  {'id': 5, 'title': 'Iterative Design and Usability Testing', 'duration': '2:56', 'active': false},
+  {'id': 6, 'title': 'Introduction to UX Law', 'duration': '1:23', 'active': false},
+  {'id': 7, 'title': 'Privacy Laws and User Data Protection', 'duration': '2:34', 'active': false},
+  {'id': 8, 'title': 'Accessibility Standards and Guidelines', 'duration': '8:21', 'active': false},
+  {'id': 9, 'title': 'Usability Testing and Legal Compliance', 'duration': '2:11', 'active': false},
+  {'id': 10, 'title': 'Designing Ethical User Experiences', 'duration': '3:42', 'active': false},
+  {'id': 11, 'title': 'Managing Legal Risks in UX Design', 'duration': '1:34', 'active': false},
+  {'id': 12, 'title': 'Creating a UX Law Compliance Plan', 'duration': '2:01', 'active': false},
+] %}
+{% block body %}
+<div class="bg-background">
+<div>
+  {# Course header #}
+  <header class="sticky top-0 z-50 border-b bg-card/50 backdrop-blur-sm">
+    <div class="px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          {% call ui.button(variant='outline', size='sm', class='gap-2') %}{{ lucide('arrow-left', 'h-4 w-4') }}Courses{% endcall %}
+          <div class="h-6 w-px bg-border"></div>
+          <h1 class="text-lg font-medium">The Ultimate Guide to Usability Testing and UX Law</h1>
+        </div>
+
+        <nav class="hidden items-center gap-2 md:flex">
+          {{ ui.button(text='All Videos', variant='ghost', size='sm') }}
+          {{ ui.button(text='Resources', variant='ghost', size='sm') }}
+          {{ ui.button(text='Support', variant='ghost', size='sm') }}
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="px-4 py-8">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div class="space-y-8 lg:col-span-2">
+        {# Video player #}
+        {% call ui.card(class='overflow-hidden py-0') %}
+          <div class="relative aspect-video bg-gradient-to-br from-muted to-muted/50">
+            <div class="absolute inset-0 bg-gradient-to-br from-foreground to-foreground/90">
+              <img src="{{ url_for('basecoat.placeholder', height=540, width=960) }}" alt="Course instructor" class="h-full w-full object-cover">
+            </div>
+
+            <div class="absolute inset-0 bg-foreground/20 opacity-0 transition-opacity duration-200 hover:opacity-100 focus-within:opacity-100">
+              <div class="absolute right-4 bottom-4 left-4">
+                <div class="flex items-center justify-between text-background">
+                  <div class="flex items-center gap-3">
+                    {% call ui.button(size='sm', variant='secondary', class='bg-primary text-primary-foreground hover:bg-primary/90', aria_label='Play', attrs={'data-video-toggle': ''}) %}<span data-video-icon="play">{{ lucide('play', 'h-4 w-4') }}</span><span data-video-icon="pause" hidden>{{ lucide('pause', 'h-4 w-4') }}</span>{% endcall %}
+                    <span class="text-sm font-medium">0:23 / 45:32</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    {% call ui.button(size='sm', variant='ghost', class='text-background hover:bg-background/20', aria_label='Volume') %}{{ lucide('volume-2', 'h-4 w-4') }}{% endcall %}
+                    {% call ui.button(size='sm', variant='ghost', class='text-background hover:bg-background/20', aria_label='Settings') %}{{ lucide('settings', 'h-4 w-4') }}{% endcall %}
+                    {% call ui.button(size='sm', variant='ghost', class='text-background hover:bg-background/20', aria_label='Fullscreen') %}{{ lucide('maximize', 'h-4 w-4') }}{% endcall %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endcall %}
+
+        {# Course details #}
+        {% call ui.card() %}
+          {% call ui.card_header() %}
+            {{ ui.card_title(text='The Ultimate Guide to Usability Testing and UX Law', class='text-2xl font-bold text-balance') }}
+          {% endcall %}
+          {% call ui.card_content() %}
+            <p class="leading-relaxed text-muted-foreground">
+              In this comprehensive course, we&#39;ll delve into the fundamentals of usability testing
+              and explore the critical principles of UX law. Whether you&#39;re a seasoned UX
+              professional or just starting your journey, this course is designed to equip you with the
+              essential skills and knowledge needed to excel in the field.
+            </p>
+
+            <div class="space-y-4">
+              <div>
+                <h3 class="mb-2 font-semibold">Usability Testing:</h3>
+                <p class="leading-relaxed text-muted-foreground">
+                  Discover how to plan, conduct, and analyze usability tests to uncover insights about
+                  user behavior and preferences. Learn various testing methods, tools, and techniques,
+                  and gain practical experience through hands-on exercises and real-world case studies.
+                </p>
+              </div>
+
+              <div>
+                <h3 class="mb-2 font-semibold">UX Law:</h3>
+                <p class="leading-relaxed text-muted-foreground">
+                  Dive into the legal aspects of user experience design, including privacy regulations,
+                  accessibility standards, and copyright laws. Understand how to navigate legal
+                  frameworks and ensure compliance with industry regulations to create ethical and
+                  inclusive digital experiences.
+                </p>
+              </div>
+            </div>
+          {% endcall %}
+        {% endcall %}
+
+        {# Instructor #}
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Instructor') }}{% endcall %}
+          {% call ui.card_content() %}
+            <div class="flex gap-4">
+              {% call ui.avatar(class='h-16 w-16') %}{{ ui.avatar_fallback(text='DT') }}{% endcall %}
+
+              <div class="flex-1 space-y-2">
+                <div>
+                  <h3 class="text-lg font-semibold">David Travis</h3>
+                  <div class="flex items-center gap-1">
+                    {% for i in range(4) %}{{ lucide('star', 'h-4 w-4 fill-primary text-primary') }}{% endfor %}
+                    {{ lucide('star', 'h-4 w-4 fill-primary/50 text-primary') }}
+                    <span class="ml-2 text-sm text-muted-foreground">4.5 rating</span>
+                  </div>
+                </div>
+
+                <p class="text-sm leading-relaxed text-muted-foreground">
+                  I'm on a mission to create more user experience professionals. Perhaps you'd like a
+                  job in user experience. Or maybe you already work in the field but you've never had
+                  any formal training.
+                </p>
+              </div>
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+
+      {# Sidebar #}
+      <div class="lg:col-span-1">
+        <div class="space-y-6">
+          {# Course actions #}
+          {% call ui.card() %}
+            {% call ui.card_content(class='space-y-4') %}
+              <div class="flex flex-wrap gap-2">
+                {{ ui.badge(text='Advanced', variant='secondary') }}
+                {{ ui.badge(text='Live Class', variant='outline') }}
+                {{ ui.badge(text='24 Classes', variant='outline') }}
+              </div>
+
+              <div class="space-y-3">
+                {% call ui.button(class='w-full', size='lg') %}{{ lucide('play') }}Enroll Now{% endcall %}
+                {{ ui.button(text='Add to Favorites', variant='outline', class='w-full bg-transparent') }}
+              </div>
+            {% endcall %}
+          {% endcall %}
+
+          {# Course curriculum #}
+          {% call ui.card() %}
+            {% call ui.card_header() %}
+              {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide('play', 'h-5 w-5 text-primary') }}Course Curriculum{% endcall %}
+            {% endcall %}
+            {% call ui.card_content(class='p-0') %}
+              <div class="space-y-1">
+                {% for lesson in lessons %}
+                {% call ui.button(variant='ghost', class='block h-auto w-full rounded-none border-0 border-l-2 p-4 text-left whitespace-normal transition-colors hover:bg-muted/50 ' ~ ('border-l-primary bg-primary/5' if lesson.active else 'border-l-transparent')) %}
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full {{ 'bg-primary text-primary-foreground' if lesson.active else 'bg-muted' }}">
+                        {{ lucide('play', 'h-3 w-3') }}
+                      </div>
+                      <div>
+                        <p class="text-sm font-medium text-pretty {{ 'text-primary' if lesson.active else 'text-foreground' }}">{{ lesson.title }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-1 text-muted-foreground">
+                      {{ lucide('clock', 'h-3 w-3') }}
+                      <span class="text-xs">{{ lesson.duration }}</span>
+                    </div>
+                  </div>
+                {% endcall %}
+                {% endfor %}
+              </div>
+            {% endcall %}
+          {% endcall %}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div>
+<script>
+  (function () {
+    var toggle = document.querySelector('[data-video-toggle]');
+    if (!toggle) return;
+    var playing = false;
+    toggle.addEventListener('click', function () {
+      playing = !playing;
+      toggle.querySelector('[data-video-icon="play"]').hidden = playing;
+      toggle.querySelector('[data-video-icon="pause"]').hidden = !playing;
+      toggle.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    });
+  })();
+</script>
+{% endblock %}

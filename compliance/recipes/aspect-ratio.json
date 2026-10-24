@@ -1,0 +1,12 @@
+{
+  "name": "aspect-ratio",
+  "source": "upstream/shadcn/radix/ui/aspect-ratio.tsx",
+  "slots": {
+    "aspect-ratio": {
+      "component": "AspectRatio",
+      "element": "AspectRatioPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    }
+  }
+}

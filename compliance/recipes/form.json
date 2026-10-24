@@ -1,0 +1,50 @@
+{
+  "name": "form",
+  "source": "upstream/shadcn/new-york-v4/ui/form.tsx",
+  "slots": {
+    "form-item": {
+      "component": "FormItem",
+      "element": "div",
+      "base_classes": "grid gap-2",
+      "data_attrs": []
+    },
+    "form-label": {
+      "component": "FormLabel",
+      "element": "Label",
+      "base_classes": "data-[error=true]:text-destructive",
+      "data_attrs": [
+        "data-error"
+      ]
+    },
+    "form-control": {
+      "component": "FormControl",
+      "element": "Slot.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "form-description": {
+      "component": "FormDescription",
+      "element": "p",
+      "base_classes": "text-sm text-muted-foreground",
+      "data_attrs": []
+    },
+    "form-message": {
+      "component": "FormMessage",
+      "element": "p",
+      "base_classes": "text-sm text-destructive",
+      "data_attrs": []
+    },
+    "form": {
+      "component": "Form",
+      "element": "FormProvider",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "form-field": {
+      "component": "FormField",
+      "element": "Controller",
+      "base_classes": "",
+      "data_attrs": []
+    }
+  }
+}

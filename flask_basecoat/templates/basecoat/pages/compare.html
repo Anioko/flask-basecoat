@@ -1,0 +1,59 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Compare {{ name }} · Flask-Basecoat{% endblock %}
+{% block body %}
+<div class="flex h-svh flex-col">
+  <header class="flex flex-wrap items-center gap-3 border-b px-4 py-2">
+    {{ ui.button(variant='ghost', size='sm', href=url_for('basecoat_gallery.index'), text='All components') }}
+    {{ ui.separator(orientation='vertical', class='h-6') }}
+    <form class="flex items-center gap-2" method="get" action="" onsubmit="location.href = '/basecoat/compare/' + this.name.value; return false;">
+      <label class="text-sm text-muted-foreground" for="compare-name">Page</label>
+      {% call ui.native_select_wrapper(size='sm') %}
+        {% call ui.native_select(id='compare-name', size='sm', attrs={'name': 'name', 'onchange': "location.href = '/basecoat/compare/' + this.value"}) %}
+          {% for c in components %}{{ ui.native_select_option(text=c, value=c, attrs={'selected': true if c == name else none}) }}{% endfor %}
+          {% for b in blocks %}{{ ui.native_select_option(text='block: ' ~ b, value=b, attrs={'selected': true if b == name else none}) }}{% endfor %}
+          {% for c in charts or [] %}{{ ui.native_select_option(text='chart: ' ~ c, value=c, attrs={'selected': true if c == name else none}) }}{% endfor %}
+        {% endcall %}
+        {{ ui.native_select_icon() }}
+      {% endcall %}
+    </form>
+    {{ ui.separator(orientation='vertical', class='h-6') }}
+    {{ ui.button(variant='outline', size='sm', text='Toggle dark in both', attrs={'data-compare-theme': ''}) }}
+    {{ ui.button(variant='outline', size='sm', text='Sync scroll', attrs={'data-compare-sync': '', 'aria-pressed': 'true'}) }}
+    <span class="ml-auto text-xs text-muted-foreground">Left: upstream shadcn/ui (React render). Right: Flask-Basecoat.</span>
+  </header>
+  <div class="grid flex-1 grid-cols-2 divide-x">
+    <div class="flex min-h-0 flex-col">
+      <div class="border-b px-3 py-1 text-xs font-medium text-muted-foreground">upstream · {{ name }}</div>
+      <iframe id="compare-golden" src="{{ golden_url }}" title="Upstream render of {{ name }}" class="min-h-0 flex-1 w-full bg-background"></iframe>
+    </div>
+    <div class="flex min-h-0 flex-col">
+      <div class="border-b px-3 py-1 text-xs font-medium text-muted-foreground">Flask-Basecoat · {{ name }}</div>
+      <iframe id="compare-ours" src="{{ ours_url }}" title="Flask-Basecoat render of {{ name }}" class="min-h-0 flex-1 w-full bg-background"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    var frames = [document.getElementById('compare-golden'), document.getElementById('compare-ours')];
+    var sync = true;
+    document.querySelector('[data-compare-theme]').addEventListener('click', function () {
+      frames.forEach(function (f) { try { f.contentDocument.documentElement.classList.toggle('dark'); } catch (e) {} });
+    });
+    document.querySelector('[data-compare-sync]').addEventListener('click', function (e) {
+      sync = !sync; e.currentTarget.setAttribute('aria-pressed', String(sync));
+    });
+    frames.forEach(function (f, i) {
+      f.addEventListener('load', function () {
+        var other = frames[1 - i];
+        try {
+          f.contentWindow.addEventListener('scroll', function () {
+            if (!sync) return;
+            try { other.contentWindow.scrollTo(f.contentWindow.scrollX, f.contentWindow.scrollY); } catch (e) {}
+          }, { passive: true });
+        } catch (e) {}
+      });
+    });
+  })();
+</script>
+{% endblock %}

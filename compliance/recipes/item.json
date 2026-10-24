@@ -1,0 +1,105 @@
+{
+  "name": "item",
+  "source": "upstream/shadcn/radix/ui/item.tsx",
+  "slots": {
+    "item-group": {
+      "component": "ItemGroup",
+      "element": "div",
+      "base_classes": "cn-item-group group/item-group flex w-full flex-col",
+      "data_attrs": []
+    },
+    "item-separator": {
+      "component": "ItemSeparator",
+      "element": "Separator",
+      "base_classes": "cn-item-separator",
+      "data_attrs": []
+    },
+    "item": {
+      "component": "Item",
+      "element": "Comp",
+      "base_classes": "",
+      "data_attrs": [
+        "data-size",
+        "data-variant"
+      ],
+      "cva": "itemVariants",
+      "variants": {
+        "base": "cn-item group/item flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors",
+        "variants": {
+          "variant": {
+            "default": "cn-item-variant-default",
+            "outline": "cn-item-variant-outline",
+            "muted": "cn-item-variant-muted"
+          },
+          "size": {
+            "default": "cn-item-size-default",
+            "sm": "cn-item-size-sm",
+            "xs": "cn-item-size-xs"
+          }
+        },
+        "defaults": {
+          "variant": "default",
+          "size": "default"
+        }
+      }
+    },
+    "item-media": {
+      "component": "ItemMedia",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": [
+        "data-variant"
+      ],
+      "cva": "itemMediaVariants",
+      "variants": {
+        "base": "cn-item-media flex shrink-0 items-center justify-center [&_svg]:pointer-events-none",
+        "variants": {
+          "variant": {
+            "default": "cn-item-media-variant-default",
+            "icon": "cn-item-media-variant-icon",
+            "image": "cn-item-media-variant-image"
+          }
+        },
+        "defaults": {
+          "variant": "default"
+        }
+      }
+    },
+    "item-content": {
+      "component": "ItemContent",
+      "element": "div",
+      "base_classes": "cn-item-content flex flex-1 flex-col [&+[data-slot=item-content]]:flex-none",
+      "data_attrs": []
+    },
+    "item-title": {
+      "component": "ItemTitle",
+      "element": "div",
+      "base_classes": "cn-item-title line-clamp-1 flex w-fit items-center",
+      "data_attrs": []
+    },
+    "item-description": {
+      "component": "ItemDescription",
+      "element": "p",
+      "base_classes": "cn-item-description line-clamp-2 font-normal [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
+      "data_attrs": []
+    },
+    "item-actions": {
+      "component": "ItemActions",
+      "element": "div",
+      "base_classes": "cn-item-actions flex items-center",
+      "data_attrs": []
+    },
+    "item-header": {
+      "component": "ItemHeader",
+      "element": "div",
+      "base_classes": "cn-item-header flex basis-full items-center justify-between",
+      "data_attrs": []
+    },
+    "item-footer": {
+      "component": "ItemFooter",
+      "element": "div",
+      "base_classes": "cn-item-footer flex basis-full items-center justify-between",
+      "data_attrs": []
+    }
+  }
+}

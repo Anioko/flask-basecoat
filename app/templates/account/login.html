@@ -1,39 +1,44 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 {% import 'macros/form_macros.html' as f %}
 
 {% block content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-md mx-auto w-full">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="text-2xl font-semibold">Log in</h2>
-                </div>
-                <div class="card-content">
-                    {% set flashes = {
-                        'error':   get_flashed_messages(category_filter=['form-error']),
-                        'warning': get_flashed_messages(category_filter=['form-check-email']),
-                        'info':    get_flashed_messages(category_filter=['form-info']),
-                        'success': get_flashed_messages(category_filter=['form-success'])
-                    } %}
+    <div class="flex w-full items-center justify-center p-6 md:p-10">
+        <div class="w-full max-w-sm">
+            <div class="flex flex-col gap-6">
+                {% call ui.card() %}
+                    {% call ui.card_header() %}
+                        {{ ui.card_title(text='Log in to your account') }}
+                        {{ ui.card_description(text='Enter your email below to log in to your account') }}
+                    {% endcall %}
+                    {% call ui.card_content() %}
+                        <form action="" method="POST">
+                            {{ form.hidden_tag() }}
+                            {% call ui.field_group() %}
+                                {{ f.render_field(form.email, placeholder='m@example.com') }}
 
-                    {{ f.begin_form(form, flashes) }}
-                        {{ f.render_form_field(form.email) }}
-                        {{ f.render_form_field(form.password) }}
-                        <div class="grid grid-cols-2 gap-4 items-center">
-                            {{ f.render_form_field(form.remember_me, extra_classes='') }}
-                            <div class="text-right">
-                                <a href="{{ url_for('account.reset_password_request') }}" class="text-sm underline">Forgot password?</a>
-                            </div>
-                        </div>
+                                {% set password_invalid = form.password.errors | length > 0 %}
+                                {% call ui.field(invalid=password_invalid) %}
+                                    <div class="flex items-center">
+                                        {{ ui.field_label(text=form.password.label.text, for_=form.password.id) }}
+                                        <a href="{{ url_for('account.reset_password_request') }}" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">Forgot your password?</a>
+                                    </div>
+                                    {{ ui.input(id=form.password.id, name=form.password.name, type='password', required=true, invalid=password_invalid) }}
+                                    {{ ui.field_errors(form.password) }}
+                                {% endcall %}
 
-                        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-                        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-                        {{ f.form_message(flashes['info'], header='Information', class='info') }}
-                        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+                                {{ f.render_field(form.remember_me) }}
 
-                        {{ f.render_form_field(form.submit) }}
-                    {{ f.end_form(form) }}
-                </div>
+                                {% call ui.field() %}
+                                    {{ f.submit_button(form, class='w-full') }}
+                                    {% call ui.field_description(class='text-center') %}
+                                        Don't have an account? <a href="{{ url_for('account.register') }}">Sign up</a>
+                                    {% endcall %}
+                                {% endcall %}
+                            {% endcall %}
+                        </form>
+                    {% endcall %}
+                {% endcall %}
             </div>
         </div>
     </div>

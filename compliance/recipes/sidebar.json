@@ -1,0 +1,275 @@
+{
+  "name": "sidebar",
+  "source": "upstream/shadcn/radix/ui/sidebar.tsx",
+  "slots": {
+    "sidebar-wrapper": {
+      "component": "SidebarProvider",
+      "element": "div",
+      "base_classes": "group/sidebar-wrapper flex min-h-svh w-full has-data-[variant=inset]:bg-sidebar",
+      "data_attrs": []
+    },
+    "sidebar": {
+      "component": "Sidebar",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": [],
+      "alts": [
+        {
+          "component": "Sidebar",
+          "element": "SheetContent",
+          "base_classes": "w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden",
+          "data_attrs": []
+        }
+      ],
+      "variants": {
+        "base": "",
+        "variants": {
+          "collapsible": {
+            "none": "flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
+            "offcanvas": "group peer hidden text-sidebar-foreground md:block",
+            "icon": "group peer hidden text-sidebar-foreground md:block"
+          }
+        },
+        "defaults": {
+          "collapsible": "offcanvas"
+        }
+      },
+      "silent_groups": [
+        "collapsible"
+      ]
+    },
+    "Sidebar:SheetHeader": {
+      "component": "Sidebar",
+      "element": "SheetHeader",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    },
+    "Sidebar:div": {
+      "component": "Sidebar",
+      "element": "div",
+      "base_classes": "flex h-full w-full flex-col",
+      "data_attrs": []
+    },
+    "sidebar-gap": {
+      "component": "Sidebar",
+      "element": "div",
+      "base_classes": "cn-sidebar-gap relative w-(--sidebar-width) bg-transparent group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180",
+      "data_attrs": [],
+      "variants": {
+        "base": "",
+        "variants": {
+          "variant": {
+            "sidebar": "group-data-[collapsible=icon]:w-(--sidebar-width-icon)",
+            "floating": "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]",
+            "inset": "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
+          }
+        },
+        "defaults": {
+          "variant": "sidebar"
+        }
+      },
+      "silent_groups": [
+        "variant"
+      ]
+    },
+    "sidebar-container": {
+      "component": "Sidebar",
+      "element": "div",
+      "base_classes": "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] md:flex",
+      "data_attrs": [
+        "data-side"
+      ],
+      "variants": {
+        "base": "",
+        "variants": {
+          "variant": {
+            "sidebar": "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
+            "floating": "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]",
+            "inset": "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
+          }
+        },
+        "defaults": {
+          "variant": "sidebar"
+        }
+      },
+      "silent_groups": [
+        "variant"
+      ]
+    },
+    "sidebar-inner": {
+      "component": "Sidebar",
+      "element": "div",
+      "base_classes": "cn-sidebar-inner flex size-full flex-col",
+      "data_attrs": []
+    },
+    "sidebar-trigger": {
+      "component": "SidebarTrigger",
+      "element": "Button",
+      "base_classes": "cn-sidebar-trigger",
+      "data_attrs": []
+    },
+    "SidebarTrigger:IconPlaceholder": {
+      "component": "SidebarTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip",
+      "data_attrs": []
+    },
+    "SidebarTrigger:span": {
+      "component": "SidebarTrigger",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    },
+    "sidebar-rail": {
+      "component": "SidebarRail",
+      "element": "button",
+      "base_classes": "cn-sidebar-rail absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2 in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize [[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar [[data-side=left][data-collapsible=offcanvas]_&]:-right-2 [[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+      "data_attrs": []
+    },
+    "sidebar-inset": {
+      "component": "SidebarInset",
+      "element": "main",
+      "base_classes": "cn-sidebar-inset relative flex w-full flex-1 flex-col",
+      "data_attrs": []
+    },
+    "sidebar-input": {
+      "component": "SidebarInput",
+      "element": "Input",
+      "base_classes": "cn-sidebar-input",
+      "data_attrs": []
+    },
+    "sidebar-header": {
+      "component": "SidebarHeader",
+      "element": "div",
+      "base_classes": "cn-sidebar-header flex flex-col",
+      "data_attrs": []
+    },
+    "sidebar-footer": {
+      "component": "SidebarFooter",
+      "element": "div",
+      "base_classes": "cn-sidebar-footer flex flex-col",
+      "data_attrs": []
+    },
+    "sidebar-separator": {
+      "component": "SidebarSeparator",
+      "element": "Separator",
+      "base_classes": "cn-sidebar-separator w-auto",
+      "data_attrs": []
+    },
+    "sidebar-content": {
+      "component": "SidebarContent",
+      "element": "div",
+      "base_classes": "cn-sidebar-content flex min-h-0 flex-1 flex-col overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+      "data_attrs": []
+    },
+    "sidebar-group": {
+      "component": "SidebarGroup",
+      "element": "div",
+      "base_classes": "cn-sidebar-group relative flex w-full min-w-0 flex-col",
+      "data_attrs": []
+    },
+    "sidebar-group-label": {
+      "component": "SidebarGroupLabel",
+      "element": "Comp",
+      "base_classes": "cn-sidebar-group-label flex shrink-0 items-center outline-hidden [&>svg]:shrink-0",
+      "data_attrs": []
+    },
+    "sidebar-group-action": {
+      "component": "SidebarGroupAction",
+      "element": "Comp",
+      "base_classes": "cn-sidebar-group-action flex aspect-square items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+      "data_attrs": []
+    },
+    "sidebar-group-content": {
+      "component": "SidebarGroupContent",
+      "element": "div",
+      "base_classes": "cn-sidebar-group-content w-full",
+      "data_attrs": []
+    },
+    "sidebar-menu": {
+      "component": "SidebarMenu",
+      "element": "ul",
+      "base_classes": "cn-sidebar-menu flex w-full min-w-0 flex-col",
+      "data_attrs": []
+    },
+    "sidebar-menu-item": {
+      "component": "SidebarMenuItem",
+      "element": "li",
+      "base_classes": "group/menu-item relative",
+      "data_attrs": []
+    },
+    "sidebar-menu-button": {
+      "component": "SidebarMenuButton",
+      "element": "Comp",
+      "base_classes": "",
+      "data_attrs": [
+        "data-active",
+        "data-size"
+      ],
+      "cva": "sidebarMenuButtonVariants",
+      "variants": {
+        "base": "cn-sidebar-menu-button peer/menu-button group/menu-button flex w-full items-center overflow-hidden outline-hidden disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0 [&>span:last-child]:truncate",
+        "variants": {
+          "variant": {
+            "default": "cn-sidebar-menu-button-variant-default",
+            "outline": "cn-sidebar-menu-button-variant-outline"
+          },
+          "size": {
+            "default": "cn-sidebar-menu-button-size-default",
+            "sm": "cn-sidebar-menu-button-size-sm",
+            "lg": "cn-sidebar-menu-button-size-lg"
+          }
+        },
+        "defaults": {
+          "variant": "default",
+          "size": "default"
+        }
+      }
+    },
+    "sidebar-menu-action": {
+      "component": "SidebarMenuAction",
+      "element": "Comp",
+      "base_classes": "cn-sidebar-menu-action flex items-center justify-center outline-hidden transition-transform group-data-[collapsible=icon]:hidden after:absolute after:-inset-2 md:after:hidden [&>svg]:shrink-0",
+      "data_attrs": []
+    },
+    "sidebar-menu-badge": {
+      "component": "SidebarMenuBadge",
+      "element": "div",
+      "base_classes": "cn-sidebar-menu-badge flex items-center justify-center tabular-nums select-none group-data-[collapsible=icon]:hidden",
+      "data_attrs": []
+    },
+    "sidebar-menu-skeleton": {
+      "component": "SidebarMenuSkeleton",
+      "element": "div",
+      "base_classes": "cn-sidebar-menu-skeleton flex items-center",
+      "data_attrs": []
+    },
+    "SidebarMenuSkeleton:Skeleton": {
+      "component": "SidebarMenuSkeleton",
+      "element": "Skeleton",
+      "base_classes": "cn-sidebar-menu-skeleton-icon",
+      "data_attrs": []
+    },
+    "sidebar-menu-sub": {
+      "component": "SidebarMenuSub",
+      "element": "ul",
+      "base_classes": "cn-sidebar-menu-sub flex min-w-0 flex-col",
+      "data_attrs": []
+    },
+    "sidebar-menu-sub-item": {
+      "component": "SidebarMenuSubItem",
+      "element": "li",
+      "base_classes": "group/menu-sub-item relative",
+      "data_attrs": []
+    },
+    "sidebar-menu-sub-button": {
+      "component": "SidebarMenuSubButton",
+      "element": "Comp",
+      "base_classes": "cn-sidebar-menu-sub-button flex min-w-0 -translate-x-px items-center overflow-hidden outline-hidden group-data-[collapsible=icon]:hidden disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:shrink-0",
+      "data_attrs": [
+        "data-active",
+        "data-size"
+      ]
+    }
+  }
+}

@@ -1,180 +1,150 @@
+{# Drawer block previews: a static side panel composed from the sheet, field, switch, checkbox, item and button macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
 {% macro _section_header(section) -%}
   {% if section.title or section.description %}
-    <div class="drawer-block__section-heading">
-      {% if section.title %}
-        <h4 class="drawer-block__section-title">{{ section.title }}</h4>
-      {% endif %}
-      {% if section.description %}
-        <p class="drawer-block__section-description">{{ section.description }}</p>
-      {% endif %}
-    </div>
+  <div class="flex flex-col gap-1">
+    {% if section.title %}<h4 class="text-sm font-medium">{{ section.title }}</h4>{% endif %}
+    {% if section.description %}<p class="text-sm text-muted-foreground">{{ section.description }}</p>{% endif %}
+  </div>
   {% endif %}
 {%- endmacro %}
 
-{% macro _field_icon(field) -%}
-  {% if field.type == 'select' %}
-    <svg class="drawer-block__chevron" viewBox="0 0 20 20" aria-hidden="true">
-      <path d="M6.2 7.3a.75.75 0 0 1 1.06 0L10 10.02l2.74-2.72a.75.75 0 0 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L6.2 8.36a.75.75 0 0 1 0-1.06Z"></path>
-    </svg>
-  {% endif %}
-{%- endmacro %}
-
-{% macro _render_fields(section) -%}
-  <div class="drawer-block__fields">
+{% macro _render_fields(section, uid) -%}
+  {% call ui.field_group() %}
     {% for field in section.fields %}
-      <div class="drawer-block__field drawer-block__field--{{ field.type|default('text') }}">
-        <label class="drawer-block__field-label">{{ field.label }}</label>
-        <div class="drawer-block__field-control">
-          <span class="drawer-block__field-value">{{ field.value }}</span>
-          {{ _field_icon(field) }}
-        </div>
-        {% if field.hint %}
-          <p class="drawer-block__field-hint">{{ field.hint }}</p>
-        {% endif %}
-      </div>
+    {% set field_id = uid ~ '-field-' ~ loop.index %}
+    {% call ui.field() %}
+      {{ ui.field_label(text=field.label, for_=field_id) }}
+      {% if field.type == 'select' %}
+        {% call ui.native_select_wrapper() %}
+          {% call ui.native_select(id=field_id) %}{{ ui.native_select_option(text=field.value, attrs={'value': field.value, 'selected': true}) }}{% endcall %}
+          {{ ui.native_select_icon() }}
+        {% endcall %}
+      {% else %}
+        {{ ui.input(id=field_id, readonly=true, attrs={'value': field.value}) }}
+      {% endif %}
+      {% if field.hint %}{{ ui.field_description(text=field.hint) }}{% endif %}
+    {% endcall %}
     {% endfor %}
-  </div>
+  {% endcall %}
 {%- endmacro %}
 
-{% macro _render_toggles(section) -%}
-  <div class="drawer-block__toggles">
+{% macro _render_toggles(section, uid) -%}
+  <div class="flex flex-col gap-4">
     {% for toggle in section.toggles %}
-      {% set is_checked = toggle.checked %}
-      <div class="drawer-block__toggle" data-state="{{ 'on' if is_checked else 'off' }}">
-        <span class="drawer-block__toggle-switch"></span>
-        <div class="drawer-block__toggle-copy">
-          <span class="drawer-block__toggle-label">{{ toggle.label }}</span>
-          {% if toggle.description %}
-            <span class="drawer-block__toggle-description">{{ toggle.description }}</span>
-          {% endif %}
-        </div>
-      </div>
+    {% set toggle_id = uid ~ '-toggle-' ~ loop.index %}
+    {% call ui.field(orientation='horizontal') %}
+      {% call ui.field_content() %}
+        {{ ui.field_label(text=toggle.label, for_=toggle_id) }}
+        {% if toggle.description %}{{ ui.field_description(text=toggle.description) }}{% endif %}
+      {% endcall %}
+      {% call ui.switch(id=toggle_id, checked=toggle.checked) %}{{ ui.switch_thumb(checked=toggle.checked) }}{% endcall %}
+    {% endcall %}
     {% endfor %}
   </div>
 {%- endmacro %}
 
-{% macro _render_options(section) -%}
+{% macro _render_options(section, uid) -%}
   {% set control = section.control or 'checkbox' %}
-  <div class="drawer-block__options drawer-block__options--{{ control }}">
+  {% if control == 'radio' %}
+  {% call ui.radio_group(class='gap-3') %}
     {% for option in section.options %}
-      {% set is_checked = option.checked %}
-      <div class="drawer-block__option" data-state="{{ 'on' if is_checked else 'off' }}">
-        <span class="drawer-block__option-control"></span>
-        <div class="drawer-block__option-copy">
-          <span class="drawer-block__option-label">{{ option.label }}</span>
-          {% if option.description %}
-            <span class="drawer-block__option-description">{{ option.description }}</span>
-          {% endif %}
-        </div>
-        {% if option.meta %}
-          <span class="drawer-block__option-meta">{{ option.meta }}</span>
-        {% endif %}
-      </div>
+    {% set option_id = uid ~ '-option-' ~ loop.index %}
+    {% call ui.field(orientation='horizontal') %}
+      {% call ui.radio_group_item(id=option_id, checked=option.checked, attrs={'value': option.label}) %}{{ ui.radio_group_indicator(checked=option.checked) }}{% endcall %}
+      {% call ui.field_content() %}
+        {{ ui.field_label(text=option.label, for_=option_id) }}
+        {% if option.description %}{{ ui.field_description(text=option.description) }}{% endif %}
+      {% endcall %}
+      {% if option.meta %}<span class="text-xs text-muted-foreground">{{ option.meta }}</span>{% endif %}
+    {% endcall %}
+    {% endfor %}
+  {% endcall %}
+  {% else %}
+  <div class="flex flex-col gap-3">
+    {% for option in section.options %}
+    {% set option_id = uid ~ '-option-' ~ loop.index %}
+    {% call ui.field(orientation='horizontal') %}
+      {{ ui.checkbox(id=option_id, checked=option.checked) }}
+      {% call ui.field_content() %}
+        {{ ui.field_label(text=option.label, for_=option_id) }}
+        {% if option.description %}{{ ui.field_description(text=option.description) }}{% endif %}
+      {% endcall %}
+      {% if option.meta %}<span class="text-xs text-muted-foreground">{{ option.meta }}</span>{% endif %}
+    {% endcall %}
     {% endfor %}
   </div>
+  {% endif %}
 {%- endmacro %}
 
 {% macro _render_list(section) -%}
-  <ul class="drawer-block__list">
+  {% call ui.item_group() %}
     {% for item in section.list_items %}
-      <li class="drawer-block__list-item{% if item.active %} is-active{% endif %}">
-        <div class="drawer-block__list-text">
-          <span class="drawer-block__list-title">{{ item.title }}</span>
-          {% if item.description %}
-            <span class="drawer-block__list-description">{{ item.description }}</span>
-          {% endif %}
-        </div>
-        {% if item.meta %}
-          <span class="drawer-block__list-meta">{{ item.meta }}</span>
-        {% endif %}
-      </li>
+    {% call ui.item(variant='outline', size='sm', class=('border-primary' if item.active else '')) %}
+      {% call ui.item_content() %}
+        {{ ui.item_title(text=item.title) }}
+        {% if item.description %}{{ ui.item_description(text=item.description) }}{% endif %}
+      {% endcall %}
+      {% if item.meta %}{% call ui.item_actions() %}<span class="text-xs text-muted-foreground">{{ item.meta }}</span>{% endcall %}{% endif %}
+    {% endcall %}
     {% endfor %}
-  </ul>
+  {% endcall %}
 {%- endmacro %}
 
 {% macro _render_summary(section) -%}
-  <dl class="drawer-block__summary">
+  <dl class="grid gap-3 text-sm">
     {% for item in section.summary_items %}
-      <div class="drawer-block__summary-item">
-        <dt class="drawer-block__summary-label">{{ item.label }}</dt>
-        <dd class="drawer-block__summary-value">
-          <span>{{ item.value }}</span>
-          {% if item.badge_tone %}
-            <span class="drawer-block__summary-badge" data-tone="{{ item.badge_tone }}"></span>
-          {% endif %}
-        </dd>
-      </div>
+    <div class="flex items-center justify-between gap-4 border-b pb-3 last:border-0 last:pb-0">
+      <dt class="text-muted-foreground">{{ item.label }}</dt>
+      <dd class="flex items-center gap-2 font-medium">
+        <span>{{ item.value }}</span>
+        {% if item.badge_tone %}<span class="size-2 rounded-full {{ 'bg-destructive' if item.badge_tone == 'danger' else ('bg-primary' if item.badge_tone in ['success', 'primary'] else 'bg-muted-foreground') }}" aria-hidden="true"></span>{% endif %}
+      </dd>
+    </div>
     {% endfor %}
   </dl>
 {%- endmacro %}
 
 {% macro _render_timeline(section) -%}
-  <ol class="drawer-block__timeline">
+  <ol class="flex flex-col gap-4 border-l pl-4">
     {% for item in section.timeline %}
-      <li class="drawer-block__timeline-item">
-        <span class="drawer-block__timeline-marker"></span>
-        <div class="drawer-block__timeline-content">
-          <div class="drawer-block__timeline-heading">
-            <span class="drawer-block__timeline-title">{{ item.title }}</span>
-            {% if item.time %}
-              <span class="drawer-block__timeline-time">{{ item.time }}</span>
-            {% endif %}
-          </div>
-          {% if item.description %}
-            <p class="drawer-block__timeline-description">{{ item.description }}</p>
-          {% endif %}
-        </div>
-      </li>
+    <li class="relative flex flex-col gap-0.5">
+      <span class="absolute -left-[1.3rem] top-1.5 size-2.5 rounded-full border-2 border-background bg-primary" aria-hidden="true"></span>
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-sm font-medium">{{ item.title }}</span>
+        {% if item.time %}<span class="text-xs text-muted-foreground">{{ item.time }}</span>{% endif %}
+      </div>
+      {% if item.description %}<p class="text-sm text-muted-foreground">{{ item.description }}</p>{% endif %}
+    </li>
     {% endfor %}
   </ol>
 {%- endmacro %}
 
 {% macro _render_pills(section) -%}
-  <div class="drawer-block__pills">
-    <div class="drawer-block__pill-collection">
-      {% for pill in section.pills %}
-        <span class="drawer-block__pill{% if pill.selected %} is-selected{% endif %}">{{ pill.label }}</span>
-      {% endfor %}
-    </div>
-    {% if section.add_label %}
-      <button class="drawer-block__pill-add" type="button">{{ section.add_label }}</button>
-    {% endif %}
+  <div class="flex flex-wrap items-center gap-2">
+    {% for pill in section.pills %}{{ ui.badge(text=pill.label, variant=('default' if pill.selected else 'outline')) }}{% endfor %}
+    {% if section.add_label %}{% call ui.button(variant='ghost', size='xs') %}{{ lucide('plus') }}{{ section.add_label }}{% endcall %}{% endif %}
   </div>
 {%- endmacro %}
 
-{% macro _render_section(section) -%}
-  <section class="drawer-block__section drawer-block__section--{{ section.kind|default('generic') }}">
+{% macro _render_section(section, uid) -%}
+  <section class="flex flex-col gap-3" data-section="{{ section.kind|default('generic') }}">
     {{ _section_header(section) }}
-    {% if section.kind == 'fields' and section.fields %}
-      {{ _render_fields(section) }}
-    {% elif section.kind == 'toggles' and section.toggles %}
-      {{ _render_toggles(section) }}
-    {% elif section.kind == 'options' and section.options %}
-      {{ _render_options(section) }}
-    {% elif section.kind == 'list' and section.list_items %}
-      {{ _render_list(section) }}
-    {% elif section.kind == 'summary' and section.summary_items %}
-      {{ _render_summary(section) }}
-    {% elif section.kind == 'timeline' and section.timeline %}
-      {{ _render_timeline(section) }}
-    {% elif section.kind == 'pills' and section.pills %}
-      {{ _render_pills(section) }}
+    {% if section.kind == 'fields' and section.fields %}{{ _render_fields(section, uid) }}
+    {% elif section.kind == 'toggles' and section.toggles %}{{ _render_toggles(section, uid) }}
+    {% elif section.kind == 'options' and section.options %}{{ _render_options(section, uid) }}
+    {% elif section.kind == 'list' and section.list_items %}{{ _render_list(section) }}
+    {% elif section.kind == 'summary' and section.summary_items %}{{ _render_summary(section) }}
+    {% elif section.kind == 'timeline' and section.timeline %}{{ _render_timeline(section) }}
+    {% elif section.kind == 'pills' and section.pills %}{{ _render_pills(section) }}
     {% endif %}
   </section>
 {%- endmacro %}
 
-{% macro _render_avatar(header) -%}
-  {% set avatar = header.avatar %}
-  {% if avatar %}
-    <span class="drawer-block__avatar" data-tone="{{ avatar.tone|default('slate') }}">{{ avatar.initials }}</span>
-  {% endif %}
-{%- endmacro %}
-
-{% macro _render_badge(header) -%}
-  {% set badge = header.badge %}
-  {% if badge %}
-    <span class="drawer-block__badge" data-tone="{{ badge.tone|default('neutral') }}">{{ badge.label }}</span>
-  {% endif %}
+{% macro _badge_variant(tone) -%}
+{{ {'success': 'default', 'primary': 'default', 'danger': 'destructive', 'info': 'secondary', 'neutral': 'outline'}.get(tone, 'secondary') }}
 {%- endmacro %}
 
 {% macro render_drawer_preview(variant) -%}
@@ -182,57 +152,44 @@
   {% set placement = data.get('placement', 'right') %}
   {% set size = data.get('size', 'md') %}
   {% set backdrop = data.get('backdrop', True) %}
-  <div class="drawer-block" data-placement="{{ placement }}" data-size="{{ size }}">
-    <div class="drawer-block__canvas">
-      {% if backdrop %}
-        <div class="drawer-block__scrim"></div>
-      {% endif %}
-      <div class="drawer-block__panel drawer-block__panel--{{ placement }} drawer-block__panel-size-{{ size }}">
+  {% set uid = variant.name or 'drawer' %}
+  {% set widths = {'sm': 'sm:w-80', 'md': 'sm:w-96', 'lg': 'sm:w-[28rem]'} %}
+  {% call d.preview(class='p-0 overflow-hidden sm:p-0 bg-muted', attrs={'data-placement': placement, 'data-size': size}) %}
+    <div class="relative flex min-h-[32rem] w-full {{ 'justify-start' if placement == 'left' else ('items-end' if placement == 'bottom' else 'justify-end') }} p-4 sm:p-8">
+      {% if backdrop %}<div class="absolute inset-0 bg-foreground/10" aria-hidden="true"></div>{% endif %}
+      <div class="relative flex w-full flex-col overflow-hidden rounded-xl border bg-background text-foreground shadow-lg {{ widths.get(size, 'sm:w-96') if placement != 'bottom' else 'max-h-[26rem]' }}" role="dialog" aria-modal="false" aria-labelledby="{{ uid }}-title">
         {% set header = data.get('header') %}
         {% if header %}
-          <header class="drawer-block__header">
-            <div class="drawer-block__header-top">
-              {{ _render_avatar(header) }}
-              <div class="drawer-block__header-titles">
-                {% if header.eyebrow %}
-                  <span class="drawer-block__eyebrow">{{ header.eyebrow }}</span>
-                {% endif %}
-                <div class="drawer-block__title-row">
-                  <h3 class="drawer-block__title">{{ header.title }}</h3>
-                  {{ _render_badge(header) }}
-                </div>
-                {% if header.meta %}
-                  <span class="drawer-block__meta">{{ header.meta }}</span>
-                {% endif %}
-              </div>
-            </div>
-            {% if header.description %}
-              <p class="drawer-block__description">{{ header.description }}</p>
+        {% call ui.sheet_header() %}
+          <div class="flex items-start gap-3">
+            {% if header.avatar %}
+            {% call ui.avatar() %}{{ ui.avatar_fallback(text=header.avatar.initials) }}{% endcall %}
             {% endif %}
-          </header>
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              {% if header.eyebrow %}<span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{{ header.eyebrow }}</span>{% endif %}
+              <div class="flex flex-wrap items-center gap-2">
+                {{ ui.sheet_title(text=header.title, id=uid ~ '-title') }}
+                {% if header.badge %}{{ ui.badge(text=header.badge.label, variant=_badge_variant(header.badge.tone|default('neutral'))) }}{% endif %}
+              </div>
+              {% if header.meta %}<span class="text-xs text-muted-foreground">{{ header.meta }}</span>{% endif %}
+            </div>
+            {% call ui.button(variant='ghost', size='icon-sm', attrs={'aria-label': 'Close'}) %}{{ lucide('x') }}{% endcall %}
+          </div>
+          {% if header.description %}{{ ui.sheet_description(text=header.description) }}{% endif %}
+        {% endcall %}
         {% endif %}
-
-        <div class="drawer-block__body">
-          {% for section in data.get('body_sections', []) %}
-            {{ _render_section(section) }}
-          {% endfor %}
+        <div class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pb-4">
+          {% for section in data.get('body_sections', []) %}{{ _render_section(section, uid ~ '-' ~ loop.index) }}{% endfor %}
         </div>
-
         {% set footer = data.get('footer') %}
         {% if footer %}
-          <footer class="drawer-block__footer">
-            {% if footer.primary %}
-              <button type="button" class="drawer-block__action drawer-block__action--primary" data-tone="{{ footer.primary.tone|default('primary') }}">{{ footer.primary.label }}</button>
-            {% endif %}
-            {% if footer.secondary %}
-              <button type="button" class="drawer-block__action drawer-block__action--secondary">{{ footer.secondary.label }}</button>
-            {% endif %}
-            {% if footer.tertiary %}
-              <button type="button" class="drawer-block__action drawer-block__action--tertiary" data-tone="{{ footer.tertiary.tone|default('neutral') }}">{{ footer.tertiary.label }}</button>
-            {% endif %}
-          </footer>
+        {% call ui.sheet_footer(class='flex-row flex-wrap justify-end gap-2 border-t') %}
+          {% if footer.tertiary %}{{ ui.button(text=footer.tertiary.label, variant=('destructive' if footer.tertiary.tone|default('neutral') == 'danger' else 'ghost'), class='mr-auto') }}{% endif %}
+          {% if footer.secondary %}{{ ui.button(text=footer.secondary.label, variant='outline') }}{% endif %}
+          {% if footer.primary %}{{ ui.button(text=footer.primary.label, variant=('destructive' if footer.primary.tone|default('primary') == 'danger' else 'default')) }}{% endif %}
+        {% endcall %}
         {% endif %}
       </div>
     </div>
-  </div>
+  {% endcall %}
 {%- endmacro %}

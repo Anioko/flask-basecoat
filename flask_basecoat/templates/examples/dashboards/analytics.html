@@ -1,0 +1,69 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/_dashboards.html' as d %}
+{% block title %}Analytics dashboard · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set visits = [
+  {'month': 'Jan', 'teamA': 1500, 'teamB': 2200}, {'month': 'Feb', 'teamA': 3100, 'teamB': 3600}, {'month': 'Mar', 'teamA': 2400, 'teamB': 3500},
+  {'month': 'Apr', 'teamA': 1000, 'teamB': 4100}, {'month': 'May', 'teamA': 3500, 'teamB': 3600}, {'month': 'Jun', 'teamA': 1000, 'teamB': 2600},
+  {'month': 'Jul', 'teamA': 4000, 'teamB': 4100}, {'month': 'Aug', 'teamA': 3100, 'teamB': 3600}, {'month': 'Sep', 'teamA': 3200, 'teamB': 1100},
+  {'month': 'Oct', 'teamA': 5000, 'teamB': 3600}, {'month': 'Nov', 'teamA': 1700, 'teamB': 2100}, {'month': 'Dec', 'teamA': 4800, 'teamB': 1900},
+] %}
+{% call d.shell('analytics', 'Analytics', 'Visits, customers and campaign results') %}
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  {{ d.greeting('Cameron', 'Stay up to date with how the store performed today.', 'xl:col-span-2') }}
+
+  {% call ui.card() %}
+    {{ d.card_head('Key insights') }}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-muted-foreground">All-time revenue</span>
+        <span class="flex items-center gap-2 text-3xl font-semibold tracking-tight tabular-nums">$395.7k {{ d.delta('+2.7%') }}</span>
+      </div>
+      {{ d.segments([('Asia', 60, 1), ('USA', 25, 2), ('Europe', 15, 3)]) }}
+      {{ d.legend([('Asia', 1), ('USA', 2), ('Europe', 3)]) }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card(class='xl:col-span-2') %}
+    {% call ui.card_header() %}
+      {{ ui.card_description(text='Website visits') }}
+      {% call ui.card_title(class='flex flex-wrap items-baseline gap-2 text-3xl font-semibold tabular-nums') %}8,150 <span class="flex items-center gap-2 text-sm font-normal text-muted-foreground">{{ d.delta('+18%') }} than last year</span>{% endcall %}
+      {% call ui.card_action() %}{{ d.period('visits-year', ['2026', '2025'], '2026') }}{% endcall %}
+    {% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      {{ d.legend([('Team A', 1), ('Team B', 2)]) }}
+      {{ d.chart('stacked-bar', visits, [{'key': 'teamA', 'label': 'Team A', 'color': 'var(--chart-1)'}, {'key': 'teamB', 'label': 'Team B', 'color': 'var(--chart-2)'}], class='aspect-auto h-[280px] w-full', label='Website visits by team') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Customer segmentation', 'Customers by region') }}
+    {% call ui.card_content(class='flex flex-col gap-6') %}
+      <div class="relative">
+        {{ d.chart('donut', [{'region': 'Asia', 'value': 2300, 'fill': 'var(--chart-1)'}, {'region': 'America', 'value': 800, 'fill': 'var(--chart-2)'}, {'region': 'Europe', 'value': 500, 'fill': 'var(--chart-3)'}], [{'key': 'value', 'label': 'Customers'}], x='region', grid=false, class='mx-auto aspect-square h-[200px]', label='Customers by region') }}
+        <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"><span class="text-xs text-muted-foreground">Total</span><span class="text-2xl font-semibold tabular-nums">3,600</span></div>
+      </div>
+      <div class="flex flex-col gap-3 text-sm">
+        {% for label, amount, change, tone in [('Asia', '2,300', '+2.1%', 1), ('America', '800', '+4.7%', 2), ('Europe', '500', '-1.7%', 3)] %}
+        <div class="flex items-center gap-3"><span class="h-4 w-1 rounded-full bg-chart-{{ tone }}"></span><span class="font-medium">{{ label }}</span><span class="ml-auto font-medium tabular-nums">{{ amount }}</span>{{ d.delta(change) }}</div>
+        {% endfor %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  {{ d.stat_card('Weekly sales', '714k', 'shopping-bag', '+40%', period=none, action='See report') }}
+  {{ d.stat_card('Conversion rate', '5.3%', 'users', '+20%', period=none, action='See report') }}
+  {{ d.stat_card('Ad campaign clicks', '11,510', 'mouse-pointer-click', '+40%', period=none, action='See report') }}
+
+  {% call ui.card() %}
+    {{ d.card_head('Campaign performance', 'Audience reached per channel') }}
+    {{ d.channel_list([('IG', 1, 'Instagram', '8.49k users', 'Running'), ('GO', 2, 'Google', '9.12k users', 'Running'), ('FB', 3, 'Facebook', '6.98k users', 'Stopped'), ('X', 4, 'X', '8.92k users', 'Stopped')], footer='View detailed analytics') }}
+  {% endcall %}
+
+  <div class="xl:col-span-2">
+    {{ d.products_table([('SkyLens Pro 8K', 'Camera drone', 4, '$1,499.00', 'High demand'), ('DataDrive Secure X', 'External SSD 2TB', 4, '$199.00', 'Low demand'), ('FlexBook Infinity', 'Convertible laptop', 4, '$1,499.00', 'High demand'), ('PulseFit Tracker 2', 'Fitness watch', 3, '$1,499.00', 'Low demand')]) }}
+  </div>
+</div>
+{% endcall %}
+{% endblock %}

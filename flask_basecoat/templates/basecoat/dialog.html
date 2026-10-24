@@ -1,33 +1,59 @@
-{# Basecoat Dialog Component #}
-{% macro dialog(id, title='', description='', trigger_text='', trigger_variant='default', trigger_icon=none, size='max-w-lg', class='') %}
-    {% if trigger_text %}
-        {% from 'basecoat/button.html' import button %}
-        {{ button(
-            text=trigger_text,
-            variant=trigger_variant,
-            icon=trigger_icon,
-            on_click="document.getElementById('" ~ id ~ "').showModal()"
-        ) }}
-    {% endif %}
+{# dialog: port of shadcn/ui dialog.tsx (pinned in compliance/upstream). Macros: dialog, dialog_trigger, dialog_portal, dialog_close, dialog_overlay, dialog_content, dialog_header, dialog_footer, dialog_title, dialog_description #}
 
-    <dialog id="{{ id }}" class="dialog {{ size }} rounded-lg border border-border bg-card p-6 shadow-xl backdrop:bg-background/80 backdrop:backdrop-blur-sm fixed inset-0 m-auto {{ class }}">
-        {# Header #}
-        <div class="flex flex-col space-y-1.5 mb-4 pr-6">
-            <h3 class="text-lg font-semibold leading-none tracking-tight text-foreground">{{ title }}</h3>
-            {% if description %}
-                <p class="text-sm text-muted-foreground">{{ description }}</p>
-            {% endif %}
-        </div>
-        
-        {# Body #}
-        <div class="dialog-content mb-6 text-sm text-foreground">
-            {{ caller() if caller }}
-        </div>
-        
-        {# Close button #}
-        <button type="button" onclick="document.getElementById('{{ id }}').close()" class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2" aria-label="Close">
-            <i data-lucide="x" class="h-4 w-4"></i>
-            <span class="sr-only">Close</span>
-        </button>
-    </dialog>
-{% endmacro %}
+{#- Dialog: renders no element upstream. The macro groups trigger and content in the template only; the runtime pairs each content with the trigger that precedes it in document order. -#}
+{% macro dialog(class='', id=none, attrs={}) -%}
+{{ caller() if caller }}
+{%- endmacro %}
+
+{#- DialogTrigger -#}
+{% macro dialog_trigger(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-trigger', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogPortal: renders no element upstream. The macro groups trigger and content in the template only; the runtime pairs each content with the trigger that precedes it in document order. -#}
+{% macro dialog_portal(class='', id=none, attrs={}) -%}
+{{ caller() if caller }}
+{%- endmacro %}
+
+{#- DialogClose -#}
+{% macro dialog_close(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-close', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogOverlay -#}
+{% macro dialog_overlay(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-overlay', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogContent -#}
+{% macro dialog_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-content', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogHeader -#}
+{% macro dialog_header(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-header', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogFooter -#}
+{% macro dialog_footer(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-footer', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogTitle -#}
+{% macro dialog_title(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-title', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- DialogDescription -#}
+{% macro dialog_description(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('dialog-description', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}

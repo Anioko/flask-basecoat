@@ -1,0 +1,202 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Add Product{% endblock %}
+{% block body %}
+{% set posted = request.method == 'POST' %}
+{% set f = request.form %}
+{% set v = {
+  'name': f.get('name', ''), 'description': f.get('description', ''), 'basePrice': f.get('basePrice', ''), 'vatAmount': f.get('vatAmount', ''),
+  'discountType': f.get('discountType', 'none') or 'none', 'status': f.get('status', 'published') or 'published',
+  'template': f.get('template', 'default') or 'default', 'taxClass': f.get('taxClass') or none,
+} %}
+{% set categories = f.getlist('categories') if posted else ['Headphones'] %}
+{% set vtypes, vvalues = f.getlist('variation_type'), f.getlist('variation_value') %}
+{% set errors = {} %}
+{% if posted %}
+  {% if not v.name.strip() %}{% set _ = errors.update({'name': 'Product name is required'}) %}{% endif %}
+  {% if not v.basePrice.strip() %}{% set _ = errors.update({'basePrice': 'Base price is required'}) %}{% endif %}
+  {% if not v.vatAmount.strip() %}{% set _ = errors.update({'vatAmount': 'VAT amount is required'}) %}{% endif %}
+{% endif %}
+{% set variation_types = [('Size', 'Size'), ('Color', 'Color'), ('Material', 'Material')] %}
+{% macro variation_row(type='Size', value='') -%}
+<div class="flex items-center gap-2" data-variation>
+  {{ c.select_field('variation_type', variation_types, type, class='w-32', id='') }}
+  {{ ui.input(name='variation_value', placeholder='Variation', value=value, class='flex-1', attrs={'aria-label': 'Variation'}) }}
+  {% call ui.button(type='button', variant='outline', size='icon', attrs={'data-remove-variation': '', 'aria-label': 'Remove variation'}) %}{{ lucide('x') }}{% endcall %}
+</div>
+{%- endmacro %}
+{% macro category_badge(name) -%}
+{% call ui.badge(variant='secondary', class='bg-primary/10 text-primary', attrs={'data-category': name}) %}<span class="mr-1 cursor-pointer" data-remove-category role="button" tabindex="0" aria-label="Remove {{ name }}">×</span>{{ name }}<input type="hidden" name="categories" value="{{ name }}">{% endcall %}
+{%- endmacro %}
+<div class="mx-auto max-w-7xl space-y-8 p-6">
+  <form method="post" action="{{ request.path }}" class="space-y-8" novalidate>
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div class="space-y-4 lg:col-span-2">
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='General') }}{% endcall %}
+          {% call ui.card_content(class='space-y-6') %}
+            <div class="space-y-2">
+              {{ c.required_label('Product Name', for_='name') }}
+              {{ ui.input(id='name', name='name', placeholder='Product Name', value=v.name, invalid=('name' in errors), attrs={'aria-describedby': 'name-error' if 'name' in errors else none}) }}
+              {% if 'name' in errors %}{{ ui.field_error(text=errors.name, id='name-error', class='text-sm') }}{% endif %}
+              <p class="text-muted-foreground text-sm">A product name is required and recommended to be unique.</p>
+            </div>
+            <div class="space-y-2">
+              {{ ui.label(text='Description', for_='description') }}
+              {{ ui.textarea(id='description', name='description', text=v.description, placeholder='Set a description to the product for better visibility.', class='min-h-[200px]') }}
+            </div>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Media') }}{% endcall %}
+          {% call ui.card_content() %}
+            <div class="border-primary/30 bg-primary/5 rounded-lg border-2 border-dashed p-12 text-center">
+              <div class="text-primary/60 mx-auto mb-4 flex h-12 w-12 items-center justify-center text-2xl">📁</div>
+              <p class="text-primary">Drop files here to upload</p>
+            </div>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Variation') }}{% endcall %}
+          {% call ui.card_content(class='space-y-4') %}
+            <div class="space-y-4" id="variations">
+              {{ ui.label(text='Add Product Variations') }}
+              {% for type in vtypes %}{{ variation_row(type, vvalues[loop.index0] if loop.index0 < vvalues | length else '') }}{% endfor %}
+              {% call ui.button(type='button', variant='outline', id='add-variation') %}{{ lucide('plus') }} Add another variation{% endcall %}
+            </div>
+            <template id="variation-template">{{ variation_row() }}</template>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Pricing') }}{% endcall %}
+          {% call ui.card_content(class='space-y-6') %}
+            <div class="space-y-2">
+              {{ c.required_label('Base Price', for_='basePrice') }}
+              {{ ui.input(id='basePrice', name='basePrice', placeholder='Product Price', value=v.basePrice, invalid=('basePrice' in errors), attrs={'aria-describedby': 'basePrice-error' if 'basePrice' in errors else none}) }}
+              {% if 'basePrice' in errors %}{{ ui.field_error(text=errors.basePrice, id='basePrice-error', class='text-sm') }}{% endif %}
+              <p class="text-muted-foreground text-sm">Set the product price.</p>
+            </div>
+            <div class="space-y-2">
+              {{ ui.label(text='Discount Type', attrs={'id': 'discount-label'}) }}
+              {% call ui.radio_group(name='discountType', class='flex gap-8', attrs={'aria-labelledby': 'discount-label'}) %}
+                {% for value, id, label in [('none', 'no-discount', 'No Discount'), ('percentage', 'percentage', 'Percentage %'), ('fixed', 'fixed-price', 'Fixed Price')] %}
+                <div class="flex items-center space-x-2">
+                  {% if v.discountType == value %}{% call ui.radio_group_item(value=value, id=id, checked=true) %}{% call ui.radio_group_indicator(checked=true) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}{% else %}{{ ui.radio_group_item(value=value, id=id, checked=false) }}{% endif %}
+                  {{ ui.label(text=label, for_=id) }}
+                </div>
+                {% endfor %}
+              {% endcall %}
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-2">
+                {{ c.required_label('Tax Class', for_='taxClass') }}
+                {{ c.select_field('taxClass', [('standard', 'Standard'), ('reduced', 'Reduced'), ('zero', 'Zero Rate')], v.taxClass, 'Select an option', class='w-full') }}
+                <p class="text-muted-foreground text-sm">Set the product tax class.</p>
+              </div>
+              <div class="space-y-2">
+                {{ c.required_label('VAT Amount (%)', for_='vatAmount') }}
+                {{ ui.input(id='vatAmount', name='vatAmount', placeholder='0', value=v.vatAmount, invalid=('vatAmount' in errors), attrs={'aria-describedby': 'vatAmount-error' if 'vatAmount' in errors else none}) }}
+                {% if 'vatAmount' in errors %}{{ ui.field_error(text=errors.vatAmount, id='vatAmount-error', class='text-sm') }}{% endif %}
+                <p class="text-muted-foreground text-sm">Set the product VAT about.</p>
+              </div>
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+
+      <div class="space-y-4">
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Thumbnail') }}{% endcall %}
+          {% call ui.card_content() %}
+            <div class="border-primary/30 bg-primary/5 rounded-lg border-2 border-dashed p-8 text-center">
+              <div class="text-primary/60 mx-auto mb-2 flex h-8 w-8 items-center justify-center text-xl">🖼️</div>
+              <p class="text-primary text-sm">Drop Thumbnail here to upload</p>
+            </div>
+            <p class="text-muted-foreground mt-2 text-xs">Set the product thumbnail image. Only *.png, *.jpg and *.jpeg image files are accepted.</p>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_header() %}
+            {% call ui.card_title(class='flex items-center gap-2') %}Status<div class="bg-primary h-2 w-2 rounded-full"></div>{% endcall %}
+            {{ ui.card_description(text='Set the product status.') }}
+          {% endcall %}
+          {% call ui.card_content(class='space-y-2') %}
+            {{ c.select_field('status', [('published', 'Published'), ('draft', 'Draft'), ('archived', 'Archived')], v.status, class='w-full') }}
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_header() %}{{ ui.card_title(text='Product Details') }}{% endcall %}
+          {% call ui.card_content(class='space-y-6') %}
+            <div>
+              {{ ui.label(text='Categories', class='text-sm font-medium') }}
+              <div class="mt-2 flex flex-wrap gap-2" id="categories">{% for cat in categories %}{{ category_badge(cat) }}{% endfor %}</div>
+              <p class="text-muted-foreground mt-1 text-xs">Add product to a category.</p>
+              <div class="mt-2 flex gap-2">
+                {{ ui.input(id='new-category', placeholder='New category', class='flex-1', attrs={'aria-label': 'New category'}) }}
+                {% call ui.button(type='button', variant='outline', id='add-category') %}{{ lucide('plus') }} Create New Category{% endcall %}
+              </div>
+              <template id="category-template">{{ category_badge('__name__') }}</template>
+            </div>
+            {{ ui.separator() }}
+            <div>
+              {{ ui.label(text='Tags', class='text-sm font-medium') }}
+              <p class="text-muted-foreground mt-1 text-xs">Add product to a category.</p>
+            </div>
+          {% endcall %}
+        {% endcall %}
+
+        {% call ui.card() %}
+          {% call ui.card_header() %}
+            {{ ui.card_title(text='Product Template') }}
+            {{ ui.card_description(text='Assign a template from your current theme to define how a single product is displayed.') }}
+          {% endcall %}
+          {% call ui.card_content() %}
+            <div class="space-y-2">{{ c.select_field('template', [('default', 'Default Template'), ('minimal', 'Minimal Template'), ('detailed', 'Detailed Template')], v.template, class='w-full', id='product-template') }}</div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+    <div class="flex gap-3">
+      {{ ui.button(text='Save changes', type='submit') }}
+      {{ ui.button(text='Cancel', type='button', variant='destructive') }}
+    </div>
+  </form>
+</div>
+<script>
+  (function () {
+    var variations = document.getElementById('variations');
+    var addVariation = document.getElementById('add-variation');
+    addVariation.addEventListener('click', function () {
+      var row = document.getElementById('variation-template').content.firstElementChild.cloneNode(true);
+      variations.insertBefore(row, addVariation);
+    });
+    variations.addEventListener('click', function (e) {
+      var remove = e.target.closest('[data-remove-variation]');
+      if (remove) remove.closest('[data-variation]').remove();
+    });
+    var list = document.getElementById('categories');
+    var input = document.getElementById('new-category');
+    document.getElementById('add-category').addEventListener('click', function () {
+      var name = input.value.trim();
+      var exists = Array.prototype.some.call(list.querySelectorAll('[data-category]'), function (b) { return b.getAttribute('data-category') === name; });
+      if (!name || exists) return;
+      var html = document.getElementById('category-template').innerHTML.split('__name__').join(name.replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }));
+      list.insertAdjacentHTML('beforeend', html);
+      input.value = '';
+    });
+    list.addEventListener('click', function (e) {
+      var x = e.target.closest('[data-remove-category]');
+      if (x) x.closest('[data-category]').remove();
+    });
+    list.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('[data-remove-category]')) { e.preventDefault(); e.target.click(); }
+    });
+  })();
+</script>
+{% endblock %}

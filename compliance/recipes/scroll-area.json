@@ -1,0 +1,32 @@
+{
+  "name": "scroll-area",
+  "source": "upstream/shadcn/radix/ui/scroll-area.tsx",
+  "slots": {
+    "scroll-area": {
+      "component": "ScrollArea",
+      "element": "ScrollAreaPrimitive.Root",
+      "base_classes": "cn-scroll-area relative",
+      "data_attrs": []
+    },
+    "scroll-area-viewport": {
+      "component": "ScrollArea",
+      "element": "ScrollAreaPrimitive.Viewport",
+      "base_classes": "cn-scroll-area-viewport size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1",
+      "data_attrs": []
+    },
+    "scroll-area-scrollbar": {
+      "component": "ScrollBar",
+      "element": "ScrollAreaPrimitive.ScrollAreaScrollbar",
+      "base_classes": "cn-scroll-area-scrollbar flex touch-none p-px transition-colors select-none",
+      "data_attrs": [
+        "data-orientation"
+      ]
+    },
+    "scroll-area-thumb": {
+      "component": "ScrollBar",
+      "element": "ScrollAreaPrimitive.ScrollAreaThumb",
+      "base_classes": "cn-scroll-area-thumb relative flex-1 bg-border",
+      "data_attrs": []
+    }
+  }
+}

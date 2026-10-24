@@ -1,0 +1,150 @@
+{
+  "name": "questionnaire",
+  "source": "upstream/shadcn/radix/ui/questionnaire.tsx",
+  "slots": {
+    "questionnaire": {
+      "component": "Questionnaire",
+      "element": "QuestionnairePrimitive.Root",
+      "base_classes": "cn-questionnaire flex w-full min-w-0 flex-col",
+      "data_attrs": []
+    },
+    "questionnaire-progress": {
+      "component": "QuestionnaireProgress",
+      "element": "QuestionnairePrimitive.Progress",
+      "base_classes": "cn-questionnaire-progress min-h-[1lh] w-fit min-w-[14ch] font-medium text-muted-foreground tabular-nums",
+      "data_attrs": []
+    },
+    "questionnaire-item": {
+      "component": "QuestionnaireItem",
+      "element": "QuestionnairePrimitive.Item",
+      "base_classes": "cn-questionnaire-item min-w-0 border-0 p-0 outline-none",
+      "data_attrs": []
+    },
+    "questionnaire-title": {
+      "component": "QuestionnaireTitle",
+      "element": "QuestionnairePrimitive.Title",
+      "base_classes": "cn-questionnaire-title cn-font-heading text-pretty",
+      "data_attrs": []
+    },
+    "questionnaire-description": {
+      "component": "QuestionnaireDescription",
+      "element": "QuestionnairePrimitive.Description",
+      "base_classes": "cn-questionnaire-description text-pretty text-muted-foreground",
+      "data_attrs": []
+    },
+    "questionnaire-choices": {
+      "component": "QuestionnaireChoices",
+      "element": "QuestionnairePrimitive.Choices",
+      "base_classes": "cn-questionnaire-choices group/questionnaire-choices grid min-w-0",
+      "data_attrs": []
+    },
+    "questionnaire-choice": {
+      "component": "QuestionnaireChoice",
+      "element": "QuestionnairePrimitive.Choice",
+      "base_classes": "cn-questionnaire-choice group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start text-start transition-colors outline-none select-none data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
+      "data_attrs": []
+    },
+    "questionnaire-choice-input": {
+      "component": "QuestionnaireChoice",
+      "element": "QuestionnairePrimitive.ChoiceInput",
+      "base_classes": "cn-questionnaire-choice-input absolute inset-0 z-10 size-full cursor-pointer opacity-0",
+      "data_attrs": []
+    },
+    "questionnaire-choice-indicator": {
+      "component": "QuestionnaireChoice",
+      "element": "span",
+      "base_classes": "cn-questionnaire-choice-indicator pointer-events-none relative flex shrink-0 items-center justify-center border group-data-[type=radio]/questionnaire-choice:rounded-full",
+      "data_attrs": []
+    },
+    "questionnaire-choice-indicator-dot": {
+      "component": "QuestionnaireChoice",
+      "element": "span",
+      "base_classes": "cn-questionnaire-choice-indicator-dot hidden rounded-full group-data-[type=checkbox]/questionnaire-choice:hidden group-data-checked/questionnaire-choice:block",
+      "data_attrs": []
+    },
+    "questionnaire-choice-indicator-check": {
+      "component": "QuestionnaireChoice",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-questionnaire-choice-indicator-check hidden group-data-[type=radio]/questionnaire-choice:hidden group-data-checked/questionnaire-choice:block",
+      "data_attrs": []
+    },
+    "questionnaire-choice-label": {
+      "component": "QuestionnaireChoice",
+      "element": "QuestionnairePrimitive.ChoiceLabel",
+      "base_classes": "cn-questionnaire-choice-label cn-questionnaire-choice-content flex min-w-0 flex-1 flex-col leading-snug",
+      "data_attrs": []
+    },
+    "questionnaire-choice-shortcut": {
+      "component": "QuestionnaireChoice",
+      "element": "QuestionnairePrimitive.ChoiceShortcut",
+      "base_classes": "cn-questionnaire-choice-shortcut cn-questionnaire-shortcut pointer-events-none ms-auto hidden shrink-0 group-data-[shortcut]/questionnaire-choice:inline-flex",
+      "data_attrs": []
+    },
+    "questionnaire-choice-description": {
+      "component": "QuestionnaireChoiceDescription",
+      "element": "span",
+      "base_classes": "cn-questionnaire-choice-description",
+      "data_attrs": []
+    },
+    "questionnaire-input-wrapper": {
+      "component": "QuestionnaireInput",
+      "element": "div",
+      "base_classes": "cn-questionnaire-input-wrapper group/questionnaire-input relative min-w-0",
+      "data_attrs": []
+    },
+    "questionnaire-input": {
+      "component": "QuestionnaireInput",
+      "element": "QuestionnairePrimitive.Input",
+      "base_classes": "cn-questionnaire-input min-h-11 w-full min-w-0 transition-[color,box-shadow,background-color] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-0 selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground",
+      "data_attrs": []
+    },
+    "questionnaire-error": {
+      "component": "QuestionnaireError",
+      "element": "QuestionnairePrimitive.Error",
+      "base_classes": "cn-questionnaire-error text-destructive",
+      "data_attrs": []
+    },
+    "questionnaire-actions": {
+      "component": "QuestionnaireActions",
+      "element": "div",
+      "base_classes": "cn-questionnaire-actions grid min-h-11 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center",
+      "data_attrs": []
+    },
+    "questionnaire-previous": {
+      "component": "QuestionnairePrevious",
+      "element": "QuestionnairePrimitive.Previous",
+      "base_classes": "cn-questionnaire-previous col-start-1 row-start-1 min-h-11 justify-self-start sm:min-h-0",
+      "data_attrs": [
+        "data-size",
+        "data-variant"
+      ]
+    },
+    "questionnaire-skip": {
+      "component": "QuestionnaireSkip",
+      "element": "QuestionnairePrimitive.Skip",
+      "base_classes": "cn-questionnaire-skip col-start-2 row-start-1 min-h-11 justify-self-end sm:min-h-0",
+      "data_attrs": [
+        "data-size",
+        "data-variant"
+      ]
+    },
+    "questionnaire-next": {
+      "component": "QuestionnaireNext",
+      "element": "QuestionnairePrimitive.Next",
+      "base_classes": "cn-questionnaire-next col-start-3 row-start-1 min-h-11 justify-self-end sm:min-h-0",
+      "data_attrs": [
+        "data-size",
+        "data-variant"
+      ]
+    },
+    "questionnaire-submit": {
+      "component": "QuestionnaireSubmit",
+      "element": "QuestionnairePrimitive.Submit",
+      "base_classes": "cn-questionnaire-submit col-start-3 row-start-1 min-h-11 justify-self-end sm:min-h-0",
+      "data_attrs": [
+        "data-size",
+        "data-variant"
+      ]
+    }
+  }
+}

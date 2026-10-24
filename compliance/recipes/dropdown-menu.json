@@ -1,0 +1,125 @@
+{
+  "name": "dropdown-menu",
+  "source": "upstream/shadcn/radix/ui/dropdown-menu.tsx",
+  "slots": {
+    "dropdown-menu": {
+      "component": "DropdownMenu",
+      "element": "DropdownMenuPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dropdown-menu-portal": {
+      "component": "DropdownMenuPortal",
+      "element": "DropdownMenuPrimitive.Portal",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dropdown-menu-trigger": {
+      "component": "DropdownMenuTrigger",
+      "element": "DropdownMenuPrimitive.Trigger",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dropdown-menu-content": {
+      "component": "DropdownMenuContent",
+      "element": "DropdownMenuPrimitive.Content",
+      "base_classes": "cn-dropdown-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden",
+      "data_attrs": []
+    },
+    "dropdown-menu-group": {
+      "component": "DropdownMenuGroup",
+      "element": "DropdownMenuPrimitive.Group",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dropdown-menu-item": {
+      "component": "DropdownMenuItem",
+      "element": "DropdownMenuPrimitive.Item",
+      "base_classes": "cn-dropdown-menu-item group/dropdown-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset",
+        "data-variant"
+      ]
+    },
+    "dropdown-menu-checkbox-item": {
+      "component": "DropdownMenuCheckboxItem",
+      "element": "DropdownMenuPrimitive.CheckboxItem",
+      "base_classes": "cn-dropdown-menu-checkbox-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "dropdown-menu-checkbox-item-indicator": {
+      "component": "DropdownMenuCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-dropdown-menu-item-indicator pointer-events-none",
+      "data_attrs": []
+    },
+    "dropdown-menu-radio-group": {
+      "component": "DropdownMenuRadioGroup",
+      "element": "DropdownMenuPrimitive.RadioGroup",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dropdown-menu-radio-item": {
+      "component": "DropdownMenuRadioItem",
+      "element": "DropdownMenuPrimitive.RadioItem",
+      "base_classes": "cn-dropdown-menu-radio-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "dropdown-menu-radio-item-indicator": {
+      "component": "DropdownMenuRadioItem",
+      "element": "span",
+      "base_classes": "cn-dropdown-menu-item-indicator pointer-events-none",
+      "data_attrs": []
+    },
+    "dropdown-menu-label": {
+      "component": "DropdownMenuLabel",
+      "element": "DropdownMenuPrimitive.Label",
+      "base_classes": "cn-dropdown-menu-label",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "dropdown-menu-separator": {
+      "component": "DropdownMenuSeparator",
+      "element": "DropdownMenuPrimitive.Separator",
+      "base_classes": "cn-dropdown-menu-separator",
+      "data_attrs": []
+    },
+    "dropdown-menu-shortcut": {
+      "component": "DropdownMenuShortcut",
+      "element": "span",
+      "base_classes": "cn-dropdown-menu-shortcut",
+      "data_attrs": []
+    },
+    "dropdown-menu-sub": {
+      "component": "DropdownMenuSub",
+      "element": "DropdownMenuPrimitive.Sub",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "dropdown-menu-sub-trigger": {
+      "component": "DropdownMenuSubTrigger",
+      "element": "DropdownMenuPrimitive.SubTrigger",
+      "base_classes": "cn-dropdown-menu-sub-trigger flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "DropdownMenuSubTrigger:IconPlaceholder": {
+      "component": "DropdownMenuSubTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip ml-auto",
+      "data_attrs": []
+    },
+    "dropdown-menu-sub-content": {
+      "component": "DropdownMenuSubContent",
+      "element": "DropdownMenuPrimitive.SubContent",
+      "base_classes": "cn-dropdown-menu-sub-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden",
+      "data_attrs": []
+    }
+  }
+}

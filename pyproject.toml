@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "flask-basecoat"
-version = "0.1.0"
-description = "Canonical shadcn/ui-aligned Jinja macros wrapping Basecoat UI for Flask and Entelim"
+name = "Flask-Basecoat"
+version = "1.0.0"
+description = "The shadcn/ui design system as Jinja macros for Flask: every registry component and block, checked against the pinned upstream sources"
 readme = "README.md"
 authors = [{ name = "Anioko" }]
 license = { text = "MIT" }
@@ -27,4 +27,4 @@ where = ["."]
 include = ["flask_basecoat*"]
 
 [tool.setuptools.package-data]
-flask_basecoat = ["templates/**/*.html", "static/**/*"]
+flask_basecoat = ["templates/**/*.html", "static/**/*", "data/*.json"]

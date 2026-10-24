@@ -99,7 +99,7 @@ class DocsPagesTestCase(unittest.TestCase):
     def test_faq_block_preview(self):
         response = self.client.get('/docs/blocks/faq/faq-01')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Answers for Basecoat UI teams', response.data)
+        self.assertIn(b'Answers for Flask-Basecoat teams', response.data)
         self.assertIn(b'Read migration guide', response.data)
         self.assertIn(b'Semantic UI', response.data)
 

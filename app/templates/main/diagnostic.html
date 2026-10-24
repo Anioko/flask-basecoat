@@ -1,95 +1,127 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Basecoat Diagnostic Page</h1>
-    
-    <div class="space-y-8">
-        <!-- Test 1: Direct .input class -->
-        <section class="border border-gray-300 p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Test 1: Direct .input class</h2>
-            <input type="text" class="input" placeholder="This should have Basecoat styling" />
-            <p class="text-sm text-gray-600 mt-2">Expected: Border, padding, rounded corners</p>
-        </section>
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold tracking-tight">Flask-Basecoat Diagnostic Page</h1>
+        <p class="mt-1 text-sm text-muted-foreground">Each test renders one component through its macro; the expected result is listed beneath it.</p>
+    </div>
 
-        <!-- Test 2: Input inside .form parent -->
-        <section class="border border-gray-300 p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Test 2: Input inside .form parent</h2>
-            <form class="form">
-                <input type="text" placeholder="Input inside .form parent" />
-            </form>
-            <p class="text-sm text-gray-600 mt-2">Expected: Border, padding, rounded corners (even without .input class)</p>
-        </section>
+    <div class="grid gap-6">
+        <!-- Test 1: Input -->
+        {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Test 1: Input') }}{% endcall %}
+            {% call ui.card_content(class='flex flex-col gap-2') %}
+                {{ ui.input(type='text', id='diag-input', attrs={'placeholder': 'This should have shadcn styling'}) }}
+                <p class="text-sm text-muted-foreground">Expected: border, padding, rounded corners, focus ring.</p>
+            {% endcall %}
+        {% endcall %}
 
-        <!-- Test 3: Button with .btn class -->
-        <section class="border border-gray-300 p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Test 3: Button with .btn class</h2>
-            <button class="btn">Click Me</button>
-            <p class="text-sm text-gray-600 mt-2">Expected: Blue background, white text, padding</p>
-        </section>
+        <!-- Test 2: Input inside a Field -->
+        {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Test 2: Input inside a Field') }}{% endcall %}
+            {% call ui.card_content(class='flex flex-col gap-2') %}
+                {% call ui.field() %}
+                    {{ ui.field_label(text='Field label', for_='diag-field-input') }}
+                    {{ ui.input(type='text', id='diag-field-input', attrs={'placeholder': 'Input inside a Field'}) }}
+                    {{ ui.field_description(text='Help text rendered by the Field macros.') }}
+                {% endcall %}
+                <p class="text-sm text-muted-foreground">Expected: label above the input, description in muted text.</p>
+            {% endcall %}
+        {% endcall %}
 
-        <!-- Test 4: Alert component -->
-        <section class="border border-gray-300 p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Test 4: Alert component</h2>
-            <div class="alert">
-                <h2>Alert Title</h2>
-                <p>This is an alert message</p>
-            </div>
-            <p class="text-sm text-gray-600 mt-2">Expected: Card-like box with border and padding</p>
-        </section>
-
-        <!-- Test 5: Card component -->
-        <section class="border border-gray-300 p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Test 5: Card component</h2>
-            <div class="card">
-                <header>
-                    <h2>Card Title</h2>
-                    <p>Card description</p>
-                </header>
-            </div>
-            <p class="text-sm text-gray-600 mt-2">Expected: Card with shadow, border, padding</p>
-        </section>
-
-        <!-- Test 6: Complete form with proper structure -->
-        <section class="border border-gray-300 p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Test 6: Complete form (Basecoat structure)</h2>
-            <form class="form grid gap-6">
-                <div class="grid gap-2">
-                    <label for="test-name">Full Name</label>
-                    <input type="text" id="test-name" class="input" placeholder="Enter your name" />
+        <!-- Test 3: Button -->
+        {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Test 3: Button') }}{% endcall %}
+            {% call ui.card_content(class='flex flex-col gap-2') %}
+                <div class="flex flex-wrap gap-2">
+                    {{ ui.button(text='Click Me', type='button') }}
+                    {{ ui.button(text='Outline', variant='outline', type='button') }}
+                    {{ ui.button(text='Ghost', variant='ghost', type='button') }}
                 </div>
-                <div class="grid gap-2">
-                    <label for="test-email">Email</label>
-                    <input type="email" id="test-email" class="input" placeholder="Enter your email" />
-                </div>
-                <button type="submit" class="btn">Submit</button>
-            </form>
-            <p class="text-sm text-gray-600 mt-2">Expected: All inputs styled, button styled, proper spacing</p>
-        </section>
+                <p class="text-sm text-muted-foreground">Expected: primary background, contrasting text, padding.</p>
+            {% endcall %}
+        {% endcall %}
 
-        <!-- CSS Check -->
-        <section class="border border-red-300 p-4 rounded bg-red-50">
-            <h2 class="text-xl font-semibold mb-4">CSS Loading Check</h2>
-            <ul class="list-disc list-inside space-y-2">
-                <li>Open DevTools (F12)</li>
-                <li>Go to Network tab</li>
-                <li>Refresh page (Ctrl+R)</li>
-                <li>Check if basecoat.cdn.min.css loaded (200 status)</li>
-                <li>Check if cdn.tailwindcss.com loaded (200 status)</li>
-            </ul>
-        </section>
+        <!-- Test 4: Alert -->
+        {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Test 4: Alert') }}{% endcall %}
+            {% call ui.card_content(class='flex flex-col gap-2') %}
+                {% call ui.alert() %}
+                    {{ lucide('info') }}
+                    {{ ui.alert_title(text='Alert Title') }}
+                    {{ ui.alert_description(text='This is an alert message') }}
+                {% endcall %}
+                <p class="text-sm text-muted-foreground">Expected: bordered box with icon, title and description.</p>
+            {% endcall %}
+        {% endcall %}
+
+        <!-- Test 5: Card -->
+        {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Test 5: Card') }}{% endcall %}
+            {% call ui.card_content(class='flex flex-col gap-2') %}
+                {% call ui.card(class='max-w-sm') %}
+                    {% call ui.card_header() %}
+                        {{ ui.card_title(text='Card Title') }}
+                        {{ ui.card_description(text='Card description') }}
+                    {% endcall %}
+                {% endcall %}
+                <p class="text-sm text-muted-foreground">Expected: card with border, shadow and padding.</p>
+            {% endcall %}
+        {% endcall %}
+
+        <!-- Test 6: Complete form -->
+        {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Test 6: Complete form') }}{% endcall %}
+            {% call ui.card_content(class='flex flex-col gap-2') %}
+                <form class="max-w-md" action="#" method="get">
+                    {% call ui.field_group() %}
+                        {% call ui.field() %}
+                            {{ ui.field_label(text='Full Name', for_='test-name') }}
+                            {{ ui.input(type='text', id='test-name', attrs={'placeholder': 'Enter your name'}) }}
+                        {% endcall %}
+                        {% call ui.field() %}
+                            {{ ui.field_label(text='Email', for_='test-email') }}
+                            {{ ui.input(type='email', id='test-email', attrs={'placeholder': 'Enter your email'}) }}
+                        {% endcall %}
+                        {% call ui.field() %}
+                            {{ ui.button(text='Submit', type='submit') }}
+                        {% endcall %}
+                    {% endcall %}
+                </form>
+                <p class="text-sm text-muted-foreground">Expected: all inputs styled, button styled, proper spacing.</p>
+            {% endcall %}
+        {% endcall %}
+
+        <!-- Asset check -->
+        {% call ui.alert(variant='destructive') %}
+            {{ lucide('circle-alert') }}
+            {{ ui.alert_title(text='CSS and script loading check') }}
+            {% call ui.alert_description() %}
+                <ol class="list-decimal space-y-1 pl-4">
+                    <li>Open DevTools (F12) and go to the Network tab.</li>
+                    <li>Refresh the page (Ctrl+R).</li>
+                    <li>Check that <code>styles/app.css</code> loaded (200 status).</li>
+                    <li>Check that <code>js/flask-basecoat.js</code> loaded (200 status).</li>
+                    <li>No request should go to a CDN.</li>
+                </ol>
+            {% endcall %}
+        {% endcall %}
 
         <!-- Inspect Element Instructions -->
-        <section class="border border-blue-300 p-4 rounded bg-blue-50">
-            <h2 class="text-xl font-semibold mb-4">How to Inspect</h2>
-            <ol class="list-decimal list-inside space-y-2">
-                <li>Right-click on an input field above</li>
-                <li>Select "Inspect" or "Inspect Element"</li>
-                <li>Check the Styles panel on the right</li>
-                <li>Look for .input or :is(.form,.field) input[type=text] selectors</li>
-                <li>Check if border-width: 1px is shown (not crossed out)</li>
-            </ol>
-        </section>
+        {% call ui.alert() %}
+            {{ lucide('search') }}
+            {{ ui.alert_title(text='How to inspect') }}
+            {% call ui.alert_description() %}
+                <ol class="list-decimal space-y-1 pl-4">
+                    <li>Right-click on an input field above and select "Inspect".</li>
+                    <li>Check the Styles panel on the right.</li>
+                    <li>Look for the <code>.cn-input</code> recipe under <code>.style-vega</code>.</li>
+                    <li>Every element carries a <code>data-slot</code> attribute naming its component part.</li>
+                </ol>
+            {% endcall %}
+        {% endcall %}
     </div>
 </div>
 {% endblock %}

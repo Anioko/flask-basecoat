@@ -1,0 +1,148 @@
+{# Prose and page helpers shared by the documentation pages. Every control comes from the component macros;
+   these only add the typographic rhythm of a docs page on top of the design tokens. #}
+{% import 'basecoat/index.html' as ui %}
+
+{% macro h2(text='', id=none) -%}
+<h2{% if id %} id="{{ id }}"{% endif %} class="mt-12 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0">{{ text }}{{ caller() if caller }}</h2>
+{%- endmacro %}
+
+{% macro h3(text='', id=none) -%}
+<h3{% if id %} id="{{ id }}"{% endif %} class="mt-8 scroll-m-20 text-xl font-semibold tracking-tight">{{ text }}{{ caller() if caller }}</h3>
+{%- endmacro %}
+
+{% macro h4(text='') -%}
+<h4 class="mt-6 scroll-m-20 text-base font-semibold tracking-tight">{{ text }}{{ caller() if caller }}</h4>
+{%- endmacro %}
+
+{% macro p(text='', class='') -%}
+<p class="{{ tw('mt-4 leading-7', class) }}">{{ text }}{{ caller() if caller }}</p>
+{%- endmacro %}
+
+{% macro lead(text='') -%}
+<p class="mt-4 text-lg leading-8 text-muted-foreground">{{ text }}{{ caller() if caller }}</p>
+{%- endmacro %}
+
+{% macro muted(text='') -%}
+<p class="mt-2 text-sm text-muted-foreground">{{ text }}{{ caller() if caller }}</p>
+{%- endmacro %}
+
+{% macro c(text) -%}
+<code class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-[0.85em]">{{ text }}</code>
+{%- endmacro %}
+
+{% macro link(text, href, external=false, class='') -%}
+<a class="{{ tw('font-medium text-foreground underline underline-offset-4 hover:text-primary', class) }}" href="{{ href }}"{% if external %} target="_blank" rel="noreferrer"{% endif %}>{{ text }}{{ caller() if caller }}</a>
+{%- endmacro %}
+
+{% macro ul(items=[]) -%}
+<ul class="mt-4 ml-6 list-disc [&>li]:mt-2 [&>li]:leading-7">{% for item in items %}<li>{{ item|safe }}</li>{% endfor %}{{ caller() if caller }}</ul>
+{%- endmacro %}
+
+{% macro ol(items=[]) -%}
+<ol class="mt-4 ml-6 list-decimal [&>li]:mt-2 [&>li]:leading-7">{% for item in items %}<li>{{ item|safe }}</li>{% endfor %}{{ caller() if caller }}</ol>
+{%- endmacro %}
+
+{# Numbered steps rendered as a vertical list with step markers. #}
+{% macro steps(items=[]) -%}
+<ol class="mt-6 flex flex-col gap-4">
+  {% for item in items %}
+  <li class="flex gap-4">
+    <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{{ loop.index }}</span>
+    <div class="min-w-0 flex-1 leading-7">{{ item|safe }}</div>
+  </li>
+  {% endfor %}
+</ol>
+{%- endmacro %}
+
+{# Alert-based callout; variant is default or destructive. #}
+{% macro callout(title=none, variant='default', icon='info', class='') -%}
+{% set body = caller() %}
+<div class="{{ tw('mt-6', class) }}">
+  {% call ui.alert(variant=variant) %}
+    {{ lucide(icon) }}
+    {% if title %}{{ ui.alert_title(text=title) }}{% endif %}
+    {{ ui.alert_description(text=body) }}
+  {% endcall %}
+</div>
+{%- endmacro %}
+
+{# Code sample with header, title and a copy button wired to the code-block runtime. #}
+{% macro code(title=none, icon='terminal', class='') -%}
+{% set body = caller() %}
+<div class="{{ tw('mt-4', class) }}">
+  {% call ui.code_block() %}
+    {% if title %}
+    {% call ui.code_block_header() %}
+      {% call ui.code_block_title() %}{{ lucide(icon) }}{{ title }}{% endcall %}
+      {% call ui.code_block_actions() %}
+        {% call ui.code_block_copy_button(size='icon-xs', variant='ghost', attrs={'aria-label': 'Copy code'}) %}
+          {{ lucide('copy', 'group-data-[copied=true]/button:hidden') }}{{ lucide('check', 'hidden group-data-[copied=true]/button:block') }}
+        {% endcall %}
+        <span aria-live="polite" class="sr-only"></span>
+      {% endcall %}
+    {% endcall %}
+    {% endif %}
+    {% call ui.code_block_content() %}{{ ui.code_block_code(text=body) }}{% endcall %}
+  {% endcall %}
+</div>
+{%- endmacro %}
+
+{# Live preview surface for rendered components and blocks. #}
+{% macro preview(class='', attrs={}) -%}
+<div data-preview class="{{ tw('mt-6 flex w-full flex-col gap-6 rounded-xl border bg-card p-6 text-card-foreground sm:p-8', class) }}"{% for k, v in attrs.items() %} {{ k }}="{{ v }}"{% endfor %}>
+  {{ caller() }}
+</div>
+{%- endmacro %}
+
+{# Grid of cards. Column utilities composed below: lg:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 md:grid-cols-1 md:grid-cols-2 md:grid-cols-3 sm:grid-cols-2 sm:grid-cols-3 #}
+{% macro grid(cols=3, class='') -%}
+<div class="{{ tw('mt-6 grid gap-4 sm:grid-cols-2', 'lg:grid-cols-' ~ cols, class) }}">{{ caller() }}</div>
+{%- endmacro %}
+
+{# Card with a title, optional description and a link action. #}
+{% macro link_card(title, href, description='', cta='Open', badge=none, meta=none) -%}
+{% set body = caller() if caller else '' %}
+{% call ui.card(class='flex h-full flex-col') %}
+  {% call ui.card_header() %}
+    {% call ui.card_title() %}<a class="hover:underline" href="{{ href }}">{{ title }}</a>{% endcall %}
+    {% if description %}{{ ui.card_description(text=description) }}{% endif %}
+    {% if badge %}{% call ui.card_action() %}{{ ui.badge(text=badge, variant='secondary') }}{% endcall %}{% endif %}
+  {% endcall %}
+  {% if meta or body %}
+  {% call ui.card_content() %}
+    {% if meta %}<p class="text-sm text-muted-foreground">{{ meta }}</p>{% endif %}
+    {{ body }}
+  {% endcall %}
+  {% endif %}
+  {% call ui.card_footer(class='mt-auto') %}
+    {% call ui.button(variant='outline', size='sm', href=href) %}{{ cta }}{{ lucide('arrow-right') }}{% endcall %}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{# Key/value table used for file maps and prop tables. #}
+{% macro table(headers=[], rows=[]) -%}
+<div class="mt-6">
+  {% call ui.table_container() %}
+    {% call ui.table() %}
+      {% call ui.table_header() %}
+        {% call ui.table_row() %}
+          {% for header in headers %}{{ ui.table_head(text=header) }}{% endfor %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.table_body() %}
+        {% for row in rows %}
+        {% call ui.table_row() %}
+          {% for cell in row %}{% call ui.table_cell(class='align-top whitespace-normal') %}{{ cell|safe }}{% endcall %}{% endfor %}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+</div>
+{%- endmacro %}
+
+{# Map the legacy action style names used by the block data to button variants. #}
+{% macro variant_for(style) -%}
+{{ {'primary': 'default', 'secondary': 'secondary', 'ghost': 'ghost', 'link': 'link', 'outline': 'outline', 'destructive': 'destructive'}.get(style, 'default') }}
+{%- endmacro %}

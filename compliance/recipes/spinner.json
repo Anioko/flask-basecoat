@@ -1,0 +1,12 @@
+{
+  "name": "spinner",
+  "source": "upstream/shadcn/radix/ui/spinner.tsx",
+  "slots": {
+    "spinner": {
+      "component": "Spinner",
+      "element": "IconPlaceholder",
+      "base_classes": "size-4 animate-spin",
+      "data_attrs": []
+    }
+  }
+}

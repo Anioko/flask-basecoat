@@ -1,0 +1,43 @@
+{
+  "name": "alert",
+  "source": "upstream/shadcn/radix/ui/alert.tsx",
+  "slots": {
+    "alert": {
+      "component": "Alert",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": [],
+      "cva": "alertVariants",
+      "variants": {
+        "base": "cn-alert group/alert relative w-full",
+        "variants": {
+          "variant": {
+            "default": "cn-alert-variant-default",
+            "destructive": "cn-alert-variant-destructive"
+          }
+        },
+        "defaults": {
+          "variant": "default"
+        }
+      }
+    },
+    "alert-title": {
+      "component": "AlertTitle",
+      "element": "div",
+      "base_classes": "cn-alert-title [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+      "data_attrs": []
+    },
+    "alert-description": {
+      "component": "AlertDescription",
+      "element": "div",
+      "base_classes": "cn-alert-description [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+      "data_attrs": []
+    },
+    "alert-action": {
+      "component": "AlertAction",
+      "element": "div",
+      "base_classes": "cn-alert-action",
+      "data_attrs": []
+    }
+  }
+}

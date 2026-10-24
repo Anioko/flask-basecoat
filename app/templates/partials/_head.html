@@ -1,12 +1,9 @@
-<meta name="charset" content="utf-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block page_title %}{{ config.APP_NAME }}{% endblock %}</title>
 
 {# Simple favicon to prevent 404 errors #}
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-
-{# App JavaScript for interactive features #}
-<script type="text/javascript" src="{{ url_for('static', filename='scripts/app.js') }}"></script>
 
 {% if config.GOOGLE_ANALYTICS_ID %}
 <!-- Google Analytics -->

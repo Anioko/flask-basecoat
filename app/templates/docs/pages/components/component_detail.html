@@ -1,140 +1,177 @@
 {% extends 'docs/layout.html' %}
-{% from 'docs/macros/components.html' import component_showcase, render_button, render_badge, render_card, render_alert, render_avatar, render_input %}
-
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+{% from 'docs/macros/components.html' import component_showcase %}
 {% block content %}
-<section class="docs-section">
-  <div class="docs-callout docs-callout--info">
-    <h2>{{ component.title }}</h2>
-    <p>{{ component.description }}</p>
-    <p>
-      Shadcn reference:
-      <a class="docs-link" href="{{ component.docs_url }}" target="_blank" rel="noreferrer">{{ component.docs_url }}</a>
-    </p>
-    <p><a class="docs-link" href="{{ url_for('docs.page', slug='components') }}">Back to components overview</a></p>
-  </div>
+<section class="mt-10">
+  {% call ui.card() %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text=component.title, class='text-xl') }}
+      {{ ui.card_description(text=component.description) }}
+      {% call ui.card_action() %}{{ ui.badge(text=(component.variants|length ~ ' variants'), variant='secondary') }}{% endcall %}
+    {% endcall %}
+    {% call ui.card_content() %}
+      <dl class="grid gap-3 text-sm sm:grid-cols-2">
+        <div>
+          <dt class="text-muted-foreground">Macro</dt>
+          <dd class="mt-1"><code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">ui.{{ component.name|replace('-', '_') }}</code></dd>
+        </div>
+        <div>
+          <dt class="text-muted-foreground">Shadcn reference</dt>
+          <dd class="mt-1">{% call ui.button(variant='link', size='sm', href=component.docs_url, class='h-auto p-0', attrs={'target': '_blank', 'rel': 'noreferrer'}) %}{{ component.docs_url }}{{ lucide('external-link') }}{% endcall %}</dd>
+        </div>
+      </dl>
+    {% endcall %}
+    {% call ui.card_footer() %}
+      {% call ui.button(variant='outline', size='sm', href=url_for('docs.page', slug='components')) %}{{ lucide('arrow-left') }}Back to components overview{% endcall %}
+    {% endcall %}
+  {% endcall %}
 </section>
 
-<section class="docs-section">
-  <h2>Variants</h2>
-  <p>Different styles and states for the {{ component.title.lower() }} component.</p>
-  
-  <div class="docs-preview docs-preview--components" data-preview>
-    {{ component_showcase(component.name, component.variants) }}
-  </div>
-</section>
+{{ d.h2('Variants') }}
+{{ d.p('Different styles and states for the ' ~ component.title.lower() ~ ' component.') }}
+{{ component_showcase(component.name, component.variants) }}
 
-<section class="docs-section">
-  <h2>Usage Examples</h2>
-  <p>Here are some practical examples of using the {{ component.title.lower() }} component:</p>
-  
-  {% if component.name == 'button' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Form Actions</h4>
-      <div class="component-example">
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-        <button class="btn btn-secondary" type="button">Cancel</button>
-      </div>
-      
-      <h4>Navigation</h4>
-      <div class="component-example">
-        <button class="btn btn-outline" type="button">← Previous</button>
-        <button class="btn btn-primary" type="button">Next →</button>
-      </div>
-      
-      <h4>Destructive Actions</h4>
-      <div class="component-example">
-        <button class="btn btn-destructive" type="button">Delete Item</button>
-        <button class="btn btn-ghost" type="button">Cancel</button>
-      </div>
+{% if component.name in ['button', 'card', 'alert'] %}
+{{ d.h2('Usage Examples') }}
+{{ d.p('Here are some practical examples of using the ' ~ component.title.lower() ~ ' component:') }}
+{% if component.name == 'button' %}
+{% call d.preview() %}
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Form Actions</h4>
+    <div class="flex flex-wrap gap-2">{{ ui.button(text='Save Changes', type='submit') }}{{ ui.button(text='Cancel', variant='secondary') }}</div>
+  </div>
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Navigation</h4>
+    <div class="flex flex-wrap gap-2">
+      {% call ui.button(variant='outline') %}{{ lucide('arrow-left') }}Previous{% endcall %}
+      {% call ui.button() %}Next{{ lucide('arrow-right') }}{% endcall %}
     </div>
   </div>
-  
-  {% elif component.name == 'card' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Product Card</h4>
-      <div class="component-example">
-        <div class="card card-interactive">
-          <div class="card-header">
-            <h3 class="card-title">Premium Plan</h3>
-            <p class="card-description">Perfect for growing teams</p>
-          </div>
-          <div class="card-content">
-            <p class="card-price">$29<span>/month</span></p>
-            <ul class="card-features">
-              <li>Unlimited projects</li>
-              <li>Advanced analytics</li>
-              <li>Priority support</li>
-            </ul>
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Destructive Actions</h4>
+    <div class="flex flex-wrap gap-2">
+      {% call ui.button(variant='destructive') %}{{ lucide('trash-2') }}Delete Item{% endcall %}
+      {{ ui.button(text='Cancel', variant='ghost') }}
     </div>
   </div>
-  
-  {% elif component.name == 'alert' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Form Validation</h4>
-      <div class="component-example">
-        <div class="alert alert-destructive" role="alert">
-          <div class="alert-icon">⚠️</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Validation Error</h4>
-            <p class="alert-description">Please check the required fields and try again.</p>
-          </div>
-        </div>
-      </div>
-      
-      <h4>Success Message</h4>
-      <div class="component-example">
-        <div class="alert alert-success" role="alert">
-          <div class="alert-icon">✅</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Success!</h4>
-            <p class="alert-description">Your changes have been saved successfully.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+{% endcall %}
+{% call d.code(title='button-examples.html', icon='file-code') -%}
+{% raw %}{{ ui.button(text='Save Changes', type='submit') }}
+{{ ui.button(text='Cancel', variant='secondary') }}
+{% call ui.button(variant='outline') %}{{ lucide('arrow-left') }}Previous{% endcall %}
+{% call ui.button(variant='destructive') %}{{ lucide('trash-2') }}Delete Item{% endcall %}{% endraw %}
+{%- endcall %}
+{% elif component.name == 'card' %}
+{% call d.preview() %}
+  <h4 class="text-sm font-medium text-muted-foreground">Product Card</h4>
+  {% call ui.card(class='w-full max-w-sm') %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text='Premium Plan') }}
+      {{ ui.card_description(text='Perfect for growing teams') }}
+      {% call ui.card_action() %}{{ ui.badge(text='Popular') }}{% endcall %}
+    {% endcall %}
+    {% call ui.card_content() %}
+      <p class="text-3xl font-semibold tracking-tight">$29<span class="text-base font-normal text-muted-foreground">/month</span></p>
+      <ul class="mt-4 grid gap-2 text-sm">
+        {% for feature in ['Unlimited projects', 'Advanced analytics', 'Priority support'] %}
+        <li class="flex items-center gap-2">{{ lucide('check', 'size-4 text-primary') }}{{ feature }}</li>
+        {% endfor %}
+      </ul>
+    {% endcall %}
+    {% call ui.card_footer() %}
+      {{ ui.button(text='Get Started', class='w-full') }}
+    {% endcall %}
+  {% endcall %}
+{% endcall %}
+{% call d.code(title='product-card.html', icon='file-code') -%}
+{% raw %}{% call ui.card(class='w-full max-w-sm') %}
+  {% call ui.card_header() %}
+    {{ ui.card_title(text='Premium Plan') }}
+    {{ ui.card_description(text='Perfect for growing teams') }}
+    {% call ui.card_action() %}{{ ui.badge(text='Popular') }}{% endcall %}
+  {% endcall %}
+  {% call ui.card_content() %}
+    <p class="text-3xl font-semibold tracking-tight">$29<span class="text-base font-normal text-muted-foreground">/month</span></p>
+  {% endcall %}
+  {% call ui.card_footer() %}{{ ui.button(text='Get Started', class='w-full') }}{% endcall %}
+{% endcall %}{% endraw %}
+{%- endcall %}
+{% elif component.name == 'alert' %}
+{% call d.preview() %}
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Form Validation</h4>
+    {% call ui.alert(variant='destructive') %}
+      {{ lucide('circle-alert') }}
+      {{ ui.alert_title(text='Validation Error') }}
+      {{ ui.alert_description(text='Please check the required fields and try again.') }}
+    {% endcall %}
   </div>
-  {% endif %}
-</section>
-
-<section class="docs-section">
-  <h2>Implementation Notes</h2>
-  <ul class="docs-list">
-    <li>Components use Basecoat CSS classes for consistent styling</li>
-    <li>All variants support dark mode through CSS custom properties</li>
-    <li>Accessibility attributes are included where appropriate</li>
-    <li>Components are designed to be composable and customizable</li>
-  </ul>
-</section>
-
-<section class="docs-section">
-  <h2>Related Components</h2>
-  <p>Other components that work well with {{ component.title.lower() }}:</p>
-  
-  <div class="docs-grid">
-    {% set related_components = {
-      'button': ['badge', 'card', 'alert'],
-      'badge': ['button', 'card', 'avatar'],
-      'card': ['button', 'badge', 'avatar'],
-      'alert': ['button', 'badge'],
-      'avatar': ['badge', 'card'],
-      'input': ['button', 'alert', 'card']
-    } %}
-    
-    {% for related_name in related_components.get(component.name, []) %}
-    <article class="docs-card">
-      <h3><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">{{ related_name|title }}</a></h3>
-      <p><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">View component &rarr;</a></p>
-    </article>
-    {% endfor %}
+  <div class="flex flex-col gap-2">
+    <h4 class="text-sm font-medium text-muted-foreground">Success Message</h4>
+    {% call ui.alert() %}
+      {{ lucide('circle-check') }}
+      {{ ui.alert_title(text='Success!') }}
+      {{ ui.alert_description(text='Your changes have been saved successfully.') }}
+    {% endcall %}
   </div>
-</section>
+{% endcall %}
+{% call d.code(title='alert-examples.html', icon='file-code') -%}
+{% raw %}{% call ui.alert(variant='destructive') %}
+  {{ lucide('circle-alert') }}
+  {{ ui.alert_title(text='Validation Error') }}
+  {{ ui.alert_description(text='Please check the required fields and try again.') }}
+{% endcall %}{% endraw %}
+{%- endcall %}
+{% endif %}
+{% endif %}
+
+{{ d.h2('Implementation Notes') }}
+{{ d.ul([
+  'Every part is a macro from <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">basecoat/index.html</code>; it renders the upstream element, its <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">data-slot</code> and the class recipe for the chosen variant and size.',
+  'All variants support dark mode through the design tokens; no palette colours or literal values are involved.',
+  'Accessibility attributes (<code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">role</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">aria-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">data-state</code>) follow the Radix contract and are kept in sync by the runtime.',
+  'Macros accept <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">class</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">id</code> and <code class="rounded bg-muted px-1 py-0.5 font-mono text-sm">attrs</code> so they compose with your own layout utilities.'
+]) }}
+
+{{ d.h2('Related Components') }}
+{{ d.p('Other components that work well with ' ~ component.title.lower() ~ ':') }}
+{% set related_components = {
+  'button': ['badge', 'card', 'alert'],
+  'badge': ['button', 'card', 'avatar'],
+  'card': ['button', 'badge', 'avatar'],
+  'alert': ['button', 'badge'],
+  'avatar': ['badge', 'card'],
+  'input': ['button', 'alert', 'card'],
+  'checkbox': ['switch', 'input', 'toggle'],
+  'select': ['input', 'command', 'dropdown'],
+  'textarea': ['input', 'button'],
+  'toggle': ['switch', 'checkbox'],
+  'progress': ['skeleton', 'slider'],
+  'tooltip': ['popover', 'button'],
+  'tabs': ['card', 'separator'],
+  'dialog': ['sheet', 'popover', 'button'],
+  'popover': ['tooltip', 'dialog', 'command'],
+  'breadcrumb': ['navigation', 'separator'],
+  'separator': ['breadcrumb', 'card'],
+  'command': ['popover', 'dialog', 'select'],
+  'dropdown': ['menubar', 'button', 'select'],
+  'menubar': ['dropdown', 'navigation'],
+  'navigation': ['breadcrumb', 'menubar'],
+  'sheet': ['dialog', 'button'],
+  'skeleton': ['progress', 'card'],
+  'slider': ['progress', 'switch'],
+  'switch': ['checkbox', 'toggle'],
+  'table': ['badge', 'card', 'datatable'],
+  'datatable': ['table', 'input', 'badge'],
+  'accordion': ['card', 'tabs'],
+  'carousel': ['card'],
+  'calendar': ['popover', 'input']
+} %}
+{% set related = related_components.get(component.name, ['button', 'card', 'badge']) %}
+{% call d.grid(cols=3) %}
+  {% for related_name in related %}
+    {{ d.link_card(related_name|replace('-', ' ')|title, url_for('docs.page', slug='components/' + related_name), cta='View component') }}
+  {% endfor %}
+{% endcall %}
 {% endblock %}

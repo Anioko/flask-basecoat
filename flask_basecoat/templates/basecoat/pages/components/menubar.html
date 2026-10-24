@@ -1,0 +1,318 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `menubar` (pinned source in compliance/upstream). #}
+{% block title %}menubar · Flask-Basecoat{% endblock %}
+{% block body %}
+{% call ui.example_wrapper() %}
+    {% call ui.example(title='Basic') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_31H1_') %}File{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}New Tab {{ ui.menubar_shortcut(text='⌘T') }}{% endcall %}
+{% call ui.menubar_item() %}New Window {{ ui.menubar_shortcut(text='⌘N') }}{% endcall %}
+{{ ui.menubar_item(text='New Incognito Window', disabled=true) }}{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}Print... {{ ui.menubar_shortcut(text='⌘P') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_51H1_') %}Edit{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}Undo {{ ui.menubar_shortcut(text='⌘Z') }}{% endcall %}
+{% call ui.menubar_item() %}Redo {{ ui.menubar_shortcut(text='⇧⌘Z') }}{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_item(text='Cut') }}{{ ui.menubar_item(text='Copy') }}{{ ui.menubar_item(text='Paste') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Submenu') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_32H1_') %}File{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_sub() %}
+              {% call ui.menubar_sub_trigger() %}Share{{ lucide('chevron-right', 'cn-rtl-flip ml-auto size-4') }}{% endcall %}
+{% call ui.menubar_sub_content() %}
+                {% call ui.menubar_group() %}
+                  {{ ui.menubar_item(text='Email link') }}{{ ui.menubar_item(text='Messages') }}{{ ui.menubar_item(text='Notes') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}Print... {{ ui.menubar_shortcut(text='⌘P') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_52H1_') %}Edit{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}Undo {{ ui.menubar_shortcut(text='⌘Z') }}{% endcall %}
+{% call ui.menubar_item() %}Redo {{ ui.menubar_shortcut(text='⇧⌘Z') }}{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_sub() %}
+              {% call ui.menubar_sub_trigger() %}Find{{ lucide('chevron-right', 'cn-rtl-flip ml-auto size-4') }}{% endcall %}
+{% call ui.menubar_sub_content() %}
+                {% call ui.menubar_group() %}
+                  {{ ui.menubar_item(text='Find...') }}{{ ui.menubar_item(text='Find Next') }}{{ ui.menubar_item(text='Find Previous') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_item(text='Cut') }}{{ ui.menubar_item(text='Copy') }}{{ ui.menubar_item(text='Paste') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Checkboxes') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_33H1_') %}View{% endcall %}
+{% call ui.menubar_content(class='w-64') %}
+            {% call ui.menubar_group() %}
+              {{ ui.menubar_checkbox_item(text='Always Show Bookmarks Bar') }}{{ ui.menubar_checkbox_item(text='Always Show Full URLs', checked=true) }}{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item(inset=true) %}Reload {{ ui.menubar_shortcut(text='⌘R') }}{% endcall %}
+{% call ui.menubar_item(disabled=true, inset=true) %}Force Reload {{ ui.menubar_shortcut(text='⇧⌘R') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_53H1_') %}Format{% endcall %}
+{% call ui.menubar_content() %}
+            {{ ui.menubar_checkbox_item(text='Strikethrough', checked=true) }}{{ ui.menubar_checkbox_item(text='Code') }}{{ ui.menubar_checkbox_item(text='Superscript') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Radio') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_34H1_') %}Profiles{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_radio_group() %}
+              {{ ui.menubar_radio_item(text='Andy', attrs={'data-value': 'andy'}) }}{{ ui.menubar_radio_item(text='Benoit', checked=true, attrs={'data-value': 'benoit'}) }}{{ ui.menubar_radio_item(text='Luis', attrs={'data-value': 'luis'}) }}{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_item(text='Edit...', inset=true) }}{{ ui.menubar_item(text='Add Profile...', inset=true) }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_54H1_') %}Theme{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_radio_group() %}
+              {{ ui.menubar_radio_item(text='Light', attrs={'data-value': 'light'}) }}{{ ui.menubar_radio_item(text='Dark', attrs={'data-value': 'dark'}) }}{{ ui.menubar_radio_item(text='System', checked=true, attrs={'data-value': 'system'}) }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Icons') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_35H1_') %}File{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('file') }}New File {{ ui.menubar_shortcut(text='⌘N') }}{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('folder') }}Open Folder{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('save') }}Save {{ ui.menubar_shortcut(text='⌘S') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_55H1_') %}More{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('circle-dashed') }}Settings{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('circle-dashed') }}Help{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_item(variant='destructive') %}{{ lucide('circle-dashed') }}Delete{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Shortcuts') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_36H1_') %}File{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}New Tab {{ ui.menubar_shortcut(text='⌘T') }}{% endcall %}
+{% call ui.menubar_item() %}New Window {{ ui.menubar_shortcut(text='⌘N') }}{% endcall %}
+{% call ui.menubar_item() %}Print... {{ ui.menubar_shortcut(text='⌘P') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_56H1_') %}Edit{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}Undo {{ ui.menubar_shortcut(text='⌘Z') }}{% endcall %}
+{% call ui.menubar_item() %}Redo {{ ui.menubar_shortcut(text='⇧⌘Z') }}{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}Cut {{ ui.menubar_shortcut(text='⌘X') }}{% endcall %}
+{% call ui.menubar_item() %}Copy {{ ui.menubar_shortcut(text='⌘C') }}{% endcall %}
+{% call ui.menubar_item() %}Paste {{ ui.menubar_shortcut(text='⌘V') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Format') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_37H1_') %}Format{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('bold') }}Bold {{ ui.menubar_shortcut(text='⌘B') }}{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('italic') }}Italic {{ ui.menubar_shortcut(text='⌘I') }}{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('underline') }}Underline {{ ui.menubar_shortcut(text='⌘U') }}{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_checkbox_item(text='Strikethrough', checked=true) }}{{ ui.menubar_checkbox_item(text='Code') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_57H1_') %}View{% endcall %}
+{% call ui.menubar_content() %}
+            {{ ui.menubar_checkbox_item(text='Show Ruler') }}{{ ui.menubar_checkbox_item(text='Show Grid', checked=true) }}{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_item(text='Zoom In', inset=true) }}{{ ui.menubar_item(text='Zoom Out', inset=true) }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Insert') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_38H1_') %}Insert{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_sub() %}
+              {% call ui.menubar_sub_trigger() %}{{ lucide('image') }}Media{{ lucide('chevron-right', 'cn-rtl-flip ml-auto size-4') }}{% endcall %}
+{% call ui.menubar_sub_content() %}
+                {% call ui.menubar_group() %}
+                  {{ ui.menubar_item(text='Image') }}{{ ui.menubar_item(text='Video') }}{{ ui.menubar_item(text='Audio') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('link') }}Link {{ ui.menubar_shortcut(text='⌘K') }}{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('table') }}Table{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_58H1_') %}Tools{% endcall %}
+{% call ui.menubar_content(class='w-44') %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('search') }}Find & Replace {{ ui.menubar_shortcut(text='⌘F') }}{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('check') }}Spell Check{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Destructive') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_39H1_') %}File{% endcall %}
+{% call ui.menubar_content(class='w-40') %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('file') }}New File {{ ui.menubar_shortcut(text='⌘N') }}{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('folder') }}Open Folder{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item(variant='destructive') %}{{ lucide('trash') }}Delete File {{ ui.menubar_shortcut(text='⌘⌫') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_59H1_') %}Account{% endcall %}
+{% call ui.menubar_content() %}
+            {% call ui.menubar_group() %}
+              {% call ui.menubar_item() %}{{ lucide('user') }}Profile{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('settings') }}Settings{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item(variant='destructive') %}{{ lucide('log-out') }}Sign out{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {% call ui.menubar_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='In Dialog') %}
+      {% call ui.dialog() %}
+        {% call ui.dialog_trigger(size='default', variant='outline') %}Open Dialog{% endcall %}
+{{ ui.dialog_overlay() }}{% call ui.dialog_content() %}
+          {% call ui.dialog_header() %}
+            {{ ui.dialog_title(text='Menubar Example') }}{{ ui.dialog_description(text='Use the menubar below to see the menu options.') }}{% endcall %}
+{% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+            {% call ui.menubar_menu() %}
+              {% call ui.menubar_trigger(orientation='horizontal') %}File{% endcall %}
+{% call ui.menubar_content() %}
+                {% call ui.menubar_group() %}
+                  {% call ui.menubar_item() %}{{ lucide('copy') }}Copy{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('clipboard-paste') }}Paste{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_sub() %}
+                  {% call ui.menubar_sub_trigger() %}More Options{{ lucide('chevron-right', 'cn-rtl-flip ml-auto size-4') }}{% endcall %}
+{% call ui.menubar_sub_content() %}
+                    {% call ui.menubar_group() %}
+                      {{ ui.menubar_item(text='Save Page...') }}{{ ui.menubar_item(text='Create Shortcut...') }}{{ ui.menubar_item(text='Name Window...') }}{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+                      {{ ui.menubar_item(text='Developer Tools') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+                  {% call ui.menubar_item(variant='destructive') %}{{ lucide('trash') }}Delete{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.menubar_menu() %}
+              {% call ui.menubar_trigger(orientation='horizontal') %}Edit{% endcall %}
+{% call ui.menubar_content() %}
+                {% call ui.menubar_group() %}
+                  {% call ui.menubar_item() %}Undo {{ ui.menubar_shortcut(text='⌘Z') }}{% endcall %}
+{% call ui.menubar_item() %}Redo {{ ui.menubar_shortcut(text='⇧⌘Z') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='With Inset') %}
+      {% call ui.menubar(orientation='horizontal', attrs={'style': 'outline:none'}) %}
+        {% call ui.menubar_menu() %}
+          {% call ui.menubar_trigger(orientation='horizontal', id='radix-_R_1bH1_') %}View{% endcall %}
+{% call ui.menubar_content(class='w-44') %}
+            {% call ui.menubar_group() %}
+              {{ ui.menubar_label(text='Actions') }}{% call ui.menubar_item() %}{{ lucide('copy') }}Copy{% endcall %}
+{% call ui.menubar_item() %}{{ lucide('scissors') }}Cut{% endcall %}
+{{ ui.menubar_item(text='Paste', inset=true) }}{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_label(text='Appearance', inset=true) }}{{ ui.menubar_checkbox_item(text='Bookmarks', inset=true, checked=true) }}{{ ui.menubar_checkbox_item(text='Full URLs', inset=true) }}{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_group() %}
+              {{ ui.menubar_label(text='Theme', inset=true) }}{% call ui.menubar_radio_group() %}
+                {{ ui.menubar_radio_item(text='Light', inset=true, attrs={'data-value': 'light'}) }}{{ ui.menubar_radio_item(text='Dark', inset=true, attrs={'data-value': 'dark'}) }}{{ ui.menubar_radio_item(text='System', inset=true, checked=true, attrs={'data-value': 'system'}) }}{% endcall %}
+{% endcall %}
+{{ ui.menubar_separator() }}{% call ui.menubar_sub() %}
+              {% call ui.menubar_sub_trigger(inset=true) %}More Options{{ lucide('chevron-right', 'cn-rtl-flip ml-auto size-4') }}{% endcall %}
+{% call ui.menubar_sub_content() %}
+                {% call ui.menubar_group() %}
+                  {{ ui.menubar_item(text='Save Page...') }}{{ ui.menubar_item(text='Create Shortcut...') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endblock %}

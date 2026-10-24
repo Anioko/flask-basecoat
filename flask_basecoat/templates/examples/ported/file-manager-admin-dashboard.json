@@ -1,0 +1,11 @@
+{
+  "id": "file-manager-admin-dashboard",
+  "title": "File Manager Admin Dashboard",
+  "description": "Storage dashboard with a menu sidebar, recently modified files, an all-files list and a storage usage panel.",
+  "tags": [
+    "Files",
+    "Cards",
+    "Sheet",
+    "Dropdown"
+  ]
+}

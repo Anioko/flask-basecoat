@@ -1,0 +1,88 @@
+{
+ "type": "bar",
+ "component": "BarChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  },
+  "mobile": {
+   "label": "Mobile",
+   "color": "var(--chart-2)"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "desktop": 186,
+   "mobile": 80
+  },
+  {
+   "month": "February",
+   "desktop": 305,
+   "mobile": 200
+  },
+  {
+   "month": "March",
+   "desktop": 237,
+   "mobile": 120
+  },
+  {
+   "month": "April",
+   "desktop": 73,
+   "mobile": 190
+  },
+  {
+   "month": "May",
+   "desktop": 209,
+   "mobile": 130
+  },
+  {
+   "month": "June",
+   "desktop": 214,
+   "mobile": 140
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true
+ },
+ "series": [
+  {
+   "component": "Bar",
+   "dataKey": "desktop",
+   "fill": "var(--color-desktop)",
+   "radius": 4
+  },
+  {
+   "component": "Bar",
+   "dataKey": "mobile",
+   "fill": "var(--color-mobile)",
+   "radius": 4
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "dataKey": "month",
+   "tickLine": false,
+   "tickMargin": 10,
+   "axisLine": false,
+   "tickFormatter": {
+    "$fn": "slice",
+    "start": 0,
+    "end": 3
+   }
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {
+  "cursor": false,
+  "indicator": "dashed",
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

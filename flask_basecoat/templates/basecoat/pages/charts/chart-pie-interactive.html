@@ -1,0 +1,26 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui chart `chart-pie-interactive` (pinned source in compliance/upstream/shadcn/charts). #}
+{% block title %}chart-pie-interactive · Flask-Basecoat{% endblock %}
+{% macro card() -%}
+{% call ui.card(size='default') %}<style>
+ [data-chart=pie-interactive] {
+  --color-january: var(--chart-1);
+  --color-february: var(--chart-2);
+  --color-march: var(--chart-3);
+  --color-april: var(--chart-4);
+  --color-may: var(--chart-5);
+}
+
+
+.dark [data-chart=pie-interactive] {
+  --color-january: var(--chart-1);
+  --color-february: var(--chart-2);
+  --color-march: var(--chart-3);
+  --color-april: var(--chart-4);
+  --color-may: var(--chart-5);
+}
+</style>{% call ui.card_header(class='flex-row space-y-0 pb-0') %}<div class="grid gap-1">{% call ui.card_title() %}Pie Chart - Interactive{% endcall %}{% call ui.card_description() %}January - June 2024{% endcall %}</div>{% call ui.select_trigger(size='default', placeholder_shown=false, class='ml-auto h-7 w-[130px] rounded-lg pl-2.5', attrs={'aria-label': 'Select a value', 'data-chart-control': 'chart-pie-interactive', 'data-chart-state': 'activeMonth'}) %}{% call ui.select_value(attrs={'style': 'pointer-events: none;'}) %}<div class="flex items-center gap-2 text-xs"><span class="flex h-3 w-3 shrink-0 rounded-xs" style="background-color: var(--color-january);"></span>January</div>{% endcall %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}{% call ui.select_content(class='rounded-xl', align='end') %}{% call ui.select_item(value='january', class='rounded-lg [&_span]:flex', checked=true) %}<div class="flex items-center gap-2 text-xs"><span class="flex h-3 w-3 shrink-0 rounded-xs" style="background-color: var(--color-january);"></span>January</div>{% endcall %}{% call ui.select_item(value='february', class='rounded-lg [&_span]:flex') %}<div class="flex items-center gap-2 text-xs"><span class="flex h-3 w-3 shrink-0 rounded-xs" style="background-color: var(--color-february);"></span>February</div>{% endcall %}{% call ui.select_item(value='march', class='rounded-lg [&_span]:flex') %}<div class="flex items-center gap-2 text-xs"><span class="flex h-3 w-3 shrink-0 rounded-xs" style="background-color: var(--color-march);"></span>March</div>{% endcall %}{% call ui.select_item(value='april', class='rounded-lg [&_span]:flex') %}<div class="flex items-center gap-2 text-xs"><span class="flex h-3 w-3 shrink-0 rounded-xs" style="background-color: var(--color-april);"></span>April</div>{% endcall %}{% call ui.select_item(value='may', class='rounded-lg [&_span]:flex') %}<div class="flex items-center gap-2 text-xs"><span class="flex h-3 w-3 shrink-0 rounded-xs" style="background-color: var(--color-may);"></span>May</div>{% endcall %}{% endcall %}{% endcall %}{% call ui.card_content(class='flex flex-1 justify-center pb-0') %}{{ ui.chart_from_spec(chart_spec('chart-pie-interactive'), id='pie-interactive', class='mx-auto aspect-square w-full max-w-[300px]') }}{% endcall %}{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div data-chart-frame="regular" style="width: 384px;"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div>{% endblock %}

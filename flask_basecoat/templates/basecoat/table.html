@@ -1,28 +1,55 @@
-{# Basecoat Table Component #}
-{% macro table(columns=[], rows=[], empty_title='No records found', empty_description='', class='', id=none) %}
-    <div class="w-full overflow-x-auto rounded-md border border-border bg-card {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if rows and rows|length > 0 %}
-            <table class="table w-full text-sm">
-                <thead>
-                    <tr class="border-b border-border bg-muted/50">
-                        {% for col in columns %}
-                            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">{{ col }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border">
-                    {% for row in rows %}
-                        <tr class="hover:bg-muted/50 transition-colors">
-                            {% for cell in row %}
-                                <td class="p-4 align-middle">{{ cell }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            {% from 'basecoat/empty_state.html' import empty_state %}
-            {{ empty_state(title=empty_title, description=empty_description) }}
-        {% endif %}
-    </div>
-{% endmacro %}
+{# table: port of shadcn/ui table.tsx (pinned in compliance/upstream). Macros: table_container, table, table_header, table_body, table_footer, table_row, table_head, table_cell, table_caption #}
+
+{#- Table -#}
+{% macro table_container(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-container', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- Table -#}
+{% macro table(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableHeader -#}
+{% macro table_header(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-header', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableBody -#}
+{% macro table_body(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-body', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableFooter -#}
+{% macro table_footer(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-footer', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableRow -#}
+{% macro table_row(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-row', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableHead -#}
+{% macro table_head(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-head', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableCell -#}
+{% macro table_cell(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-cell', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- TableCaption -#}
+{% macro table_caption(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('table-caption', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}

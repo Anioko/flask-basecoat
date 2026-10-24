@@ -1,27 +1,43 @@
 {% extends 'docs/layout.html' %}
-
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<h2>Test Page</h2>
-<p>If you can see this, the routing and templates are working.</p>
-
-<div id="test-output"></div>
-
+{{ d.h2('Test Page') }}
+{{ d.p('If you can see this, the routing and templates are working.') }}
+<div class="mt-6">
+  {% call ui.card() %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text='Runtime checks') }}
+      {{ ui.card_description(text='JavaScript execution and JSON loading for the interactive demos.') }}
+    {% endcall %}
+    {% call ui.card_content() %}
+      <div id="test-output" class="grid gap-2 text-sm"></div>
+    {% endcall %}
+  {% endcall %}
+</div>
+{# Classes used by the script below: text-destructive flex items-center gap-2 size-4 #}
 <script>
 (function() {
   const output = document.getElementById('test-output');
-  output.innerHTML = '<p>JavaScript is working!</p>';
+  function line(text, tone) {
+    const p = document.createElement('p');
+    p.className = 'flex items-center gap-2' + (tone === 'error' ? ' text-destructive' : '');
+    p.textContent = text;
+    output.appendChild(p);
+  }
+  line('JavaScript is working!');
 
   // Test JSON loading
   fetch('/static/data/kanban_data.json')
     .then(response => {
-      output.innerHTML += `<p>Fetch status: ${response.status}</p>`;
+      line('Fetch status: ' + response.status);
       return response.json();
     })
     .then(data => {
-      output.innerHTML += `<p>JSON loaded successfully! Found ${data.cards.length} cards</p>`;
+      line('JSON loaded successfully! Found ' + data.cards.length + ' cards');
     })
     .catch(error => {
-      output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+      line('Error: ' + error.message, 'error');
     });
 })();
 </script>

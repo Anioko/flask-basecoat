@@ -9,7 +9,7 @@ CTAData = Dict[str, object]
 
 _CTA_DEFAULT: CTAData = {
     "eyebrow": "Call to action",
-    "headline": "Ready to build with Basecoat UI?",
+    "headline": "Ready to build with Flask-Basecoat?",
     "description": "Accelerate product delivery with drop-in shadcn/ui blocks tailored for Flask teams.",
     "layout": "centered",
     "actions": [],
@@ -19,7 +19,7 @@ _CTA_BLUEPRINTS: Dict[str, CTAData] = {
     "cta-01": {
         "layout": "centered",
         "headline": "Launch your next experience in days",
-        "description": "Use Basecoat to assemble marketing, onboarding, and product flows backed by consistent tokens.",
+        "description": "Use Flask-Basecoat to assemble marketing, onboarding, and product flows backed by consistent tokens.",
         "actions": [
             {"label": "Start free trial", "style": "primary"},
             {"label": "View pricing", "style": "ghost"},
@@ -33,7 +33,7 @@ _CTA_BLUEPRINTS: Dict[str, CTAData] = {
         "layout": "split",
         "eyebrow": "Compose journeys",
         "headline": "Design once, reuse everywhere",
-        "description": "Pair Basecoat Studio with shadcn blocks to orchestrate cohesive user journeys across products.",
+        "description": "Pair Flask-Basecoat Studio with shadcn blocks to orchestrate cohesive user journeys across products.",
         "actions": [
             {"label": "Book a walkthrough", "style": "secondary"},
         ],
@@ -43,13 +43,13 @@ _CTA_BLUEPRINTS: Dict[str, CTAData] = {
             "Analytics instrumentation included out of the box",
         ],
         "media": {
-            "caption": "Basecoat Studio workspace",
+            "caption": "Flask-Basecoat Studio workspace",
             "meta": "Live preview updating in realtime",
         },
     },
     "cta-03": {
         "layout": "banner",
-        "headline": "Bring Basecoat UI to your platform",
+        "headline": "Bring Flask-Basecoat to your platform",
         "description": "Governance-ready foundations that unlock faster launches with measurable quality gains.",
         "actions": [
             {"label": "Talk to our team", "style": "primary"},
@@ -62,7 +62,7 @@ _CTA_BLUEPRINTS: Dict[str, CTAData] = {
     },
     "cta-04": {
         "layout": "inline",
-        "headline": "Join the Basecoat release notes",
+        "headline": "Join the Flask-Basecoat release notes",
         "description": "Monthly updates on new block families, migration guides, and product launches.",
         "actions": [
             {"label": "Subscribe", "style": "primary"},

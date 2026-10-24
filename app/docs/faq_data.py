@@ -9,8 +9,8 @@ FaqVariant = Dict[str, object]
 
 _FAQ_DEFAULT: FaqVariant = {
     "eyebrow": "FAQs",
-    "headline": "Answers for Basecoat UI teams",
-    "description": "Everything product, design, and engineering leaders ask while rolling out shadcn-compatible Basecoat patterns.",
+    "headline": "Answers for Flask-Basecoat teams",
+    "description": "Everything product, design, and engineering leaders ask while rolling out shadcn-compatible Flask-Basecoat patterns.",
     "meta": "Don’t see what you need? Contact support for a tailored walkthrough.",
     "list": [],
 }
@@ -21,15 +21,15 @@ _FAQ_BLUEPRINTS: Dict[str, FaqVariant] = {
         "list": [
             {
                 "question": "How do we migrate from Semantic UI?",
-                "answer": "Use the migration kit included with Basecoat UI—map legacy classes to modern utilities and ship without downtime.",
+                "answer": "Use the migration kit included with Flask-Basecoat—map legacy classes to modern utilities and ship without downtime.",
             },
             {
-                "question": "Does Basecoat work with dark mode?",
+                "question": "Does Flask-Basecoat work with dark mode?",
                 "answer": "Yes. Each block ships with balanced dark mode tokens that mirror the shadcn/ui reference.",
             },
             {
                 "question": "Can we customise tokens?",
-                "answer": "Override the Tailwind config or update the Basecoat token layer to match your brand palette.",
+                "answer": "Override the Tailwind config or update the Flask-Basecoat token layer to match your brand palette.",
             },
             {
                 "question": "What browsers do you support?",
@@ -43,11 +43,11 @@ _FAQ_BLUEPRINTS: Dict[str, FaqVariant] = {
         "accordion": [
             {
                 "question": "How are new blocks released?",
-                "answer": "We track ui.shadcn.com weekly. New Basecoat variants release every Friday with changelog notes.",
+                "answer": "We track ui.shadcn.com weekly. New Flask-Basecoat variants release every Friday with changelog notes.",
             },
             {
                 "question": "Do you offer design tokens?",
-                "answer": "Yes—download Figma libraries and JSON token exports from the Basecoat registry.",
+                "answer": "Yes—download Figma libraries and JSON token exports from the Flask-Basecoat registry.",
             },
             {
                 "question": "Is there enterprise support?",
@@ -56,7 +56,7 @@ _FAQ_BLUEPRINTS: Dict[str, FaqVariant] = {
         ],
         "support": {
             "title": "Need a live walkthrough?",
-            "description": "Book time with the Basecoat crew to align stakeholders and unblock delivery teams.",
+            "description": "Book time with the Flask-Basecoat crew to align stakeholders and unblock delivery teams.",
             "actions": [
                 {"label": "Schedule onboarding", "style": "primary"},
                 {"label": "Join Slack", "style": "ghost"},
@@ -89,7 +89,7 @@ _FAQ_BLUEPRINTS: Dict[str, FaqVariant] = {
         "layout": "split",
         "list": [
             {
-                "question": "How quickly can we ship Basecoat clones?",
+                "question": "How quickly can we ship Flask-Basecoat clones?",
                 "answer": "Teams typically port a block family every sprint once macros and data builders are in place.",
             },
             {
@@ -100,9 +100,9 @@ _FAQ_BLUEPRINTS: Dict[str, FaqVariant] = {
         "sidebar": {
             "title": "Support channels",
             "items": [
-                {"label": "Status page", "description": "Track Basecoat releases and planned maintenance windows."},
+                {"label": "Status page", "description": "Track Flask-Basecoat releases and planned maintenance windows."},
                 {"label": "Component registry", "description": "Browse all cloned variants and dark mode previews."},
-                {"label": "CLI onboarding", "description": "Install the CLI to scaffold Basecoat-ready Flask blueprints."},
+                {"label": "CLI onboarding", "description": "Install the CLI to scaffold Flask-Basecoat-ready Flask blueprints."},
             ],
         },
         "cta": {"label": "Open support docs", "style": "secondary"},

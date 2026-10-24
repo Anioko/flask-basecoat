@@ -71,7 +71,7 @@ class FormBrowserTest(unittest.TestCase):
 
         # Check button classes
         button_classes = submit_btn.get_attribute('class')
-        self.assertIn('btn', button_classes, "Submit button should have 'btn' class")
+        self.assertIn('cn-button', button_classes, "Submit button should carry the Button recipe (cn-button)")
 
         # Check if button is visible and clickable
         self.assertTrue(submit_btn.is_displayed())
@@ -88,7 +88,7 @@ class FormBrowserTest(unittest.TestCase):
 
         # Check button classes
         button_classes = submit_btn.get_attribute('class')
-        self.assertIn('btn', button_classes, "Submit button should have 'btn' class")
+        self.assertIn('cn-button', button_classes, "Submit button should carry the Button recipe (cn-button)")
 
         # Check if button is visible
         self.assertTrue(submit_btn.is_displayed())
@@ -105,7 +105,7 @@ class FormBrowserTest(unittest.TestCase):
         # Check first input has proper class
         first_input = inputs[0]
         input_classes = first_input.get_attribute('class')
-        self.assertIn('input', input_classes, "Input field should have 'input' class")
+        self.assertIn('cn-input', input_classes, "Input field should carry the Input recipe (cn-input)")
 
     def test_register_inputs_properly_styled(self):
         """Test that register form inputs have proper styling"""
@@ -119,7 +119,7 @@ class FormBrowserTest(unittest.TestCase):
         # Check all inputs have proper class
         for input_field in inputs:
             input_classes = input_field.get_attribute('class')
-            self.assertIn('input', input_classes, f"Input {input_field.get_attribute('name')} should have 'input' class")
+            self.assertIn('cn-input', input_classes, f"Input {input_field.get_attribute('name')} should carry the Input recipe (cn-input)")
 
     def test_login_form_structure(self):
         """Test that login form has proper structure"""
@@ -201,17 +201,17 @@ class FormBrowserTest(unittest.TestCase):
 
         # Find card element
         card = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'card'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="card"]'))
         )
 
         self.assertTrue(card.is_displayed())
 
         # Check for card header
-        card_header = self.driver.find_element(By.CLASS_NAME, 'card-header')
+        card_header = self.driver.find_element(By.CSS_SELECTOR, '[data-slot="card-header"]')
         self.assertTrue(card_header.is_displayed())
 
         # Check for card content
-        card_content = self.driver.find_element(By.CLASS_NAME, 'card-content')
+        card_content = self.driver.find_element(By.CSS_SELECTOR, '[data-slot="card-content"]')
         self.assertTrue(card_content.is_displayed())
 
     def test_register_has_card_wrapper(self):
@@ -220,17 +220,17 @@ class FormBrowserTest(unittest.TestCase):
 
         # Find card element
         card = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'card'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="card"]'))
         )
 
         self.assertTrue(card.is_displayed())
 
         # Check for card header
-        card_header = self.driver.find_element(By.CLASS_NAME, 'card-header')
+        card_header = self.driver.find_element(By.CSS_SELECTOR, '[data-slot="card-header"]')
         self.assertTrue(card_header.is_displayed())
 
         # Check for card content
-        card_content = self.driver.find_element(By.CLASS_NAME, 'card-content')
+        card_content = self.driver.find_element(By.CSS_SELECTOR, '[data-slot="card-content"]')
         self.assertTrue(card_content.is_displayed())
 
 

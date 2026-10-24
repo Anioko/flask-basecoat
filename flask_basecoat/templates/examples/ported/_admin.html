@@ -1,0 +1,136 @@
+{# Building blocks shared by the admin screens (dashboards, file managers, point of sale, tasks, todo list). #}
+{# Tone classes chosen by number in the admin screens, listed so the stylesheet build includes them: bg-chart-1 bg-chart-2 bg-chart-3 bg-chart-4 bg-chart-5 bg-chart-1/30 bg-chart-2/30 bg-chart-3/30 #}
+{% import 'basecoat/index.html' as ui %}
+
+{#- A JSON value as an attribute string. -#}
+{% macro json_attr(value) %}{{ value | tojson | list | join('') }}{% endmacro %}
+
+{#- Chart container driven by the runtime chart renderer (attribute API). -#}
+{% macro chart(type, data, series, x='month', class='aspect-auto h-[250px] w-full', legend=false, y_axis=false, dots=false, short=false, grid=true, label='Chart', id=none, attrs={}) -%}
+{%- set a = {'data-chart-type': type, 'data-chart-x': x, 'data-chart-data': json_attr(data), 'data-chart-series': json_attr(series), 'role': 'img', 'aria-label': label} -%}
+{%- if not grid %}{% set _ = a.update({'data-chart-no-grid': ''}) %}{% endif -%}
+{%- if legend %}{% set _ = a.update({'data-chart-legend': ''}) %}{% endif -%}
+{%- if y_axis %}{% set _ = a.update({'data-chart-y-axis': ''}) %}{% endif -%}
+{%- if dots %}{% set _ = a.update({'data-chart-dots': ''}) %}{% endif -%}
+{%- if short %}{% set _ = a.update({'data-chart-x-short': ''}) %}{% endif -%}
+{%- set _ = a.update(attrs) -%}
+{{ ui.chart(class=class, id=id, attrs=a) }}
+{%- endmacro %}
+
+{#- Select with a trigger, value and listbox. options: list of values or (value, label) pairs. -#}
+{% macro select_box(id, options, selected=none, placeholder='', size='default', class='', content_class='', item_class='', side=none, align=none, attrs={}) -%}
+{%- set pairs = [] -%}
+{%- for o in options %}{% set _ = pairs.append(o if (o is not string and o is iterable) else (o, o)) %}{% endfor -%}
+{%- set ns = namespace(label=none) -%}
+{%- for v, l in pairs if v == selected %}{% set ns.label = l %}{% endfor -%}
+{%- call ui.select() -%}
+  {%- call ui.select_trigger(size=size, id=id, placeholder_shown=(ns.label is none), class=class, attrs=attrs) -%}
+    {{ ui.select_value(text=(ns.label if ns.label is not none else placeholder), attrs={'style': 'pointer-events:none'}) }}
+    {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
+  {%- endcall -%}
+  {%- call ui.select_content(side=side, align=align, class=content_class) -%}
+    {%- call ui.select_group() -%}
+    {%- for v, l in pairs -%}
+      {%- call ui.select_item(checked=(v == selected), class=item_class, attrs={'data-value': v}) -%}
+        <span class="cn-select-item-indicator"><span class="flex in-data-[state=unchecked]:hidden">{{ lucide('check', 'cn-select-item-indicator-icon pointer-events-none') }}</span></span>{{ ui.select_item_text(text=l) }}
+      {%- endcall -%}
+    {%- endfor -%}
+    {%- endcall -%}
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- A dropdown checkbox item with its check indicator. -#}
+{% macro menu_check(text, checked=true, class='', attrs={}) -%}
+{%- call ui.dropdown_menu_checkbox_item(checked=checked, class=class, attrs=attrs) -%}
+  {%- call ui.dropdown_menu_checkbox_item_indicator(checked=checked) %}{{ lucide('check') }}{% endcall -%}{{ text }}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Search input with a leading icon (upstream: relative wrapper, absolute Search icon, padded Input). -#}
+{% macro search_input(placeholder='Search', class='', icon_class='text-muted-foreground', id=none, attrs={}) -%}
+<div class="relative">
+  {{ lucide('search', 'absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform ' ~ icon_class) }}
+  {{ ui.input(placeholder=placeholder, id=id, class=class, attrs=dict({'aria-label': placeholder}, **attrs)) }}
+</div>
+{%- endmacro %}
+
+{#- Table pager buttons: first, previous, next, last. -#}
+{% macro pager_buttons(prefix, first_class='hidden h-8 w-8 p-0 lg:flex', last_class='hidden size-8 lg:flex', first_size=none) -%}
+{%- call ui.button(variant='outline', size=first_size, class=first_class, disabled=true, attrs={'data-page': 'first', 'data-pager': prefix}) %}<span class="sr-only">Go to first page</span>{{ lucide('chevrons-left') }}{% endcall -%}
+{%- call ui.button(variant='outline', size='icon', class='size-8', disabled=true, attrs={'data-page': 'prev', 'data-pager': prefix}) %}<span class="sr-only">Go to previous page</span>{{ lucide('chevron-left') }}{% endcall -%}
+{%- call ui.button(variant='outline', size='icon', class='size-8', attrs={'data-page': 'next', 'data-pager': prefix}) %}<span class="sr-only">Go to next page</span>{{ lucide('chevron-right') }}{% endcall -%}
+{%- call ui.button(variant='outline', size='icon', class=last_class, attrs={'data-page': 'last', 'data-pager': prefix}) %}<span class="sr-only">Go to last page</span>{{ lucide('chevrons-right') }}{% endcall -%}
+{%- endmacro %}
+
+{#- Client-side table paging, selection count and select-all for a table body marked data-table="<name>".
+    Rows carry data-row; filtered-out rows get data-filtered. The page size comes from the select with id <name>-page-size. -#}
+{% macro table_script() -%}
+<script>
+  window.AdminTable = function (name, opts) {
+    opts = opts || {};
+    var body = document.querySelector('[data-table="' + name + '"]');
+    if (!body) return null;
+    var state = { page: 0, size: opts.size || 10 };
+    function rows() { return Array.prototype.slice.call(body.querySelectorAll('[data-row]')); }
+    function shown() { return rows().filter(function (r) { return !r.hasAttribute('data-filtered'); }); }
+    function boxes(list) { return list.map(function (r) { return r.querySelector('[data-slot="checkbox"]'); }).filter(Boolean); }
+    function on(cb) { return cb.getAttribute('aria-checked') === 'true'; }
+    function pages() { return Math.max(1, Math.ceil(shown().length / state.size)); }
+    function render() {
+      var list = shown(), total = pages();
+      if (state.page > total - 1) state.page = total - 1;
+      rows().forEach(function (r) { r.hidden = true; });
+      list.forEach(function (r, i) { r.hidden = !(i >= state.page * state.size && i < (state.page + 1) * state.size); });
+      var empty = body.querySelector('[data-empty]');
+      if (empty) empty.hidden = list.length > 0;
+      document.querySelectorAll('[data-pager="' + name + '"]').forEach(function (b) {
+        var p = b.getAttribute('data-page');
+        b.disabled = (p === 'first' || p === 'prev') ? state.page === 0 : state.page >= total - 1;
+      });
+      var label = document.querySelector('[data-page-label="' + name + '"]');
+      if (label) label.textContent = 'Page ' + (state.page + 1) + ' of ' + total;
+      count();
+    }
+    function count() {
+      var list = shown(), picked = boxes(list).filter(on).length;
+      rows().forEach(function (r) { var cb = r.querySelector('[data-slot="checkbox"]'); if (cb) r.setAttribute('data-state', on(cb) ? 'selected' : 'false'); });
+      var c = document.querySelector('[data-selected-count="' + name + '"]');
+      if (c) c.textContent = picked + ' of ' + list.length + ' row(s) selected.';
+      var all = document.querySelector('[data-select-all="' + name + '"]');
+      if (all) {
+        var pageBoxes = boxes(list.filter(function (r) { return !r.hidden; }));
+        var n = pageBoxes.filter(on).length;
+        var st = n === 0 ? 'unchecked' : (n === pageBoxes.length ? 'checked' : 'indeterminate');
+        all.setAttribute('data-state', st);
+        all.setAttribute('aria-checked', st === 'indeterminate' ? 'mixed' : String(st === 'checked'));
+      }
+    }
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-pager="' + name + '"]');
+      if (!b || b.disabled) return;
+      var p = b.getAttribute('data-page');
+      if (p === 'first') state.page = 0;
+      else if (p === 'prev') state.page = Math.max(0, state.page - 1);
+      else if (p === 'next') state.page = Math.min(pages() - 1, state.page + 1);
+      else state.page = pages() - 1;
+      render();
+    });
+    document.addEventListener('basecoat:change', function (e) {
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      if (t.getAttribute('data-select-all') === name) {
+        var want = on(t);
+        boxes(shown().filter(function (r) { return !r.hidden; })).forEach(function (cb) { if (on(cb) !== want) cb.click(); });
+        count();
+      } else if (t.id === name + '-page-size') {
+        state.size = Number(e.detail.value) || state.size; state.page = 0; render();
+      } else if (body.contains(t) && t.getAttribute('data-slot') === 'checkbox') {
+        count();
+      }
+    });
+    render();
+    return { render: render, state: state };
+  };
+</script>
+{%- endmacro %}

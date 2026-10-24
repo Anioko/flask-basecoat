@@ -1,0 +1,28 @@
+{# Shared layout for the example screens: package build only (no CDN assets, no legacy Flask-Basecoat). #}
+<!doctype html>
+<html lang="en" class="style-vega{% block html_class %}{% endblock %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Flask-Basecoat examples{% endblock %}</title>
+  {{ basecoat.css() }}
+  {{ basecoat.js() }}
+  <script>
+    // Theme preference is applied before first paint so dark pages do not flash.
+    (function () {
+      try {
+        var stored = localStorage.getItem('flask-basecoat-theme');
+        var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (new URLSearchParams(location.search).get('theme') === 'dark') dark = true;
+        if (new URLSearchParams(location.search).get('theme') === 'light') dark = false;
+        document.documentElement.classList.toggle('dark', dark);
+      } catch (e) {}
+    })();
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-svh bg-background text-foreground antialiased{% block body_class %}{% endblock %}">
+  {% for category, message in get_flashed_messages(with_categories=true) %}<template data-fb-flash data-variant="{{ 'error' if category in ('error', 'danger') else category }}">{{ message }}</template>{% endfor %}
+  {% block body %}{% endblock %}
+</body>
+</html>

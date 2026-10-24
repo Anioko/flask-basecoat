@@ -1,0 +1,10 @@
+{
+  "id": "pos-app",
+  "title": "POS App",
+  "description": "Point of sale screen with channels, menu categories, a product grid and a live order summary with checkout.",
+  "tags": [
+    "Commerce",
+    "Cards",
+    "Scroll Area"
+  ]
+}

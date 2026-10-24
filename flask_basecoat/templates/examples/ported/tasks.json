@@ -1,0 +1,11 @@
+{
+  "id": "tasks",
+  "title": "Tasks",
+  "description": "Task table with text and faceted filters, column sorting and visibility, row selection, row actions and pagination.",
+  "tags": [
+    "Table",
+    "Popover",
+    "Command",
+    "Dropdown"
+  ]
+}

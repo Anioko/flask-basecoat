@@ -1,0 +1,20 @@
+/* Shipped stylesheet for Flask-Basecoat consumers.
+   Identical pipeline to the golden oracle (compliance/golden/golden.css) and to the demo app build,
+   scanning only the package templates and runtime so every class a macro can emit is present. */
+@import "tailwindcss" source(none);
+@source "../../../templates";
+@source "../../js/src";
+@source "../../../data";  /* class recipes extracted from upstream; the macros emit them at render time */
+
+@import "tw-animate-css";
+@import "../../../../compliance/upstream/shadcn/shadcn-tailwind.css";
+@import "../../../../compliance/golden/generated/theme.css";
+@import "../../../../compliance/golden/generated/tokens.css";
+@import "../../../../compliance/upstream/shadcn/styles/style-vega.css" layer(base);
+@import "../../../../app/assets/styles/runtime.css";
+
+/* Pages must carry class="style-vega" on <html>; the upstream style pack scopes every recipe under it. */
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+}

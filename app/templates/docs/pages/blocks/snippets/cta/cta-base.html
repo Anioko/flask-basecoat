@@ -1,29 +1,29 @@
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% from 'docs/macros/cta_blocks.html' import cta_actions, cta_supporting, cta_split, cta_metrics, cta_inline_form %}
 {% set data = variant.data or {} %}
 {% set layout = data.get('layout', 'centered') %}
-<section class="docs-section">
-  <div class="docs-preview docs-preview--cta" data-preview data-cta-layout="{{ layout }}">
-    <header class="cta-block__header">
-      {% if data.get('eyebrow') %}<span class="cta-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
-      <h2 class="cta-block__headline">{{ data.get('headline', 'Ready to get started?') }}</h2>
-      {% if data.get('description') %}<p class="cta-block__description">{{ data['description'] }}</p>{% endif %}
-    </header>
+{% call d.preview(class=('bg-primary text-primary-foreground' if layout == 'banner' else ''), attrs={'data-cta-layout': layout}) %}
+  <header class="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
+    {% if data.get('eyebrow') %}{{ ui.badge(text=data['eyebrow'], variant=('outline' if layout == 'banner' else 'secondary')) }}{% endif %}
+    <h2 class="text-3xl font-semibold tracking-tight">{{ data.get('headline', 'Ready to get started?') }}</h2>
+    {% if data.get('description') %}<p class="{{ 'text-primary-foreground/80' if layout == 'banner' else 'text-muted-foreground' }}">{{ data['description'] }}</p>{% endif %}
+  </header>
 
-    {% if layout == 'split' %}
-      {{ cta_split(data.get('bullets', []), data.get('media', {})) }}
-      {{ cta_actions(data.get('actions', [])) }}
-    {% elif layout == 'banner' %}
-      <div class="cta-banner">
-        {{ cta_metrics(data.get('metrics', [])) }}
-        {{ cta_actions(data.get('actions', [])) }}
-      </div>
-    {% elif layout == 'inline' %}
-      {{ cta_inline_form(data.get('form', {}), data.get('actions', [])) }}
-    {% else %}
-      {{ cta_actions(data.get('actions', [])) }}
-      {% if data.get('supporting') %}
-      {{ cta_supporting(data['supporting']) }}
-      {% endif %}
-    {% endif %}
-  </div>
-</section>
+  {% if layout == 'split' %}
+    {{ cta_split(data.get('bullets', []), data.get('media', {})) }}
+    {{ cta_actions(data.get('actions', [])) }}
+  {% elif layout == 'banner' %}
+    {{ cta_metrics(data.get('metrics', [])) }}
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      {% for action in data.get('actions', []) %}
+      {{ ui.button(text=action.get('label'), variant=('secondary' if loop.first else 'outline'), size='lg', class=('' if loop.first else 'border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground')) }}
+      {% endfor %}
+    </div>
+  {% elif layout == 'inline' %}
+    {{ cta_inline_form(data.get('form', {}), data.get('actions', [])) }}
+  {% else %}
+    {{ cta_actions(data.get('actions', [])) }}
+    {% if data.get('supporting') %}{{ cta_supporting(data['supporting']) }}{% endif %}
+  {% endif %}
+{% endcall %}

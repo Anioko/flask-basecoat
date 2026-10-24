@@ -1,0 +1,9 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui chart `chart-bar-horizontal` (pinned source in compliance/upstream/shadcn/charts). #}
+{% block title %}chart-bar-horizontal · Flask-Basecoat{% endblock %}
+{% macro card() -%}
+{% call ui.card(size='default') %}{% call ui.card_header() %}{% call ui.card_title() %}Bar Chart - Horizontal{% endcall %}{% call ui.card_description() %}January - June 2024{% endcall %}{% endcall %}{% call ui.card_content() %}{{ ui.chart_from_spec(chart_spec('chart-bar-horizontal'), id='bar-horizontal') }}{% endcall %}{% call ui.card_footer(class='flex-col items-start gap-2 text-sm') %}<div class="flex gap-2 leading-none font-medium">Trending up by 5.2% this month <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up h-4 w-4" aria-hidden="true"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg></div><div class="leading-none text-muted-foreground">Showing total visitors for the last 6 months</div>{% endcall %}{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div data-chart-frame="regular" style="width: 384px;"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div>{% endblock %}

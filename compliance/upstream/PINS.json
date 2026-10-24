@@ -1,0 +1,48 @@
+{
+  "generated_on": "2026-10-24",
+  "shadcn_ui": {
+    "repo": "https://github.com/shadcn-ui/ui",
+    "commit": "e55b60b1014cccfb9ac62f97e0d20b5b649f4a54",
+    "commit_date": "2026-10-23T20:25:11Z",
+    "paths": {
+      "components": "apps/v4/registry/bases/radix/ui",
+      "examples": "apps/v4/registry/bases/radix/examples",
+      "blocks": "apps/v4/registry/bases/radix/blocks",
+      "styles": "apps/v4/registry/styles",
+      "globals": "apps/v4/app/globals.css",
+      "icon_placeholder": "apps/v4/app/(app)/(create)/components/icon-placeholder.tsx",
+      "form": "apps/v4/registry/new-york-v4/ui/form.tsx",
+      "charts": "apps/v4/registry/new-york-v4/charts (mirrored to compliance/upstream/shadcn/charts)",
+      "charts_app": "apps/v4/app/(app)/charts + apps/v4/components/chart-display.tsx, chart-iframe.tsx, charts-nav.tsx (mirrored to compliance/upstream/shadcn/charts-app)",
+      "docs_examples": "apps/v4/examples/radix/{data-table-*,date-picker-*,typography-*}.tsx + apps/v4/content/docs/components/radix/{data-table,date-picker,typography}.mdx (mirrored to compliance/upstream/shadcn/docs-examples)",
+      "language_selector": "apps/v4/components/language-selector.tsx (mirrored to compliance/upstream/shadcn/site)"
+    },
+    "registry_index": "https://ui.shadcn.com/r/index.json",
+    "theme": "https://ui.shadcn.com/r/colors/neutral.json",
+    "style": "vega",
+    "docs_pages": {
+      "components": "https://ui.shadcn.com/docs/components (69 entries on 2026-10-24: 63 registry:ui components + data-table, date-picker, typography; aria/base/radix are bases, not components)",
+      "charts": "https://ui.shadcn.com/charts (70 charts: area 10, bar 10, line 10, pie 11, radar 14, radial 6, tooltip 9)"
+    }
+  },
+  "shadcn_npm": {
+    "package": "shadcn",
+    "version": "4.22.1",
+    "stylesheet": "dist/tailwind.css"
+  },
+  "radix_ui_npm": {
+    "package": "radix-ui",
+    "version": "1.8.1"
+  },
+  "basecoat": {
+    "repo": "https://github.com/hunvreus/basecoat",
+    "commit": "6769c83c9644ec4195ed30af028a9e66fe670215",
+    "commit_date": "2026-10-23T10:15:35Z",
+    "npm_version": "1.1.0",
+    "docs_path": "site/src/docs/components"
+  },
+  "extra_npm": {
+    "chrono-node": "2.8.2",
+    "@tanstack/react-table": "9.x (installed 9.3.1; upstream ^9.0.0)"
+  }
+}

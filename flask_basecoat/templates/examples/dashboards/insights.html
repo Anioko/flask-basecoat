@@ -1,0 +1,117 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/_dashboards.html' as d %}
+{% block title %}Insights dashboard · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set updates = [
+  {'day': '16/08', 'earnings': 1500, 'expense': 1800}, {'day': '17/08', 'earnings': 2700, 'expense': 1100},
+  {'day': '18/08', 'earnings': 2200, 'expense': 2500}, {'day': '19/08', 'earnings': 3000, 'expense': 1500},
+  {'day': '20/08', 'earnings': 1500, 'expense': 600}, {'day': '21/08', 'earnings': 1100, 'expense': 1700},
+  {'day': '22/08', 'earnings': 1400, 'expense': 1200},
+] %}
+{% set monthly = [{'month': 'Jan', 'value': 20}, {'month': 'Feb', 'value': 45}, {'month': 'Mar', 'value': 28}, {'month': 'Apr', 'value': 52}, {'month': 'May', 'value': 30}, {'month': 'Jun', 'value': 70}, {'month': 'Jul', 'value': 48}] %}
+{% set weekly = [{'day': 'Mon', 'sales': 22}, {'day': 'Tue', 'sales': 30}, {'day': 'Wed', 'sales': 72}, {'day': 'Thu', 'sales': 30}, {'day': 'Fri', 'sales': 50}, {'day': 'Sat', 'sales': 28}, {'day': 'Sun', 'sales': 40}] %}
+{% set locations = [{'month': 'Jan', 'usa': 90, 'india': 40}, {'month': 'Feb', 'usa': 120, 'india': 160}, {'month': 'Mar', 'usa': 120, 'india': 60}, {'month': 'Apr', 'usa': 40, 'india': 100}, {'month': 'May', 'usa': 110, 'india': 70}, {'month': 'Jun', 'usa': 110, 'india': 70}] %}
+{% call d.shell('insights', 'Insights', 'Earnings, spending and where sales come from') %}
+<div class="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 xl:grid-cols-4">
+  {% call ui.card(class='relative overflow-hidden md:col-span-2') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Analytics dashboard', class='text-xl') }}{{ ui.card_description(text='Check all the statistics') }}{% endcall %}
+    {% call ui.card_content(class='flex flex-wrap gap-8') %}
+      {% for label, value, change in [('Earnings', '$27,850', '+18%'), ('Expense', '$18,453', '-5%')] %}
+      <div class="grid gap-1 {{ 'border-l pl-8' if not loop.first else '' }}"><span class="text-sm text-muted-foreground">{{ label }}</span><span class="flex items-center gap-2 text-2xl font-semibold tabular-nums">{{ value }} {{ d.delta(change) }}</span></div>
+      {% endfor %}
+    {% endcall %}
+    <div aria-hidden="true" class="pointer-events-none absolute -right-4 -bottom-6 hidden lg:block">{{ lucide('chart-line', 'size-36 text-muted-foreground/15') }}</div>
+  {% endcall %}
+  {{ d.stat_card('Weekly sales', '$4,587', 'calendar-days', '+18%', period=none, action='See report') }}
+  {{ d.stat_card('Purchase orders', '230', 'shopping-bag', '+18%', period=none, action='See report') }}
+</div>
+
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  {% call ui.card(class='xl:col-span-2') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Revenue updates') }}{{ ui.card_description(text='Earnings and expenses per day') }}{% call ui.card_action() %}{{ d.period('insights-year', ['Year 2026', 'Year 2025'], 'Year 2026') }}{% endcall %}{% endcall %}
+    {% call ui.card_content(class='grid gap-6 lg:grid-cols-[1fr_14rem]') %}
+      {{ d.chart('bar', updates, [{'key': 'earnings', 'label': 'Earnings', 'color': 'var(--chart-2)'}, {'key': 'expense', 'label': 'Expense', 'color': 'var(--chart-1)'}], x='day', class='aspect-auto h-[360px] w-full', label='Earnings and expenses per day') }}
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center gap-3">{{ d.icon_tile('layout-grid') }}<div class="grid"><span class="text-2xl font-semibold tabular-nums">$63,489.50</span><span class="text-sm text-muted-foreground">Total earnings</span></div></div>
+        {% for label, value, tone in [('Earnings this month', '$48,820', 2), ('Expense this month', '$26,498', 1)] %}
+        <div class="grid gap-1"><span class="flex items-center gap-2 text-sm text-muted-foreground"><span class="size-2 rounded-full bg-chart-{{ tone }}"></span>{{ label }}</span><span class="text-xl font-semibold tabular-nums">{{ value }}</span></div>
+        {% endfor %}
+        {{ ui.button(text='View full report', href='#', class='mt-auto w-full') }}
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  <div class="flex flex-col gap-4 md:gap-6">
+    {% call ui.card() %}
+      {% call ui.card_header() %}{{ ui.card_title(text='Monthly earnings') }}{% call ui.card_action() %}{{ d.icon_tile('circle-dollar-sign') }}{% endcall %}{% endcall %}
+      {% call ui.card_content(class='flex flex-col gap-2') %}
+        <span class="text-2xl font-semibold tabular-nums">$6,820</span>
+        <span class="flex items-center gap-2 text-sm text-muted-foreground">{{ d.delta('-9%') }} than last year</span>
+        {{ d.chart('area', monthly, [{'key': 'value', 'label': 'Earnings', 'color': 'var(--chart-1)'}], grid=false, class='aspect-auto h-[110px] w-full', label='Monthly earnings') }}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.card() %}
+      {% call ui.card_header() %}{{ ui.card_title(text='Yearly breakup') }}{% endcall %}
+      {% call ui.card_content(class='flex items-center justify-between gap-4') %}
+        <div class="flex flex-col gap-2">
+          <span class="text-2xl font-semibold tabular-nums">$36,358</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap text-muted-foreground">{{ d.delta('+9%') }} last year</span>
+          {{ d.legend([('2025', 2), ('2026', 4)], 'mt-2') }}
+        </div>
+        {{ d.chart('donut', [{'year': '2025', 'value': 55, 'fill': 'var(--chart-2)'}, {'year': '2026', 'value': 30, 'fill': 'var(--chart-4)'}, {'year': 'Other', 'value': 15, 'fill': 'var(--chart-1)'}], [{'key': 'value', 'label': 'Share'}], x='year', grid=false, class='aspect-square h-[120px]', label='Earnings by year') }}
+      {% endcall %}
+    {% endcall %}
+  </div>
+
+  {% call ui.card() %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Weekly stats') }}{{ ui.card_description(text='Average sales') }}{% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      {{ d.chart('area', weekly, [{'key': 'sales', 'label': 'Sales', 'color': 'var(--chart-1)'}], x='day', grid=false, class='aspect-auto h-[160px] w-full', label='Sales per day') }}
+      {% call ui.item_group(class='gap-1') %}
+        {% for icon, title, detail, change in [('presentation', 'Top sales', 'Jonathan Doe', '+76'), ('star', 'Best seller', 'Footwear', '+68'), ('message-square', 'Most commented', 'Fashionware', '+52')] %}
+        {% call ui.item(size='sm', class='px-0') %}{% call ui.item_media() %}{{ d.icon_tile(icon) }}{% endcall %}{% call ui.item_content() %}{{ ui.item_title(text=title) }}{{ ui.item_description(text=detail) }}{% endcall %}{% call ui.item_actions() %}{{ ui.badge(text=change, variant='secondary') }}{% endcall %}{% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Sales from locations') }}{{ ui.card_description(text='This year') }}{% endcall %}
+    {% call ui.card_content() %}
+      {{ d.chart('stacked-bar', locations, [{'key': 'usa', 'label': 'USA', 'color': 'var(--chart-1)'}, {'key': 'india', 'label': 'India', 'color': 'var(--chart-3)'}], class='aspect-auto h-[280px] w-full', legend=true, label='Sales by country') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Recent transactions') }}
+    {% call ui.card_content() %}{{ d.transactions([('wallet', 'PayPal transfer', 'Big brands', '+$6,235'), ('briefcase', 'Wallet', 'Big brands', '+$345'), ('credit-card', 'Credit card', 'Money reversed', '+$2,235'), ('landmark', 'Bank transfer', 'Money added', '+$320'), ('receipt', 'Refund', 'Bill payment', '-$32')]) }}{% endcall %}
+    {% call ui.card_footer() %}{{ ui.button(text='View full report', href='#', class='w-full') }}{% endcall %}
+  {% endcall %}
+
+  <div class="xl:col-span-2">
+    {{ d.campaigns_table([
+      ('app-window', 'Web app launch', '04 June 2026', 'Organic', ['AO', 'JK', 'LM'], 60),
+      ('gift', 'Loyalty rewards', '09 January 2026', 'Paid', ['BS', 'TG', 'EP'], 30),
+      ('megaphone', 'Digital marketing', '15 April 2026', 'Email', ['LG', 'OR', 'MA'], 45),
+      ('palette', 'Brand refresh', '30 March 2026', 'Social', ['EP', 'JK', 'AO'], 38),
+      ('paintbrush', 'Graphic design', '23 October 2026', 'Social', ['TG', 'LM'], 88),
+      ('megaphone', 'Spring promotion', '15 April 2026', 'Paid', ['OR', 'BS'], 45),
+      ('shield-check', 'Security webinar', '09 January 2026', 'Paid', ['MA', 'LG', 'JK'], 30),
+    ]) }}
+  </div>
+
+  {% call ui.card() %}
+    {{ d.card_head('Sales by country', 'Share of revenue') }}
+    {% call ui.card_content(class='flex flex-col gap-5') %}
+      {% for country, amount, pct in [('United States', '$28,410', 72), ('India', '$17,930', 54), ('United Kingdom', '$12,200', 41), ('Germany', '$9,860', 33), ('Brazil', '$6,120', 22), ('Japan', '$4,480', 15)] %}
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-2 text-sm"><span class="flex items-center gap-2 font-medium">{{ lucide('globe', 'size-4 text-muted-foreground') }}{{ country }}</span><span class="tabular-nums text-muted-foreground">{{ amount }}</span></div>
+        {{ d.bar(pct, country) }}
+      </div>
+      {% endfor %}
+    {% endcall %}
+  {% endcall %}
+</div>
+{% endcall %}
+{% endblock %}

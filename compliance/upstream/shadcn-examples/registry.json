@@ -1,0 +1,349 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "shadcn",
+  "homepage": "http://localhost:3000",
+  "items": [
+    {
+      "name": "admin-dashboard",
+      "type": "registry:page",
+      "title": "Admin Dashboard",
+      "registryDependencies": [
+        "sidebar",
+        "card",
+        "chart",
+        "select",
+        "toggle-group",
+        "badge",
+        "button",
+        "checkbox",
+        "drawer",
+        "dropdown-menu",
+        "input",
+        "label",
+        "separator",
+        "table",
+        "tabs",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "examples/admin-dashboard/components/app-sidebar.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/app-sidebar.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/chart-area-interactive.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/chart-area-interactive.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/data-table.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/data-table.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/nav-documents.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/nav-documents.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/nav-main.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/nav-main.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/nav-secondary.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/nav-secondary.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/nav-user.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/nav-user.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/section-cards.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/section-cards.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/components/site-header.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/components/site-header.tsx"
+        },
+        {
+          "path": "examples/admin-dashboard/data.json",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/data.json"
+        },
+        {
+          "path": "examples/admin-dashboard/page.tsx",
+          "type": "registry:component",
+          "target": "components/admin-dashboard/page.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ai-chat",
+      "type": "registry:page",
+      "title": "Ai Chat",
+      "registryDependencies": [
+        "button",
+        "input",
+        "scroll-area",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "examples/ai-chat/components/chat-interface.tsx",
+          "type": "registry:component",
+          "target": "components/ai-chat/components/chat-interface.tsx"
+        },
+        {
+          "path": "examples/ai-chat/components/sidebar.tsx",
+          "type": "registry:component",
+          "target": "components/ai-chat/components/sidebar.tsx"
+        },
+        {
+          "path": "examples/ai-chat/components/welcome-screen.tsx",
+          "type": "registry:component",
+          "target": "components/ai-chat/components/welcome-screen.tsx"
+        },
+        {
+          "path": "examples/ai-chat/page.tsx",
+          "type": "registry:component",
+          "target": "components/ai-chat/page.tsx"
+        }
+      ]
+    },
+    {
+      "name": "authentication",
+      "type": "registry:page",
+      "title": "Authentication",
+      "registryDependencies": [
+        "button",
+        "input",
+        "label"
+      ],
+      "files": [
+        {
+          "path": "examples/authentication/components/user-auth-form.tsx",
+          "type": "registry:component",
+          "target": "components/authentication/components/user-auth-form.tsx"
+        },
+        {
+          "path": "examples/authentication/page.tsx",
+          "type": "registry:component",
+          "target": "components/authentication/page.tsx"
+        }
+      ]
+    },
+    {
+      "name": "playground",
+      "type": "registry:page",
+      "title": "Playground",
+      "registryDependencies": [
+        "button",
+        "dialog",
+        "hover-card",
+        "label",
+        "slider",
+        "command",
+        "popover",
+        "alert-dialog",
+        "dropdown-menu",
+        "switch",
+        "input",
+        "textarea",
+        "separator",
+        "tabs"
+      ],
+      "files": [
+        {
+          "path": "examples/playground/components/code-viewer.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/code-viewer.tsx"
+        },
+        {
+          "path": "examples/playground/components/maxlength-selector.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/maxlength-selector.tsx"
+        },
+        {
+          "path": "examples/playground/components/model-selector.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/model-selector.tsx"
+        },
+        {
+          "path": "examples/playground/components/preset-actions.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/preset-actions.tsx"
+        },
+        {
+          "path": "examples/playground/components/preset-save.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/preset-save.tsx"
+        },
+        {
+          "path": "examples/playground/components/preset-selector.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/preset-selector.tsx"
+        },
+        {
+          "path": "examples/playground/components/preset-share.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/preset-share.tsx"
+        },
+        {
+          "path": "examples/playground/components/temperature-selector.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/temperature-selector.tsx"
+        },
+        {
+          "path": "examples/playground/components/top-p-selector.tsx",
+          "type": "registry:component",
+          "target": "components/playground/components/top-p-selector.tsx"
+        },
+        {
+          "path": "examples/playground/data/models.ts",
+          "type": "registry:component",
+          "target": "components/playground/data/models.ts"
+        },
+        {
+          "path": "examples/playground/data/presets.ts",
+          "type": "registry:component",
+          "target": "components/playground/data/presets.ts"
+        },
+        {
+          "path": "examples/playground/page.tsx",
+          "type": "registry:component",
+          "target": "components/playground/page.tsx"
+        }
+      ]
+    },
+    {
+      "name": "profile-page",
+      "type": "registry:page",
+      "title": "Profile Page",
+      "registryDependencies": [
+        "button",
+        "card",
+        "input",
+        "label",
+        "separator",
+        "switch",
+        "tabs",
+        "textarea",
+        "badge",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "examples/profile-page/components/profile-content.tsx",
+          "type": "registry:component",
+          "target": "components/profile-page/components/profile-content.tsx"
+        },
+        {
+          "path": "examples/profile-page/components/profile-header.tsx",
+          "type": "registry:component",
+          "target": "components/profile-page/components/profile-header.tsx"
+        },
+        {
+          "path": "examples/profile-page/page.tsx",
+          "type": "registry:component",
+          "target": "components/profile-page/page.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "type": "registry:page",
+      "title": "Tasks",
+      "registryDependencies": [
+        "badge",
+        "checkbox",
+        "button",
+        "dropdown-menu",
+        "command",
+        "popover",
+        "separator",
+        "select",
+        "input",
+        "table",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "examples/tasks/components/columns.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/columns.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table-column-header.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table-column-header.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table-faceted-filter.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table-faceted-filter.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table-pagination.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table-pagination.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table-row-actions.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table-row-actions.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table-toolbar.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table-toolbar.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table-view-options.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table-view-options.tsx"
+        },
+        {
+          "path": "examples/tasks/components/data-table.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/data-table.tsx"
+        },
+        {
+          "path": "examples/tasks/components/user-nav.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/components/user-nav.tsx"
+        },
+        {
+          "path": "examples/tasks/data/data.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/data/data.tsx"
+        },
+        {
+          "path": "examples/tasks/data/schema.ts",
+          "type": "registry:component",
+          "target": "components/tasks/data/schema.ts"
+        },
+        {
+          "path": "examples/tasks/data/seed.ts",
+          "type": "registry:component",
+          "target": "components/tasks/data/seed.ts"
+        },
+        {
+          "path": "examples/tasks/data/tasks.json",
+          "type": "registry:component",
+          "target": "components/tasks/data/tasks.json"
+        },
+        {
+          "path": "examples/tasks/page.tsx",
+          "type": "registry:component",
+          "target": "components/tasks/page.tsx"
+        }
+      ]
+    }
+  ]
+}

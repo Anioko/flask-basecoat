@@ -1,20 +1,7 @@
-{# Basecoat Badge Component #}
-{% macro badge(
-    text='',
-    variant='default',
-    class='',
-    id=none
-) %}
-    {% set variant_map = {
-        'default': 'badge badge-primary',
-        'secondary': 'badge badge-secondary',
-        'destructive': 'badge badge-destructive',
-        'outline': 'badge badge-outline'
-    } %}
-    
-    {% set badge_classes = variant_map.get(variant, 'badge badge-primary') ~ (' ' ~ class if class else '') %}
-    
-    <span class="{{ badge_classes }}" {% if id %}id="{{ id }}"{% endif %}>
-        {{ text }}{{ caller() if caller }}
-    </span>
-{% endmacro %}
+{# badge: port of shadcn/ui badge.tsx (pinned in compliance/upstream). Macros: badge #}
+
+{#- Badge -#}
+{% macro badge(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('badge', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}

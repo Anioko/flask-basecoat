@@ -1,0 +1,176 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}POS App{% endblock %}
+{% set categories = [('Burger', '🍔'), ('Hot Dog', '🌭'), ('Pizza', '🍕'), ('Sandwich', '🥪'), ('Popcorn', '🍿'), ('Taco', '🌮'), ('Burrito', '🌯'), ('Pizza', '🍕'), ('Burrito', '🌯')] %}
+{% set menu_items = [
+  {'id': '1', 'name': 'Duck Salad', 'category': 'Pizza', 'price': 35.0},
+  {'id': '2', 'name': 'Breakfast board', 'category': 'Taco', 'price': 14.0},
+  {'id': '3', 'name': 'Hummus', 'category': 'Sandwich', 'price': 24.0},
+  {'id': '4', 'name': 'Roast beef', 'category': 'Kebab', 'price': 17.5},
+  {'id': '5', 'name': 'Tuna salad', 'category': 'Popcorn', 'price': 35.0},
+  {'id': '6', 'name': 'Salmon', 'category': 'Burger', 'price': 48.0},
+  {'id': '7', 'name': 'California roll', 'category': 'Taco', 'price': 74.0},
+  {'id': '8', 'name': 'Sashimi', 'category': 'Burrito', 'price': 74.0},
+] %}
+{% set order_items = [
+  {'id': '4', 'name': 'Roast beef', 'price': 12.0, 'quantity': 1},
+  {'id': '5', 'name': 'Tuna salad', 'price': 14.0, 'quantity': 1},
+  {'id': '6', 'name': 'Salmon', 'price': 45.0, 'quantity': 1},
+  {'id': '7', 'name': 'California roll', 'price': 22.0, 'quantity': 1},
+  {'id': '9', 'name': 'Duck carpaccio', 'price': 18.0, 'quantity': 1},
+] %}
+{% set ns = namespace(subtotal=0) %}{% for i in order_items %}{% set ns.subtotal = ns.subtotal + i.price * i.quantity %}{% endfor %}
+{% set draft_number = 1 %}
+{% set nav_row = 'flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-muted' %}
+
+{% block body %}
+<div class="flex h-screen">
+  <div class="flex w-64 flex-col border-r">
+    <div class="border-b p-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-foreground">CHANNELS</h2>
+        <div class="flex items-center gap-2">{{ lucide('search', 'h-4 w-4 text-muted-foreground') }}{{ lucide('chevron-down', 'h-4 w-4 text-muted-foreground') }}</div>
+      </div>
+    </div>
+    <nav class="flex-1 p-4">
+      <div class="space-y-2">
+        <div class="flex items-center gap-3 rounded-lg bg-destructive/10 p-2 text-destructive">{{ lucide('building-2', 'h-4 w-4') }}<span class="text-sm font-medium">Office</span></div>
+        {% for label in ['Main Warehouse', 'Warehouse East', 'Warehouse #12'] %}
+        <div class="{{ nav_row }}">{{ lucide('warehouse', 'h-4 w-4') }}<span class="text-sm">{{ label }}</span></div>
+        {% endfor %}
+      </div>
+      {{ ui.separator(class='my-4') }}
+      <div class="space-y-2">
+        {% for icon, label in [('star', 'Top Deals'), ('settings', 'Setting'), ('history', 'History'), ('file-text', 'Report')] %}
+        <div class="{{ nav_row }}">{{ lucide(icon, 'h-4 w-4') }}<span class="text-sm">{{ label }}</span></div>
+        {% endfor %}
+      </div>
+    </nav>
+    <div class="border-t p-4">
+      <div class="text-sm">Sales Today</div>
+      <div class="text-lg font-semibold">134.55$</div>
+    </div>
+  </div>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+    <div class="border-b p-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-xl font-semibold">Categories</h1>
+        <div class="flex items-center gap-2">{{ lucide('chevron-left', 'h-5 w-5 text-muted-foreground') }}{{ lucide('chevron-right', 'h-5 w-5 text-muted-foreground') }}</div>
+      </div>
+    </div>
+    <div class="border-b p-4">
+      <div class="flex gap-4 overflow-x-auto">
+        {% for name, icon in categories %}
+        <div class="flex min-w-[80px] cursor-pointer flex-col items-center rounded-lg p-2 hover:bg-muted data-[selected=true]:bg-muted" data-category="{{ name }}">
+          <div class="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-muted text-2xl">{{ icon }}</div>
+          <span class="text-center text-xs text-muted-foreground">{{ name }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="flex-1 overflow-auto p-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {% for item in menu_items %}
+        {% call ui.card(class='cursor-pointer transition-shadow hover:shadow-lg', attrs={'data-add': item.id, 'data-name': item.name, 'data-price': item.price, 'role': 'button', 'tabindex': '0'}) %}
+          {% call ui.card_content(class='p-0') %}
+            <div class="relative aspect-video overflow-hidden rounded-t-lg"><img src="{{ url_for('basecoat.placeholder', height=200, width=300) }}" alt="{{ item.name }}" class="absolute inset-0 h-full w-full object-cover"></div>
+            <div class="p-4">
+              <h3 class="mb-1 font-semibold">{{ item.name }}</h3>
+              <p class="mb-2 text-sm text-muted-foreground">{{ item.category }}</p>
+              <p class="text-lg font-bold text-primary">${{ '%.2f' | format(item.price) }}</p>
+            </div>
+          {% endcall %}
+        {% endcall %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex w-80 flex-col border-l">
+    <div class="border-b p-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold">Draft #{{ '%03d' | format(draft_number) }}</h2>
+        <div class="flex items-center gap-2">{{ lucide('plus', 'h-4 w-4 text-muted-foreground') }}{{ lucide('trash-2', 'h-4 w-4 text-muted-foreground') }}</div>
+      </div>
+    </div>
+    {% call ui.scroll_area(class='min-h-0 flex-1 p-4') %}
+      {% call ui.scroll_area_viewport(class='size-full', attrs={'style': 'overflow-y:auto'}) %}
+        <div class="space-y-3" data-order>
+          {% for item in order_items %}
+          <div class="flex items-center gap-3" data-order-item="{{ item.id }}" data-price="{{ item.price }}" data-qty="{{ item.quantity }}">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-muted"><span class="text-lg" data-index>{{ loop.index }}</span></div>
+            <div class="flex-1"><h4 class="text-sm font-medium">{{ item.name }}</h4><p class="text-xs text-muted-foreground">Lorem ipsum dolor sit</p></div>
+            <div class="text-right"><p class="font-semibold">${{ '%.2f' | format(item.price) }}</p></div>
+          </div>
+          {% endfor %}
+        </div>
+      {% endcall %}
+    {% endcall %}
+    <div class="border-t p-4">
+      <div class="mb-4 space-y-2">
+        <div class="flex justify-between text-sm"><span>Subtotal</span><span data-subtotal>{{ '%.2f' | format(ns.subtotal) }}$</span></div>
+        <div class="flex justify-between text-sm"><span>Tax</span><span data-tax>{{ '%.2f' | format(ns.subtotal * 0.1) }}$</span></div>
+        {{ ui.separator() }}
+        <div class="flex justify-between font-semibold"><span>Total</span><span data-total>{{ '%.2f' | format(ns.subtotal * 1.1) }}$</span></div>
+      </div>
+      <div class="mb-4 grid grid-cols-3 gap-2">
+        {% for label, icon in [('Cash', none), ('Debit', 'credit-card'), ('Scan', 'qr-code')] %}
+        {% call ui.button(variant='outline', class='flex h-auto flex-col items-center bg-transparent p-4') %}
+          <div class="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-muted">{% if icon %}{{ lucide(icon, 'h-4 w-4 text-foreground') }}{% else %}<span class="font-semibold text-foreground">$</span>{% endif %}</div>
+          <span class="text-xs">{{ label }}</span>
+        {% endcall %}
+        {% endfor %}
+      </div>
+      {% call ui.button(class='w-full py-3') %}<span>Checkout $<span data-checkout>{{ "%.2f" | format(ns.subtotal * 1.1) }}</span></span>{% endcall %}
+    </div>
+  </div>
+</div>
+<template id="order-row">
+  <div class="flex items-center gap-3">
+    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-muted"><span class="text-lg" data-index></span></div>
+    <div class="flex-1"><h4 class="text-sm font-medium" data-name></h4><p class="text-xs text-muted-foreground">Lorem ipsum dolor sit</p></div>
+    <div class="text-right"><p class="font-semibold" data-price-label></p></div>
+  </div>
+</template>
+<script>
+  (function () {
+    var order = document.querySelector('[data-order]');
+    function totals() {
+      var sub = 0;
+      order.querySelectorAll('[data-order-item]').forEach(function (r, i) {
+        sub += Number(r.getAttribute('data-price')) * Number(r.getAttribute('data-qty'));
+        r.querySelector('[data-index]').textContent = i + 1;
+      });
+      document.querySelector('[data-subtotal]').textContent = sub.toFixed(2) + '$';
+      document.querySelector('[data-tax]').textContent = (sub * 0.1).toFixed(2) + '$';
+      document.querySelector('[data-total]').textContent = (sub * 1.1).toFixed(2) + '$';
+      document.querySelector('[data-checkout]').textContent = (sub * 1.1).toFixed(2);
+    }
+    function add(card) {
+      var id = card.getAttribute('data-add');
+      var row = order.querySelector('[data-order-item="' + id + '"]');
+      if (row) { row.setAttribute('data-qty', Number(row.getAttribute('data-qty')) + 1); }
+      else {
+        row = document.getElementById('order-row').content.firstElementChild.cloneNode(true);
+        row.setAttribute('data-order-item', id);
+        row.setAttribute('data-price', card.getAttribute('data-price'));
+        row.setAttribute('data-qty', '1');
+        row.querySelector('[data-name]').textContent = card.getAttribute('data-name');
+        row.querySelector('[data-price-label]').textContent = '$' + Number(card.getAttribute('data-price')).toFixed(2);
+        order.appendChild(row);
+      }
+      totals();
+    }
+    document.querySelectorAll('[data-add]').forEach(function (card) {
+      card.addEventListener('click', function () { add(card); });
+      card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); add(card); } });
+    });
+    document.querySelectorAll('[data-category]').forEach(function (c) {
+      c.addEventListener('click', function () {
+        document.querySelectorAll('[data-category]').forEach(function (o) { o.setAttribute('data-selected', String(o === c)); });
+      });
+    });
+  })();
+</script>
+{% endblock %}

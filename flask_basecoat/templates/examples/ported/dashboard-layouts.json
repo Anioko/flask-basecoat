@@ -1,0 +1,9 @@
+{
+  "id": "dashboard-layouts",
+  "title": "Dashboard Layouts",
+  "description": "Empty state announcing upcoming dashboard layouts.",
+  "tags": [
+    "Empty",
+    "Spinner"
+  ]
+}

@@ -1,51 +1,43 @@
-{# Basecoat Card Component #}
-{% macro card(title=none, description=none, footer=none, class='', id=none) %}
-    <div class="card {{ class }}" {% if id %}id="{{ id }}"{% endif %}>
-        {% if title or description %}
-            <div class="card-header">
-                {% if title %}
-                    <h3 class="card-title">{{ title }}</h3>
-                {% endif %}
-                {% if description %}
-                    <p class="card-description">{{ description }}</p>
-                {% endif %}
-            </div>
-        {% endif %}
-        
-        <div class="card-content">
-            {{ caller() if caller }}
-        </div>
-        
-        {% if footer %}
-            <div class="card-footer">
-                {{ footer }}
-            </div>
-        {% endif %}
-    </div>
-{% endmacro %}
+{# card: port of shadcn/ui card.tsx (pinned in compliance/upstream). Macros: card, card_header, card_title, card_description, card_action, card_content, card_footer #}
 
-{% macro card_header(class='') %}
-    <div class="card-header {{ class }}">
-        {{ caller() if caller }}
-    </div>
-{% endmacro %}
+{#- Card -#}
+{% macro card(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
 
-{% macro card_title(text='', class='') %}
-    <h3 class="card-title {{ class }}">{{ text }}{{ caller() if caller }}</h3>
-{% endmacro %}
+{#- CardHeader -#}
+{% macro card_header(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-header', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
 
-{% macro card_description(text='', class='') %}
-    <p class="card-description {{ class }}">{{ text }}{{ caller() if caller }}</p>
-{% endmacro %}
+{#- CardTitle -#}
+{% macro card_title(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-title', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
 
-{% macro card_content(class='') %}
-    <div class="card-content {{ class }}">
-        {{ caller() if caller }}
-    </div>
-{% endmacro %}
+{#- CardDescription -#}
+{% macro card_description(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-description', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
 
-{% macro card_footer(class='') %}
-    <div class="card-footer {{ class }}">
-        {{ caller() if caller }}
-    </div>
-{% endmacro %}
+{#- CardAction -#}
+{% macro card_action(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-action', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- CardContent -#}
+{% macro card_content(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-content', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}
+
+{#- CardFooter -#}
+{% macro card_footer(text='', class='', id=none, attrs={}) -%}
+{%- set s = slot('card-footer', kwargs, class, id, attrs) -%}
+{%- if s.void %}<{{ s.tag }}{{ s.attributes }}>{%- else %}<{{ s.tag }}{{ s.attributes }}>{{ s.inner }}{{ text }}{{ caller() if caller }}</{{ s.tag }}>{%- endif %}
+{%- endmacro %}

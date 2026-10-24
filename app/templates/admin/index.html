@@ -1,29 +1,36 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 
-{% macro dashboard_option(title, endpoint, description=None) %}
-    <a class="block w-full" href="{{ url_for(endpoint) }}">
-        <div class="card">
-            <header>
-                <h2>{{ title }}</h2>
+{% macro dashboard_option(title, endpoint, description=None, icon='arrow-right') %}
+    <a class="block rounded-xl outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50" href="{{ url_for(endpoint) }}">
+        {% call ui.card(class='h-full transition-colors hover:bg-accent/50') %}
+            {% call ui.card_header() %}
+                {{ ui.card_title(text=title) }}
                 {% if description is not none %}
-                    <p>{{ description }}</p>
+                    {{ ui.card_description(text=description) }}
                 {% endif %}
-            </header>
-        </div>
+                {% call ui.card_action() %}
+                    {{ lucide(icon, 'size-5 text-muted-foreground') }}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
     </a>
 {% endmacro %}
 
 {% block content %}
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto w-full">
-            <h2 class="text-2xl font-semibold">Admin Dashboard</h2>
-            <div class="grid grid-cols-2 gap-6 mt-4">
+    <div class="container mx-auto px-4 py-8">
+        <div class="mx-auto w-full max-w-4xl">
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold tracking-tight">Admin Dashboard</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Manage the people who use this application.</p>
+            </div>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {{ dashboard_option('Registered Users', 'admin.registered_users',
-                                    description='View and manage user accounts') }}
+                                    description='View and manage user accounts', icon='users') }}
                 {{ dashboard_option('Add New User', 'admin.new_user',
-                                    description='Create a new user account') }}
+                                    description='Create a new user account', icon='user') }}
                 {{ dashboard_option('Invite New User', 'admin.invite_user',
-                                    description='Invites a new user to create their own account') }}
+                                    description='Invites a new user to create their own account', icon='mail') }}
             </div>
         </div>
     </div>

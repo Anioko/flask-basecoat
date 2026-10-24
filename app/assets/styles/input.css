@@ -1,27 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Flask-Basecoat stylesheet entry (Tailwind v4).
+   The visual layer is the upstream shadcn/ui pipeline, pinned under compliance/upstream:
+   tailwind -> tw-animate -> shadcn/tailwind.css -> theme mapping -> neutral tokens -> Vega style pack.
+   The same files feed the golden oracle, so what the checks compare against is what ships. */
+@import "tailwindcss";
+@source "../../templates";
+@source "../../../flask_basecoat/templates";
+@source "../../../flask_basecoat/static/js";
+@source "../../../flask_basecoat/data";  /* class recipes extracted from upstream; the macros emit them at render time */
 
-@layer components {
-  .form-group {
-    @apply flex flex-col space-y-1.5;
-  }
-}
+@import "tw-animate-css";
+@import "../../../compliance/upstream/shadcn/shadcn-tailwind.css";
+@import "../../../compliance/golden/generated/theme.css";
+@import "../../../compliance/golden/generated/tokens.css";
+@import "../../../compliance/upstream/shadcn/styles/style-vega.css" layer(base);
 
-/* Custom app tweaks */
-nav {
-  margin-bottom: 40px !important;
-}
+/* Behaviour hooks that React/Radix provide at runtime and a server-rendered page needs in CSS. */
+@import "./runtime.css";
 
-.flashes > .message:last-of-type {
-  margin-bottom: 2rem;
-}
-
-table.selectable tr:hover {
-  cursor: pointer !important;
-}
-
-.sidebar-icon svg {
-  width: 1.25rem !important;
-  height: 1.25rem !important;
+/* Pages must carry class="style-vega" on <html>; the upstream style pack scopes every recipe under it. */
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
 }

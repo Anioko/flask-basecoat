@@ -1,0 +1,83 @@
+{
+ "type": "bar",
+ "component": "BarChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "desktop": 186
+  },
+  {
+   "month": "February",
+   "desktop": 305
+  },
+  {
+   "month": "March",
+   "desktop": 237
+  },
+  {
+   "month": "April",
+   "desktop": 73
+  },
+  {
+   "month": "May",
+   "desktop": 209
+  },
+  {
+   "month": "June",
+   "desktop": 214
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true,
+  "margin": {
+   "top": 20
+  }
+ },
+ "series": [
+  {
+   "component": "Bar",
+   "dataKey": "desktop",
+   "fill": "var(--color-desktop)",
+   "radius": 8,
+   "labelList": [
+    {
+     "position": "top",
+     "offset": 12,
+     "className": "fill-foreground",
+     "fontSize": 12
+    }
+   ]
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "dataKey": "month",
+   "tickLine": false,
+   "tickMargin": 10,
+   "axisLine": false,
+   "tickFormatter": {
+    "$fn": "slice",
+    "start": 0,
+    "end": 3
+   }
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {
+  "cursor": false,
+  "hideLabel": true,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

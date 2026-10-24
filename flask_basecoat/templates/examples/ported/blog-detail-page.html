@@ -1,0 +1,118 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_content.html' as c %}
+{% block title %}Blog Detail Page · Flask-Basecoat{% endblock %}
+{% set comments = [
+  {'name': 'Sarah Johnson', 'content': "This is exactly what I needed! The personalization tips are incredibly valuable. I've been struggling with low open rates, and this gives me a clear direction to improve.", 'timestamp': '2 hours ago', 'likes': 12},
+  {'name': 'Mike Chen', 'content': 'Great insights on email personalization. I especially liked the section about adding elements that spark interest. Have you tested A/B variations of these techniques?', 'timestamp': '5 hours ago', 'likes': 8},
+  {'name': 'Emily Rodriguez', 'content': 'Thanks for sharing this comprehensive guide! The practical examples make it easy to understand how to implement these strategies in our own campaigns.', 'timestamp': '1 day ago', 'likes': 15},
+] %}
+{% set paragraphs = [
+  'You cannot avoid the importance of the first outreach email for increasing your sales in the email campaign. But how can you move out from the crowd and evoke a meaningful and personalized response?',
+  'Personalizing the emails for prospects and clients can get you the results you want from your email marketing strategy. As a result, you can engage prospects and drive them toward action, leading to a successful lead prospecting strategy in your sales outreach emails.',
+  'Although you cannot personalize every email with great accuracy, you can add a few elements that are enough to spark interest.',
+  'To get you in the right direction, here is the complete guide to email personalization for sales outreach that will help you create more engaging and effective email campaigns.',
+  'The key to successful email marketing lies in understanding your audience deeply and crafting messages that resonate with their specific needs, challenges, and goals. This approach not only improves open rates but also builds stronger relationships with your prospects.',
+] %}
+
+{% macro comment_card(name, content, timestamp, likes) -%}
+<div data-comment class="bg-card rounded-xl border p-6 transition-colors hover:bg-accent/50">
+  <div class="flex items-start space-x-4">
+    {% call ui.avatar(class='h-10 w-10') %}{{ ui.avatar_fallback(text=name[:1], attrs={'data-comment-initial': ''}) }}{% endcall %}
+    <div class="flex-1 space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-foreground font-medium" data-comment-name>{{ name }}</p>
+          <p class="text-muted-foreground text-sm" data-comment-time>{{ timestamp }}</p>
+        </div>
+      </div>
+      <p class="text-foreground/80 leading-relaxed" data-comment-content>{{ content }}</p>
+      <div class="flex items-center gap-4">
+        {% call ui.button(variant='ghost', size='sm', class='text-muted-foreground hover:text-primary gap-2') %}{{ lucide('heart', 'h-4 w-4') }}<span data-comment-likes>{{ likes }}</span>{% endcall %}
+        {{ ui.button(text='Reply', variant='ghost', size='sm', class='text-muted-foreground hover:text-primary') }}
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% block body %}
+<div class="bg-background min-h-screen">
+  <div class="mx-auto max-w-4xl px-6 py-12">
+    <header class="space-y-6">
+      {{ ui.badge(text='Company', variant='outline') }}
+      <h1 class="text-foreground text-4xl leading-15 font-bold tracking-tight md:text-4xl lg:text-5xl">The Best Way to Write a Recurring Email Newsletter</h1>
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+          {% call ui.avatar(class='h-12 w-12') %}{{ ui.avatar_fallback(text='E') }}{% endcall %}
+          <div>
+            <p class="font-medium">by Esther Howard</p>
+            <p class="text-muted-foreground text-sm">Nov 24, 2023</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="text-muted-foreground text-[11px] font-medium tracking-widest uppercase">Share this</span>
+          {% for brand, label in [('twitter', 'Twitter'), ('facebook', 'Facebook'), ('linkedin', 'LinkedIn')] %}
+          {% call ui.button(variant='outline', size='icon', class='h-9 w-9 rounded-full hover:bg-accent', attrs={'aria-label': 'Share on ' ~ label}) %}{{ c.brand_icon(brand) }}{% endcall %}
+          {% endfor %}
+        </div>
+      </div>
+    </header>
+
+    <div class="mt-16">
+      <article class="space-y-8">
+        <div class="bg-muted aspect-video w-full overflow-hidden rounded-xl">
+          <img src="{{ c.ph(1200, 675) }}" alt="Blog cover" class="h-full w-full object-cover">
+        </div>
+        <div class="prose prose-lg max-w-none">
+          {% for p in paragraphs %}
+          <p class="text-foreground/80 mb-6 leading-relaxed">{{ p }}</p>
+          {% endfor %}
+        </div>
+      </article>
+    </div>
+
+    <div class="mt-16">
+      <section class="space-y-6">
+        <div class="border-t pt-12">
+          <h2 class="text-foreground mb-8 flex items-center gap-2 text-2xl font-bold">{{ lucide('message-circle', 'h-6 w-6') }}<span>Comments (<span id="comment-count">{{ comments | length }}</span>)</span></h2>
+
+          <form id="comment-form" class="bg-card mb-12 rounded-xl border p-6">
+            <div class="space-y-4">
+              {% call ui.textarea(id='comment-input', name='comment', class='focus:border-primary min-h-[100px] resize-none', attrs={'placeholder': 'Share your thoughts...', 'aria-label': 'Comment'}) %}{% endcall %}
+              <div class="flex justify-end">
+                {% call ui.button(type='submit', class='gap-2') %}{{ lucide('send', 'h-4 w-4') }}Post Comment{% endcall %}
+              </div>
+            </div>
+          </form>
+
+          <div id="comment-list" class="space-y-6">
+            {% for cm in comments %}{{ comment_card(cm.name, cm.content, cm.timestamp, cm.likes) }}{% endfor %}
+          </div>
+          <template id="comment-template">{{ comment_card('You', '', 'Just now', 0) }}</template>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<script>
+  // New comments go to the top of the list, as the upstream page does with its comment state.
+  (function () {
+    var form = document.getElementById('comment-form');
+    var input = document.getElementById('comment-input');
+    var list = document.getElementById('comment-list');
+    var tpl = document.getElementById('comment-template');
+    var count = document.getElementById('comment-count');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var text = input.value.trim();
+      if (!text) return;
+      var node = tpl.content.firstElementChild.cloneNode(true);
+      node.querySelector('[data-comment-content]').textContent = input.value;
+      list.insertBefore(node, list.firstElementChild);
+      count.textContent = list.children.length;
+      input.value = '';
+    });
+  })();
+</script>
+{% endblock %}

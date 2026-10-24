@@ -1,0 +1,37 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui example `drawer` (pinned source in compliance/upstream). #}
+{% block title %}drawer · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' %}
+{% call ui.example_wrapper() %}
+    {% call ui.example(title='Scrollable Content') %}
+      {% call ui.drawer() %}
+        {% call ui.drawer_trigger(size='default', variant='outline') %}Scrollable Content{% endcall %}
+{{ ui.drawer_overlay() }}{% call ui.drawer_content(side='right', data_vaul_drawer_direction='right') %}
+          <div class="cn-drawer-handle mx-auto hidden shrink-0 group-data-[vaul-drawer-direction=bottom]/drawer-content:block"></div>{% call ui.drawer_header() %}
+            {{ ui.drawer_title(text='Move Goal') }}{{ ui.drawer_description(text='Set your daily activity goal.') }}{% endcall %}
+<div class="no-scrollbar overflow-y-auto px-4">{% for _ in range(10) %}
+            <p class="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed style-sera:leading-relaxed">{{ lorem }}</p>{% endfor %}
+</div>{% call ui.drawer_footer() %}
+            {{ ui.button(text='Submit') }}{{ ui.drawer_close(text='Cancel', variant='outline', size='default') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endcall %}
+{% call ui.example(title='Sides') %}
+      <div class="flex flex-wrap gap-2">{% for side in ['top', 'right', 'bottom', 'left'] %}
+        {% call ui.drawer() %}
+          {% call ui.drawer_trigger(size='default', variant='outline', class='capitalize style-sera:uppercase') %}{{ side }}{% endcall %}
+{{ ui.drawer_overlay() }}{% call ui.drawer_content(side=side, data_vaul_drawer_direction=side, class='data-[vaul-drawer-direction=bottom]:max-h-[50vh] data-[vaul-drawer-direction=top]:max-h-[50vh]') %}
+            <div class="cn-drawer-handle mx-auto hidden shrink-0 group-data-[vaul-drawer-direction=bottom]/drawer-content:block"></div>{% call ui.drawer_header() %}
+              {{ ui.drawer_title(text='Move Goal') }}{{ ui.drawer_description(text='Set your daily activity goal.') }}{% endcall %}
+<div class="no-scrollbar overflow-y-auto px-4">{% for _ in range(10) %}
+              <p class="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed style-sera:leading-relaxed">{{ lorem }}</p>{% endfor %}
+</div>{% call ui.drawer_footer() %}
+              {{ ui.button(text='Submit') }}{{ ui.drawer_close(text='Cancel', variant='outline', size='default') }}{% endcall %}
+{% endcall %}
+{% endcall %}
+{% endfor %}
+</div>{% endcall %}
+{% endcall %}
+{% endblock %}

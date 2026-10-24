@@ -1,0 +1,109 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/_dashboards.html' as d %}
+{% block title %}Sales dashboard · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set report = [
+  {'month': 'Jan', 'thisYear': 4200, 'lastYear': 1800}, {'month': 'Feb', 'thisYear': 2900, 'lastYear': 2600},
+  {'month': 'Mar', 'thisYear': 4400, 'lastYear': 3900}, {'month': 'Apr', 'thisYear': 2100, 'lastYear': 3800},
+  {'month': 'May', 'thisYear': 2800, 'lastYear': 1200}, {'month': 'Jun', 'thisYear': 3900, 'lastYear': 400},
+  {'month': 'Jul', 'thisYear': 2100, 'lastYear': 2300}, {'month': 'Aug', 'thisYear': 2700, 'lastYear': 3600},
+  {'month': 'Sep', 'thisYear': 4300, 'lastYear': 4400}, {'month': 'Oct', 'thisYear': 6000, 'lastYear': 4800},
+  {'month': 'Nov', 'thisYear': 5700, 'lastYear': 5300}, {'month': 'Dec', 'thisYear': 7200, 'lastYear': 6100},
+] %}
+{% set weekly = [{'day': 'Mon', 'sales': 52}, {'day': 'Tue', 'sales': 92}, {'day': 'Wed', 'sales': 63}, {'day': 'Thu', 'sales': 52}, {'day': 'Fri', 'sales': 80}, {'day': 'Sat', 'sales': 70}] %}
+{% call d.shell('sales', 'Sales', 'Orders, profit and the projects behind them') %}
+{{ d.stat_strip([
+  {'title': 'Orders', 'value': '5,868', 'icon': 'shopping-bag', 'change': '+18%'},
+  {'title': 'Sales', 'value': '$96,850', 'icon': 'package', 'change': '-5%'},
+  {'title': 'Profit', 'value': '$82,906', 'icon': 'chart-column', 'change': '+18%'},
+  {'title': 'Expense', 'value': '$14,653', 'icon': 'star', 'change': '+18%'},
+]) }}
+
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  {% call ui.card(class='xl:col-span-2') %}
+    {% call ui.card_header() %}
+      {{ ui.card_title(text='Sales report') }}
+      {{ ui.card_description(text='This year against last year') }}
+      {% call ui.card_action() %}
+        {% call ui.toggle_group(type='single', variant='outline', size='sm', attrs={'aria-label': 'Report'}) %}
+          {{ ui.toggle_group_item(text='Profit', value='profit', pressed=true) }}
+          {{ ui.toggle_group_item(text='Expenses', value='expenses', pressed=false) }}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-6') %}
+      <div class="flex flex-wrap gap-8">
+        {% for label, value, change in [('Sales this year', '$563,489', '+18%'), ('Sales last year', '$438,928', none)] %}
+        <div class="flex items-center gap-3">
+          {{ d.icon_tile('trending-up', 'rounded-full') }}
+          <div class="grid"><span class="text-sm text-muted-foreground">{{ label }}</span><span class="flex items-center gap-2 text-2xl font-semibold tabular-nums">{{ value }}{% if change %}{{ d.delta(change) }}{% endif %}</span></div>
+        </div>
+        {% endfor %}
+      </div>
+      {{ d.chart('area', report, [{'key': 'thisYear', 'label': 'This year', 'color': 'var(--chart-1)'}, {'key': 'lastYear', 'label': 'Last year', 'color': 'var(--chart-3)'}], class='aspect-auto h-[260px] w-full', label='Sales this year and last year') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Weekly sales') }}
+    {% call ui.card_content(class='flex flex-col gap-6') %}
+      <div class="flex items-center gap-3">
+        {{ d.icon_tile('trending-up', 'rounded-full') }}
+        <div class="grid"><span class="flex items-center gap-2 text-2xl font-semibold tabular-nums">$96,850 {{ d.delta('-5%') }}</span><span class="text-sm text-muted-foreground">Last 7 days</span></div>
+      </div>
+      {{ d.chart('bar', weekly, [{'key': 'sales', 'label': 'Sales', 'color': 'var(--chart-1)'}], x='day', grid=false, class='aspect-auto h-[220px] w-full', label='Sales per day') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card(class='overflow-hidden pt-0') %}
+    <div class="flex aspect-video items-center justify-center bg-muted">{{ lucide('presentation', 'size-12 text-muted-foreground') }}</div>
+    {% call ui.card_header() %}
+      {{ ui.card_title(text='Design review: the Q4 dashboards') }}
+      {{ ui.card_description(text='Walk through the new reporting layouts with the product team before they ship.') }}
+    {% endcall %}
+    {% call ui.card_footer(class='justify-between') %}
+      {% call ui.avatar_group() %}{% for i in ['AO', 'JK', 'LM'] %}{% call ui.avatar() %}{{ ui.avatar_fallback(text=i) }}{% endcall %}{% endfor %}{{ ui.avatar_group_count(text='+4') }}{% endcall %}
+      {{ ui.button(text='Join', variant='outline', size='sm', href='#') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Campaign performance', 'Leads and followers by channel') }}
+    {{ d.channel_list([('IG', 1, 'Instagram', '523 new leads', 'Running'), ('FB', 2, 'Facebook', '5,490 new followers', 'Running'), ('AD', 3, 'Google Ads', '790 paid clicks', 'Paused'), ('YT', 4, 'YouTube', '2,763 new subscribers', 'Paused'), ('IN', 5, 'LinkedIn', '5,039 new followers', 'Paused')]) }}
+  {% endcall %}
+
+  {% call ui.card(class='bg-primary text-primary-foreground') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Best selling products') }}{{ ui.card_description(text='Share of this month’s revenue', class='text-primary-foreground/70') }}{% endcall %}
+    {% call ui.card_content(class='flex flex-1 flex-col justify-end gap-3') %}
+      <div class="flex flex-col gap-4 rounded-xl bg-background p-4 text-foreground">
+        {% for name, amount, pct in [('Admin dashboard kit', '$23,568', 55), ('Starter template', '$24,468', 65), ('Icon pack', '$8,220', 30)] %}
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between gap-2"><span class="font-medium">{{ name }}</span>{{ ui.badge(text=pct ~ '%', variant='secondary') }}</div>
+          <span class="text-sm text-muted-foreground tabular-nums">{{ amount }}</span>
+          {{ d.bar(pct, name) }}
+        </div>
+        {% endfor %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  <div class="xl:col-span-2">
+    {{ d.projects_table([
+      ('app-window', 1, 'Web app project', '04 June 2026', '$12,000', 'Olivia Rhye', 'olivia@northwind.example', 'OR', 45),
+      ('layout-dashboard', 2, 'Admin console', '09 January 2026', '$8,000', 'Barbara Steele', 'barbara@northwind.example', 'BS', 30),
+      ('megaphone', 3, 'Digital marketing', '15 April 2026', '$15,000', 'Leonard Gordon', 'leonard@northwind.example', 'LG', 40),
+      ('palette', 4, 'Brand refresh', '30 March 2026', '$1,000', 'Evelyn Pope', 'evelyn@northwind.example', 'EP', 25),
+      ('paintbrush', 5, 'Graphic design', '23 October 2026', '$7,000', 'Tommy Garza', 'tommy@northwind.example', 'TG', 90),
+    ]) }}
+  </div>
+
+  {% call ui.card() %}
+    {{ d.card_head('Daily activities', 'What happened today') }}
+    {% call ui.card_content() %}
+      {{ d.timeline([('09:46', 'Payment of $385.90 received from John Doe', 1), ('10:12', 'New sale recorded, order ML-3467', 2), ('11:05', 'Payment of $64.95 made to Michael', 4), ('12:30', 'New sale recorded, order ML-3468', 2), ('14:00', 'Project meeting with the design team', 5), ('15:20', 'Payment of $210.00 received from Ana Silva', 1)]) }}
+    {% endcall %}
+  {% endcall %}
+</div>
+{% endcall %}
+{% endblock %}

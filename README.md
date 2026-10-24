@@ -1,380 +1,204 @@
-# Flask-Basecoat: Canonical shadcn/ui for Flask & Jinja2
+# Flask-Basecoat
 
-A production-grade component system and application boilerplate that brings **shadcn/ui** aesthetics and ergonomics to **Flask** and **Jinja2**.
+The shadcn/ui design system for Flask and Jinja2. Every component in the shadcn/ui registry and every
+block (sidebars, logins, signups, the dashboard) is a Jinja macro, styled by the upstream shadcn stylesheet
+and driven by a small dependency-free runtime. Nothing is approximated: the package is built from a pinned
+copy of the shadcn/ui sources and checked against them in a browser.
 
-Powered by upstream [Basecoat UI](https://basecoatui.com/) (`basecoat-css`), `flask-basecoat` provides composable Jinja2 macros with caller slots, an automatic WTForms field adapter, tokenized HSL/oklch themes (Light & Dark), and an interactive component gallery.
+## What you get
 
----
+- 65 components, 406 macros: Accordion to Tooltip, including Combobox, Command, Data Table, Date Picker,
+  Input OTP, Sidebar, Resizable, Carousel, Chart, Sonner toasts, Field and Input Group.
+- 27 blocks ported part for part: sidebar-01 to sidebar-16, login-01 to login-05, signup-01 to signup-05, dashboard-01.
+- All 70 shadcn charts (area, bar, line, pie, radar, radial and tooltip variants) drawn from a chart spec, with the
+  same SVG, tooltips and legends as Recharts.
+- 46 application screens ported from the shadcn-examples collection (mail, chat, calendar, kanban, tasks, admin
+  dashboards, commerce, settings, blog and more), six dashboard layouts, and a reference dashboard built only from
+  shadcn parts.
+- The upstream look, not a re-implementation: the shipped stylesheet is compiled from shadcn's own
+  Tailwind v4 pipeline (the shadcn stylesheet, the Vega style pack and the neutral theme) with light and dark mode.
+- Behaviour without React: dialogs, sheets, drawers, menus, popovers, tooltips, selects, comboboxes, command
+  palettes, tabs, accordions, toggles, sliders, OTP inputs, carousels, resizable panels, the sidebar, toasts,
+  calendars and charts work from static HTML with keyboard navigation, focus management and ARIA state.
+- WTForms adapter: `ui.render_form(form)` and `ui.render_field(form.email)` render fields with server-side
+  validation state the way shadcn's Field component does.
+- A compliance harness that proves all of the above against the pinned upstream sources on every build.
 
-## 📸 Visual Showcase
+## Screenshots
 
-Explore the canonical components running in the live interactive gallery (`/basecoat/gallery`).
+| | |
+|---|---|
+| ![The dashboard-01 block in light mode](readme_media/dashboard-01-light-1440.png) | ![The dashboard-01 block in dark mode](readme_media/dashboard-01-dark-1440.png) |
+| dashboard-01, light | dashboard-01, dark |
+| ![The chart gallery](readme_media/charts-1440.png) | ![An upstream chart beside the Flask-Basecoat render](readme_media/compare-1440.png) |
+| The chart gallery | Upstream render (left) beside Flask-Basecoat (right) |
+| ![The admin dashboard example screen](readme_media/example-admin-dashboard-1440.png) | ![The mail example screen in dark mode](readme_media/example-mail-dark-1440.png) |
+| Admin dashboard example | Mail example, dark |
+| ![The reference portfolio dashboard](readme_media/reference-portfolio-1440.png) | ![The component gallery](readme_media/gallery-light-1440.png) |
+| Reference page built only from shadcn parts | Component gallery |
+| ![A dialog](readme_media/dialog-modal.png) | ![Server-side form validation](readme_media/form-validation.png) |
+| Dialog with focus management | WTForms validation shown with the Field component |
 
-### 🌓 Desktop Gallery — Light & Dark Mode (1440px)
+<p align="center"><img src="readme_media/dashboard-01-mobile-390.png" alt="dashboard-01 at phone width" width="260"></p>
 
-| Light Theme | Dark Theme |
-| :---: | :---: |
-| ![Flask-Basecoat Component Gallery - Light Mode](readme_media/gallery-light-1440.png) | ![Flask-Basecoat Component Gallery - Dark Mode](readme_media/gallery-dark-1440.png) |
-
----
-
-### 📱 Responsive Mobile Layout & Native Dialog Modal
-
-| Mobile Viewport (390px) | Native Accessible Modal Dialog (`<dialog>`) |
-| :---: | :---: |
-| ![Flask-Basecoat Mobile Gallery](readme_media/gallery-mobile-390.png) | ![Flask-Basecoat Accessible Dialog Modal](readme_media/dialog-modal.png) |
-
----
-
-### 🛡️ WTForms Integration & Server-Side Validation State
-
-Zero hand-written markup. The WTForms adapter automatically connects labels, help text, input validation rings, error summaries, and ARIA attributes:
-
-![Flask-Basecoat WTForms Server-side Validation](readme_media/form-validation.png)
-
----
-
-## 💡 Why Flask-Basecoat?
-
-Traditional Flask applications either hand-code raw HTML tags across dozens of templates (causing visual drift and accessibility regressions) or rely on heavy client-side JavaScript frameworks.
-
-`flask-basecoat` takes a modern server-rendered approach:
-
-1. **Wrap, Don't Re-invent**: [Basecoat UI](https://basecoatui.com/) is our CSS and micro-JS upstream. Focus traps, keyboard navigation, dialog backdrops, and dropdown positioning are solved upstream—no bespoke Alpine.js state machines to debug.
-2. **Jinja2 Macros with Caller Slots**: Every component is a single macro call with standard arguments and caller slots for composable markup.
-3. **Deep WTForms Integration**: `{{ bc.render_field(form.email) }}` inspects the WTForm field type, renders semantic labels, inputs, validation errors, and focus rings with zero template boilerplate.
-4. **shadcn/ui Design Tokens**: 100% tokenized CSS variables matching shadcn/ui (`--primary`, `--background`, `--card`, `--destructive`, `--ring`, `--radius`), with full Dark mode support (`.dark`).
-5. **Anti-Drift Governance**: Includes a CI ratchet script (`check_raw_components.py`) ensuring pages adopt canonical macros instead of raw `<button>` and `<input>` tags.
-
----
-
-## 📦 Installation & Setup
-
-### 1. Install as a Python Package
-
-Install directly from Git or your local checkout:
+## Install
 
 ```bash
-pip install -e /path/to/flask-basecoat
-# or from GitHub:
-pip install git+https://github.com/Anioko/flask-basecoat.git
+pip install Flask-Basecoat
 ```
-
-### 2. Initialize in your Flask Application
 
 ```python
 from flask import Flask
 from flask_basecoat import Basecoat
 
 app = Flask(__name__)
-basecoat = Basecoat(app)
+Basecoat(app)
 ```
 
-The `Basecoat` extension automatically:
-- Registers the `basecoat` static blueprint (`/static/basecoat/*`).
-- Configures Jinja's `ChoiceLoader` so all `basecoat/*.html` templates are instantly importable by any template.
-- Mounts the interactive gallery at `/basecoat/gallery` (in development mode or when explicitly enabled).
-
-### 3. Include Assets in your Base Template
-
-In your `layout.html` or `base.html`:
-
 ```html
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="style-vega">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}My App{% endblock %}</title>
-
-    {# Basecoat & Tailwind CSS assets #}
-    {{ basecoat.css() }}
+  {{ basecoat.css() }}
+  {{ basecoat.js() }}
 </head>
-<body class="bg-background text-foreground antialiased min-h-screen">
-    {% block content %}{% endblock %}
-
-    {# Basecoat micro-JS #}
-    {{ basecoat.js() }}
+<body class="bg-background text-foreground">
+  {% import 'basecoat/index.html' as ui %}
+  {{ ui.button(text='Save changes') }}
 </body>
 </html>
 ```
 
----
+Add `class="dark"` to `<html>` for dark mode. Any element with `data-theme-toggle` switches it.
 
-## 🧩 Component Catalog & Macro Usage
+## Using the macros
 
-Import the canonical macros once at the top of any template:
+Every macro is one upstream part, named after the React component in snake_case. Content goes in `text=`
+or a `{% call %}` block; `class`, `id` and `attrs={}` are always accepted; state is passed by name.
 
-```jinja2
-{% import 'basecoat/index.html' as bc %}
-```
+```jinja
+{% import 'basecoat/index.html' as ui %}
 
-Or import individual modules:
-```jinja2
-{% from 'basecoat/button.html' import button %}
-{% from 'basecoat/form.html' import render_field, render_form %}
-```
+{{ ui.button(text='Delete', variant='destructive', size='sm') }}
+{% call ui.button(variant='outline', href=url_for('main.index')) %}{{ lucide('arrow-left') }} Back{% endcall %}
 
----
-
-### 1. Button
-
-Supports 6 shadcn variants (`default`, `secondary`, `destructive`, `outline`, `ghost`, `link`), 4 sizes (`sm`, `md`, `lg`, `icon`), and loading states.
-
-```jinja2
-{# Standard buttons #}
-{{ bc.button('Save Changes', variant='default') }}
-{{ bc.button('Cancel', variant='outline') }}
-{{ bc.button('Delete Account', variant='destructive') }}
-
-{# Icon button with caller slot #}
-{% call bc.button(variant='ghost', size='icon') %}
-    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-    </svg>
+{% call ui.card(class='w-full max-w-sm') %}
+  {% call ui.card_header() %}
+    {{ ui.card_title(text='Login to your account') }}
+    {{ ui.card_description(text='Enter your email below to login to your account') }}
+  {% endcall %}
+  {% call ui.card_content() %}
+    {% call ui.field() %}
+      {{ ui.field_label(text='Email', for_='email') }}
+      {{ ui.input(id='email', type='email', placeholder='m@example.com', required=true) }}
+    {% endcall %}
+  {% endcall %}
 {% endcall %}
 
-{# Link styled as button #}
-{{ bc.button('Back to Dashboard', href=url_for('main.index'), variant='ghost') }}
-```
-
----
-
-### 2. Form & WTForms Adapter
-
-Zero-boilerplate rendering for `Flask-WTF` forms with automatic validation error feedback, CSRF token handling, and focus rings:
-
-```jinja2
-{# Render entire WTForms form automatically #}
-{{ bc.render_form(form, action=url_for('account.login'), submit_text='Sign In') }}
-
-{# Or render fields individually with fine control #}
-<form method="POST" action="">
-    {{ form.hidden_tag() }}
-    
-    {{ bc.render_field(form.email, placeholder='user@company.com') }}
-    {{ bc.render_field(form.password) }}
-    {{ bc.render_field(form.remember_me) }}
-    
-    <div class="mt-4">
-        {{ bc.button('Sign In', type='submit') }}
-    </div>
-</form>
-```
-
----
-
-### 3. Card
-
-Composable container with header, title, description, content, and footer slots:
-
-```jinja2
-{% call bc.card(title='Account Settings', description='Manage your email preferences and security keys.') %}
-    <div class="space-y-4">
-        <p class="text-sm text-muted-foreground">Your primary email is verified.</p>
-    </div>
-    
-    {% block card_footer %}
-        {{ bc.button('Save Preferences') }}
-    {% endblock %}
+{% call ui.dialog() %}
+  {{ ui.dialog_trigger(text='Edit profile', variant='outline') }}
+  {{ ui.dialog_overlay() }}
+  {% call ui.dialog_content() %}
+    {% call ui.dialog_header() %}
+      {{ ui.dialog_title(text='Edit profile') }}
+      {{ ui.dialog_description(text="Make changes to your profile here. Click save when you're done.") }}
+    {% endcall %}
+    {% call ui.dialog_footer() %}
+      {{ ui.dialog_close(text='Cancel', variant='outline', size='default') }}
+      {{ ui.button(text='Save changes', type='submit') }}
+    {% endcall %}
+    {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+  {% endcall %}
 {% endcall %}
-```
 
----
-
-### 4. Badge
-
-Semantic status indicators:
-
-```jinja2
-{{ bc.badge('Active', variant='default') }}
-{{ bc.badge('Pending', variant='secondary') }}
-{{ bc.badge('Failed', variant='destructive') }}
-{{ bc.badge('Draft', variant='outline') }}
-```
-
----
-
-### 5. Dialog Modal
-
-Accessible native HTML5 `<dialog>` component with trigger button, backdrop click dismissal, title, and action buttons:
-
-```jinja2
-{% call bc.dialog(id='invite-modal', trigger_text='Invite Teammate', title='Invite Team Member', description='Send an invitation link to collaborate.') %}
-    <div class="py-4 space-y-3">
-        <label class="text-sm font-medium">Email address</label>
-        <input type="email" class="input w-full" placeholder="colleague@domain.com">
-    </div>
-    
-    {% block dialog_footer %}
-        {{ bc.button('Send Invite', type='button') }}
-    {% endblock %}
+{% call ui.dropdown_menu() %}
+  {{ ui.dropdown_menu_trigger(text='Open', variant='outline') }}
+  {% call ui.dropdown_menu_content(align='end') %}
+    {{ ui.dropdown_menu_label(text='My Account') }}
+    {{ ui.dropdown_menu_separator() }}
+    {{ ui.dropdown_menu_item(text='Profile') }}
+    {{ ui.dropdown_menu_checkbox_item(text='Status bar', checked=true) }}
+    {{ ui.dropdown_menu_item(text='Log out', variant='destructive') }}
+  {% endcall %}
 {% endcall %}
-```
 
----
-
-### 6. Dropdown Menu
-
-Keyboard-navigable dropdown menu with trigger slot and action items:
-
-```jinja2
-{% call bc.dropdown(id='actions-menu', trigger_text='Options') %}
-    {{ bc.dropdown_item('Edit Details', href=url_for('main.index')) }}
-    {{ bc.dropdown_item('Duplicate', href='#') }}
-    <div class="my-1 border-t border-border"></div>
-    {{ bc.dropdown_item('Delete', href='#', variant='destructive') }}
+{% call ui.tabs() %}
+  {% call ui.tabs_list() %}
+    {{ ui.tabs_trigger(text='Account', active=true) }}
+    {{ ui.tabs_trigger(text='Password') }}
+  {% endcall %}
+  {% call ui.tabs_content(active=true) %}...{% endcall %}
+  {% call ui.tabs_content() %}...{% endcall %}
 {% endcall %}
+
+{{ ui.render_form(form, submit_text='Create account') }}
 ```
 
----
+Icons: `{{ lucide('chevron-down', 'size-4') }}` renders the same SVG lucide-react emits.
+Toasts: `FlaskBasecoat.toast.success('Saved')` in JavaScript, or `data-fb-toast="Saved"` on any element;
+flashed messages become toasts through `<template data-fb-flash data-variant="success">...</template>`.
 
-### 7. Tabs
+The gallery at `/basecoat/` (enabled in debug and testing, or with `BASECOAT_GALLERY_ENABLED = True`) shows
+every component page and block, each a port of the upstream example. `/examples/` holds 27 application screens
+built with the macros, and `/basecoat/gallery` the WTForms adapter with live validation.
 
-Accessible tab navigation for switching content panels:
+## Building pages with an AI coding agent
 
-```jinja2
-{% set tab_items = [
-    {'id': 'overview', 'label': 'Overview', 'active': true},
-    {'id': 'security', 'label': 'Security'},
-    {'id': 'billing', 'label': 'Billing'}
-] %}
+`AGENTS.md` is the procedure for agents (and people) building new pages: pick the nearest shadcn original, reuse its
+frame, lay rows out with the originals' recipes (`docs/LAYOUT.md`), write every part with a macro
+(`docs/MACROS.md` lists them all), and prove the result with
+`compliance/scripts/check_page.py`, which reports whether a page is composed only of shadcn parts inside the frame of
+a shadcn original. `flask_basecoat/templates/examples/reference/portfolio.html` (served at
+`/examples/reference/portfolio`) is a dashboard built that way. A Claude skill with the same steps is in
+`skills/flask-basecoat/`.
 
-{% call bc.tabs(id='account-tabs', items=tab_items) %}
-    <div id="overview" class="tab-panel">Overview content...</div>
-    <div id="security" class="tab-panel hidden">Security content...</div>
-    <div id="billing" class="tab-panel hidden">Billing content...</div>
-{% endcall %}
-```
+## How compliance is proven
 
----
+`compliance/upstream/` pins shadcn-ui/ui (commit e55b60b, 23 October 2026): the component sources, the
+examples, the blocks, the Vega style pack and the neutral theme. `compliance/golden/` renders every upstream
+example and block with React to static HTML, the reference DOM. From the same pinned sources:
 
-### 8. Data Table & Empty State
+- `compliance/scripts/extract_recipes.py` extracts each part's class recipe from the TSX; `scripts/gen_macros.py`
+  turns them into macros backed by `flask_basecoat/slots.py`, which also applies tailwind-merge rules and the
+  Radix state contract (`data-state`, `aria-*`, `role`, `data-orientation`).
+- The shipped stylesheet is compiled from the upstream pipeline: Tailwind v4, tw-animate, shadcn's stylesheet,
+  the theme mapping, the neutral tokens and the Vega style pack.
 
-Accessible data tables with headers, zebra striping, and canonical empty states:
+`python scripts/shadcn_compliance.py --browser` runs the checks and writes `compliance/REPORT.json`:
 
-```jinja2
-{% call bc.table() %}
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td class="font-medium">{{ user.name }}</td>
-            <td>{{ user.role }}</td>
-            <td>{{ bc.badge('Active', variant='default') }}</td>
-            <td>{{ bc.button('Edit', variant='ghost', size='sm') }}</td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="4">
-                {{ bc.empty_state(
-                    title='No team members found',
-                    description='Get started by adding your first team member.',
-                    action_text='Add Member',
-                    action_href='#'
-                ) }}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-{% endcall %}
-```
+| Check | What it compares |
+| --- | --- |
+| coverage | every registry component and block has a macro file, a page and a barrel export |
+| dom | our pages against the golden DOM: data-slot elements, order, class sets, state attributes |
+| recipes | every rendered part carries exactly its upstream class recipe |
+| tokens | the stylesheet's light and dark variables against the upstream neutral theme |
+| styles | computed styles of every part in headless Chromium, light and dark, against the golden pages |
+| a11y | axe-core on every page: no accessibility findings beyond upstream's own |
+| runtime | pages load without script errors; popups, menus, tabs, toggles and sliders behave like Radix |
+| ratchet | application templates contain no raw colours, raw form controls or legacy class names |
+| tests | the pytest suite, including a parametrised test per component and block |
 
----
+The GitHub Actions workflow in `.github/workflows/compliance.yml` runs the same checks on every push and
+fails the build when generated files drift from the pinned sources.
 
-### 9. Toast Notifications
-
-Renders Flask flash messages (`get_flashed_messages(with_categories=true)`) with auto-dismiss animations and severity variants:
-
-```jinja2
-{# Include once in layout.html #}
-{{ bc.toast_container() }}
-```
-
-In your Flask routes:
-```python
-flash("Changes saved successfully!", "success")
-flash("Invalid credentials provided.", "error")
-```
-
----
-
-### 10. Skeleton Loader
-
-Accessible placeholder shapes for async content:
-
-```jinja2
-<div class="space-y-3">
-    {{ bc.skeleton(width='w-48', height='h-6') }}
-    {{ bc.skeleton(width='w-full', height='h-4') }}
-    {{ bc.skeleton(width='w-3/4', height='h-4') }}
-</div>
-```
-
----
-
-## 🏛️ Anti-Drift CI Ratchet
-
-To prevent codebases from regressing to raw HTML tags (`<button>`, `<input>`), `flask-basecoat` includes a strict CI ratchet check:
+## Development
 
 ```bash
-python scripts/ops/ci/check_raw_components.py
-```
+npm install && (cd compliance/golden && npm install)
+pip install -r requirements.txt -r requirements-dev.txt
+python -m playwright install chromium
 
-The ratchet verifies that the count of raw tags never exceeds the baseline established in `raw_components_baseline.json`. As templates are refactored to use `bc.*` macros, update the baseline with `--update`:
-
-```bash
-python scripts/ops/ci/check_raw_components.py --update
-```
-
----
-
-## 🧪 Testing
-
-Run the automated test suite with pytest:
-
-```bash
-pytest tests/test_basecoat_macros.py tests/test_wtforms_adapter.py tests/test_basecoat_extension.py
-```
-
-All 21 unit and integration tests verify:
-- Macro output HTML and ARIA attribute presence.
-- WTForms rendering and server validation feedback.
-- Extension blueprint registration and ChoiceLoader setup.
-
----
-
-## 🚀 Running the Development Server & Gallery
-
-```bash
-# 1. Create and activate virtual environment
-python -m venv venv
-venv\Scripts\activate   # Windows
-source venv/bin/activate # Unix/macOS
-
-# 2. Install dependencies
-pip install -r requirements.txt
-pip install -e .
-
-# 3. Setup database
-python manage.py recreate_db
-python manage.py setup_dev
-
-# 4. Start the server
+npm run golden          # render the upstream examples and blocks to compliance/golden/out
+npm run build           # compile the demo stylesheet and the package stylesheet
+python scripts/build_js.py
+python scripts/shadcn_compliance.py --browser
 python manage.py runserver
 ```
 
-Visit the component gallery at: **`http://localhost:5000/basecoat/gallery`**
+To take a new upstream version, update `compliance/upstream/PINS.json`, refresh the pinned sources, then run
+`python compliance/scripts/gen_theme.py`, `npm run golden`, `python compliance/scripts/extract_recipes.py`,
+`python scripts/gen_macros.py --force`, `python scripts/gen_pages.py --force` and the compliance run.
 
----
+## License
 
-## 📄 License
-
-MIT License. Upstream [Basecoat UI](https://basecoatui.com/) CSS and components are MIT licensed.
+MIT

@@ -1,0 +1,18 @@
+{
+  "name": "checkbox",
+  "source": "upstream/shadcn/radix/ui/checkbox.tsx",
+  "slots": {
+    "checkbox": {
+      "component": "Checkbox",
+      "element": "CheckboxPrimitive.Root",
+      "base_classes": "cn-checkbox peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "data_attrs": []
+    },
+    "checkbox-indicator": {
+      "component": "Checkbox",
+      "element": "CheckboxPrimitive.Indicator",
+      "base_classes": "cn-checkbox-indicator grid place-content-center text-current transition-none",
+      "data_attrs": []
+    }
+  }
+}

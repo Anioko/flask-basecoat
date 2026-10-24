@@ -1,0 +1,85 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Sortable Cards · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set items = [
+  ('1', 'Hero Image', 'Main banner image', 'image', '2.4 MB'),
+  ('2', 'Product Specs', 'Technical documentation', 'document', '1.2 MB'),
+  ('3', 'Demo Video', 'Product demonstration', 'video', '15.7 MB'),
+  ('4', 'Audio Guide', 'Voice instructions', 'audio', '8.3 MB'),
+  ('5', 'Gallery Photo 1', 'Product view 1', 'image', '3.1 MB'),
+  ('6', 'Gallery Photo 2', 'Product view 2', 'image', '2.8 MB'),
+  ('7', 'User Manual', 'Installation guide', 'document', '4.2 MB'),
+  ('8', 'Background Music', 'Ambient soundtrack', 'audio', '12.1 MB'),
+  ('9', 'Feature Highlight', 'Key product features', 'featured', 'N/A'),
+] %}
+
+<div class="mx-auto w-full max-w-5xl space-y-6 p-4">
+  <div data-slot="sortable" data-dragging="false" class="grid auto-rows-fr grid-cols-3 gap-3" id="sortable">
+    {% for id, title, description, type, size in items %}
+    <div data-slot="sortable-item" data-value="{{ id }}" data-title="{{ title }}" class="data-dragging:z-50 data-dragging:opacity-50">
+      <div class="group bg-background border-border hover:bg-accent/50 relative cursor-pointer rounded-lg border p-3 transition-colors {{ 'col-span-2 row-span-2' if type == 'featured' else 'col-span-1 row-span-1' }} flex min-h-[100px] flex-col">
+        <div data-slot="sortable-item-handle" draggable="true" tabindex="0" role="button" aria-label="Drag {{ title }}" class="!cursor-grab text-muted-foreground hover:text-foreground absolute end-1.5 top-2.5 z-10 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100">{{ lucide('grip-vertical', 'h-3.5 w-3.5') }}</div>
+        <div class="min-w-0 flex-1">
+          <h4 class="truncate text-sm font-medium">{{ title }}</h4>
+          <p class="text-muted-foreground mt-0.5 truncate text-xs">{{ description }}</p>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          {{ ui.badge(text=type) }}
+          {% if type != 'featured' %}<span class="text-muted-foreground text-xs">{{ size }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Drag a card by its grip to reorder the grid; the new order is announced in a toast like upstream.
+    var grid = document.getElementById('sortable');
+    var dragged = null, start = '';
+    var order = function () { return Array.from(grid.children).map(function (el) { return el.getAttribute('data-value'); }).join(','); };
+    function announce() {
+      if (order() === start) return;
+      var titles = Array.from(grid.children).map(function (el, i) { return (i + 1) + '. ' + el.getAttribute('data-title'); });
+      if (window.FlaskBasecoat && FlaskBasecoat.toast) FlaskBasecoat.toast({ title: 'Grid items reordered successfully!', description: 'New order: ' + titles.join(', '), variant: 'success', duration: 4000 });
+    }
+    grid.addEventListener('dragstart', function (e) {
+      var handle = e.target.closest('[data-slot="sortable-item-handle"]');
+      if (!handle) { e.preventDefault(); return; }
+      dragged = handle.closest('[data-slot="sortable-item"]');
+      start = order();
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', dragged.getAttribute('data-value'));
+      e.dataTransfer.setDragImage(dragged.firstElementChild, 16, 16);
+      requestAnimationFrame(function () { dragged.setAttribute('data-dragging', ''); grid.setAttribute('data-dragging', 'true'); });
+    });
+    grid.addEventListener('dragover', function (e) {
+      if (!dragged) return;
+      e.preventDefault();
+      var over = e.target.closest('[data-slot="sortable-item"]');
+      if (!over || over === dragged) return;
+      var items = Array.from(grid.children);
+      grid.insertBefore(dragged, items.indexOf(over) > items.indexOf(dragged) ? over.nextSibling : over);
+    });
+    grid.addEventListener('dragend', function () {
+      if (!dragged) return;
+      dragged.removeAttribute('data-dragging'); grid.setAttribute('data-dragging', 'false');
+      dragged = null; announce();
+    });
+    // Keyboard: arrows on a focused grip move the card one place.
+    grid.addEventListener('keydown', function (e) {
+      var handle = e.target.closest('[data-slot="sortable-item-handle"]');
+      if (!handle || ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(e.key) === -1) return;
+      e.preventDefault();
+      var item = handle.closest('[data-slot="sortable-item"]');
+      start = order();
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && item.previousElementSibling) grid.insertBefore(item, item.previousElementSibling);
+      if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && item.nextElementSibling) grid.insertBefore(item.nextElementSibling, item);
+      handle.focus();
+      announce();
+    });
+  })();
+</script>
+{% endblock %}

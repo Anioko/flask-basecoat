@@ -1,0 +1,10 @@
+{
+  "id": "course-detail",
+  "title": "Course Detail Page",
+  "description": "A course page with a video player, course description, instructor profile and a lesson curriculum.",
+  "tags": [
+    "education",
+    "video",
+    "course"
+  ]
+}

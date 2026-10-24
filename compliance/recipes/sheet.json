@@ -1,0 +1,80 @@
+{
+  "name": "sheet",
+  "source": "upstream/shadcn/radix/ui/sheet.tsx",
+  "slots": {
+    "sheet": {
+      "component": "Sheet",
+      "element": "SheetPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "sheet-trigger": {
+      "component": "SheetTrigger",
+      "element": "SheetPrimitive.Trigger",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "sheet-close": {
+      "component": "SheetClose",
+      "element": "SheetPrimitive.Close",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "sheet-portal": {
+      "component": "SheetPortal",
+      "element": "SheetPrimitive.Portal",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "sheet-overlay": {
+      "component": "SheetOverlay",
+      "element": "SheetPrimitive.Overlay",
+      "base_classes": "cn-sheet-overlay fixed inset-0 z-50 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+      "data_attrs": []
+    },
+    "sheet-content": {
+      "component": "SheetContent",
+      "element": "SheetPrimitive.Content",
+      "base_classes": "cn-sheet-content data-open:animate-in data-open:fade-in-0 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=top]:data-closed:slide-out-to-top-10",
+      "data_attrs": [
+        "data-side"
+      ]
+    },
+    "SheetContent:Button": {
+      "component": "SheetContent",
+      "element": "Button",
+      "base_classes": "cn-sheet-close",
+      "data_attrs": []
+    },
+    "SheetContent:span": {
+      "component": "SheetContent",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    },
+    "sheet-header": {
+      "component": "SheetHeader",
+      "element": "div",
+      "base_classes": "cn-sheet-header flex flex-col",
+      "data_attrs": []
+    },
+    "sheet-footer": {
+      "component": "SheetFooter",
+      "element": "div",
+      "base_classes": "cn-sheet-footer mt-auto flex flex-col",
+      "data_attrs": []
+    },
+    "sheet-title": {
+      "component": "SheetTitle",
+      "element": "SheetPrimitive.Title",
+      "base_classes": "cn-sheet-title cn-font-heading",
+      "data_attrs": []
+    },
+    "sheet-description": {
+      "component": "SheetDescription",
+      "element": "SheetPrimitive.Description",
+      "base_classes": "cn-sheet-description",
+      "data_attrs": []
+    }
+  }
+}

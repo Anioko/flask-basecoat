@@ -1,0 +1,143 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Checkout{% endblock %}
+{% block body %}
+{% set posted = request.method == 'POST' %}
+{% set f = request.form %}
+{% set selected = f.get('payment', 'card') if posted else 'card' %}
+{% set data = {
+  'cardName': f.get('cardName', '') if posted else 'John Cena',
+  'cardNumber': f.get('cardNumber', '') if posted else '1234 5678 9012 3456',
+  'expiryDate': f.get('expiryDate', '') if posted else '09/27',
+  'cvc': f.get('cvc', '') if posted else '123',
+} %}
+{% set agree = ('agreeTerms' in f) if posted else true %}
+{% set methods = [
+  ('card', 'Credit/Debit Card', ['Visa', 'Mastercard']),
+  ('paypal', 'Paypal', ['PayPal']),
+  ('ovo', 'OVO', ['OVO']),
+  ('mandiri', 'Mandiri Virtual Account', ['Mandiri']),
+  ('gopay', 'GoPay', ['GoPay']),
+] %}
+{% macro card_field(id, label, class='') -%}
+<div>
+  {% call ui.label(for_=id, class='text-foreground text-sm font-medium') %}{{ label }} <span class="text-muted-foreground">*Required</span>{% endcall %}
+  {{ ui.input(id=id, name=id, value=data[id], placeholder=placeholders[id], class='mt-1 ' ~ class) }}
+</div>
+{%- endmacro %}
+{% set placeholders = {'cardName': 'John Cena', 'cardNumber': '1234 5678 9012 3456', 'expiryDate': '09/27', 'cvc': '123'} %}
+<form method="post" action="{{ request.path }}" class="p-4 md:p-6" id="checkout-form">
+  <input type="hidden" name="payment" value="{{ selected }}" id="checkout-payment">
+  <div class="mx-auto max-w-5xl">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div class="space-y-6">
+        <h2 class="text-foreground text-2xl font-semibold">Payment Method</h2>
+        <div class="space-y-4" id="checkout-methods">
+          {% for id, name, logos in methods %}
+          {% set on = selected == id %}
+          {% call ui.card(class='cursor-pointer transition-all duration-200 ' ~ ('ring-primary border-primary/20 ring-2' if on else 'hover:border-muted-foreground/20'), attrs={'data-method': id, 'role': 'radio', 'aria-checked': 'true' if on else 'false', 'tabindex': '0'}) %}
+            {% call ui.card_content() %}
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="flex h-4 w-4 items-center justify-center rounded-full border-2 {{ 'border-primary bg-primary' if on else 'border-muted-foreground' }}" data-method-dot>
+                    <div class="bg-primary-foreground h-2 w-2 rounded-full{{ '' if on else ' hidden' }}"></div>
+                  </div>
+                  <span class="text-foreground font-medium">{{ name }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  {% for logo in logos %}<div class="bg-muted text-muted-foreground rounded px-2 py-1 text-xs font-semibold">{{ logo }}</div>{% endfor %}
+                </div>
+              </div>
+              {% if id == 'card' %}
+              <div class="mt-6 space-y-4{{ '' if on else ' hidden' }}" id="checkout-card-form">
+                {{ card_field('cardName', 'Name on Card') }}
+                {{ card_field('cardNumber', 'Card Number') }}
+                <div class="grid grid-cols-2 gap-4">
+                  {{ card_field('expiryDate', 'Expiry Date') }}
+                  {{ card_field('cvc', 'CVC/CVV', 'ring-primary/20 border-primary/30 ring-2') }}
+                </div>
+              </div>
+              {% endif %}
+            {% endcall %}
+          {% endcall %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <h2 class="text-foreground text-2xl font-semibold">Order Details</h2>
+        {% call ui.card() %}{% call ui.card_content() %}
+          <div class="flex space-x-4">
+            <img src="{{ c.placeholder(80, 64) }}" alt="Mastering Illustration Course" class="h-16 w-20 rounded-lg object-cover">
+            <div class="flex-1">
+              {{ ui.badge(text='DESIGN', variant='secondary', class='text-primary bg-primary/10 mb-2 text-xs') }}
+              <h3 class="text-foreground text-lg font-semibold">Mastering Illustration</h3>
+              <p class="text-muted-foreground text-sm">25 Lessons • 72 Hours</p>
+              <p class="text-foreground mt-1 text-xl font-semibold">$300</p>
+            </div>
+          </div>
+        {% endcall %}{% endcall %}
+
+        {% call ui.card() %}{% call ui.card_content() %}
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              {{ lucide('gift', 'text-muted-foreground h-5 w-5') }}
+              <span class="text-foreground font-medium">GWENCHANA</span>
+            </div>
+            <div class="bg-primary flex h-6 w-6 items-center justify-center rounded-full">{{ lucide('check', 'text-primary-foreground h-4 w-4') }}</div>
+          </div>
+          <p class="text-primary mt-2 text-sm">Yeay, you got $10 discount!</p>
+        {% endcall %}{% endcall %}
+
+        {% call ui.card() %}{% call ui.card_content(class='space-y-4') %}
+          <div class="flex items-center justify-between"><span class="text-foreground">Price</span><span class="text-foreground">$300</span></div>
+          <div class="flex items-center justify-between"><span class="text-foreground">Discount</span><span class="text-foreground">-$10</span></div>
+          <div class="flex items-center justify-between"><span class="text-foreground">Tax</span><span class="text-foreground">+$1</span></div>
+          {{ ui.separator() }}
+          <div class="flex items-center justify-between text-lg font-semibold"><span class="text-foreground">Total</span><span class="text-foreground">$289</span></div>
+        {% endcall %}{% endcall %}
+
+        <div class="space-y-4">
+          <div class="flex items-start space-x-2">
+            {{ ui.checkbox(id='terms', name='agreeTerms', checked=agree, class='mt-1') }}
+            {% call ui.label(for_='terms', class='text-foreground block text-sm leading-5') %}By clicking this you are agree to our <a href="#" class="text-primary inline-flex items-center hover:underline">Terms of Services{{ lucide('external-link', 'ml-1 h-3 w-3') }}</a> and <a href="#" class="text-primary inline-flex items-center hover:underline">Privacy Policy{{ lucide('external-link', 'ml-1 h-3 w-3') }}</a>.{% endcall %}
+          </div>
+          {{ ui.button(text='Checkout Now', type='submit', size='lg', class='w-full', disabled=(not agree), id='checkout-submit') }}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+  (function () {
+    var methods = document.getElementById('checkout-methods');
+    var hidden = document.getElementById('checkout-payment');
+    var cardForm = document.getElementById('checkout-card-form');
+    function choose(card) {
+      methods.querySelectorAll('[data-method]').forEach(function (m) {
+        var on = m === card;
+        m.setAttribute('aria-checked', String(on));
+        ['ring-primary', 'border-primary/20', 'ring-2'].forEach(function (k) { m.classList.toggle(k, on); });
+        m.classList.toggle('hover:border-muted-foreground/20', !on);
+        var dot = m.querySelector('[data-method-dot]');
+        ['border-primary', 'bg-primary'].forEach(function (k) { dot.classList.toggle(k, on); });
+        dot.classList.toggle('border-muted-foreground', !on);
+        dot.firstElementChild.classList.toggle('hidden', !on);
+      });
+      hidden.value = card.getAttribute('data-method');
+      cardForm.classList.toggle('hidden', hidden.value !== 'card');
+    }
+    methods.addEventListener('click', function (e) {
+      var card = e.target.closest('[data-method]');
+      if (card && !e.target.closest('input')) choose(card);
+    });
+    methods.addEventListener('keydown', function (e) {
+      var card = e.target.closest('[data-method]');
+      if (card && e.target === card && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); choose(card); }
+    });
+    var terms = document.getElementById('terms');
+    terms.addEventListener('basecoat:change', function (e) { document.getElementById('checkout-submit').disabled = !e.detail.checked; });
+  })();
+</script>
+{% endblock %}

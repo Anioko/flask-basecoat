@@ -1,0 +1,12 @@
+{
+  "name": "label",
+  "source": "upstream/shadcn/radix/ui/label.tsx",
+  "slots": {
+    "label": {
+      "component": "Label",
+      "element": "LabelPrimitive.Root",
+      "base_classes": "cn-label flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed",
+      "data_attrs": []
+    }
+  }
+}

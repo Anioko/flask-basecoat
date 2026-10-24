@@ -1,0 +1,39 @@
+{
+  "name": "button-group",
+  "source": "upstream/shadcn/radix/ui/button-group.tsx",
+  "slots": {
+    "button-group": {
+      "component": "ButtonGroup",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": [
+        "data-orientation"
+      ],
+      "cva": "buttonGroupVariants",
+      "variants": {
+        "base": "cn-button-group group/button-group flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
+        "variants": {
+          "orientation": {
+            "horizontal": "cn-button-group-orientation-horizontal [&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none",
+            "vertical": "cn-button-group-orientation-vertical flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none"
+          }
+        },
+        "defaults": {
+          "orientation": "horizontal"
+        }
+      }
+    },
+    "button-group-text": {
+      "component": "ButtonGroupText",
+      "element": "Comp",
+      "base_classes": "cn-button-group-text flex items-center [&_svg]:pointer-events-none",
+      "data_attrs": []
+    },
+    "button-group-separator": {
+      "component": "ButtonGroupSeparator",
+      "element": "Separator",
+      "base_classes": "cn-button-group-separator relative self-stretch data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto",
+      "data_attrs": []
+    }
+  }
+}

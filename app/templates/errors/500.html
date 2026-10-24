@@ -1,6 +1,17 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
 
 {% block content %}
-    <h1 class="text-4xl font-bold">500</h1>
-    <h3 class="text-xl font-semibold">Internal Server Error</h3>
+    <div class="container mx-auto flex min-h-[60svh] items-center justify-center px-4 py-16">
+        {% call ui.empty() %}
+            {% call ui.empty_header() %}
+                {% call ui.empty_icon(variant='icon') %}{{ lucide('server') }}{% endcall %}
+                {{ ui.empty_title(text='500 · Internal Server Error') }}
+                {{ ui.empty_description(text='Something went wrong on our side. Please try again in a moment.') }}
+            {% endcall %}
+            {% call ui.empty_content() %}
+                {% call ui.button(href=url_for('main.index')) %}{{ lucide('home') }}Back to home{% endcall %}
+            {% endcall %}
+        {% endcall %}
+    </div>
 {% endblock %}

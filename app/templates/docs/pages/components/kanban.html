@@ -1,47 +1,29 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 
 {% block extra_head %}
 <style>
-  /* NUCLEAR OPTION: Force reset all docs grid layouts */
-  body.docs-shell * {
-    box-sizing: border-box;
-  }
-
-  .docs-article,
-  .docs-article > *,
-  .docs-content,
-  .docs-content__inner {
-    max-width: none !important;
-    display: block !important;
-    grid-template-columns: none !important;
-  }
-
+  /* Board layout; every colour comes from the design tokens so dark mode follows the page theme. */
   .kanban-board {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex;
+    flex-direction: row;
     gap: 1.5rem;
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     overflow-x: auto;
     padding-bottom: 1rem;
     width: 100%;
   }
 
   .kanban-column {
-    background: rgb(248 250 252);
-    border-radius: 0.75rem;
+    background: var(--muted);
+    border-radius: calc(var(--radius) + 2px);
     padding: 1rem;
     min-height: 500px;
-    width: 350px !important;
-    min-width: 350px;
-    max-width: 350px;
-    flex-shrink: 0 !important;
-    flex-grow: 0 !important;
+    width: 320px;
+    flex: 0 0 320px;
     display: flex;
     flex-direction: column;
-  }
-
-  .dark .kanban-column {
-    background: rgb(15 23 42);
   }
 
   .kanban-column-header {
@@ -50,11 +32,7 @@
     justify-content: space-between;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid rgb(226 232 240);
-  }
-
-  .dark .kanban-column-header {
-    border-bottom-color: rgb(51 65 85);
+    border-bottom: 1px solid var(--border);
   }
 
   .kanban-column-title {
@@ -63,20 +41,6 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
-
-  .kanban-column-badge {
-    background: rgb(226 232 240);
-    color: rgb(71 85 105);
-    padding: 0.125rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  .dark .kanban-column-badge {
-    background: rgb(51 65 85);
-    color: rgb(148 163 184);
   }
 
   .kanban-cards {
@@ -88,26 +52,18 @@
   }
 
   .kanban-card {
-    background: white;
-    border: 1px solid rgb(226 232 240);
-    border-radius: 0.5rem;
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1rem;
     cursor: grab;
-    transition: all 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s, opacity 0.2s;
   }
 
   .kanban-card:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    border-color: rgb(148 163 184);
-  }
-
-  .dark .kanban-card {
-    background: rgb(30 41 59);
-    border-color: rgb(51 65 85);
-  }
-
-  .dark .kanban-card:hover {
-    border-color: rgb(71 85 105);
+    box-shadow: 0 4px 6px -1px color-mix(in oklch, var(--foreground) 10%, transparent);
+    border-color: var(--ring);
   }
 
   .kanban-card.dragging {
@@ -116,34 +72,20 @@
   }
 
   .kanban-card.drag-over {
-    border-color: rgb(59 130 246);
-    background: rgb(239 246 255);
-  }
-
-  .dark .kanban-card.drag-over {
-    border-color: rgb(59 130 246);
-    background: rgb(30 58 138 / 0.3);
+    border-color: var(--primary);
+    background: var(--accent);
   }
 
   .kanban-card-title {
     font-weight: 600;
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
-    color: rgb(15 23 42);
-  }
-
-  .dark .kanban-card-title {
-    color: rgb(241 245 249);
   }
 
   .kanban-card-description {
     font-size: 0.8125rem;
-    color: rgb(100 116 139);
+    color: var(--muted-foreground);
     margin-bottom: 0.75rem;
-  }
-
-  .dark .kanban-card-description {
-    color: rgb(148 163 184);
   }
 
   .kanban-card-footer {
@@ -153,91 +95,67 @@
     gap: 0.5rem;
     margin-top: 0.75rem;
     padding-top: 0.75rem;
-    border-top: 1px solid rgb(241 245 249);
-  }
-
-  .dark .kanban-card-footer {
-    border-top-color: rgb(51 65 85);
-  }
-
-  .kanban-card-assignee {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .kanban-card-avatar {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 9999px;
-    background: rgb(148 163 184);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6875rem;
-    font-weight: 600;
+    border-top: 1px solid var(--border);
   }
 
   .kanban-card-due-date {
     font-size: 0.75rem;
-    color: rgb(100 116 139);
+    color: var(--muted-foreground);
   }
 
-  .dark .kanban-card-due-date {
-    color: rgb(148 163 184);
-  }
-
-  .priority-high {
-    border-left: 3px solid rgb(239 68 68);
-  }
-
-  .priority-medium {
-    border-left: 3px solid rgb(250 204 21);
-  }
-
-  .priority-low {
-    border-left: 3px solid rgb(34 197 94);
-  }
+  .priority-high { border-left: 3px solid var(--destructive); }
+  .priority-medium { border-left: 3px solid var(--chart-4); }
+  .priority-low { border-left: 3px solid var(--chart-2); }
 </style>
 {% endblock %}
 
 {% block content %}
-<h2>Overview</h2>
-<p>A fully functional Kanban board with drag-and-drop functionality for organizing tasks across different status columns. Built with vanilla JavaScript and shadcn/ui design patterns.</p>
+{{ d.h2('Overview') }}
+{{ d.p('A fully functional Kanban board with drag-and-drop functionality for organizing tasks across different status columns. Built with vanilla JavaScript on top of the design tokens, so columns and cards follow the active theme.') }}
 
-<h2>Features</h2>
-<ul>
-  <li><strong>Drag & Drop:</strong> Move cards between columns with smooth animations</li>
-  <li><strong>Persistent State:</strong> Saves board state to localStorage</li>
-  <li><strong>Priority Indicators:</strong> Visual color-coding for task priority</li>
-  <li><strong>Dark Mode:</strong> Full dark mode support</li>
-  <li><strong>Responsive:</strong> Adapts to different screen sizes</li>
-</ul>
+{{ d.h2('Features') }}
+{{ d.ul([
+  '<strong>Drag &amp; Drop:</strong> Move cards between columns with smooth animations',
+  '<strong>Persistent State:</strong> Saves board state to localStorage',
+  '<strong>Priority Indicators:</strong> Token-based colour coding for task priority',
+  '<strong>Dark Mode:</strong> Full dark mode support through the theme tokens',
+  '<strong>Responsive:</strong> Adapts to different screen sizes'
+]) }}
 
-<h2>Interactive Demo</h2>
-<div style="width: 100%; overflow-x: auto; margin: 2rem 0;">
-  <div id="kanban-board" class="kanban-board">
-    <!-- Kanban columns will be rendered here by JavaScript -->
-  </div>
+{{ d.h2('Interactive Demo') }}
+{# Classes rendered by the script below: cn-badge cn-avatar flex items-center justify-center rounded-full bg-muted text-muted-foreground text-xs font-medium size-7 text-sm py-8 text-center #}
+<div id="kanban-board" class="kanban-board" aria-label="Kanban board">
+  {% call ui.empty(class='w-full') %}
+    {% call ui.empty_header() %}
+      {% call ui.empty_icon(variant='icon') %}{{ ui.spinner() }}{% endcall %}
+      {{ ui.empty_title(text='Loading board') }}
+      {{ ui.empty_description(text='Columns and cards are rendered from the sample data set.') }}
+    {% endcall %}
+  {% endcall %}
 </div>
 
-<h2>Usage</h2>
-<p>Drag any card to move it between columns. The board state is automatically saved to your browser's local storage.</p>
+{{ d.h2('Usage') }}
+{{ d.p("Drag any card to move it between columns. The board state is automatically saved to your browser's local storage.") }}
 
-<h3>Card Properties</h3>
-<ul>
-  <li><strong>Title:</strong> Task name</li>
-  <li><strong>Description:</strong> Task details</li>
-  <li><strong>Priority:</strong> high, medium, or low</li>
-  <li><strong>Assignee:</strong> Person responsible for the task</li>
-  <li><strong>Due Date:</strong> Task deadline</li>
-</ul>
+{{ d.h3('Card Properties') }}
+{{ d.ul([
+  '<strong>Title:</strong> Task name',
+  '<strong>Description:</strong> Task details',
+  '<strong>Priority:</strong> high, medium, or low',
+  '<strong>Assignee:</strong> Person responsible for the task',
+  '<strong>Due Date:</strong> Task deadline'
+]) }}
 
 <script>
 (function() {
   const STORAGE_KEY = 'kanban-board-state';
   let boardData = null;
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
 
   // Load data from JSON
   async function loadBoardData() {
@@ -249,7 +167,6 @@
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const savedData = JSON.parse(saved);
-        // Merge saved card positions with original data
         data.cards = data.cards.map(card => {
           const savedCard = savedData.cards.find(c => c.id === card.id);
           return savedCard ? { ...card, column: savedCard.column } : card;
@@ -267,10 +184,7 @@
   function saveState() {
     if (!boardData) return;
     const state = {
-      cards: boardData.cards.map(card => ({
-        id: card.id,
-        column: card.column
-      }))
+      cards: boardData.cards.map(card => ({ id: card.id, column: card.column }))
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
@@ -280,24 +194,17 @@
     const container = document.getElementById('kanban-board');
     if (!container || !boardData) return;
 
-    // Force flex layout with inline styles
-    container.style.display = 'flex';
-    container.style.flexDirection = 'row';
-    container.style.gap = '1.5rem';
-    container.style.overflowX = 'auto';
-    container.style.width = '100%';
-
     container.innerHTML = boardData.columns.map(column => `
-      <div class="kanban-column" data-column-id="${column.id}" style="width: 350px; min-width: 350px; max-width: 350px; flex-shrink: 0; flex-grow: 0; display: flex; flex-direction: column;">
+      <div class="kanban-column" data-column-id="${escapeHtml(column.id)}">
         <div class="kanban-column-header">
           <div class="kanban-column-title">
-            ${column.name}
-            <span class="kanban-column-badge" data-count="${column.id}">
+            ${escapeHtml(column.name)}
+            <span class="cn-badge inline-flex w-fit shrink-0 items-center justify-center whitespace-nowrap cn-badge-variant-secondary" data-count="${escapeHtml(column.id)}">
               ${boardData.cards.filter(c => c.column === column.id).length}
             </span>
           </div>
         </div>
-        <div class="kanban-cards" data-column="${column.id}">
+        <div class="kanban-cards" data-column="${escapeHtml(column.id)}">
           ${renderCards(column.id)}
         </div>
       </div>
@@ -311,17 +218,15 @@
     const cards = boardData.cards.filter(card => card.column === columnId);
 
     if (cards.length === 0) {
-      return '<div class="empty-state" style="text-align: center; padding: 2rem; color: rgb(148 163 184); font-size: 0.875rem;">No tasks</div>';
+      return '<div class="py-8 text-center text-sm text-muted-foreground">No tasks</div>';
     }
 
     return cards.map(card => `
-      <div class="kanban-card priority-${card.priority}" draggable="true" data-card-id="${card.id}">
-        <div class="kanban-card-title">${card.title}</div>
-        <div class="kanban-card-description">${card.description}</div>
+      <div class="kanban-card priority-${escapeHtml(card.priority)}" draggable="true" data-card-id="${escapeHtml(card.id)}">
+        <div class="kanban-card-title">${escapeHtml(card.title)}</div>
+        <div class="kanban-card-description">${escapeHtml(card.description)}</div>
         <div class="kanban-card-footer">
-          <div class="kanban-card-assignee">
-            <div class="kanban-card-avatar">${card.assignee.avatar}</div>
-          </div>
+          <span class="flex size-7 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground" title="${escapeHtml(card.assignee.name || '')}">${escapeHtml(card.assignee.avatar)}</span>
           <div class="kanban-card-due-date">${formatDate(card.dueDate)}</div>
         </div>
       </div>
@@ -358,19 +263,15 @@
         draggedCard = e.target;
         e.target.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', e.target.innerHTML);
+        e.dataTransfer.setData('text/plain', e.target.dataset.cardId);
       });
 
       card.addEventListener('dragend', (e) => {
         e.target.classList.remove('dragging');
-        // Remove drag-over from all cards
-        document.querySelectorAll('.kanban-card').forEach(c => {
-          c.classList.remove('drag-over');
-        });
+        document.querySelectorAll('.kanban-card').forEach(c => c.classList.remove('drag-over'));
         draggedCard = null;
       });
 
-      // Allow dropping on cards (for reordering within same column)
       card.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -392,16 +293,13 @@
         if (draggedCard && draggedCard !== card) {
           const column = card.closest('.kanban-cards');
           const draggedCardId = draggedCard.dataset.cardId;
-          const targetCardId = card.dataset.cardId;
           const newColumnId = column.dataset.column;
 
-          // Update card column
           const draggedCardData = boardData.cards.find(c => c.id === draggedCardId);
           if (draggedCardData) {
             draggedCardData.column = newColumnId;
           }
 
-          // Reorder in DOM
           const draggedIndex = Array.from(column.children).indexOf(draggedCard);
           const targetIndex = Array.from(column.children).indexOf(card);
 
@@ -422,7 +320,6 @@
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
 
-        // Only handle if dragging over empty space in column
         const afterElement = getDragAfterElement(column, e.clientY);
         if (draggedCard && !e.target.classList.contains('kanban-card')) {
           if (afterElement == null) {
@@ -436,12 +333,10 @@
       column.addEventListener('drop', (e) => {
         e.preventDefault();
 
-        // Only handle if dropping in empty column space
         if (draggedCard && !e.target.classList.contains('kanban-card')) {
           const cardId = draggedCard.dataset.cardId;
           const newColumnId = column.dataset.column;
 
-          // Update data
           const card = boardData.cards.find(c => c.id === cardId);
           if (card) {
             card.column = newColumnId;
@@ -469,7 +364,6 @@
     }, { offset: Number.NEGATIVE_INFINITY }).element;
   }
 
-  // Initialize on page load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadBoardData);
   } else {

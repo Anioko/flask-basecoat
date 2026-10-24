@@ -1,44 +1,39 @@
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% from 'docs/macros/faq_blocks.html' import faq_articles, faq_accordion, faq_support_panel, faq_sidebar %}
 {% set data = variant.data or {} %}
-<section class="docs-section">
-  <div class="docs-preview docs-preview--faq" data-preview data-faq-layout="{{ data.get('layout', 'cards') }}">
-    <header class="faq-block__header">
-      {% if data.get('eyebrow') %}<span class="faq-block__eyebrow">{{ data['eyebrow'] }}</span>{% endif %}
-      <h2 class="faq-block__headline">{{ data.get('headline', 'Frequently asked questions') }}</h2>
-      {% if data.get('description') %}<p class="faq-block__description">{{ data['description'] }}</p>{% endif %}
-    </header>
+{% set layout = data.get('layout', 'cards') %}
+{% call d.preview(attrs={'data-faq-layout': layout}) %}
+  <header class="flex max-w-2xl flex-col gap-3">
+    {% if data.get('eyebrow') %}{{ ui.badge(text=data['eyebrow'], variant='secondary', class='w-fit') }}{% endif %}
+    <h2 class="text-3xl font-semibold tracking-tight">{{ data.get('headline', 'Frequently asked questions') }}</h2>
+    {% if data.get('description') %}<p class="text-muted-foreground">{{ data['description'] }}</p>{% endif %}
+  </header>
 
-    {% if data.get('layout') == 'accordion' %}
-      {{ faq_accordion(data.get('accordion', [])) }}
-      {% if data.get('support') %}
-      {{ faq_support_panel(data['support']) }}
-      {% endif %}
-    {% elif data.get('layout') == 'split' %}
-      <div class="faq-block__split">
-        {{ faq_articles(data.get('list', []), data.get('layout')) }}
-        {% if data.get('sidebar') %}
-        {{ faq_sidebar(data['sidebar']) }}
-        {% endif %}
-      </div>
-    {% else %}
-      {{ faq_articles(data.get('list', []), data.get('layout')) }}
-      {% if data.get('highlight') %}
-      <aside class="faq-block__highlight">
-        {% if data['highlight'].get('label') %}<span class="faq-block__highlight-label">{{ data['highlight']['label'] }}</span>{% endif %}
-        <h3>{{ data['highlight'].get('title') }}</h3>
-        <p>{{ data['highlight'].get('copy') }}</p>
-      </aside>
-      {% endif %}
-    {% endif %}
-
-    {% if data.get('cta') %}
-    <div class="faq-block__cta">
-      <button class="btn btn-{{ data['cta'].get('style', 'primary') }}" type="button">{{ data['cta'].get('label', 'Get help') }}</button>
+  {% if layout == 'accordion' %}
+    {{ faq_accordion(data.get('accordion', [])) }}
+    {% if data.get('support') %}{{ faq_support_panel(data['support']) }}{% endif %}
+  {% elif layout == 'split' %}
+    <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+      {{ faq_articles(data.get('list', []), layout) }}
+      {% if data.get('sidebar') %}{{ faq_sidebar(data['sidebar']) }}{% endif %}
     </div>
+  {% else %}
+    {{ faq_articles(data.get('list', []), layout) }}
+    {% if data.get('highlight') %}
+    {% call ui.alert() %}
+      {{ lucide('sparkles') }}
+      {{ ui.alert_title(text=(data['highlight'].get('label') ~ ': ' if data['highlight'].get('label') else '') ~ data['highlight'].get('title')) }}
+      {{ ui.alert_description(text=data['highlight'].get('copy')) }}
+    {% endcall %}
     {% endif %}
+  {% endif %}
 
-    {% if data.get('meta') %}
-    <p class="faq-block__meta">{{ data['meta'] }}</p>
-    {% endif %}
+  {% if data.get('cta') %}
+  <div class="flex justify-center">
+    {{ ui.button(text=data['cta'].get('label', 'Get help'), variant=d.variant_for(data['cta'].get('style', 'primary'))) }}
   </div>
-</section>
+  {% endif %}
+
+  {% if data.get('meta') %}<p class="text-center text-xs text-muted-foreground">{{ data['meta'] }}</p>{% endif %}
+{% endcall %}

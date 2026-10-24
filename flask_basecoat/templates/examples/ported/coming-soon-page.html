@@ -1,0 +1,85 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_marketing.html' as mk %}
+{% block title %}Coming Soon Page · Flask-Basecoat{% endblock %}
+{% block body %}
+<div class="bg-background">
+<div class="grid min-h-screen lg:grid-cols-2">
+  {# Left section #}
+  <div class="relative flex flex-1 flex-col items-center justify-between overflow-hidden bg-muted bg-cover bg-top p-8 lg:p-12">
+    <img src="{{ url_for('basecoat.placeholder', height=900, width=720) }}" alt="" class="absolute inset-0 h-full w-full object-cover object-top dark:opacity-10">
+    <div class="z-10 flex w-full items-center justify-start">
+      <div class="flex items-center gap-2">
+        <img src="{{ url_for('basecoat.placeholder', height=28, width=30) }}" width="30" height="28" alt="...">
+        <span class="text-lg font-medium text-foreground">Logo</span>
+      </div>
+    </div>
+
+    <nav class="relative z-10 mt-8 flex w-full justify-center gap-6 text-muted-foreground lg:justify-start">
+      {% for link in ['About', 'Contact', 'Feedback', 'Help'] %}
+      <a href="#" class="text-foreground hover:underline">{{ link }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+
+  {# Right section #}
+  <div class="relative flex flex-1 flex-col items-center justify-between bg-gradient-to-br p-8 lg:p-12">
+    <div class="flex w-full items-center justify-end">
+      {{ lucide('share-2', 'h-6 w-6 cursor-pointer opacity-80 hover:opacity-100') }}
+    </div>
+
+    <div class="flex flex-col items-center space-y-20 text-center">
+      <div class="relative z-10 flex flex-col items-center space-y-2 text-center">
+        <h1 class="text-4xl font-bold text-primary lg:text-5xl">Coming Soon</h1>
+        <p class="text-muted-foreground lg:text-lg">Stay Connected, Stay Updated!</p>
+      </div>
+
+      <div class="flex justify-center gap-6 md:gap-8" data-countdown>
+        {% for interval, value in [('days', '30'), ('hours', '00'), ('minutes', '00'), ('seconds', '00')] %}
+        <div class="flex flex-col items-center">
+          <span class="text-5xl font-bold" data-countdown-value="{{ interval }}">{{ value }}</span>
+          <span class="text-sm uppercase opacity-80">{{ interval }}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="space-y-6">
+        <h2 class="text-xl font-semibold md:text-2xl">Get Updates!</h2>
+        <form class="flex w-full max-w-sm rounded-full border p-1" data-updates-form>
+          {{ ui.input(type='email', placeholder='Email Address', aria_label='Email Address', class='flex-1 rounded-full border-none bg-transparent px-4 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-transparent') }}
+          {{ ui.button(text='Send Now', type='submit', class='rounded-full') }}
+        </form>
+      </div>
+    </div>
+
+    <div class="flex w-full justify-center gap-6 lg:justify-end">
+      <a href="#" aria-label="Facebook">{{ mk.brand_icon('facebook', 'h-6 w-6 text-foreground opacity-80 hover:opacity-100') }}</a>
+      <a href="#" aria-label="Twitter">{{ mk.brand_icon('twitter', 'h-6 w-6 text-foreground opacity-80 hover:opacity-100') }}</a>
+      <a href="#" aria-label="LinkedIn">{{ mk.brand_icon('linkedin', 'h-6 w-6 text-foreground opacity-80 hover:opacity-100') }}</a>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  (function () {
+    var target = new Date();
+    target.setDate(target.getDate() + 30);
+    var cells = document.querySelectorAll('[data-countdown-value]');
+    function tick() {
+      var diff = Math.max(0, +target - +new Date());
+      var left = {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / 1000 / 60) % 60),
+        seconds: Math.floor((diff / 1000) % 60)
+      };
+      cells.forEach(function (el) {
+        var v = left[el.getAttribute('data-countdown-value')];
+        el.textContent = v < 10 ? '0' + v : String(v);
+      });
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
+{% endblock %}

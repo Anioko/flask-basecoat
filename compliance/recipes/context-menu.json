@@ -1,0 +1,139 @@
+{
+  "name": "context-menu",
+  "source": "upstream/shadcn/radix/ui/context-menu.tsx",
+  "slots": {
+    "context-menu": {
+      "component": "ContextMenu",
+      "element": "ContextMenuPrimitive.Root",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "context-menu-trigger": {
+      "component": "ContextMenuTrigger",
+      "element": "ContextMenuPrimitive.Trigger",
+      "base_classes": "cn-context-menu-trigger select-none",
+      "data_attrs": []
+    },
+    "context-menu-group": {
+      "component": "ContextMenuGroup",
+      "element": "ContextMenuPrimitive.Group",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "context-menu-portal": {
+      "component": "ContextMenuPortal",
+      "element": "ContextMenuPrimitive.Portal",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "context-menu-sub": {
+      "component": "ContextMenuSub",
+      "element": "ContextMenuPrimitive.Sub",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "context-menu-radio-group": {
+      "component": "ContextMenuRadioGroup",
+      "element": "ContextMenuPrimitive.RadioGroup",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "context-menu-content": {
+      "component": "ContextMenuContent",
+      "element": "ContextMenuPrimitive.Content",
+      "base_classes": "cn-context-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-context-menu-content-available-height) origin-(--radix-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto",
+      "data_attrs": []
+    },
+    "context-menu-item": {
+      "component": "ContextMenuItem",
+      "element": "ContextMenuPrimitive.Item",
+      "base_classes": "cn-context-menu-item group/context-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset",
+        "data-variant"
+      ]
+    },
+    "context-menu-sub-trigger": {
+      "component": "ContextMenuSubTrigger",
+      "element": "ContextMenuPrimitive.SubTrigger",
+      "base_classes": "cn-context-menu-sub-trigger flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "ContextMenuSubTrigger:IconPlaceholder": {
+      "component": "ContextMenuSubTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip ml-auto",
+      "data_attrs": []
+    },
+    "context-menu-sub-content": {
+      "component": "ContextMenuSubContent",
+      "element": "ContextMenuPrimitive.SubContent",
+      "base_classes": "cn-context-menu-sub-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-context-menu-content-transform-origin) overflow-hidden",
+      "data_attrs": []
+    },
+    "context-menu-checkbox-item": {
+      "component": "ContextMenuCheckboxItem",
+      "element": "ContextMenuPrimitive.CheckboxItem",
+      "base_classes": "cn-context-menu-checkbox-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "ContextMenuCheckboxItem:span": {
+      "component": "ContextMenuCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+      "data_attrs": []
+    },
+    "context-menu-radio-item": {
+      "component": "ContextMenuRadioItem",
+      "element": "ContextMenuPrimitive.RadioItem",
+      "base_classes": "cn-context-menu-radio-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "ContextMenuRadioItem:span": {
+      "component": "ContextMenuRadioItem",
+      "element": "span",
+      "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+      "data_attrs": []
+    },
+    "context-menu-label": {
+      "component": "ContextMenuLabel",
+      "element": "ContextMenuPrimitive.Label",
+      "base_classes": "cn-context-menu-label",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "context-menu-separator": {
+      "component": "ContextMenuSeparator",
+      "element": "ContextMenuPrimitive.Separator",
+      "base_classes": "cn-context-menu-separator",
+      "data_attrs": []
+    },
+    "context-menu-shortcut": {
+      "component": "ContextMenuShortcut",
+      "element": "span",
+      "base_classes": "cn-context-menu-shortcut",
+      "data_attrs": []
+    },
+    "context-menu-checkbox-item-indicator": {
+      "component": "ContextMenuCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+      "data_attrs": [],
+      "no_slot": true
+    },
+    "context-menu-radio-item-indicator": {
+      "component": "ContextMenuRadioItem",
+      "element": "span",
+      "base_classes": "cn-context-menu-item-indicator pointer-events-none",
+      "data_attrs": [],
+      "no_slot": true
+    }
+  }
+}

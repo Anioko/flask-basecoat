@@ -1,0 +1,35 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Charts · Flask-Basecoat{% endblock %}
+{% set group_titles = {'area': 'Area Charts', 'bar': 'Bar Charts', 'line': 'Line Charts', 'pie': 'Pie Charts', 'radar': 'Radar Charts', 'radial': 'Radial Charts', 'tooltip': 'Tooltips'} %}
+{% block body %}
+<div class="mx-auto flex w-full max-w-7xl flex-col gap-10 p-4 sm:p-6 lg:p-8">
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div class="grid gap-1">
+      <h1 class="text-2xl font-semibold tracking-tight">Charts</h1>
+      <p class="text-sm text-muted-foreground">Area, bar, line, pie, radar and radial charts drawn from a chart spec, with the tooltips and legends of the shadcn/ui charts.</p>
+    </div>
+    <nav class="flex flex-wrap gap-2" aria-label="Chart groups">
+      {% for group, items in chart_groups %}{{ ui.button(variant='outline', size='sm', href='#' ~ group, text=group_titles.get(group, group)) }}{% endfor %}
+      {{ ui.button(variant='ghost', size='sm', href=url_for('basecoat_gallery.index'), text='All components') }}
+    </nav>
+  </header>
+  {% for group, items in chart_groups %}
+  <section id="{{ group }}" class="grid gap-4 scroll-mt-6" aria-labelledby="{{ group }}-title">
+    <h2 id="{{ group }}-title" class="text-lg font-semibold tracking-tight">{{ group_titles.get(group, group) }}</h2>
+    <div class="grid flex-1 scroll-mt-20 items-stretch gap-10 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:gap-10">
+      {% for item in items %}
+      {% import 'basecoat/pages/charts/' ~ item.name ~ '.html' as page with context %}
+      <div class="flex min-w-0 flex-col gap-2{{ ' md:col-span-2 lg:col-span-3' if item.full_width }}">
+        <div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ page.card() }}</div>
+        <div class="flex items-center gap-3 px-1 text-xs text-muted-foreground">
+          <a class="underline-offset-4 hover:underline" href="{{ url_for('basecoat_gallery.chart', name=item.name) }}">{{ item.name }}</a>
+          <a class="underline-offset-4 hover:underline" href="{{ url_for('basecoat_gallery.compare', name=item.name) }}">Compare with upstream</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

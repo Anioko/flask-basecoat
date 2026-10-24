@@ -1,0 +1,18 @@
+{
+  "name": "kbd",
+  "source": "upstream/shadcn/radix/ui/kbd.tsx",
+  "slots": {
+    "kbd": {
+      "component": "Kbd",
+      "element": "kbd",
+      "base_classes": "cn-kbd pointer-events-none inline-flex items-center justify-center select-none",
+      "data_attrs": []
+    },
+    "kbd-group": {
+      "component": "KbdGroup",
+      "element": "kbd",
+      "base_classes": "cn-kbd-group inline-flex items-center",
+      "data_attrs": []
+    }
+  }
+}

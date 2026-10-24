@@ -1,0 +1,19 @@
+{# Port of apps/v4/registry/bases/radix/components/example.tsx so component pages share the upstream layout. #}
+{% from 'basecoat/_base.html' import attrs %}
+
+{% macro example_wrapper(class='', attrs_={}) -%}
+<div class="w-full bg-muted dark:bg-background">
+  <div data-slot="example-wrapper" class="{{ tw('mx-auto grid min-h-screen w-full max-w-5xl min-w-0 content-center items-start gap-8 p-4 pt-2 sm:gap-12 sm:p-6 md:grid-cols-2 md:gap-8 lg:p-12 2xl:max-w-6xl', class) }}"{{ attrs(attrs_) }}>
+    {{ caller() if caller }}
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro example(title=none, class='', container_class='', attrs_={}) -%}
+<div data-slot="example" class="{{ tw('mx-auto flex w-full max-w-lg min-w-0 flex-col gap-1 self-stretch lg:max-w-none', container_class) }}"{{ attrs(attrs_) }}>
+  {% if title %}<div class="px-1.5 py-2 text-xs font-medium text-muted-foreground">{{ title }}</div>{% endif %}
+  <div data-slot="example-content" class="{{ tw("flex min-w-0 flex-1 flex-col items-start gap-6 rounded-xl bg-card p-12 text-foreground style-lyra:rounded-none style-sera:rounded-none *:[div:not([class*='w-'])]:w-full", class) }}">
+    {{ caller() if caller }}
+  </div>
+</div>
+{%- endmacro %}

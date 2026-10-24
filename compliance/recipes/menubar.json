@@ -1,0 +1,145 @@
+{
+  "name": "menubar",
+  "source": "upstream/shadcn/radix/ui/menubar.tsx",
+  "slots": {
+    "menubar": {
+      "component": "Menubar",
+      "element": "MenubarPrimitive.Root",
+      "base_classes": "cn-menubar flex items-center",
+      "data_attrs": []
+    },
+    "menubar-menu": {
+      "component": "MenubarMenu",
+      "element": "MenubarPrimitive.Menu",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "menubar-group": {
+      "component": "MenubarGroup",
+      "element": "MenubarPrimitive.Group",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "menubar-portal": {
+      "component": "MenubarPortal",
+      "element": "MenubarPrimitive.Portal",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "menubar-radio-group": {
+      "component": "MenubarRadioGroup",
+      "element": "MenubarPrimitive.RadioGroup",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "menubar-trigger": {
+      "component": "MenubarTrigger",
+      "element": "MenubarPrimitive.Trigger",
+      "base_classes": "cn-menubar-trigger flex items-center outline-hidden select-none",
+      "data_attrs": []
+    },
+    "menubar-content": {
+      "component": "MenubarContent",
+      "element": "MenubarPrimitive.Content",
+      "base_classes": "cn-menubar-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-menubar-content-transform-origin) overflow-hidden",
+      "data_attrs": []
+    },
+    "menubar-item": {
+      "component": "MenubarItem",
+      "element": "MenubarPrimitive.Item",
+      "base_classes": "cn-menubar-item group/menubar-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset",
+        "data-variant"
+      ]
+    },
+    "menubar-checkbox-item": {
+      "component": "MenubarCheckboxItem",
+      "element": "MenubarPrimitive.CheckboxItem",
+      "base_classes": "cn-menubar-checkbox-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "MenubarCheckboxItem:span": {
+      "component": "MenubarCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-menubar-checkbox-item-indicator pointer-events-none absolute flex items-center justify-center",
+      "data_attrs": []
+    },
+    "menubar-radio-item": {
+      "component": "MenubarRadioItem",
+      "element": "MenubarPrimitive.RadioItem",
+      "base_classes": "cn-menubar-radio-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "MenubarRadioItem:span": {
+      "component": "MenubarRadioItem",
+      "element": "span",
+      "base_classes": "cn-menubar-radio-item-indicator pointer-events-none absolute flex items-center justify-center",
+      "data_attrs": []
+    },
+    "menubar-label": {
+      "component": "MenubarLabel",
+      "element": "MenubarPrimitive.Label",
+      "base_classes": "cn-menubar-label",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "menubar-separator": {
+      "component": "MenubarSeparator",
+      "element": "MenubarPrimitive.Separator",
+      "base_classes": "cn-menubar-separator -mx-1 my-1 h-px",
+      "data_attrs": []
+    },
+    "menubar-shortcut": {
+      "component": "MenubarShortcut",
+      "element": "span",
+      "base_classes": "cn-menubar-shortcut ml-auto",
+      "data_attrs": []
+    },
+    "menubar-sub": {
+      "component": "MenubarSub",
+      "element": "MenubarPrimitive.Sub",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "menubar-sub-trigger": {
+      "component": "MenubarSubTrigger",
+      "element": "MenubarPrimitive.SubTrigger",
+      "base_classes": "cn-menubar-sub-trigger flex cursor-default items-center outline-none select-none",
+      "data_attrs": [
+        "data-inset"
+      ]
+    },
+    "MenubarSubTrigger:IconPlaceholder": {
+      "component": "MenubarSubTrigger",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip ml-auto size-4",
+      "data_attrs": []
+    },
+    "menubar-sub-content": {
+      "component": "MenubarSubContent",
+      "element": "MenubarPrimitive.SubContent",
+      "base_classes": "cn-menubar-sub-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-menubar-content-transform-origin) overflow-hidden",
+      "data_attrs": []
+    },
+    "menubar-checkbox-item-indicator": {
+      "component": "MenubarCheckboxItem",
+      "element": "span",
+      "base_classes": "cn-menubar-checkbox-item-indicator pointer-events-none absolute flex items-center justify-center",
+      "data_attrs": [],
+      "no_slot": true
+    },
+    "menubar-radio-item-indicator": {
+      "component": "MenubarRadioItem",
+      "element": "span",
+      "base_classes": "cn-menubar-radio-item-indicator pointer-events-none absolute flex items-center justify-center",
+      "data_attrs": [],
+      "no_slot": true
+    }
+  }
+}

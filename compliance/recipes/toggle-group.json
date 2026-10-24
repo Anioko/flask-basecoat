@@ -1,0 +1,27 @@
+{
+  "name": "toggle-group",
+  "source": "upstream/shadcn/radix/ui/toggle-group.tsx",
+  "slots": {
+    "toggle-group": {
+      "component": "ToggleGroup",
+      "element": "ToggleGroupPrimitive.Root",
+      "base_classes": "cn-toggle-group group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] data-vertical:flex-col data-vertical:items-stretch",
+      "data_attrs": [
+        "data-orientation",
+        "data-size",
+        "data-spacing",
+        "data-variant"
+      ]
+    },
+    "toggle-group-item": {
+      "component": "ToggleGroupItem",
+      "element": "ToggleGroupPrimitive.Item",
+      "base_classes": "cn-toggle-group-item shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
+      "data_attrs": [
+        "data-size",
+        "data-spacing",
+        "data-variant"
+      ]
+    }
+  }
+}

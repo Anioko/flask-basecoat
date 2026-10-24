@@ -1,0 +1,78 @@
+{
+ "type": "line",
+ "component": "LineChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "desktop": 186
+  },
+  {
+   "month": "February",
+   "desktop": 305
+  },
+  {
+   "month": "March",
+   "desktop": 237
+  },
+  {
+   "month": "April",
+   "desktop": 73
+  },
+  {
+   "month": "May",
+   "desktop": 209
+  },
+  {
+   "month": "June",
+   "desktop": 214
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true,
+  "margin": {
+   "left": 12,
+   "right": 12
+  }
+ },
+ "series": [
+  {
+   "component": "Line",
+   "dataKey": "desktop",
+   "type": "natural",
+   "stroke": "var(--color-desktop)",
+   "strokeWidth": 2,
+   "dot": false
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "dataKey": "month",
+   "tickLine": false,
+   "axisLine": false,
+   "tickMargin": 8,
+   "tickFormatter": {
+    "$fn": "slice",
+    "start": 0,
+    "end": 3
+   }
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {
+  "cursor": false,
+  "hideLabel": true,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

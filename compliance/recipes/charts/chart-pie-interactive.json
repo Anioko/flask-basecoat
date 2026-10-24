@@ -1,0 +1,204 @@
+{
+  "name": "chart-pie-interactive",
+  "group": "pie",
+  "fullWidth": false,
+  "description": "An interactive pie chart",
+  "card": {
+    "props": {
+      "data-chart": "pie-interactive",
+      "className": "flex flex-col"
+    },
+    "title": "Pie Chart - Interactive",
+    "description": "January - June 2024",
+    "headerClassName": "flex-row items-start space-y-0 pb-0",
+    "contentClassName": "flex flex-1 justify-center pb-0",
+    "footer": []
+  },
+  "chart": {
+    "type": "pie",
+    "component": "PieChart",
+    "container": {
+      "id": "pie-interactive",
+      "className": "mx-auto aspect-square w-full max-w-[300px]"
+    },
+    "config": {
+      "visitors": {
+        "label": "Visitors"
+      },
+      "desktop": {
+        "label": "Desktop"
+      },
+      "mobile": {
+        "label": "Mobile"
+      },
+      "january": {
+        "label": "January",
+        "color": "var(--chart-1)"
+      },
+      "february": {
+        "label": "February",
+        "color": "var(--chart-2)"
+      },
+      "march": {
+        "label": "March",
+        "color": "var(--chart-3)"
+      },
+      "april": {
+        "label": "April",
+        "color": "var(--chart-4)"
+      },
+      "may": {
+        "label": "May",
+        "color": "var(--chart-5)"
+      }
+    },
+    "data": null,
+    "props": {},
+    "series": [
+      {
+        "component": "Pie",
+        "data": [
+          {
+            "month": "january",
+            "desktop": 186,
+            "fill": "var(--color-january)"
+          },
+          {
+            "month": "february",
+            "desktop": 305,
+            "fill": "var(--color-february)"
+          },
+          {
+            "month": "march",
+            "desktop": 237,
+            "fill": "var(--color-march)"
+          },
+          {
+            "month": "april",
+            "desktop": 173,
+            "fill": "var(--color-april)"
+          },
+          {
+            "month": "may",
+            "desktop": 209,
+            "fill": "var(--color-may)"
+          }
+        ],
+        "dataKey": "desktop",
+        "nameKey": "month",
+        "innerRadius": 60,
+        "strokeWidth": 5,
+        "shape": "({ index, outerRadius = 0, ...props }: PieSectorShapeProps) => { if (index === activeIndex) { return ( <g> <Sector {...props} outerRadius={outerRadius + 10} /> <Sector {...props} outerRadius={outerRadius + 25} innerRadius={outerRadius + 12} /> </g> ) } return <Sector {...props} outerRadius={outerRadius} /> }",
+        "labels": [
+          {
+            "content": "({ viewBox }) => { if (viewBox && \"cx\" in viewBox && \"cy\" in viewBox) { return ( <text x={viewBox.cx} y={viewBox.cy} textAnchor=\"middle\" dominantBaseline=\"middle\" > <tspan x={viewBox.cx} y={viewBox.cy} className=\"fill-foreground text-3xl font-bold\" > {desktopData[activeIndex].desktop.toLocaleString()} </tspan> <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className=\"fill-muted-foreground\" > Visitors </tspan> </text> ) } }"
+          }
+        ]
+      }
+    ],
+    "axes": [],
+    "grid": null,
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent",
+      "hideLabel": true
+    },
+    "legend": null,
+    "labels": []
+  },
+  "interactive": {
+    "state": [
+      {
+        "name": "activeMonth",
+        "setter": "setActiveMonth",
+        "initial": "january"
+      }
+    ],
+    "controls": [
+      {
+        "component": "Select",
+        "value": {
+          "state": "activeMonth"
+        },
+        "onValueChange": {
+          "setState": "activeMonth"
+        },
+        "trigger": {
+          "className": "ml-auto h-7 w-[130px] rounded-lg pl-2.5",
+          "aria-label": "Select a value"
+        },
+        "placeholder": "Select month",
+        "content": {
+          "align": "end",
+          "className": "rounded-xl"
+        },
+        "items": [
+          {
+            "value": "january",
+            "className": "rounded-lg [&_span]:flex",
+            "label": "January",
+            "swatch": "var(--color-january)"
+          },
+          {
+            "value": "february",
+            "className": "rounded-lg [&_span]:flex",
+            "label": "February",
+            "swatch": "var(--color-february)"
+          },
+          {
+            "value": "march",
+            "className": "rounded-lg [&_span]:flex",
+            "label": "March",
+            "swatch": "var(--color-march)"
+          },
+          {
+            "value": "april",
+            "className": "rounded-lg [&_span]:flex",
+            "label": "April",
+            "swatch": "var(--color-april)"
+          },
+          {
+            "value": "may",
+            "className": "rounded-lg [&_span]:flex",
+            "label": "May",
+            "swatch": "var(--color-may)"
+          }
+        ]
+      }
+    ],
+    "derived": {
+      "activeIndex": "React.useMemo( () => desktopData.findIndex((item) => item.month === activeMonth), [activeMonth] )",
+      "months": "React.useMemo(() => desktopData.map((item) => item.month), [])",
+      "renderPieShape": "React.useCallback( ({ index, outerRadius = 0, ...props }: PieSectorShapeProps) => { if (index === activeIndex) { return ( <g> <Sector {...props} outerRadius={outerRadius + 10} /> <Sector {...props} outerRadius={outerRadius + 25} innerRadius={outerRadius + 12} /> </g> ) } return <Sector {...props} outerRadius={outerRadius} /> }, [activeIndex] )"
+    },
+    "runtime": {
+      "state": {
+        "activeMonth": "january"
+      },
+      "computed": {
+        "activeIndex": {
+          "$fn": "indexOf",
+          "key": "month",
+          "state": "activeMonth"
+        }
+      }
+    }
+  },
+  "functionProps": [
+    "chart.series[0].shape",
+    "chart.series[0].labels[0].content"
+  ],
+  "unresolved": [],
+  "resolvedByHand": [
+    {
+      "path": "interactive.state.activeMonth.initial",
+      "source": "desktopData[0].month",
+      "resolution": "desktopData[0].month = \"january\""
+    },
+    {
+      "path": "interactive.controls[0].items",
+      "source": "<SelectContent align=\"end\" className=\"rounded-xl\"> {months.map((key) => { const config = chartConfig[key as keyof typeof chartConfig] if (!config) { return null } return ( <SelectItem key={key} value={key} className=\"rounded-lg [&_span]:flex\" > <div className=\"flex items-center gap-2 text-xs\"> <span className=\"flex h-3 w-3 shrink-0 rounded-xs\" style={{ backgroundColor: `var(--color-${key})`, }} /> {config?.label} </div> </SelectItem> ) })} </SelectContent>",
+      "resolution": "one SelectItem per month that has a config entry, with a colour swatch and the config label"
+    }
+  ]
+}

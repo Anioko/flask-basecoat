@@ -1,0 +1,7 @@
+{
+  "source": "shadcn-examples (https://github.com/shadcn-examples/shadcn-examples)",
+  "archive": "shadcn-examples-main.zip, entries dated 2025-10-14, supplied locally by the project owner",
+  "licence": "MIT, as stated in the archive's README.md (the repository's LICENCE.md link no longer resolves; the examples folder was removed from the repository after 2025-11-09)",
+  "excluded": [".env.local", "public/ (44 MB of images; ports use local placeholders)"],
+  "examples": 46
+}

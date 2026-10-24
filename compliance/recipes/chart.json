@@ -1,0 +1,32 @@
+{
+  "name": "chart",
+  "source": "upstream/shadcn/radix/ui/chart.tsx",
+  "slots": {
+    "chart": {
+      "component": "ChartContainer",
+      "element": "div",
+      "base_classes": "cn-chart flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+      "data_attrs": [
+        "data-chart"
+      ]
+    },
+    "ChartTooltipContent:div": {
+      "component": "ChartTooltipContent",
+      "element": "div",
+      "base_classes": "font-medium",
+      "data_attrs": []
+    },
+    "ChartTooltipContent:span": {
+      "component": "ChartTooltipContent",
+      "element": "span",
+      "base_classes": "text-muted-foreground",
+      "data_attrs": []
+    },
+    "ChartLegendContent:div": {
+      "component": "ChartLegendContent",
+      "element": "div",
+      "base_classes": "flex items-center justify-center gap-4",
+      "data_attrs": []
+    }
+  }
+}

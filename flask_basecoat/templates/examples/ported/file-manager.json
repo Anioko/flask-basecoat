@@ -1,0 +1,11 @@
+{
+  "id": "file-manager",
+  "title": "File Manager",
+  "description": "Folder browser with breadcrumbs, row selection, file details, an upload dialog and pagination.",
+  "tags": [
+    "Files",
+    "Dialog",
+    "Breadcrumb",
+    "Pagination"
+  ]
+}

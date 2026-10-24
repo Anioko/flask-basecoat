@@ -1,11 +1,9 @@
 from flask_assets import Bundle
 
-# Use pyscss filter (python-based SCSS) so we can build without a system 'sass' binary.
-app_css = Bundle('app.scss', filters='pyscss', output='styles/app.css')
-
+# styles/app.css is built by the Tailwind CLI from app/assets/styles/input.css (see package.json), not by Flask-Assets.
 app_js = Bundle('app.js', filters='jsmin', output='scripts/app.js')
 
-# Vendor bundle: removed Semantic UI and jQuery to avoid conflicting styles with Basecoat.
+# Vendor bundle: removed Semantic UI and jQuery to avoid conflicting styles with Flask-Basecoat.
 # Vanilla JS utilities: tablesort (table sorting) and zxcvbn (password strength).
 vendor_css = Bundle(output='styles/vendor.css')
 

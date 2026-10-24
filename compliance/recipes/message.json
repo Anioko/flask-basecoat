@@ -1,0 +1,44 @@
+{
+  "name": "message",
+  "source": "upstream/shadcn/radix/ui/message.tsx",
+  "slots": {
+    "message-group": {
+      "component": "MessageGroup",
+      "element": "div",
+      "base_classes": "cn-message-group flex min-w-0 flex-col",
+      "data_attrs": []
+    },
+    "message": {
+      "component": "Message",
+      "element": "div",
+      "base_classes": "cn-message group/message relative flex w-full min-w-0 data-[align=end]:flex-row-reverse",
+      "data_attrs": [
+        "data-align"
+      ]
+    },
+    "message-avatar": {
+      "component": "MessageAvatar",
+      "element": "div",
+      "base_classes": "cn-message-avatar flex w-fit shrink-0 items-center justify-center self-end overflow-hidden rounded-full bg-muted",
+      "data_attrs": []
+    },
+    "message-content": {
+      "component": "MessageContent",
+      "element": "div",
+      "base_classes": "cn-message-content flex w-full min-w-0 flex-col wrap-break-word",
+      "data_attrs": []
+    },
+    "message-header": {
+      "component": "MessageHeader",
+      "element": "div",
+      "base_classes": "cn-message-header flex max-w-full min-w-0 items-center",
+      "data_attrs": []
+    },
+    "message-footer": {
+      "component": "MessageFooter",
+      "element": "div",
+      "base_classes": "cn-message-footer flex max-w-full min-w-0 items-center group-data-[align=end]/message:justify-end",
+      "data_attrs": []
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Let's personalize your experience{% endblock %}
+{% block body %}
+{% set posted = request.method == 'POST' %}
+{% set steps = [
+  ('role', 'Role & Use Case', false),
+  ('template', 'Choose a Template or Start from Scratch', false),
+  ('data-source', 'Data Source Setup', false),
+  ('first-flow', 'Build Your First Flow', true),
+  ('invite-team', 'Invite Team', true),
+] %}
+{% set current = [((request.form.get('step', '0') | int(0)) + 1), steps | length] | min if posted else 0 %}
+{% set role = request.form.get('role', 'product-manager') if posted else 'product-manager' %}
+{% set automation = request.form.getlist('automation') if posted else ['data-collection', 'repetitive-tasks'] %}
+{% set roles = [('product-manager', 'Product Manager'), ('developer', 'Developer'), ('designer', 'Designer'), ('ops', 'Ops'), ('founder', 'Founder'), ('other', 'Other')] %}
+{% set options = [('data-collection', 'Data collection & processing'), ('emails', 'Sending emails or messages'), ('dashboard', 'Dashboard updates'), ('repetitive-tasks', 'Repetitive internal tasks'), ('ai-assistant', 'Building your own AI assistant'), ('other', 'Other')] %}
+{% set option_class = 'h-auto justify-start rounded-lg border p-4 text-left font-medium whitespace-normal transition-all duration-200 hover:shadow-sm' %}
+{% macro option(group, value, label, on) -%}
+{% call ui.button(type='button', variant='outline', class=option_class ~ ' ' ~ ('border-foreground' if on else 'border-border text-foreground hover:border-border/60'), attrs={'data-option': group, 'data-value': value, 'aria-pressed': 'true' if on else 'false'}) %}
+  <div class="flex items-center gap-3"><div class="h-2 w-2 rounded-full {{ 'bg-primary' if on else 'bg-border' }}" data-dot></div>{{ label }}</div>
+{% endcall %}
+{%- endmacro %}
+<form method="post" action="{{ request.path }}" class="flex min-h-screen overflow-hidden" id="msf-form">
+  <input type="hidden" name="step" value="{{ current }}">
+  <input type="hidden" name="role" value="{{ role }}" id="msf-role">
+  <div id="msf-automation">{% for a in automation %}<input type="hidden" name="automation" value="{{ a }}">{% endfor %}</div>
+
+  <div class="hidden lg:block">
+    <div class="from-primary to-primary/80 text-primary-foreground relative flex min-h-screen w-80 flex-col bg-gradient-to-b p-6">
+      <div class="mb-12 flex items-center gap-3 pt-4">{{ lucide('box', 'size-6') }}</div>
+      <div class="flex-1 space-y-4">
+        {% for id, title, optional in steps %}
+        {% set done, now = loop.index0 < current, loop.index0 == current %}
+        <div class="flex items-center gap-4 rounded-lg p-3 transition-all duration-200{{ ' bg-primary-foreground/10' if now else '' }}">
+          <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 {{ 'border-primary-foreground bg-primary-foreground' if done else ('border-primary-foreground bg-transparent' if now else 'border-primary-foreground/30') }}">
+            {% if done %}<svg class="text-primary h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            {% elif now %}<div class="bg-primary-foreground h-2 w-2 rounded-full"></div>
+            {% else %}<span class="text-primary-foreground/60 text-xs">{{ loop.index }}</span>{% endif %}
+          </div>
+          <div class="flex-1">
+            <div class="text-sm font-medium {{ 'text-primary-foreground' if now else 'text-primary-foreground/70' }}">{{ title }}</div>
+            {% if optional %}<div class="text-primary-foreground/50 text-xs">optional</div>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="text-primary-foreground/60 mt-auto flex justify-between pt-8 text-sm"><span>Terms of Service</span><span>Help Center</span></div>
+    </div>
+  </div>
+
+  <div class="min-h-screen flex-1 p-8 lg:p-16">
+    <div class="mx-auto max-w-xl">
+      <div class="mb-16">
+        <h1 class="text-foreground mb-4 text-3xl leading-tight font-semibold lg:text-4xl">Let&#39;s personalize your experience</h1>
+        <p class="text-muted-foreground leading-relaxed">Tell us a bit about you so we can tailor templates, suggestions, and features to your needs.</p>
+      </div>
+      <div class="mb-12">
+        <h4 class="text-foreground mb-8 text-xl">What best describes your role?</h4>
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">{% for id, label in roles %}{{ option('role', id, label, id == role) }}{% endfor %}</div>
+      </div>
+      <div class="mb-16">
+        <h4 class="text-foreground mb-8 text-xl">What do you want to automate first?</h4>
+        <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">{% for id, label in options %}{{ option('automation', id, label, id in automation) }}{% endfor %}</div>
+      </div>
+      <div class="flex justify-center">
+        {% call ui.button(type='submit', size='lg', class='flex w-full justify-between') %}Continue{{ lucide('chevron-right') }}{% endcall %}
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-background fixed right-0 bottom-0 left-0 border-t p-4 lg:hidden">
+    <div class="flex items-center justify-center gap-2">
+      {% for s in steps %}<div class="h-2 w-2 rounded-full transition-colors {{ 'bg-accent' if loop.index0 < current else ('bg-primary' if loop.index0 == current else 'bg-border') }}"></div>{% endfor %}
+    </div>
+    <div class="mt-2 text-center"><span class="text-muted-foreground text-sm">Step {{ current + 1 }} of {{ steps | length }}</span></div>
+  </div>
+</form>
+<script>
+  (function () {
+    var form = document.getElementById('msf-form');
+    function paint(b, on) {
+      b.setAttribute('aria-pressed', String(on));
+      b.classList.toggle('border-foreground', on);
+      ['border-border', 'text-foreground', 'hover:border-border/60'].forEach(function (k) { b.classList.toggle(k, !on); });
+      var dot = b.querySelector('[data-dot]');
+      dot.classList.toggle('bg-primary', on);
+      dot.classList.toggle('bg-border', !on);
+    }
+    form.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-option]');
+      if (!b) return;
+      if (b.getAttribute('data-option') === 'role') {
+        form.querySelectorAll('[data-option="role"]').forEach(function (o) { paint(o, o === b); });
+        document.getElementById('msf-role').value = b.getAttribute('data-value');
+      } else {
+        paint(b, b.getAttribute('aria-pressed') !== 'true');
+        var box = document.getElementById('msf-automation');
+        box.innerHTML = '';
+        form.querySelectorAll('[data-option="automation"][aria-pressed="true"]').forEach(function (o) {
+          var i = document.createElement('input');
+          i.type = 'hidden'; i.name = 'automation'; i.value = o.getAttribute('data-value');
+          box.appendChild(i);
+        });
+      }
+    });
+  })();
+</script>
+{% endblock %}

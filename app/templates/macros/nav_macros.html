@@ -1,137 +1,145 @@
-{# This macro is called on the user dashboards. In this case the administrator dashboard
-   at the route admin.index
-#}
+{# Top navigation of the demo application, built from the shadcn/ui component macros.
+   render_nav(current_user, dropdown=[]) renders the header; `dropdown` takes extra entries, each either a flat
+   (endpoint, label, icon) tuple rendered as a link or a (title, [entries]) pair rendered as a dropdown menu. #}
+{% import 'basecoat/index.html' as ui %}
 
-{% macro render_menu_items(endpoints) %}
+{% macro nav_link(endpoint, name, icon=none, class='') %}
+    {% set active = request.endpoint == endpoint %}
+    {% call ui.button(variant=('secondary' if active else 'ghost'), size='sm', href=url_for(endpoint), class=class, attrs={'aria-current': 'page' if active else none}) %}
+        {% if icon %}{{ lucide(icon) }}{% endif %}{{ name }}
+    {% endcall %}
+{% endmacro %}
+
+{% macro render_menu_items(endpoints, class='') %}
     {% for endpoint, name, icon in endpoints %}
-        <a class="px-4 py-2 hover:bg-slate-800 transition-colors {% if request.endpoint == endpoint %}bg-slate-900{% endif %}" href="{{ url_for(endpoint) }}">
-            {{ name | safe }}
-        </a>
+        {{ nav_link(endpoint, name, icon, class=class) }}
     {% endfor %}
 {% endmacro %}
 
-{# This is called for all users (including anonymous users). It renders the basic left side of the 
-   navigation bar. In the default case, the left hand side will read 'Flask-Base'. In the logged in
-   admin case, there will also be an item that links to admin/ route. I have added an example use of
-   render_menu_items.
-#}
-
-{% macro menu_items(current_user) %}
-    {% set endpoints = [
-      ('main.about', 'About', 'info')
-    ]%}
+{# Left side of the bar for every visitor: About, plus the dashboard of the user's role when logged in. #}
+{% macro menu_items(current_user, class='') %}
+    {% set endpoints = [('main.about', 'About', 'info')] %}
     {% set user = [] %}
-    {% if current_user.is_authenticated %}
-      {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
-    {% endif %} 
-    {{ render_menu_items( endpoints +  user ) }}
+    {% if current_user.is_authenticated and current_user.role %}
+        {% set user = [(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'layout-dashboard')] %}
+    {% endif %}
+    {{ render_menu_items(endpoints + user, class=class) }}
 {% endmacro %}
 
+{# Brand link #}
 {% macro header_items(current_user) %}
-       {% set endpoints = [
-        ('main.index', config.APP_NAME, 'home'),
-      ] %}
-     {{ render_menu_items( endpoints ) }}
- {% endmacro %}
+    <a href="{{ url_for('main.index') }}" class="flex items-center gap-2 font-semibold tracking-tight">
+        <span class="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">{{ lucide('command', 'size-4') }}</span>
+        <span>{{ config.APP_NAME }}</span>
+    </a>
+{% endmacro %}
 
-{# This renders the right hand side of the navigation bar. If the user is logged in, it links to 
-   manage their account and logout (account routes). Otherwise, it links to register and login.
-#}
+{# Right side of the bar: account menu when logged in, Register / Log In otherwise. #}
 {% macro account_items(current_user) %}
     {% if current_user.is_authenticated %}
-      {% set endpoints = [
-        ('account.manage', 'Your Account', 'settings'),
-        ('account.logout', 'Log out', 'sign out')
-      ] %}
-      {{ render_menu_items(endpoints) }}
+        {% call ui.dropdown_menu() %}
+            {% call ui.dropdown_menu_trigger(variant='ghost', size='sm', class='gap-2 px-2') %}
+                {% call ui.avatar(class='size-7') %}
+                    {{ ui.avatar_fallback(text=(current_user.first_name[:1] ~ current_user.last_name[:1]) | upper) }}
+                {% endcall %}
+                <span class="hidden sm:inline">{{ current_user.full_name() }}</span>
+                {{ lucide('chevrons-up-down', 'text-muted-foreground') }}
+            {% endcall %}
+            {% call ui.dropdown_menu_content(align='end', class='min-w-56') %}
+                {% call ui.dropdown_menu_label(class='font-normal') %}
+                    <div class="grid text-sm leading-tight">
+                        <span class="truncate font-medium">{{ current_user.full_name() }}</span>
+                        <span class="truncate text-xs text-muted-foreground">{{ current_user.email }}</span>
+                    </div>
+                {% endcall %}
+                {{ ui.dropdown_menu_separator() }}
+                {% call ui.dropdown_menu_item(href=url_for('account.manage')) %}{{ lucide('user') }}Your Account{% endcall %}
+                {% if current_user.is_admin() %}
+                    {% call ui.dropdown_menu_item(href=url_for('admin.index')) %}{{ lucide('shield') }}Admin Dashboard{% endcall %}
+                {% endif %}
+                {{ ui.dropdown_menu_separator() }}
+                {% call ui.dropdown_menu_item(href=url_for('account.logout')) %}{{ lucide('log-out') }}Log out{% endcall %}
+            {% endcall %}
+        {% endcall %}
     {% else %}
-      {% set endpoints = [
-        ('account.register', 'Register', 'list layout'),
-        ('account.login', 'Log In', 'sign in')
-      ] %}
-      {{ render_menu_items(endpoints) }}
+        {{ ui.button(text='Register', variant='ghost', size='sm', href=url_for('account.register')) }}
+        {{ ui.button(text='Log In', size='sm', href=url_for('account.login')) }}
     {% endif %}
 {% endmacro %}
 
-{% macro mobile_nav(current_user, dropdown=None) %}
-    <div class="md:hidden">
-        <div class="fixed top-0 left-0 right-0 bg-black text-white z-50">
-            <div class="flex items-center justify-between px-4 py-3">
-                <div class="flex items-center space-x-2">
-                    {{ header_items(current_user) }}
-                </div>
-                <button class="text-white hover:text-slate-300" id="mobile-menu-button">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        {# Mobile menu dropdown #}
-        <div id="mobile-menu" class="hidden fixed top-14 left-0 right-0 bg-white shadow-lg z-40 border-t">
-            <div class="flex flex-col py-2">
-                {{ menu_items(current_user) }}
-                {{ account_items(current_user) }}
-                {{ create_dropdown(dropdown) }}
-            </div>
-        </div>
-    </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var btn = document.getElementById('mobile-menu-button');
-        var menu = document.getElementById('mobile-menu');
-        if(btn && menu) {
-            btn.addEventListener('click', function() {
-                menu.classList.toggle('hidden');
-            });
-        }
-    });
-    </script>
+{# Extra entries: flat tuples become links, (title, entries) pairs become a dropdown menu. #}
+{% macro create_dropdown(dropdown, class='') %}
+    {% for item in dropdown %}
+        {% if item | length == 3 %}
+            {{ render_menu_items([item], class=class) }}
+        {% elif item | length == 2 %}
+            {% call ui.dropdown_menu() %}
+                {% call ui.dropdown_menu_trigger(variant='ghost', size='sm', class=class) %}
+                    {{ item[0] }}{{ lucide('chevron-down', 'text-muted-foreground') }}
+                {% endcall %}
+                {% call ui.dropdown_menu_content(align='start') %}
+                    {{ dropdown_entries(item[1]) }}
+                {% endcall %}
+            {% endcall %}
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
-{% macro create_dropdown(dropdown) %}
-  {% for item in dropdown %}
-    {% if item | length == 3 %}
-      {{ render_menu_items([item]) }}
-    {% elif item | length == 2 %}
-      <div class="relative group">
-        <button class="px-4 py-2 hover:bg-slate-800 transition-colors flex items-center">
-          {{ item[0] }}
-          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <div class="hidden group-hover:block absolute left-0 mt-0 bg-slate-900 shadow-lg min-w-48 z-50">
-          {{ create_dropdown(item[1]) }}
-        </div>
-      </div>
-    {% endif %}
-  {% endfor %}
+{% macro dropdown_entries(entries) %}
+    {% for entry in entries %}
+        {% if entry | length == 3 %}
+            {% call ui.dropdown_menu_item(href=url_for(entry[0])) %}{% if entry[2] %}{{ lucide(entry[2]) }}{% endif %}{{ entry[1] }}{% endcall %}
+        {% elif entry | length == 2 %}
+            {{ ui.dropdown_menu_separator() }}
+            {{ ui.dropdown_menu_label(text=entry[0]) }}
+            {{ dropdown_entries(entry[1]) }}
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
-{% macro desktop_nav(current_user, dropdown=None) %}
-  <div class="hidden md:block">
-    <div class="fixed top-0 left-0 right-0 bg-black text-white z-50 shadow-md">
-      <div class="container mx-auto px-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-1">
-            {{ header_items(current_user) }}
-            {{ menu_items(current_user) }}
-            {{ create_dropdown(dropdown) }}
-          </div>
-          <div class="flex items-center space-x-1">
-            {{ account_items(current_user) }}
-          </div>
-        </div>
-      </div>
+{# Small screens: the navigation lives in a dropdown menu behind a menu button. #}
+{% macro mobile_nav(current_user, dropdown=[]) %}
+    {% call ui.dropdown_menu(class='md:hidden') %}
+        {% call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', attrs={'aria-label': 'Open navigation'}) %}
+            {{ lucide('menu') }}
+        {% endcall %}
+        {% call ui.dropdown_menu_content(align='end', class='min-w-48') %}
+            {% call ui.dropdown_menu_item(href=url_for('main.about')) %}{{ lucide('info') }}About{% endcall %}
+            {% if current_user.is_authenticated and current_user.role %}
+                {% call ui.dropdown_menu_item(href=url_for(current_user.role.index + '.index')) %}{{ lucide('layout-dashboard') }}{{ current_user.role.name }} Dashboard{% endcall %}
+            {% endif %}
+            {% if dropdown %}
+                {{ ui.dropdown_menu_separator() }}
+                {{ dropdown_entries(dropdown) }}
+            {% endif %}
+            {{ ui.dropdown_menu_separator() }}
+            {% if current_user.is_authenticated %}
+                {% call ui.dropdown_menu_item(href=url_for('account.manage')) %}{{ lucide('user') }}Your Account{% endcall %}
+                {% call ui.dropdown_menu_item(href=url_for('account.logout')) %}{{ lucide('log-out') }}Log out{% endcall %}
+            {% else %}
+                {% call ui.dropdown_menu_item(href=url_for('account.register')) %}{{ lucide('user') }}Register{% endcall %}
+                {% call ui.dropdown_menu_item(href=url_for('account.login')) %}{{ lucide('lock') }}Log In{% endcall %}
+            {% endif %}
+        {% endcall %}
+    {% endcall %}
+{% endmacro %}
+
+{% macro desktop_nav(current_user, dropdown=[]) %}
+    <div class="hidden items-center gap-1 md:flex">
+        {{ menu_items(current_user) }}
+        {{ create_dropdown(dropdown) }}
     </div>
-  </div>
 {% endmacro %}
 
 {% macro render_nav(current_user, dropdown=[]) %}
-  <nav class="w-full">
-    {{ mobile_nav(current_user, dropdown=dropdown) }}
-    {{ desktop_nav(current_user, dropdown=dropdown) }}
-  </nav>
+    <header class="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <nav class="container mx-auto flex h-14 items-center gap-4 px-4" aria-label="Main navigation">
+            {{ header_items(current_user) }}
+            {{ desktop_nav(current_user, dropdown=dropdown) }}
+            <div class="ml-auto flex items-center gap-2">
+                {{ account_items(current_user) }}
+                {{ mobile_nav(current_user, dropdown=dropdown) }}
+            </div>
+        </nav>
+    </header>
 {% endmacro %}

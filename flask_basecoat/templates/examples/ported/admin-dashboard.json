@@ -1,0 +1,11 @@
+{
+  "id": "admin-dashboard",
+  "title": "Admin Dashboard",
+  "description": "Document workspace with a sidebar, four KPI cards, an interactive visitors chart and a sortable outline table with a section editor drawer.",
+  "tags": [
+    "Sidebar",
+    "Charts",
+    "Table",
+    "Drawer"
+  ]
+}

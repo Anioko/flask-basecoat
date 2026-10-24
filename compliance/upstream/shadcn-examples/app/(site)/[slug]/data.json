@@ -1,0 +1,743 @@
+[
+  {
+    "href": "admin-dashboard",
+    "meta": {
+      "title": "Admin Dashboard",
+      "description": "A standard clean admin dashboard template. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "admin-dashboard.png",
+      "description": "A standard clean admin dashboard template.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "file-manager-admin-dashboard",
+      "payment-admin-dashboard"
+    ]
+  },
+  {
+    "href": "tasks",
+    "meta": {
+      "title": "Tasks",
+      "description": "Task list. List and filter tasks. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "tasks.png",
+      "description": "Task list. List and filter tasks.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "playground",
+    "meta": {
+      "title": "Playground",
+      "description": "Create an app that people can interact with with the Playground template. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "playground.png",
+      "description": "",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "authentication",
+    "meta": {
+      "title": "Authentication",
+      "description": "Authentication pages. Login page, sign-in page and more. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "authentication.png",
+      "description": "Authentication pages. Login page, registration page and more",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "profile-page",
+    "meta": {
+      "title": "Profile Page",
+      "description": "Create profile ui for users. Add forms so they can update their information. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "profile-page.png",
+      "description": "Create profile ui for users. Add forms so they can update their information.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "ai-chat",
+    "meta": {
+      "title": "AI Chat",
+      "description": "Chat ui and components for ai apps. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Chat ui and components for ai applications.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": false,
+    "similars": [
+      "chat-app",
+      "mail-app"
+    ]
+  },
+  {
+    "href": "sortable-cards",
+    "meta": {
+      "title": "Sortable Cards",
+      "description": "Sortable cards are interactive UI elements that can be rearranged by dragging and dropping. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Sortable cards are interactive UI elements that can be rearranged by dragging and dropping.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "chat-app",
+    "meta": {
+      "title": "Chat App",
+      "description": "A chat app template is a ready-made ui for quickly creating messaging apps. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A chat app template is a ready-made ui for quickly creating messaging apps.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "ai-chat",
+      "mail-app"
+    ]
+  },
+  {
+    "href": "projects-list",
+    "meta": {
+      "title": "Projects List",
+      "description": "UI component that lists projects. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "UI component that lists projects",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": false
+  },
+  {
+    "href": "onboarding-flow",
+    "meta": {
+      "title": "Onboarding Flow",
+      "description": "Step-by-step screens that collect information from users. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Step-by-step screens that collect information from users.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "product-list",
+    "meta": {
+      "title": "Product List",
+      "description": "A template consisting of a panel for listing and filtering products. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "List the products and filter them optionally.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "product-detail-page"
+    ]
+  },
+  {
+    "href": "product-detail-page",
+    "meta": {
+      "title": "Product Detail Page",
+      "description": "A chat app template is a ready-made ui for quickly creating messaging apps. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A chat app template is a ready-made ui for quickly creating messaging apps.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "product-list"
+    ]
+  },
+  {
+    "href": "coming-soon-page",
+    "meta": {
+      "title": "Coming Soon Page",
+      "description": "A coming soon page announces a future website or product launch. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A coming soon page announces a future website or product launch.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "changelog-page",
+    "meta": {
+      "title": "Changelog Page",
+      "description": "A changelog page lists updates, fixes, and new features of a product over time. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A changelog page lists updates, fixes, and new features of a product over time.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "blog-page",
+    "meta": {
+      "title": "Blog Page",
+      "description": "A blog page is a section of a website where articles, updates, or insights are regularly published. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A blog page is a section of a website where articles, updates, or insights are regularly published.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "blog-detail-page"
+    ]
+  },
+  {
+    "href": "blog-detail-page",
+    "meta": {
+      "title": "Blog Detail Page",
+      "description": "A blog post detail is a page that displays a single blog article with its content, author, and related information. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A blog post detail is a page that displays a single blog article with its content, author, and related information.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true,
+    "similars": [
+      "blog-page"
+    ]
+  },
+  {
+    "href": "pricing-tables",
+    "meta": {
+      "title": "Pricing Tables",
+      "description": "A pricing table displays different product or service plans with their features and costs. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A pricing table displays different product or service plans with their features and costs.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "kanban-board",
+    "meta": {
+      "title": "Kanban Board",
+      "description": "A Kanban board is a visual workflow management tool that helps track tasks through stages like To Do, In Progress, and Done. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A Kanban board visually tracks tasks through different stages. ",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "pos-app",
+    "meta": {
+      "title": "Point of Sale (POS) ",
+      "description": "It is a template used to process sales, payments, and manage transactions. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Point of Sale (POS) is a template used to process sales, payments, and manage transactions.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "mail-app",
+    "meta": {
+      "title": "Mail App",
+      "description": "Easily organize incoming and outgoing mail with the mail management template. Built with shadcn/ui, React, Next.js and Tailwind CSS.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A mail app is an application for sending, receiving, and managing emails.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "social-media",
+    "meta": {
+      "title": "Social Media",
+      "description": "A template for connecting, sharing and communicating with others online. Built with shadcn/ui, React, Next.js and Tailwind CSS.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A template for connecting, sharing and communicating with others online.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "music-app",
+    "meta": {
+      "title": "Music App",
+      "description": "Music app is an app ui template used to stream, play and manage audio tracks. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Music app is an app ui template used to stream, play and manage audio tracks.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "settings-page",
+    "meta": {
+      "title": "Settings Page",
+      "description": "Manage and customize your app preferences on a settings page. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Manage and customize your app preferences on a settings page.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "activity-feed",
+    "meta": {
+      "title": "Activity Feed",
+      "description": "Track events, user actions, and updates occurring in the app. React event stream component built with Tailwind CSS, Shadcn UI, and Radix UI.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Track events, user actions, and updates occurring in the app.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "timeline",
+    "meta": {
+      "title": "Timeline",
+      "description": "Visualize chronological events and milestones in a clear, interactive timeline. React timeline component built with Tailwind CSS, Shadcn UI & Radix UI.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Visualize chronological events and milestones in a clear, interactive timeline.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "payment-admin-dashboard",
+    "meta": {
+      "title": "Payment Dashboard",
+      "description": "It is a dashboard UI template used to manage, track and edit invoices and payments. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "It is a dashboard UI template used to manage, track and edit invoices and payments.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "file-manager-admin-dashboard",
+      "admin-dashboard"
+    ]
+  },
+  {
+    "href": "file-manager-admin-dashboard",
+    "meta": {
+      "title": "File Manager Dashboard",
+      "description": "It is an admin dashboard template used to organize, access and manage files and folders. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "It is an admin dashboard template used to organize, access and manage files and folders.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "similars": [
+      "admin-dashboard",
+      "payment-admin-dashboard"
+    ]
+  },
+  {
+    "href": "event-calendar",
+    "meta": {
+      "title": "Event Calendar",
+      "description": "Display and manage events with an interactive event calendar. React event calendar component built with Tailwind CSS, Shadcn UI & Radix UI.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Display and manage events with an interactive event calendar.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "file-manager",
+    "meta": {
+      "title": "File Manager App",
+      "description": "Organize, upload, and manage files efficiently with a file manager app. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Organize, upload, and manage files efficiently with a file manager app.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "todo-list-app",
+    "meta": {
+      "title": "Todo List App",
+      "description": "A to-do list app is an application for creating, organizing, and tracking tasks. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A to-do list app is an application for creating, organizing, and tracking tasks.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "cv-template",
+    "meta": {
+      "title": "Cv Template",
+      "description": "They are pre-designed ui templates that help users create professional resumes quickly and consistently. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "They are pre-designed ui templates that help users create professional resumes quickly and consistently.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "checkout-page",
+    "meta": {
+      "title": "Checkout Page",
+      "description": "A secure, conversion-optimized checkout page for fast payments and clear order review. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A secure, conversion-optimized checkout page for fast payments and clear order review.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "help-center",
+    "meta": {
+      "title": "Help Center",
+      "description": "A searchable help center with guides, FAQs and support resources to help users quickly find answers. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A searchable help center with guides, FAQs and support resources to help users quickly find answers.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "roadmap",
+    "meta": {
+      "title": "Roadmap",
+      "description": "A roadmap page is a page that outlines goals, milestones, and future plans in a visual timeline. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A roadmap page is a page that outlines goals, milestones, and future plans in a visual timeline.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "updates-page",
+    "meta": {
+      "title": "Updates Page",
+      "description": "An updates page is a page that displays the latest news, changes, or feature releases for users. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "An updates page is a page that displays the latest news, changes, or feature releases for users.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "task-detail",
+    "meta": {
+      "title": "Task Detail Page",
+      "description": "A task detail page is a page that shows comprehensive information about a specific task, including status, deadlines, and notes. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A task detail page is a page that shows comprehensive information about a specific task, including status, deadlines, and notes.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "course-detail",
+    "meta": {
+      "title": "Course Detail Page",
+      "description": "A course progress page is a page that shows a learner’s progress, completed lessons, and remaining tasks in a course. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A course progress page is a page that shows a learner’s progress, completed lessons, and remaining tasks in a course.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "hero-sections",
+    "meta": {
+      "title": "Hero sections",
+      "description": "Hero sections are prominent webpage areas, usually at the top, that showcase key content, messages, or calls-to-action. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "These are prominent areas of a web page, usually located at the top, that showcase important content, messages, or calls to action.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "video-call-chat",
+    "meta": {
+      "title": "Video Call Chat",
+      "description": "An app template that enables video communication and messaging between users. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "An app template that enables video communication and messaging between users.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "contact-page",
+    "meta": {
+      "title": "Contact Page",
+      "description": "A contact page is a page where users can find communication details or send messages directly. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A contact page is a page where users can find communication details or send messages directly.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "podcast-app",
+    "meta": {
+      "title": "Podcast App",
+      "description": "It is an application used to stream, download and manage podcast episodes. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "It is an application used to stream, download and manage podcast episodes.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "saas-landing-page",
+    "meta": {
+      "title": "SaaS Landing Page",
+      "description": "A SaaS landing page showcases product features, pricing, and aims to increase conversions. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A SaaS landing page showcases product features, pricing, and aims to increase conversions.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "dashboard-layouts",
+    "meta": {
+      "title": "Dashboard Layouts",
+      "description": "Pre-designed responsive dashboard page layouts. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "Pre-designed dashboard page layouts.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isComing": true
+  },
+  {
+    "href": "add-product-form",
+    "meta": {
+      "title": "Add Product Form",
+      "description": "The product addition form is a page composed of form elements that allow users to enter details and create a new product listing. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "The product addition form is a page composed of form elements that allow users to enter details and create a new product listing.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    },
+    "isNew": true
+  },
+  {
+    "href": "cart",
+    "meta": {
+      "title": "Cart",
+      "description": "A cart is a virtual space where users collect selected products before proceeding to checkout. Built with Next.js, React, Tailwind CSS, shadcn/ui and radix ui. Typescript included.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A cart is a virtual space where users collect selected products before proceeding to checkout.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  },
+  {
+    "href": "multi-step-form",
+    "meta": {
+      "title": "Multi Step Form",
+      "description": "A multi-step form is a form divided into multiple steps or sections to simplify data entry and improve user experience. Built with Tailwind CSS, Shadcn/ui, Radix ui, Next.js, React, Vue.js. Typescript compatible.",
+      "image": ""
+    },
+    "info": {
+      "cover_image": "",
+      "description": "A multi-step form is a form divided into multiple steps or sections to simplify data entry and improve user experience.",
+      "framework": "",
+      "demo_url": "",
+      "last_updated": ""
+    }
+  }
+]

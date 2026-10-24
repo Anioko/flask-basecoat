@@ -5,13 +5,13 @@ DOCS_NAV = [
             {
                 "title": "Introduction",
                 "slug": "introduction",
-                "description": "Understand the goals of the Basecoat Design System and how it maps to shadcn/ui.",
+                "description": "Understand the goals of the Flask-Basecoat Design System and how it maps to shadcn/ui.",
                 "template": "docs/pages/introduction.html"
             },
             {
                 "title": "Installation",
                 "slug": "installation",
-                "description": "Add the Basecoat docs stack to an existing Flask project.",
+                "description": "Add the Flask-Basecoat docs stack to an existing Flask project.",
                 "template": "docs/pages/installation.html"
             },
             {
@@ -28,7 +28,7 @@ DOCS_NAV = [
             {
                 "title": "Theming",
                 "slug": "theming",
-                "description": "Customize colors, typography, and spacing using Basecoat tokens.",
+                "description": "Customize colors, typography, and spacing using Flask-Basecoat tokens.",
                 "template": "docs/pages/theming.html"
             }
         ]
@@ -39,13 +39,13 @@ DOCS_NAV = [
             {
                 "title": "Blocks Overview",
                 "slug": "blocks",
-                "description": "Browse every shadcn block category and Basecoat coverage status.",
+                "description": "Browse every shadcn block category and Flask-Basecoat coverage status.",
                 "template": "docs/pages/blocks/index.html"
             },
             {
                 "title": "Sidebar Layout",
                 "slug": "blocks/sidebar-demo",
-                "description": "Replica of the shadcn sidebar block composed with Basecoat UI.",
+                "description": "Replica of the shadcn sidebar block composed with Flask-Basecoat.",
                 "template": "docs/pages/blocks/sidebar.html"
             }
         ]

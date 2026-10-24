@@ -1,0 +1,126 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Two-Step Verification - shadcn/ui Example{% endblock %}
+{% block head %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const otp = document.getElementById('otp-code');
+    const verifyBtn = document.getElementById('verify-button');
+    if (otp && verifyBtn) {
+      const sync = () => { verifyBtn.disabled = otp.value.length < 6; };
+      otp.addEventListener('input', sync);
+      otp.addEventListener('basecoat:change', sync);
+      sync();
+    }
+    startResendTimer();
+  });
+
+  let timeLeft = 45;
+  let timerInterval = null;
+  function startResendTimer() {
+    timeLeft = 45;
+    const timerEl = document.getElementById('resend-timer-container');
+    const btnEl = document.getElementById('resend-button');
+    if (timerEl) timerEl.classList.remove('hidden');
+    if (btnEl) btnEl.classList.add('hidden');
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      const secStr = timeLeft < 10 ? '0' + timeLeft : timeLeft;
+      document.getElementById('resend-countdown').textContent = `00:${secStr}`;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        if (timerEl) timerEl.classList.add('hidden');
+        if (btnEl) btnEl.classList.remove('hidden');
+      }
+    }, 1000);
+  }
+  function resendOtp() {
+    if (window.FlaskBasecoat && FlaskBasecoat.toast) FlaskBasecoat.toast.success('A fresh verification code has been dispatched to your email.');
+    startResendTimer();
+  }
+  function verifyOtp(e) {
+    e.preventDefault();
+    const successCard = document.getElementById('otp-success');
+    const formCard = document.getElementById('otp-form-card');
+    if (successCard && formCard) {
+      formCard.classList.add('hidden');
+      successCard.classList.remove('hidden');
+    }
+  }
+</script>
+{% endblock %}
+
+{% set otp_group_class = '*:data-[slot=input-otp-slot]:text-xl style-vega:*:data-[slot=input-otp-slot]:h-16 style-vega:*:data-[slot=input-otp-slot]:w-12 style-nova:*:data-[slot=input-otp-slot]:h-12 style-nova:*:data-[slot=input-otp-slot]:w-11 style-lyra:*:data-[slot=input-otp-slot]:h-12 style-lyra:*:data-[slot=input-otp-slot]:w-11 style-maia:*:data-[slot=input-otp-slot]:h-16 style-maia:*:data-[slot=input-otp-slot]:w-12 style-mira:*:data-[slot=input-otp-slot]:h-12 style-mira:*:data-[slot=input-otp-slot]:w-11 style-luma:*:data-[slot=input-otp-slot]:h-16 style-luma:*:data-[slot=input-otp-slot]:w-12 style-sera:*:data-[slot=input-otp-slot]:h-14 style-sera:*:data-[slot=input-otp-slot]:w-10' %}
+{% set otp_input_style = 'position:absolute;inset:0;width:100%;height:100%;display:flex;text-align:left;opacity:1;color:transparent;pointer-events:all;background:transparent;caret-color:transparent;border:0 solid transparent;outline:0 solid transparent;box-shadow:none;line-height:1;letter-spacing:-.5em;font-size:var(--root-height, 16px);font-family:monospace;font-variant-numeric:tabular-nums' %}
+
+{% block body %}
+<div class="flex min-h-svh items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    {# Main Form Card #}
+    {% call ui.card(id='otp-form-card', class='gap-6 p-6 sm:p-8') %}
+      {% call ui.card_header(class='items-center px-0 text-center') %}
+        <div class="mx-auto mb-1 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          {{ lucide('lock', 'size-6') }}
+        </div>
+        {{ ui.card_title(text='Two-step verification', class='text-2xl font-semibold tracking-tight') }}
+        {% call ui.card_description(class='leading-relaxed') %}
+          We sent a 6-digit verification code to <span class="font-medium text-foreground">john.doe@example.com</span>. Enter the code below to confirm your identity.
+        {% endcall %}
+      {% endcall %}
+
+      {% call ui.card_content(class='px-0') %}
+        <form onsubmit="verifyOtp(event)" class="space-y-6">
+          {# 6-digit OTP input #}
+          {% call ui.field(class='items-center') %}
+            {{ ui.field_label(text='Verification code', for_='otp-code', class='sr-only') }}
+            <div data-input-otp-container="true" translate="no" style="position:relative;cursor:text;user-select:none;-webkit-user-select:none;pointer-events:none" class="cn-input-otp flex items-center justify-center gap-2 has-disabled:opacity-50 sm:gap-3">
+              {% call ui.input_otp_group(class=otp_group_class) %}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+              {% endcall %}
+              {% call ui.input_otp_separator() %}{{ lucide('minus') }}{% endcall %}
+              {% call ui.input_otp_group(class=otp_group_class) %}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+                {{ ui.input_otp_slot(active=false) }}
+              {% endcall %}
+              <div style="position:absolute;inset:0;pointer-events:none">
+                {{ ui.input_otp(id='otp-code', required=true, attrs={'name': 'code', 'autofocus': true, 'data-input-otp-placeholder-shown': 'true', 'pattern': '^\\d+$', 'maxlength': '6', 'value': '', 'style': otp_input_style}) }}
+              </div>
+            </div>
+          {% endcall %}
+
+          <div class="space-y-4">
+            {{ ui.button(text='Verify & Continue', id='verify-button', type='submit', size='lg', disabled=true, class='w-full') }}
+            <div class="text-center text-sm">
+              <span id="resend-timer-container" class="text-muted-foreground">
+                Didn't receive the code? Resend in <span id="resend-countdown" class="font-medium text-foreground tabular-nums">00:45</span>
+              </span>
+              {{ ui.button(text='Resend code now', id='resend-button', variant='link', size='sm', type='button', class='hidden h-auto p-0', attrs={'onclick': 'resendOtp()'}) }}
+            </div>
+          </div>
+
+          {{ ui.separator() }}
+
+          <div class="flex flex-col items-center gap-2 text-center text-sm">
+            {{ ui.button(text='Use another verification method', variant='link', size='sm', href='#', class='h-auto p-0 font-normal text-muted-foreground hover:text-foreground') }}
+            {% call ui.button(variant='link', size='sm', href=url_for('basecoat_examples.ported', slug='authentication'), class='h-auto p-0 text-muted-foreground hover:text-foreground') %}{{ lucide('arrow-left', 'size-4', data_icon='inline-start') }} Back to sign in{% endcall %}
+          </div>
+        </form>
+      {% endcall %}
+    {% endcall %}
+
+    {# Success Confirmation Card #}
+    {% call ui.card(id='otp-success', class='hidden items-center gap-4 p-8 text-center animate-in fade-in zoom-in-95') %}
+      <div class="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+        {{ lucide('check', 'size-9') }}
+      </div>
+      {{ ui.card_title(text='Identity Verified!', class='text-2xl font-semibold tracking-tight') }}
+      {{ ui.card_description(text='Your device has been authenticated successfully. You are now securely logged into your account.', class='max-w-xs') }}
+      {{ ui.button(text='Continue to Dashboard', size='lg', href=url_for('basecoat_examples.dashboards', name='marketing'), class='mt-2 w-full') }}
+    {% endcall %}
+  </div>
+</div>
+{% endblock %}

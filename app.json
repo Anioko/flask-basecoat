@@ -1,5 +1,5 @@
 {
-  "name": "flask-basecoat",
+  "name": "Flask-Basecoat",
   "description": "A modern Flask application boilerplate with BasecoatUI and Tailwind CSS",
   "scripts": {
     "postdeploy": "python manage.py recreate_db && python manage.py setup_prod && python manage.py add_fake_data"

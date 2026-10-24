@@ -1,61 +1,65 @@
+{# Call-to-action block previews built from the button, card, field and input macros. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
+
 {% macro cta_actions(actions) -%}
-<div class="cta-actions">
+<div class="flex flex-wrap items-center justify-center gap-3">
   {% for action in actions %}
-  <button class="btn btn-{{ action.get('style', 'primary') }}" type="button">{{ action.get('label') }}</button>
+  {{ ui.button(text=action.get('label'), variant=d.variant_for(action.get('style', 'primary')), size='lg') }}
   {% endfor %}
 </div>
 {%- endmacro %}
 
 {% macro cta_supporting(supporting) -%}
-<aside class="cta-supporting">
-  <p class="cta-supporting__label">{{ supporting.get('label') }}</p>
-  <ul class="cta-supporting__logos">
+<div class="flex flex-col items-center gap-3">
+  <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">{{ supporting.get('label') }}</p>
+  <ul class="flex flex-wrap items-center justify-center gap-2">
     {% for logo in supporting.get('logos', []) %}
-    <li>{{ logo }}</li>
+    <li>{{ ui.badge(text=logo, variant='outline', class='px-3 py-1 text-sm font-semibold text-muted-foreground') }}</li>
     {% endfor %}
   </ul>
-</aside>
+</div>
 {%- endmacro %}
 
 {% macro cta_split(bullets, media) -%}
-<div class="cta-split">
-  <ul class="cta-bullets">
+<div class="grid gap-8 lg:grid-cols-2 lg:items-center">
+  <ul class="grid gap-3">
     {% for bullet in bullets %}
-    <li>{{ bullet }}</li>
+    <li class="flex items-start gap-3 text-sm">{{ lucide('circle-check', 'mt-0.5 size-4 shrink-0 text-primary') }}<span>{{ bullet }}</span></li>
     {% endfor %}
   </ul>
-  <div class="cta-media">
-    <div class="cta-media__surface">
-      <span class="cta-media__badge">Live preview</span>
-      <p class="cta-media__meta">{{ media.get('meta', 'Composable layout updates in realtime.') }}</p>
-    </div>
-    {% if media.get('caption') %}
-    <p class="cta-media__caption">{{ media['caption'] }}</p>
-    {% endif %}
+  <div class="flex flex-col gap-2">
+    {% call ui.card(class='bg-muted/40') %}
+      {% call ui.card_header() %}
+        {% call ui.card_action() %}{{ ui.badge(text='Live preview') }}{% endcall %}
+        {{ ui.card_title(text='Preview') }}
+        {{ ui.card_description(text=media.get('meta', 'Composable layout updates in realtime.')) }}
+      {% endcall %}
+      {% call ui.card_content() %}{{ ui.skeleton(class='aspect-video w-full') }}{% endcall %}
+    {% endcall %}
+    {% if media.get('caption') %}<p class="text-center text-xs text-muted-foreground">{{ media['caption'] }}</p>{% endif %}
   </div>
 </div>
 {%- endmacro %}
 
 {% macro cta_metrics(metrics) -%}
-<ul class="cta-metrics">
+<dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
   {% for metric in metrics %}
-  <li>
-    <p class="cta-metrics__value">{{ metric.get('value') }}</p>
-    <p class="cta-metrics__label">{{ metric.get('label') }}</p>
-  </li>
+  <div class="text-center">
+    <dd class="text-2xl font-semibold tracking-tight tabular-nums">{{ metric.get('value') }}</dd>
+    <dt class="text-xs text-muted-foreground">{{ metric.get('label') }}</dt>
+  </div>
   {% endfor %}
-</ul>
+</dl>
 {%- endmacro %}
 
 {% macro cta_inline_form(form, actions) -%}
-<form class="cta-inline" role="form" aria-label="{{ form.get('aria_label', 'Call to action form') }}">
-  <label class="sr-only" for="cta-inline-email">{{ form.get('aria_label', 'Email address') }}</label>
-  <input id="cta-inline-email" class="cta-inline__input" type="email" name="email" placeholder="{{ form.get('placeholder', 'Enter email') }}" required>
+<form class="mx-auto flex w-full max-w-md flex-col gap-2 sm:flex-row" role="form" aria-label="{{ form.get('aria_label', 'Call to action form') }}">
+  {{ ui.label(text=form.get('aria_label', 'Email address'), for_='cta-inline-email', class='sr-only') }}
+  {{ ui.input(id='cta-inline-email', type='email', required=true, class='flex-1', attrs={'name': 'email', 'placeholder': form.get('placeholder', 'Enter email')}) }}
   {% if actions %}
-  <button class="btn btn-{{ actions[0].get('style', 'primary') }}" type="submit">{{ actions[0].get('label', 'Submit') }}</button>
+  {{ ui.button(text=actions[0].get('label', 'Submit'), type='submit', variant=d.variant_for(actions[0].get('style', 'primary'))) }}
   {% endif %}
 </form>
-{% if form.get('disclaimer') %}
-<p class="cta-inline__disclaimer">{{ form['disclaimer'] }}</p>
-{% endif %}
+{% if form.get('disclaimer') %}<p class="text-center text-xs text-muted-foreground">{{ form['disclaimer'] }}</p>{% endif %}
 {%- endmacro %}

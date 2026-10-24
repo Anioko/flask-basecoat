@@ -69,14 +69,20 @@ class FlashMessageBrowserTest(unittest.TestCase):
             EC.url_contains('/account/login')
         )
 
-        # Find flash message
+        # Flash messages are promoted to toasts by the runtime
         flash_message = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'flash-message'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="toast"]'))
         )
+        self.assertIn('Please log in to access this page', flash_message.text)
 
-        # Check for close button
-        close_button = flash_message.find_element(By.CLASS_NAME, 'close')
+        # Check for close button (revealed on hover)
+        close_button = flash_message.find_element(By.CSS_SELECTOR, '[data-slot="toast-close"]')
         self.assertIsNotNone(close_button)
+        self.assertTrue(close_button.is_enabled())
+        from selenium.webdriver.common.action_chains import ActionChains
+        # Hidden until the toast is hovered or focused; keyboard focus must reveal it (no hover on touch or keyboard).
+        self.driver.execute_script("arguments[0].focus()", close_button)
+        WebDriverWait(self.driver, 5).until(lambda d: close_button.is_displayed())
         self.assertTrue(close_button.is_displayed())
 
     def test_flash_message_dismissable(self):
@@ -87,19 +93,17 @@ class FlashMessageBrowserTest(unittest.TestCase):
             EC.url_contains('/account/login')
         )
 
-        # Find and click close button
+        # Find and click the toast's close button
         close_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, '.flash-message .close'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="toast"] [data-slot="toast-close"]'))
         )
-        close_button.click()
+        self.driver.execute_script("arguments[0].click();", close_button)
 
-        # Wait for message to be hidden
-        time.sleep(0.5)
+        # Wait for the exit animation; the toast is removed from the DOM
+        time.sleep(0.6)
 
-        # Message should be hidden (display: none)
-        flash_message = self.driver.find_element(By.CLASS_NAME, 'flash-message')
-        self.assertFalse(flash_message.is_displayed(),
-                        "Flash message should be hidden after clicking close")
+        toasts = self.driver.find_elements(By.CSS_SELECTOR, '[data-slot="toast"]')
+        self.assertEqual(len(toasts), 0, "Toast should be removed after clicking close")
 
 
 if __name__ == '__main__':

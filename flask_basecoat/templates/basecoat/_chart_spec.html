@@ -1,0 +1,20 @@
+{# Charts from a spec. A spec is a dict describing the upstream Recharts element tree (see flask_basecoat/charts.py);
+   the runtime (static/js/src/components/chart*.js) draws it.
+
+   {{ ui.chart_from_spec(spec) }}                         ChartContainer with the chart drawn from `spec`
+   {{ ui.chart_from_spec(spec, id='visitors', class='aspect-auto h-[250px] w-full') }}
+   {{ ui.chart_style('chart-visitors', spec.config) }}     only the <style> block ChartContainer emits
+
+   `id` becomes data-chart="chart-<id>" (an id is generated when it is omitted). Controls of an interactive chart
+   carry data-chart-control="chart-<id>" and data-chart-state="<state name>". #}
+
+{% macro chart_style(chart_id, config) -%}
+{%- set css = chart_style_css(chart_id, config) -%}
+{%- if css %}<style>{{ css|safe }}</style>{% endif -%}
+{%- endmacro %}
+
+{% macro chart_from_spec(spec, id=none, class='', attrs={}) -%}
+{%- set chart_id = 'chart-' ~ (id if id else chart_uid()) -%}
+{%- set s = slot('chart', {}, class, none, dict(attrs, **{'data-chart': chart_id})) -%}
+<{{ s.tag }}{{ s.attributes }}>{{ chart_style(chart_id, spec.config) }}<script type="application/json" data-chart-spec>{{ chart_spec_json(spec)|safe }}</script><div class="recharts-responsive-container" style="width: 100%; height: 100%; min-width: 0px;"><div style="width: 0px; height: 0px; overflow: visible;"><div class="recharts-wrapper"></div></div></div>{{ caller() if caller }}</{{ s.tag }}>
+{%- endmacro %}

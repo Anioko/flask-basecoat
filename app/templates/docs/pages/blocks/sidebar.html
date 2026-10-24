@@ -1,130 +1,145 @@
 {% extends 'docs/layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'docs/macros/_docs.html' as d %}
 {% block content %}
-<section class="docs-section">
-  <p>The Basecoat implementation mirrors the shadcn sidebar layout: a fixed navigation rail, top toolbar, and scrollable content pane. Flexbox plus clamp-based padding keep the layout sharp on every breakpoint.</p>
-</section>
-<section class="docs-section">
-  <div class="docs-preview" data-preview>
-    <aside class="preview-sidebar">
-      <div class="preview-sidebar__header">
-        <span class="preview-logo">🚀</span>
-        <span class="preview-title">LaunchCtrl</span>
-      </div>
-      <nav class="preview-nav">
-        <a class="preview-nav__item is-active" href="#">
-          <span class="preview-nav__icon">🏠</span>
-          Overview
-        </a>
-        <a class="preview-nav__item" href="#">
-          <span class="preview-nav__icon">📊</span>
-          Analytics
-        </a>
-        <a class="preview-nav__item" href="#">
-          <span class="preview-nav__icon">👥</span>
-          Team
-        </a>
-        <a class="preview-nav__item" href="#">
-          <span class="preview-nav__icon">⚙️</span>
-          Settings
-        </a>
-      </nav>
-      <div class="preview-sidebar__footer">
-        <button class="btn btn-secondary w-full" type="button">New project</button>
-      </div>
-    </aside>
-    <section class="preview-main">
-      <header class="preview-main__header">
+{{ d.p('This implementation mirrors the shadcn sidebar layout: a navigation rail, a top toolbar and a scrollable content pane, all composed from the sidebar family of macros. The preview below embeds the block with a fixed-width, non-collapsing sidebar so it fits inside the page.') }}
+
+{{ d.h2('Preview') }}
+{% call d.preview(class='p-0 overflow-hidden sm:p-0') %}
+  <div class="flex min-h-[32rem] w-full bg-background text-foreground" style="--sidebar-width: 15rem">
+    {% call ui.sidebar(collapsible='none', class='h-auto border-r') %}
+      {% call ui.sidebar_header() %}
+        {% call ui.sidebar_menu() %}
+          {% call ui.sidebar_menu_item() %}
+            {% call ui.sidebar_menu_button(size='lg', href='#') %}
+              <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">{{ lucide('zap') }}</div>
+              <div class="grid flex-1 text-left text-sm leading-tight">
+                <span class="truncate font-medium">LaunchCtrl</span>
+                <span class="truncate text-xs text-sidebar-foreground/70">Workspace</span>
+              </div>
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.sidebar_content() %}
+        {% call ui.sidebar_group() %}
+          {{ ui.sidebar_group_label(text='Navigation') }}
+          {% call ui.sidebar_group_content() %}
+            {% call ui.sidebar_menu() %}
+              {% for icon, label, active in [('home', 'Overview', true), ('chart-bar', 'Analytics', false), ('users', 'Team', false), ('settings', 'Settings', false)] %}
+              {% call ui.sidebar_menu_item() %}
+                {% call ui.sidebar_menu_button(href='#', active=active) %}{{ lucide(icon) }}<span>{{ label }}</span>{% endcall %}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.sidebar_footer() %}
+        {{ ui.button(text='New project', variant='secondary', class='w-full') }}
+      {% endcall %}
+    {% endcall %}
+    <div class="flex min-w-0 flex-1 flex-col">
+      <header class="flex flex-wrap items-start justify-between gap-4 border-b px-6 py-5">
         <div>
-          <h2 class="preview-main__title">Analytics overview</h2>
-          <p class="preview-main__subtitle">Detailed breakdown of active launches this quarter.</p>
+          <h2 class="text-xl font-semibold tracking-tight">Analytics overview</h2>
+          <p class="text-sm text-muted-foreground">Detailed breakdown of active launches this quarter.</p>
         </div>
-        <div class="preview-actions">
-          <button class="btn btn-ghost">Download</button>
-          <button class="btn btn-primary">Share dashboard</button>
+        <div class="flex gap-2">
+          {% call ui.button(variant='ghost') %}{{ lucide('download') }}Download{% endcall %}
+          {{ ui.button(text='Share dashboard') }}
         </div>
       </header>
-      <div class="preview-grid">
-        <div class="preview-card">
-          <p class="preview-card__label">Active campaigns</p>
-          <p class="preview-card__value">12</p>
-          <p class="preview-card__delta">+18% vs last month</p>
+      <div class="flex flex-1 flex-col gap-6 p-6">
+        <div class="grid gap-4 md:grid-cols-3">
+          {% for label, value, delta, tone in [('Active campaigns', '12', '+18% vs last month', 'muted'), ('Conversion rate', '4.7%', '+0.6% vs goal', 'positive'), ('Avg. session', '5m 24s', '-0.3m vs last week', 'negative')] %}
+          {% call ui.card(size='sm') %}
+            {% call ui.card_header() %}
+              {{ ui.card_description(text=label) }}
+              {{ ui.card_title(text=value, class='text-2xl font-semibold tabular-nums') }}
+            {% endcall %}
+            {% call ui.card_footer() %}
+              <span class="text-xs {{ 'text-destructive' if tone == 'negative' else ('text-foreground' if tone == 'positive' else 'text-muted-foreground') }}">{{ delta }}</span>
+            {% endcall %}
+          {% endcall %}
+          {% endfor %}
         </div>
-        <div class="preview-card">
-          <p class="preview-card__label">Conversion rate</p>
-          <p class="preview-card__value">4.7%</p>
-          <p class="preview-card__delta is-positive">+0.6% vs goal</p>
-        </div>
-        <div class="preview-card">
-          <p class="preview-card__label">Avg. session</p>
-          <p class="preview-card__value">5m 24s</p>
-          <p class="preview-card__delta is-negative">-0.3m vs last week</p>
-        </div>
+        {% call ui.table_container(class='rounded-lg border') %}
+          {% call ui.table() %}
+            {% call ui.table_header() %}
+              {% call ui.table_row() %}
+                {{ ui.table_head(text='Campaign') }}{{ ui.table_head(text='Status') }}{{ ui.table_head(text='Budget') }}{{ ui.table_head(text='Spend', class='text-right') }}
+              {% endcall %}
+            {% endcall %}
+            {% call ui.table_body() %}
+              {% for name, status, variant, budget, spend in [('Summer lift-off', 'On track', 'default', '$120K', '$83K'), ('Retention pulse', 'At risk', 'destructive', '$64K', '$49K'), ('Referral booster', 'Planning', 'outline', '$32K', '$0')] %}
+              {% call ui.table_row() %}
+                {{ ui.table_cell(text=name, class='font-medium') }}
+                {% call ui.table_cell() %}{{ ui.badge(text=status, variant=variant) }}{% endcall %}
+                {{ ui.table_cell(text=budget) }}
+                {{ ui.table_cell(text=spend, class='text-right tabular-nums') }}
+              {% endcall %}
+              {% endfor %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
       </div>
-      <div class="preview-table">
-    <div class="preview-table__row preview-table__row--header">
-          <span>Campaign</span>
-          <span>Status</span>
-          <span>Budget</span>
-          <span>Spend</span>
-        </div>
-        <div class="preview-table__row">
-          <span>Summer lift-off</span>
-          <span class="preview-status is-success">On track</span>
-          <span>$120K</span>
-          <span>$83K</span>
-        </div>
-        <div class="preview-table__row">
-          <span>Retention pulse</span>
-          <span class="preview-status is-warning">At risk</span>
-          <span>$64K</span>
-          <span>$49K</span>
-        </div>
-        <div class="preview-table__row">
-          <span>Referral booster</span>
-          <span class="preview-status">Planning</span>
-          <span>$32K</span>
-          <span>$0</span>
-        </div>
+    </div>
+  </div>
+{% endcall %}
+
+{{ d.h2('Markup') }}
+{{ d.p('The following macros render the layout shown above. Copy them into any Flask template and swap the data with live content.') }}
+{% call d.code(title='sidebar-layout.html', icon='file-code') -%}
+{% raw %}{% import 'basecoat/index.html' as ui %}
+<div class="flex min-h-svh bg-background text-foreground">
+  {% call ui.sidebar(collapsible='none', class='border-r') %}
+    {% call ui.sidebar_header() %}
+      {% call ui.sidebar_menu() %}{% call ui.sidebar_menu_item() %}
+        {% call ui.sidebar_menu_button(size='lg', href='#') %}
+          <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">{{ lucide('zap') }}</div>
+          <span class="truncate font-medium">LaunchCtrl</span>
+        {% endcall %}
+      {% endcall %}{% endcall %}
+    {% endcall %}
+    {% call ui.sidebar_content() %}
+      {% call ui.sidebar_group() %}
+        {{ ui.sidebar_group_label(text='Navigation') }}
+        {% call ui.sidebar_menu() %}
+          {% call ui.sidebar_menu_item() %}
+            {% call ui.sidebar_menu_button(href='#', active=true) %}{{ lucide('home') }}<span>Overview</span>{% endcall %}
+          {% endcall %}
+          {% call ui.sidebar_menu_item() %}
+            {% call ui.sidebar_menu_button(href='#') %}{{ lucide('chart-bar') }}<span>Analytics</span>{% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.sidebar_footer() %}
+      {{ ui.button(text='New project', variant='secondary', class='w-full') }}
+    {% endcall %}
+  {% endcall %}
+  <main class="flex flex-1 flex-col gap-6 p-6">
+    <header class="flex items-start justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-semibold tracking-tight">Analytics overview</h2>
+        <p class="text-sm text-muted-foreground">Detailed breakdown of active launches this quarter.</p>
       </div>
-    </section>
-  </div>
-</section>
-<section class="docs-section">
-  <h2>Markup</h2>
-  <p>The following snippet renders the exact layout shown above. Copy it into any Flask template and swap the data with live content.</p>
-  <div class="docs-code" data-code>
-    <button type="button" class="docs-copy" data-copy>Copy</button>
-<pre><code class="language-html">&lt;div class=&quot;flex h-screen bg-slate-50 dark:bg-slate-900&quot;&gt;
-  &lt;aside class=&quot;flex w-72 flex-col border-r border-slate-200/70 bg-white/70 p-6 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/70&quot;&gt;
-    &lt;div class=&quot;flex items-center gap-2 text-lg font-semibold&quot;&gt;
-      &lt;span class=&quot;inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-500/15 text-sm text-primary-500&quot;&gt;🚀&lt;/span&gt;
-      LaunchCtrl
-    &lt;/div&gt;
-    &lt;nav class=&quot;mt-6 flex flex-1 flex-col gap-1 text-sm&quot;&gt;
-      &lt;a class=&quot;docs-link-active&quot; href=&quot;#&quot;&gt;Overview&lt;/a&gt;
-      &lt;a class=&quot;docs-link&quot; href=&quot;#&quot;&gt;Analytics&lt;/a&gt;
-      &lt;a class=&quot;docs-link&quot; href=&quot;#&quot;&gt;Team&lt;/a&gt;
-      &lt;a class=&quot;docs-link&quot; href=&quot;#&quot;&gt;Settings&lt;/a&gt;
-    &lt;/nav&gt;
-    &lt;button class=&quot;btn btn-secondary mt-auto w-full&quot;&gt;New project&lt;/button&gt;
-  &lt;/aside&gt;
-  &lt;main class=&quot;flex flex-1 flex-col overflow-y-auto bg-slate-50 px-10 py-8 dark:bg-slate-950&quot;&gt;
-    &lt;header class=&quot;flex flex-wrap items-center justify-between gap-4&quot;&gt;
-      &lt;div&gt;
-  &lt;h2 class=&quot;text-xl font-semibold text-slate-900 dark:text-slate-100&quot;&gt;Analytics overview&lt;/h2&gt;
-  &lt;p class=&quot;text-sm text-slate-500 dark:text-slate-400&quot;&gt;Detailed breakdown of active launches this quarter.&lt;/p&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;flex gap-2&quot;&gt;
-        &lt;button class=&quot;btn btn-ghost&quot;&gt;Download&lt;/button&gt;
-        &lt;button class=&quot;btn btn-primary&quot;&gt;Share dashboard&lt;/button&gt;
-      &lt;/div&gt;
-    &lt;/header&gt;
-    &lt;section class=&quot;mt-8 grid gap-6 md:grid-cols-3&quot;&gt;
-      &lt;article class=&quot;docs-metric&quot;&gt;...&lt;/article&gt;
-      &lt;!-- Repeat metric cards --&gt;
-    &lt;/section&gt;
-  &lt;/main&gt;
-&lt;/div&gt;</code></pre>
-  </div>
-</section>
+      <div class="flex gap-2">
+        {{ ui.button(text='Download', variant='ghost') }}
+        {{ ui.button(text='Share dashboard') }}
+      </div>
+    </header>
+    <div class="grid gap-4 md:grid-cols-3">
+      {% call ui.card(size='sm') %}
+        {% call ui.card_header() %}
+          {{ ui.card_description(text='Active campaigns') }}
+          {{ ui.card_title(text='12', class='text-2xl font-semibold tabular-nums') }}
+        {% endcall %}
+      {% endcall %}
+      <!-- Repeat metric cards -->
+    </div>
+  </main>
+</div>{% endraw %}
+{%- endcall %}
 {% endblock %}

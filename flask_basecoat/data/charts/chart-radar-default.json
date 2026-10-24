@@ -1,0 +1,60 @@
+{
+ "type": "radar",
+ "component": "RadarChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "desktop": 186
+  },
+  {
+   "month": "February",
+   "desktop": 305
+  },
+  {
+   "month": "March",
+   "desktop": 237
+  },
+  {
+   "month": "April",
+   "desktop": 273
+  },
+  {
+   "month": "May",
+   "desktop": 209
+  },
+  {
+   "month": "June",
+   "desktop": 214
+  }
+ ],
+ "props": {},
+ "series": [
+  {
+   "component": "Radar",
+   "dataKey": "desktop",
+   "fill": "var(--color-desktop)",
+   "fillOpacity": 0.6
+  }
+ ],
+ "axes": [
+  {
+   "component": "PolarAngleAxis",
+   "dataKey": "month"
+  }
+ ],
+ "grid": {
+  "component": "PolarGrid"
+ },
+ "tooltip": {
+  "cursor": false,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

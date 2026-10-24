@@ -1,400 +1,425 @@
 {% extends 'layouts/base.html' %}
+{% import 'basecoat/index.html' as ui %}
+
+{% macro section(title, description='') %}
+    <section class="flex flex-col gap-4">
+        <div>
+            <h2 class="text-2xl font-semibold tracking-tight">{{ title }}</h2>
+            {% if description %}<p class="text-sm text-muted-foreground">{{ description }}</p>{% endif %}
+        </div>
+        {{ caller() }}
+    </section>
+{% endmacro %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8 max-w-6xl">
-    <h1 class="text-4xl font-bold mb-2">Kitchen Sink</h1>
-    <p class="text-gray-600 mb-8">All UI components used in this application</p>
+<div class="container mx-auto max-w-6xl px-4 py-8">
+    <div class="mb-10">
+        <h1 class="text-4xl font-bold tracking-tight">Kitchen Sink</h1>
+        <p class="mt-1 text-muted-foreground">All UI components used in this application, rendered through the component macros.</p>
+    </div>
 
-    <!-- Typography Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Typography</h2>
-        <div class="space-y-4">
-            <h1 class="text-4xl font-bold">Heading 1</h1>
-            <h2 class="text-3xl font-bold">Heading 2</h2>
-            <h3 class="text-2xl font-semibold">Heading 3</h3>
-            <h4 class="text-xl font-semibold">Heading 4</h4>
-            <h5 class="text-lg font-semibold">Heading 5</h5>
-            <h6 class="text-base font-semibold">Heading 6</h6>
-            <p class="text-base">This is regular paragraph text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p class="text-sm text-gray-600">This is small, muted text often used for descriptions.</p>
-            <a href="#" class="text-blue-600 hover:text-blue-800 underline">This is a link</a>
-        </div>
-    </section>
+    <div class="flex flex-col gap-12">
+        <!-- Typography Section -->
+        {% call section('Typography') %}
+            <div class="space-y-4">
+                <h1 class="text-4xl font-bold tracking-tight">Heading 1</h1>
+                <h2 class="text-3xl font-bold tracking-tight">Heading 2</h2>
+                <h3 class="text-2xl font-semibold tracking-tight">Heading 3</h3>
+                <h4 class="text-xl font-semibold tracking-tight">Heading 4</h4>
+                <h5 class="text-lg font-semibold">Heading 5</h5>
+                <h6 class="text-base font-semibold">Heading 6</h6>
+                <p class="text-base">This is regular paragraph text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="text-sm text-muted-foreground">This is small, muted text often used for descriptions.</p>
+                <a href="#" class="text-sm font-medium text-primary underline underline-offset-4">This is a link</a>
+            </div>
+        {% endcall %}
 
-    <!-- Buttons Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Buttons</h2>
-        <div class="space-y-4">
+        <!-- Buttons Section -->
+        {% call section('Buttons', 'Variants, sizes and states of the Button macro.') %}
             <div class="flex flex-wrap gap-3">
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium">
-                    Primary Button
-                </button>
-                <button class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium">
-                    Secondary Button
-                </button>
-                <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 font-medium">
-                    Success Button
-                </button>
-                <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium">
-                    Danger Button
-                </button>
-                <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium">
-                    Outline Button
-                </button>
-                <button class="px-4 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md font-medium" disabled>
-                    Disabled Button
-                </button>
+                {{ ui.button(text='Primary Button', type='button') }}
+                {{ ui.button(text='Secondary Button', variant='secondary', type='button') }}
+                {{ ui.button(text='Outline Button', variant='outline', type='button') }}
+                {{ ui.button(text='Ghost Button', variant='ghost', type='button') }}
+                {{ ui.button(text='Link Button', variant='link', type='button') }}
+                {{ ui.button(text='Danger Button', variant='destructive', type='button') }}
+                {{ ui.button(text='Disabled Button', type='button', disabled=true) }}
             </div>
-        </div>
-    </section>
+            <div class="flex flex-wrap items-center gap-3">
+                {{ ui.button(text='Extra small', size='xs', variant='outline', type='button') }}
+                {{ ui.button(text='Small', size='sm', variant='outline', type='button') }}
+                {{ ui.button(text='Default', variant='outline', type='button') }}
+                {{ ui.button(text='Large', size='lg', variant='outline', type='button') }}
+                {% call ui.button(size='icon', variant='outline', type='button', attrs={'aria-label': 'Add'}) %}{{ lucide('plus') }}{% endcall %}
+                {% call ui.button(variant='outline', type='button') %}{{ lucide('mail') }}With icon{% endcall %}
+                {% call ui.button(type='button', disabled=true) %}{{ ui.spinner() }}Loading{% endcall %}
+            </div>
+        {% endcall %}
 
-    <!-- Forms Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Form Elements</h2>
-        
-        <!-- Text Input -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Text Input</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Default Input</label>
-                <input type="text" placeholder="Enter text here" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">With Error</label>
-                <input type="text" placeholder="Enter text here" class="w-full px-3 py-2 border border-red-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                <p class="text-red-600 text-sm mt-1">This field is required</p>
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Disabled Input</label>
-                <input type="text" placeholder="Disabled" disabled class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed">
-            </div>
-        </div>
+        <!-- Forms Section -->
+        {% call section('Form Elements', 'Field, Input, Textarea, Native Select, Checkbox, Radio Group and Switch.') %}
+            <div class="grid gap-8 md:grid-cols-2">
+                {% call ui.field_group() %}
+                    {% call ui.field() %}
+                        {{ ui.field_label(text='Default Input', for_='ks-input') }}
+                        {{ ui.input(type='text', id='ks-input', attrs={'placeholder': 'Enter text here'}) }}
+                    {% endcall %}
+                    {% call ui.field(invalid=true) %}
+                        {{ ui.field_label(text='With Error', for_='ks-input-error') }}
+                        {{ ui.input(type='text', id='ks-input-error', invalid=true, attrs={'placeholder': 'Enter text here', 'aria-describedby': 'ks-input-error-message'}) }}
+                        {{ ui.field_error(text='This field is required', id='ks-input-error-message') }}
+                    {% endcall %}
+                    {% call ui.field(disabled=true) %}
+                        {{ ui.field_label(text='Disabled Input', for_='ks-input-disabled') }}
+                        {{ ui.input(type='text', id='ks-input-disabled', disabled=true, attrs={'placeholder': 'Disabled'}) }}
+                    {% endcall %}
+                    {% call ui.field() %}
+                        {{ ui.field_label(text='Email', for_='ks-email') }}
+                        {{ ui.input(type='email', id='ks-email', attrs={'placeholder': 'email@example.com'}) }}
+                        {{ ui.field_description(text="We'll never share your email.") }}
+                    {% endcall %}
+                    {% call ui.field() %}
+                        {{ ui.field_label(text='Password', for_='ks-password') }}
+                        {{ ui.input(type='password', id='ks-password', attrs={'placeholder': 'Enter password'}) }}
+                    {% endcall %}
+                    {% call ui.field() %}
+                        {{ ui.field_label(text='Message', for_='ks-message') }}
+                        {{ ui.textarea(id='ks-message', attrs={'rows': '4', 'placeholder': 'Enter your message'}) }}
+                    {% endcall %}
+                    {% call ui.field() %}
+                        {{ ui.field_label(text='Choose an option', for_='ks-select') }}
+                        {% call ui.native_select_wrapper() %}
+                            {% call ui.native_select(id='ks-select') %}
+                                {% for option in ['Option 1', 'Option 2', 'Option 3', 'Option 4'] %}
+                                    {{ ui.native_select_option(text=option, value=option) }}
+                                {% endfor %}
+                            {% endcall %}
+                            {{ ui.native_select_icon() }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
 
-        <!-- Email Input -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Email Input</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" placeholder="email@example.com" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-        </div>
+                {% call ui.field_group() %}
+                    {% call ui.field_set() %}
+                        {{ ui.field_legend(text='Checkboxes') }}
+                        {% call ui.field_group(class='gap-3') %}
+                            {% call ui.field(orientation='horizontal') %}
+                                {{ ui.checkbox(id='check1', name='check1') }}
+                                {{ ui.field_label(text='Checkbox 1', for_='check1') }}
+                            {% endcall %}
+                            {% call ui.field(orientation='horizontal') %}
+                                {{ ui.checkbox(id='check2', name='check2', checked=true) }}
+                                {{ ui.field_label(text='Checkbox 2 (checked)', for_='check2') }}
+                            {% endcall %}
+                            {% call ui.field(orientation='horizontal', disabled=true) %}
+                                {{ ui.checkbox(id='check3', name='check3', disabled=true) }}
+                                {{ ui.field_label(text='Checkbox 3 (disabled)', for_='check3') }}
+                            {% endcall %}
+                        {% endcall %}
+                    {% endcall %}
 
-        <!-- Password Input -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Password Input</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" placeholder="Enter password" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-        </div>
+                    {% call ui.field_set() %}
+                        {{ ui.field_legend(text='Radio Buttons') }}
+                        {% call ui.radio_group(id='radio-group', attrs={'name': 'radio-group'}) %}
+                            {% for value, label, checked in [('1', 'Radio 1', false), ('2', 'Radio 2 (checked)', true), ('3', 'Radio 3', false)] %}
+                                {% call ui.field(orientation='horizontal') %}
+                                    {{ ui.radio_group_item(id='radio' ~ value, value=value, checked=checked) }}
+                                    {{ ui.field_label(text=label, for_='radio' ~ value) }}
+                                {% endcall %}
+                            {% endfor %}
+                        {% endcall %}
+                    {% endcall %}
 
-        <!-- Textarea -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Textarea</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea rows="4" placeholder="Enter your message" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    {% call ui.field_set() %}
+                        {{ ui.field_legend(text='Switches') }}
+                        {% call ui.field_group(class='gap-3') %}
+                            {% call ui.field(orientation='horizontal') %}
+                                {{ ui.switch(id='switch1', name='notifications') }}
+                                {{ ui.field_label(text='Email notifications', for_='switch1') }}
+                            {% endcall %}
+                            {% call ui.field(orientation='horizontal') %}
+                                {{ ui.switch(id='switch2', name='marketing', checked=true) }}
+                                {{ ui.field_label(text='Marketing emails (on)', for_='switch2') }}
+                            {% endcall %}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
             </div>
-        </div>
+        {% endcall %}
 
-        <!-- Select -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Select Dropdown</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Choose an option</label>
-                <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option>Option 1</option>
-                    <option>Option 2</option>
-                    <option>Option 3</option>
-                    <option>Option 4</option>
-                </select>
+        <!-- Alerts Section -->
+        {% call section('Alerts') %}
+            <div class="flex flex-col gap-4">
+                {% call ui.alert() %}
+                    {{ lucide('info') }}
+                    {{ ui.alert_title(text='Info') }}
+                    {{ ui.alert_description(text='This is an informational message.') }}
+                {% endcall %}
+                {% call ui.alert() %}
+                    {{ lucide('circle-check') }}
+                    {{ ui.alert_title(text='Success') }}
+                    {{ ui.alert_description(text='Your action was completed successfully!') }}
+                {% endcall %}
+                {% call ui.alert() %}
+                    {{ lucide('triangle-alert') }}
+                    {{ ui.alert_title(text='Warning') }}
+                    {{ ui.alert_description(text='Please be cautious about this action.') }}
+                {% endcall %}
+                {% call ui.alert(variant='destructive') %}
+                    {{ lucide('circle-alert') }}
+                    {{ ui.alert_title(text='Error') }}
+                    {{ ui.alert_description(text='Something went wrong. Please try again.') }}
+                {% endcall %}
             </div>
-        </div>
+        {% endcall %}
 
-        <!-- Checkbox -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Checkboxes</h3>
-            <div class="space-y-2">
-                <div class="flex items-center space-x-2">
-                    <input type="checkbox" id="check1" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <label for="check1" class="text-sm font-medium text-gray-700">Checkbox 1</label>
+        <!-- Cards Section -->
+        {% call section('Cards') %}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {% for title, description in [('Card Title', 'This is a basic card with some text content.'), ('Hover Card', 'This card has a hover effect with enhanced shadow.'), ('Bordered Card', 'This card has an accent border for emphasis.')] %}
+                    {% call ui.card(class=('transition-shadow hover:shadow-lg' if loop.index == 2 else ('border-primary' if loop.index == 3 else ''))) %}
+                        {% call ui.card_header() %}
+                            {{ ui.card_title(text=title) }}
+                            {{ ui.card_description(text=description) }}
+                        {% endcall %}
+                        {% call ui.card_footer() %}
+                            {{ ui.button(text='Action', size='sm', type='button') }}
+                        {% endcall %}
+                    {% endcall %}
+                {% endfor %}
+            </div>
+        {% endcall %}
+
+        <!-- Tables Section -->
+        {% call section('Tables') %}
+            {% call ui.card(class='py-0 overflow-hidden') %}
+                {% call ui.table_container() %}
+                    {% call ui.table() %}
+                        {% call ui.table_header() %}
+                            {% call ui.table_row() %}
+                                {{ ui.table_head(text='Name') }}
+                                {{ ui.table_head(text='Email') }}
+                                {{ ui.table_head(text='Role') }}
+                                {{ ui.table_head(text='Status') }}
+                                {{ ui.table_head(class='w-12') }}
+                            {% endcall %}
+                        {% endcall %}
+                        {% call ui.table_body() %}
+                            {% for name, email, role, status in [('John Doe', 'john@example.com', 'Admin', 'Active'), ('Jane Smith', 'jane@example.com', 'User', 'Active'), ('Bob Wilson', 'bob@example.com', 'User', 'Pending')] %}
+                                {% call ui.table_row() %}
+                                    {{ ui.table_cell(text=name, class='font-medium') }}
+                                    {{ ui.table_cell(text=email, class='text-muted-foreground') }}
+                                    {{ ui.table_cell(text=role) }}
+                                    {% call ui.table_cell() %}
+                                        {{ ui.badge(text=status, variant=('default' if status == 'Active' else 'secondary')) }}
+                                    {% endcall %}
+                                    {% call ui.table_cell(class='text-right') %}
+                                        {% call ui.dropdown_menu() %}
+                                            {% call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', attrs={'aria-label': 'Open menu'}) %}
+                                                {{ lucide('ellipsis') }}
+                                            {% endcall %}
+                                            {% call ui.dropdown_menu_content(align='end') %}
+                                                {{ ui.dropdown_menu_item(text='Edit') }}
+                                                {{ ui.dropdown_menu_item(text='Copy email') }}
+                                                {{ ui.dropdown_menu_separator() }}
+                                                {{ ui.dropdown_menu_item(text='Delete', variant='destructive') }}
+                                            {% endcall %}
+                                        {% endcall %}
+                                    {% endcall %}
+                                {% endcall %}
+                            {% endfor %}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+
+        <!-- Definition Table Section -->
+        {% call section('Definition Table') %}
+            {% call ui.card(class='py-0 overflow-hidden') %}
+                {% call ui.table_container() %}
+                    {% call ui.table() %}
+                        {% call ui.table_body() %}
+                            {% for label, value in [('Full name', 'John Doe'), ('Email address', 'john.doe@example.com'), ('Account type', 'Administrator'), ('Member since', 'January 1, 2025')] %}
+                                {% call ui.table_row() %}
+                                    {{ ui.table_cell(text=label, class='w-1/3 bg-muted/50 font-medium') }}
+                                    {{ ui.table_cell(text=value) }}
+                                {% endcall %}
+                            {% endfor %}
+                        {% endcall %}
+                    {% endcall %}
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+
+        <!-- Badges Section -->
+        {% call section('Badges') %}
+            <div class="flex flex-wrap gap-2">
+                {{ ui.badge(text='Default') }}
+                {{ ui.badge(text='Secondary', variant='secondary') }}
+                {{ ui.badge(text='Outline', variant='outline') }}
+                {{ ui.badge(text='Destructive', variant='destructive') }}
+                {% call ui.badge(variant='secondary') %}{{ lucide('circle-check') }}Verified{% endcall %}
+                {{ ui.badge(text='Link badge', variant='outline', href='#') }}
+            </div>
+        {% endcall %}
+
+        <!-- Navigation Menu Section -->
+        {% call section('Navigation Menu', 'Vertical navigation built from ghost buttons; the active entry is a secondary button.') %}
+            <nav class="flex max-w-xs flex-col gap-1 rounded-lg border bg-card p-2" aria-label="Example navigation">
+                {{ ui.button(text='Active Item', variant='secondary', size='sm', class='justify-start', href='#', attrs={'aria-current': 'page'}) }}
+                {{ ui.button(text='Menu Item 1', variant='ghost', size='sm', class='justify-start', href='#') }}
+                {{ ui.button(text='Menu Item 2', variant='ghost', size='sm', class='justify-start', href='#') }}
+                {{ ui.button(text='Menu Item 3', variant='ghost', size='sm', class='justify-start', href='#') }}
+            </nav>
+        {% endcall %}
+
+        <!-- Tabs, menus and dialogs -->
+        {% call section('Tabs, Menus and Dialogs') %}
+            {% call ui.tabs() %}
+                {% call ui.tabs_list() %}
+                    {{ ui.tabs_trigger(text='Overview', active=true, attrs={'data-value': 'overview'}) }}
+                    {{ ui.tabs_trigger(text='Reports', attrs={'data-value': 'reports'}) }}
+                {% endcall %}
+                {% call ui.tabs_content(active=true, attrs={'data-value': 'overview'}) %}
+                    <p class="text-sm text-muted-foreground">Tabs switch between panels without a page load.</p>
+                {% endcall %}
+                {% call ui.tabs_content(attrs={'data-value': 'reports'}) %}
+                    <p class="text-sm text-muted-foreground">Reports live here.</p>
+                {% endcall %}
+            {% endcall %}
+            <div class="flex flex-wrap gap-3">
+                {% call ui.dropdown_menu() %}
+                    {{ ui.dropdown_menu_trigger(text='Open menu', variant='outline') }}
+                    {% call ui.dropdown_menu_content(align='start') %}
+                        {{ ui.dropdown_menu_label(text='My Account') }}
+                        {{ ui.dropdown_menu_separator() }}
+                        {% call ui.dropdown_menu_item() %}{{ lucide('user') }}Profile{% endcall %}
+                        {% call ui.dropdown_menu_item() %}{{ lucide('settings') }}Settings{% endcall %}
+                        {{ ui.dropdown_menu_separator() }}
+                        {% call ui.dropdown_menu_item(variant='destructive') %}{{ lucide('log-out') }}Log out{% endcall %}
+                    {% endcall %}
+                {% endcall %}
+                {% call ui.dialog() %}
+                    {{ ui.dialog_trigger(text='Open dialog', variant='outline') }}
+                    {{ ui.dialog_overlay() }}
+                    {% call ui.dialog_content() %}
+                        {% call ui.dialog_header() %}
+                            {{ ui.dialog_title(text='Are you sure?') }}
+                            {{ ui.dialog_description(text='This dialog is rendered by the Dialog macros and driven by the runtime.') }}
+                        {% endcall %}
+                        {% call ui.dialog_footer() %}
+                            {{ ui.dialog_close(text='Cancel', variant='outline') }}
+                            {{ ui.dialog_close(text='Continue') }}
+                        {% endcall %}
+                        {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+                    {% endcall %}
+                {% endcall %}
+                {% call ui.tooltip() %}
+                    {{ ui.tooltip_trigger(text='Hover me', variant='outline') }}
+                    {{ ui.tooltip_content(text='Tooltips explain icons and short labels.') }}
+                {% endcall %}
+            </div>
+        {% endcall %}
+
+        <!-- Grid Layout Section -->
+        {% call section('Grid Layouts') %}
+            {% for cols, label in [('grid-cols-2', '2 Column Grid'), ('grid-cols-3', '3 Column Grid'), ('grid-cols-4', '4 Column Grid')] %}
+                <h3 class="text-lg font-semibold">{{ label }}</h3>
+                <div class="grid {{ cols }} gap-6">
+                    {% for n in range(loop.index + 1) %}
+                        <div class="rounded-lg bg-muted p-6 text-sm text-muted-foreground">Column {{ n + 1 }}</div>
+                    {% endfor %}
                 </div>
-                <div class="flex items-center space-x-2">
-                    <input type="checkbox" id="check2" checked class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <label for="check2" class="text-sm font-medium text-gray-700">Checkbox 2 (checked)</label>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <input type="checkbox" id="check3" disabled class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <label for="check3" class="text-sm font-medium text-gray-400">Checkbox 3 (disabled)</label>
-                </div>
+            {% endfor %}
+        {% endcall %}
+
+        <!-- Spacing Section -->
+        {% call section('Spacing Examples') %}
+            <div class="flex flex-col gap-4">
+                {% for pad, label in [('p-2', 'Padding: p-2 (0.5rem)'), ('p-4', 'Padding: p-4 (1rem)'), ('p-6', 'Padding: p-6 (1.5rem)'), ('p-8', 'Padding: p-8 (2rem)')] %}
+                    <div class="rounded-lg bg-accent text-sm text-accent-foreground {{ pad }}">{{ label }}</div>
+                {% endfor %}
             </div>
-        </div>
+        {% endcall %}
 
-        <!-- Radio Buttons -->
-        <div class="mb-6">
-            <h3 class="text-xl font-semibold mb-3">Radio Buttons</h3>
-            <div class="space-y-2">
-                <div class="flex items-center space-x-2">
-                    <input type="radio" id="radio1" name="radio-group" class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <label for="radio1" class="text-sm text-gray-700">Radio 1</label>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <input type="radio" id="radio2" name="radio-group" checked class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <label for="radio2" class="text-sm text-gray-700">Radio 2 (checked)</label>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <input type="radio" id="radio3" name="radio-group" class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500">
-                    <label for="radio3" class="text-sm text-gray-700">Radio 3</label>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Alerts Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Alerts</h2>
-        <div class="space-y-4">
-            <div class="p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-md">
-                <strong>Info:</strong> This is an informational message.
-            </div>
-            <div class="p-4 bg-green-50 border border-green-200 text-green-800 rounded-md">
-                <strong>Success:</strong> Your action was completed successfully!
-            </div>
-            <div class="p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md">
-                <strong>Warning:</strong> Please be cautious about this action.
-            </div>
-            <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-md">
-                <strong>Error:</strong> Something went wrong. Please try again.
-            </div>
-        </div>
-    </section>
-
-    <!-- Cards Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Cards</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-xl font-semibold mb-2">Card Title</h3>
-                <p class="text-gray-600 mb-4">This is a basic card with some text content.</p>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
-                    Action
-                </button>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
-                <h3 class="text-xl font-semibold mb-2">Hover Card</h3>
-                <p class="text-gray-600 mb-4">This card has a hover effect with enhanced shadow.</p>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
-                    Action
-                </button>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border border-blue-200">
-                <h3 class="text-xl font-semibold mb-2">Bordered Card</h3>
-                <p class="text-gray-600 mb-4">This card has a colored border for emphasis.</p>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
-                    Action
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Tables Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Tables</h2>
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">John Doe</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">john@example.com</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Admin</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Active
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Jane Smith</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">jane@example.com</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">User</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Active
-                            </span>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Bob Wilson</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">bob@example.com</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">User</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                Pending
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Definition Table Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Definition Table</h2>
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 bg-gray-50 w-1/3">Full name</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">John Doe</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 bg-gray-50">Email address</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">john.doe@example.com</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 bg-gray-50">Account type</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">Administrator</td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 bg-gray-50">Member since</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">January 1, 2025</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Badges Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Badges</h2>
-        <div class="flex flex-wrap gap-2">
-            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                Default
-            </span>
-            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                Primary
-            </span>
-            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                Success
-            </span>
-            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                Warning
-            </span>
-            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                Danger
-            </span>
-            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                Info
-            </span>
-        </div>
-    </section>
-
-    <!-- Navigation Menu Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Navigation Menu</h2>
-        <div class="bg-gray-50 p-2 rounded">
-            <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 font-semibold bg-white shadow">
-                Active Item
-            </a>
-            <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">
-                Menu Item 1
-            </a>
-            <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">
-                Menu Item 2
-            </a>
-            <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">
-                Menu Item 3
-            </a>
-        </div>
-    </section>
-
-    <!-- Grid Layout Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Grid Layouts</h2>
-        
-        <h3 class="text-xl font-semibold mb-3">2 Column Grid</h3>
-        <div class="grid grid-cols-2 gap-6 mb-6">
-            <div class="bg-gray-100 p-6 rounded">Column 1</div>
-            <div class="bg-gray-100 p-6 rounded">Column 2</div>
-        </div>
-
-        <h3 class="text-xl font-semibold mb-3">3 Column Grid</h3>
-        <div class="grid grid-cols-3 gap-6 mb-6">
-            <div class="bg-gray-100 p-6 rounded">Column 1</div>
-            <div class="bg-gray-100 p-6 rounded">Column 2</div>
-            <div class="bg-gray-100 p-6 rounded">Column 3</div>
-        </div>
-
-        <h3 class="text-xl font-semibold mb-3">4 Column Grid</h3>
-        <div class="grid grid-cols-4 gap-6">
-            <div class="bg-gray-100 p-6 rounded">Column 1</div>
-            <div class="bg-gray-100 p-6 rounded">Column 2</div>
-            <div class="bg-gray-100 p-6 rounded">Column 3</div>
-            <div class="bg-gray-100 p-6 rounded">Column 4</div>
-        </div>
-    </section>
-
-    <!-- Spacing Section -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Spacing Examples</h2>
-        <div class="space-y-4">
-            <div class="p-2 bg-blue-100 rounded">Padding: p-2 (0.5rem)</div>
-            <div class="p-4 bg-blue-100 rounded">Padding: p-4 (1rem)</div>
-            <div class="p-6 bg-blue-100 rounded">Padding: p-6 (1.5rem)</div>
-            <div class="p-8 bg-blue-100 rounded">Padding: p-8 (2rem)</div>
-        </div>
-    </section>
-
-    <!-- Complete Form Example -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-4">Complete Form Example</h2>
-        <div class="bg-white rounded-lg shadow p-6 max-w-2xl">
-            <form>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                    <input type="text" placeholder="John" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                    <input type="text" placeholder="Doe" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" placeholder="john.doe@example.com" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option>User</option>
-                        <option>Administrator</option>
-                        <option>Moderator</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                    <textarea rows="3" placeholder="Tell us about yourself..." class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-                <div class="mb-4">
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" id="terms" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <label for="terms" class="text-sm font-medium text-gray-700">I agree to the terms and conditions</label>
+        <!-- Feedback -->
+        {% call section('Feedback', 'Progress, skeletons and an empty state.') %}
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="flex flex-col gap-4">
+                    {{ ui.progress(value=60, attrs={'aria-label': 'Upload progress'}) }}
+                    <div class="flex items-center gap-4">
+                        {{ ui.skeleton(class='size-12 rounded-full') }}
+                        <div class="flex flex-col gap-2">
+                            {{ ui.skeleton(class='h-4 w-48') }}
+                            {{ ui.skeleton(class='h-4 w-32') }}
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium">
-                    Submit Form
-                </button>
-            </form>
-        </div>
-    </section>
+                {% call ui.empty(class='rounded-lg border') %}
+                    {% call ui.empty_header() %}
+                        {% call ui.empty_icon(variant='icon') %}{{ lucide('inbox') }}{% endcall %}
+                        {{ ui.empty_title(text='No items yet') }}
+                        {{ ui.empty_description(text='Items you create will show up here.') }}
+                    {% endcall %}
+                    {% call ui.empty_content() %}
+                        {{ ui.button(text='Create item', size='sm', type='button') }}
+                    {% endcall %}
+                {% endcall %}
+            </div>
+        {% endcall %}
 
+        <!-- Complete Form Example -->
+        {% call section('Complete Form Example') %}
+            {% call ui.card(class='max-w-2xl') %}
+                {% call ui.card_header() %}
+                    {{ ui.card_title(text='Create your profile') }}
+                    {{ ui.card_description(text='Every control below is a macro call.') }}
+                {% endcall %}
+                {% call ui.card_content() %}
+                    <form action="#" method="get">
+                        {% call ui.field_group() %}
+                            <div class="grid gap-4 md:grid-cols-2">
+                                {% call ui.field() %}
+                                    {{ ui.field_label(text='First Name', for_='ks-first-name') }}
+                                    {{ ui.input(type='text', id='ks-first-name', attrs={'placeholder': 'John'}) }}
+                                {% endcall %}
+                                {% call ui.field() %}
+                                    {{ ui.field_label(text='Last Name', for_='ks-last-name') }}
+                                    {{ ui.input(type='text', id='ks-last-name', attrs={'placeholder': 'Doe'}) }}
+                                {% endcall %}
+                            </div>
+                            {% call ui.field() %}
+                                {{ ui.field_label(text='Email', for_='ks-form-email') }}
+                                {{ ui.input(type='email', id='ks-form-email', attrs={'placeholder': 'john.doe@example.com'}) }}
+                            {% endcall %}
+                            {% call ui.field() %}
+                                {{ ui.field_label(text='Account Type', for_='ks-account-type') }}
+                                {% call ui.native_select_wrapper() %}
+                                    {% call ui.native_select(id='ks-account-type') %}
+                                        {% for option in ['User', 'Administrator', 'Moderator'] %}
+                                            {{ ui.native_select_option(text=option, value=option) }}
+                                        {% endfor %}
+                                    {% endcall %}
+                                    {{ ui.native_select_icon() }}
+                                {% endcall %}
+                            {% endcall %}
+                            {% call ui.field() %}
+                                {{ ui.field_label(text='Bio', for_='ks-bio') }}
+                                {{ ui.textarea(id='ks-bio', attrs={'rows': '3', 'placeholder': 'Tell us about yourself...'}) }}
+                            {% endcall %}
+                            {% call ui.field(orientation='horizontal') %}
+                                {{ ui.checkbox(id='terms', name='terms') }}
+                                {{ ui.field_label(text='I agree to the terms and conditions', for_='terms') }}
+                            {% endcall %}
+                            {% call ui.field() %}
+                                {{ ui.button(text='Submit Form', type='submit', class='w-full') }}
+                            {% endcall %}
+                        {% endcall %}
+                    </form>
+                {% endcall %}
+            {% endcall %}
+        {% endcall %}
+    </div>
 </div>
 {% endblock %}

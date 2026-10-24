@@ -1,0 +1,12 @@
+{
+  "name": "direction",
+  "source": "upstream/shadcn/radix/ui/direction.tsx",
+  "slots": {
+    "direction": {
+      "component": "DirectionProvider",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": []
+    }
+  }
+}

@@ -1,0 +1,84 @@
+/* Runtime structure for server-rendered shadcn components.
+   React unmounts closed popups and portals them to <body>; a static page keeps them in the DOM,
+   so closed state must hide them and open state must position them. Visual recipes stay in the
+   upstream Vega style pack; nothing here sets colour, radius, shadow or typography. */
+@layer components {
+  /* Closed floating layers, overlays and panels are not rendered. */
+  [data-slot="dialog-overlay"][data-state="closed"],
+  [data-slot="dialog-content"][data-state="closed"],
+  [data-slot="alert-dialog-overlay"][data-state="closed"],
+  [data-slot="alert-dialog-content"][data-state="closed"],
+  [data-slot="sheet-overlay"][data-state="closed"],
+  [data-slot="sheet-content"][data-state="closed"],
+  [data-slot="drawer-overlay"][data-state="closed"],
+  [data-slot="drawer-content"][data-state="closed"],
+  [data-slot="popover-content"][data-state="closed"],
+  [data-slot="hover-card-content"][data-state="closed"],
+  [data-slot="tooltip-content"][data-state="closed"],
+  [data-slot="dropdown-menu-content"][data-state="closed"],
+  [data-slot="dropdown-menu-sub-content"][data-state="closed"],
+  [data-slot="context-menu-content"][data-state="closed"],
+  [data-slot="context-menu-sub-content"][data-state="closed"],
+  [data-slot="menubar-content"][data-state="closed"],
+  [data-slot="menubar-sub-content"][data-state="closed"],
+  [data-slot="select-content"][data-state="closed"],
+  [data-slot="combobox-content"][data-state="closed"],
+  [data-slot="navigation-menu-content"][data-state="closed"],
+  [data-slot="navigation-menu-viewport"][data-state="closed"],
+  [data-slot="navigation-menu-indicator"][data-state="hidden"],
+  [data-slot="scroll-area-scrollbar"][data-state="hidden"],
+  [data-slot="scroll-area-scrollbar"][hidden],
+  [data-slot="toast"][data-state="closed"],
+  [data-slot="tabs-content"][data-state="inactive"],
+  [data-slot="accordion-content"][data-state="closed"],
+  [data-slot="collapsible-content"][data-state="closed"],
+  [data-slot="trace-collapsible-content"][data-state="closed"] {
+    display: none !important; /* recipe classes such as `grid` live in the utilities layer and would win otherwise */
+  }
+
+  /* Floating layers are positioned by flask-basecoat.js with fixed coordinates. */
+  [data-floating] {
+    position: fixed !important; /* recipe classes such as the select content's `relative` live in the utilities layer and would win otherwise */
+    inset-inline-start: 0;
+    top: 0;
+    z-index: 50;
+    width: max-content;
+  }
+  [data-floating][data-state="closed"] {
+    display: none !important;
+  }
+
+  /* Exit animations: the runtime keeps a closing layer displayed until its animation ends. */
+  [data-state="closed"][data-fb-animating] {
+    display: block !important;
+  }
+  /* Radix only renders indicators while checked; the static markup may carry them unchecked. */
+  /* Important: the indicator's own recipe sets display (grid/flex) in the utilities layer. */
+  [data-slot="checkbox-indicator"][data-state="unchecked"],
+  [data-slot="radio-group-indicator"][data-state="unchecked"] {
+    display: none !important;
+  }
+  /* Command palettes hide filtered-out items and empty groups. */
+  [data-slot="command-item"][hidden],
+  [data-slot="command-group"][hidden],
+  [data-slot="command-separator"][hidden],
+  [data-slot="command-empty"][hidden],
+  [data-slot="combobox-item"][hidden],
+  [data-slot="combobox-group"][hidden],
+  [data-slot="combobox-separator"][hidden],
+  [data-slot="combobox-empty"][hidden] {
+    display: none;
+  }
+  /* State-driven text swaps (preview / full text, "Show more" / "Show less"). */
+  [data-state="closed"] [data-fb-full],
+  [data-state="open"] [data-fb-preview] {
+    display: none;
+  }
+  /* The clear button of a combobox appears once it has a value. */
+  [data-slot="combobox-clear"]:not([data-visible]) {
+    display: none;
+  }
+  /* Scroll areas draw their own scrollbar; the native one is hidden, as Radix does. */
+  [data-radix-scroll-area-viewport] { scrollbar-width: none; -ms-overflow-style: none; }
+  [data-radix-scroll-area-viewport]::-webkit-scrollbar { display: none; }
+}

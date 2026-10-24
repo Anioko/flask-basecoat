@@ -1,0 +1,90 @@
+{
+  "name": "pagination",
+  "source": "upstream/shadcn/radix/ui/pagination.tsx",
+  "slots": {
+    "pagination": {
+      "component": "Pagination",
+      "element": "nav",
+      "base_classes": "cn-pagination mx-auto flex w-full justify-center",
+      "data_attrs": []
+    },
+    "pagination-content": {
+      "component": "PaginationContent",
+      "element": "ul",
+      "base_classes": "cn-pagination-content flex items-center",
+      "data_attrs": []
+    },
+    "pagination-item": {
+      "component": "PaginationItem",
+      "element": "li",
+      "base_classes": "",
+      "data_attrs": []
+    },
+    "PaginationLink:Button": {
+      "component": "PaginationLink",
+      "element": "Button",
+      "base_classes": "cn-pagination-link",
+      "data_attrs": []
+    },
+    "pagination-link": {
+      "component": "PaginationLink",
+      "element": "a",
+      "base_classes": "",
+      "data_attrs": [
+        "data-active"
+      ]
+    },
+    "pagination-previous": {
+      "component": "PaginationPrevious",
+      "element": "PaginationLink",
+      "base_classes": "cn-pagination-previous",
+      "data_attrs": [],
+      "alts": [
+        {
+          "component": "PaginationPrevious",
+          "element": "IconPlaceholder",
+          "base_classes": "cn-rtl-flip",
+          "data_attrs": []
+        }
+      ]
+    },
+    "PaginationPrevious:span": {
+      "component": "PaginationPrevious",
+      "element": "span",
+      "base_classes": "cn-pagination-previous-text hidden sm:block",
+      "data_attrs": []
+    },
+    "pagination-next": {
+      "component": "PaginationNext",
+      "element": "PaginationLink",
+      "base_classes": "cn-pagination-next",
+      "data_attrs": [],
+      "alts": [
+        {
+          "component": "PaginationNext",
+          "element": "IconPlaceholder",
+          "base_classes": "cn-rtl-flip",
+          "data_attrs": []
+        }
+      ]
+    },
+    "PaginationNext:span": {
+      "component": "PaginationNext",
+      "element": "span",
+      "base_classes": "cn-pagination-next-text hidden sm:block",
+      "data_attrs": []
+    },
+    "pagination-ellipsis": {
+      "component": "PaginationEllipsis",
+      "element": "span",
+      "base_classes": "cn-pagination-ellipsis flex items-center justify-center",
+      "data_attrs": []
+    },
+    "PaginationEllipsis:span": {
+      "component": "PaginationEllipsis",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    }
+  }
+}

@@ -1,122 +1,118 @@
-{# Shared content for sidebar demos #}
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-  {{ sb.sidebar(id='main-sidebar', items=nav_items, user=user_data, position='left') }}
-  <div id="main-sidebar-spacer" class="sidebar-spacer transition-all duration-300 ease-in-out" style="margin-left: 16rem;">
-    <div class="p-8">
-      {{ sb.breadcrumb([
-        {'label': 'Home', 'href': url_for('main.index')},
-        {'label': 'Components', 'href': '#'},
-        {'label': 'Sidebar Demo', 'href': '#'}
-      ]) }}
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Sidebar Component Demo</h1>
-        <p class="text-gray-600 dark:text-gray-400">shadcn/ui inspired sidebar built with BasecoatUI + Tailwind CSS</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
-            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            Collapsible Sidebar
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Click the toggle button in the sidebar to collapse it to an icon-only view.</p>
-        </div>
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            Nested Navigation
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Expandable groups like "Projects" and "Team" with nested sub-items.</p>
-        </div>
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
-            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-            Smooth Transitions
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Animated width transitions and state persistence using localStorage.</p>
-        </div>
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
-            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            Responsive Design
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Automatically hides on mobile devices (&lt; 768px width).</p>
-        </div>
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
-            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-            Badge Support
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Show notification counts and status indicators on menu items.</p>
-        </div>
-        <div class="card p-6">
-          <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            User Profile
-          </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">User info section in the sidebar footer with avatar and menu.</p>
-        </div>
-      </div>
-      <div class="card p-6 mb-8">
-        <h2 class="text-2xl font-bold mb-4">Usage Example</h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">To use this sidebar in your templates, import the macros and define your navigation structure:</p>
-        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>{% raw %}{% import 'macros/sidebar_macros.html' as sb %}
+{# Shared content for the sidebar demos: expects `nav_items` and `user_data` from the including template. #}
+{% import 'basecoat/index.html' as ui %}
+{% import 'macros/sidebar_macros.html' as sb %}
 
-{% set nav_items = [
-  {
-    'label': 'Dashboard',
-    'href': url_for('main.index'),
-    'icon': '&lt;svg&gt;...&lt;/svg&gt;'
-  },
-  {
-    'label': 'Projects',
-    'icon': '&lt;svg&gt;...&lt;/svg&gt;',
-    'children': [
-      {'label': 'All Projects', 'href': '#'},
-      {'label': 'Active', 'href': '#', 'badge': '8'}
-    ]
-  }
+{% set features = [
+  ('panel-left', 'Collapsible Sidebar', 'Use the trigger, the rail or Ctrl/Cmd+B to collapse the sidebar to an icon-only view.'),
+  ('menu', 'Nested Navigation', 'Expandable groups like "Projects" and "Team" with nested sub-items.'),
+  ('sparkles', 'Smooth Transitions', 'Animated width transitions; the state is remembered in a cookie like upstream.'),
+  ('monitor', 'Responsive Design', 'Below 768px the sidebar opens as a sheet over the page.'),
+  ('bell', 'Badge Support', 'Show notification counts and status indicators on menu items.'),
+  ('user', 'User Profile', 'User info in the sidebar footer with avatar and a dropdown menu.')
 ] %}
 
-{% set user_data = {
-  'name': current_user.full_name(),
-  'email': current_user.email
-} %}
+{% set comparison = [
+  ('Collapsible sidebar', true, 'Yes'),
+  ('Nested navigation groups', true, 'Yes'),
+  ('Icon-only collapsed state', true, 'Yes'),
+  ('Smooth transitions', true, 'Yes'),
+  ('State persistence', true, 'Yes (cookie)'),
+  ('Breadcrumb component', true, 'Yes'),
+  ('Badge support', true, 'Yes'),
+  ('Dark mode support', true, 'Yes (tokens)'),
+  ('Responsive behaviour', true, 'Yes (mobile sheet)'),
+  ('Floating sidebar variant', true, 'Yes (variant="floating")'),
+  ('File tree component', true, 'Not included'),
+  ('Calendar integration', true, 'Not included')
+] %}
 
-{{ sb.sidebar(id='main-sidebar', items=nav_items, user=user_data) }}
+{% call ui.sidebar_wrapper(attrs={'style': '--sidebar-width:16rem;--sidebar-width-icon:3rem'}) %}
+  {{ sb.sidebar(id='main-sidebar', items=nav_items, user=user_data, position='left',
+                brand=config.APP_NAME, brand_subtitle='Sidebar demo', brand_href=url_for('main.index'), group_label='Platform') }}
+  {% call ui.sidebar_inset() %}
+    {{ sb.inset_header([
+      {'label': 'Home', 'href': url_for('main.index')},
+      {'label': 'Components', 'href': '#'},
+      {'label': 'Sidebar Demo'}
+    ]) }}
+    <div class="flex flex-1 flex-col gap-6 p-4 pt-0">
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight">Sidebar Component Demo</h1>
+        <p class="mt-1 text-muted-foreground">The shadcn/ui sidebar block rendered with the Flask-Basecoat macros.</p>
+      </div>
 
-{# Don't forget to include the JavaScript #}
-&lt;script src="{{ url_for('static', filename='scripts/sidebar.js') }}" defer&gt;&lt;/script&gt;{% endraw %}</code></pre>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {% for icon, title, description in features %}
+          {% call ui.card() %}
+            {% call ui.card_header() %}
+              {% call ui.card_title(class='flex items-center gap-2') %}
+                {{ lucide(icon, 'size-5 text-primary') }}{{ title }}
+              {% endcall %}
+              {{ ui.card_description(text=description) }}
+            {% endcall %}
+          {% endcall %}
+        {% endfor %}
       </div>
-      <div class="card p-6">
-        <h2 class="text-2xl font-bold mb-4">shadcn/ui Feature Comparison</h2>
-        <div class="overflow-x-auto">
-          <table class="table w-full">
-            <thead>
-              <tr class="border-b dark:border-gray-700">
-                <th class="text-left p-3">Feature</th>
-                <th class="text-center p-3">shadcn/ui</th>
-                <th class="text-center p-3">Our Implementation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Collapsible sidebar</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Nested navigation groups</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Icon-only collapsed state</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Smooth transitions</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">State persistence</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅ (localStorage)</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Breadcrumb component</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Badge support</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Dark mode support</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅ (via BasecoatUI)</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Responsive behavior</td><td class="text-center p-3">✅</td><td class="text-center p-3">✅</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">Floating sidebar variant</td><td class="text-center p-3">✅</td><td class="text-center p-3">⚠️ (requires customization)</td></tr>
-              <tr class="border-b dark:border-gray-700"><td class="p-3">File tree component</td><td class="text-center p-3">✅</td><td class="text-center p-3">❌ (not included)</td></tr>
-              <tr><td class="p-3">Calendar integration</td><td class="text-center p-3">✅</td><td class="text-center p-3">❌ (requires external lib)</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-4"><strong>Overall match: ~90%</strong> - Core sidebar functionality fully implemented with BasecoatUI + Tailwind.</p>
-      </div>
+
+      {% call ui.card() %}
+        {% call ui.card_header() %}
+          {{ ui.card_title(text='Usage Example') }}
+          {{ ui.card_description(text='Import the macros, describe the navigation as data and render the sidebar inside a wrapper next to the inset.') }}
+        {% endcall %}
+        {% call ui.card_content() %}
+<pre class="overflow-x-auto rounded-lg bg-muted p-4 text-sm text-muted-foreground"><code>{% raw %}{% import 'basecoat/index.html' as ui %}
+{% import 'macros/sidebar_macros.html' as sb %}
+
+{% set nav_items = [
+  {'label': 'Dashboard', 'href': url_for('main.index'), 'icon': 'home'},
+  {'label': 'Projects', 'icon': 'folder', 'children': [
+    {'label': 'All Projects', 'href': '#'},
+    {'label': 'Active', 'href': '#', 'badge': '8'}
+  ]}
+] %}
+
+{% set user_data = {'name': current_user.full_name(), 'email': current_user.email} %}
+
+{% call ui.sidebar_wrapper() %}
+  {{ sb.sidebar(id='main-sidebar', items=nav_items, user=user_data) }}
+  {% call ui.sidebar_inset() %}
+    {{ sb.inset_header([{'label': 'Home', 'href': '/'}, {'label': 'Page'}]) }}
+    ...
+  {% endcall %}
+{% endcall %}{% endraw %}</code></pre>
+        {% endcall %}
+      {% endcall %}
+
+      {% call ui.card() %}
+        {% call ui.card_header() %}
+          {{ ui.card_title(text='shadcn/ui Feature Comparison') }}
+        {% endcall %}
+        {% call ui.card_content() %}
+          {% call ui.table_container() %}
+            {% call ui.table() %}
+              {% call ui.table_header() %}
+                {% call ui.table_row() %}
+                  {{ ui.table_head(text='Feature') }}
+                  {{ ui.table_head(text='shadcn/ui') }}
+                  {{ ui.table_head(text='Our Implementation') }}
+                {% endcall %}
+              {% endcall %}
+              {% call ui.table_body() %}
+                {% for feature, upstream, ours in comparison %}
+                  {% call ui.table_row() %}
+                    {{ ui.table_cell(text=feature, class='font-medium') }}
+                    {% call ui.table_cell() %}{{ ui.badge(text='Yes', variant='outline') }}{% endcall %}
+                    {% call ui.table_cell() %}{{ ui.badge(text=ours, variant=('secondary' if ours.startswith('Not') else 'default')) }}{% endcall %}
+                  {% endcall %}
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.card_footer() %}
+          <p class="text-sm text-muted-foreground"><strong class="text-foreground">Core sidebar functionality fully implemented</strong> with the same parts, classes and state attributes as the upstream block.</p>
+        {% endcall %}
+      {% endcall %}
     </div>
-  </div>
-  <script src="{{ url_for('static', filename='scripts/sidebar.js') }}" defer></script>
-</div>
+  {% endcall %}
+{% endcall %}

@@ -1,0 +1,120 @@
+{
+  "name": "chart-radar-legend",
+  "group": "radar",
+  "fullWidth": false,
+  "description": "A radar chart with a legend",
+  "card": {
+    "title": "Radar Chart - Legend",
+    "description": "Showing total visitors for the last 6 months",
+    "headerClassName": "items-center",
+    "contentClassName": null,
+    "footerClassName": "flex-col gap-2 pt-4 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex items-center gap-2 leading-none font-medium"
+      },
+      {
+        "text": "January - June 2024",
+        "icons": [],
+        "className": "flex items-center gap-2 leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "radar",
+    "component": "RadarChart",
+    "container": {
+      "id": null,
+      "className": "mx-auto aspect-square max-h-[250px]"
+    },
+    "config": {
+      "desktop": {
+        "label": "Desktop",
+        "color": "var(--chart-1)"
+      },
+      "mobile": {
+        "label": "Mobile",
+        "color": "var(--chart-2)"
+      }
+    },
+    "data": [
+      {
+        "month": "January",
+        "desktop": 186,
+        "mobile": 80
+      },
+      {
+        "month": "February",
+        "desktop": 305,
+        "mobile": 200
+      },
+      {
+        "month": "March",
+        "desktop": 237,
+        "mobile": 120
+      },
+      {
+        "month": "April",
+        "desktop": 73,
+        "mobile": 190
+      },
+      {
+        "month": "May",
+        "desktop": 209,
+        "mobile": 130
+      },
+      {
+        "month": "June",
+        "desktop": 214,
+        "mobile": 140
+      }
+    ],
+    "props": {
+      "margin": {
+        "top": -40,
+        "bottom": -10,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "series": [
+      {
+        "component": "Radar",
+        "dataKey": "desktop",
+        "fill": "var(--color-desktop)",
+        "fillOpacity": 0.6
+      },
+      {
+        "component": "Radar",
+        "dataKey": "mobile",
+        "fill": "var(--color-mobile)"
+      }
+    ],
+    "axes": [
+      {
+        "component": "PolarAngleAxis",
+        "dataKey": "month"
+      }
+    ],
+    "grid": {
+      "component": "PolarGrid"
+    },
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent",
+      "indicator": "line"
+    },
+    "legend": {
+      "className": "mt-8",
+      "content": "ChartLegendContent"
+    },
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [],
+  "unresolved": []
+}

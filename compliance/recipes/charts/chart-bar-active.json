@@ -1,0 +1,126 @@
+{
+  "name": "chart-bar-active",
+  "group": "bar",
+  "fullWidth": false,
+  "description": "A bar chart with an active bar",
+  "card": {
+    "title": "Bar Chart - Active",
+    "description": "January - June 2024",
+    "headerClassName": null,
+    "contentClassName": null,
+    "footerClassName": "flex-col items-start gap-2 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex gap-2 leading-none font-medium"
+      },
+      {
+        "text": "Showing total visitors for the last 6 months",
+        "icons": [],
+        "className": "leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "bar",
+    "component": "BarChart",
+    "container": {
+      "id": null,
+      "className": null
+    },
+    "config": {
+      "visitors": {
+        "label": "Visitors"
+      },
+      "chrome": {
+        "label": "Chrome",
+        "color": "var(--chart-1)"
+      },
+      "safari": {
+        "label": "Safari",
+        "color": "var(--chart-2)"
+      },
+      "firefox": {
+        "label": "Firefox",
+        "color": "var(--chart-3)"
+      },
+      "edge": {
+        "label": "Edge",
+        "color": "var(--chart-4)"
+      },
+      "other": {
+        "label": "Other",
+        "color": "var(--chart-5)"
+      }
+    },
+    "data": [
+      {
+        "browser": "chrome",
+        "visitors": 187,
+        "fill": "var(--color-chrome)"
+      },
+      {
+        "browser": "safari",
+        "visitors": 200,
+        "fill": "var(--color-safari)"
+      },
+      {
+        "browser": "firefox",
+        "visitors": 275,
+        "fill": "var(--color-firefox)"
+      },
+      {
+        "browser": "edge",
+        "visitors": 173,
+        "fill": "var(--color-edge)"
+      },
+      {
+        "browser": "other",
+        "visitors": 90,
+        "fill": "var(--color-other)"
+      }
+    ],
+    "props": {
+      "accessibilityLayer": true
+    },
+    "series": [
+      {
+        "component": "Bar",
+        "dataKey": "visitors",
+        "strokeWidth": 2,
+        "radius": 8,
+        "shape": "({ index, ...props }: BarShapeProps) => index === ACTIVE_INDEX ? ( <Rectangle {...props} fillOpacity={0.8} stroke={props.payload.fill} strokeDasharray={4} strokeDashoffset={4} /> ) : ( <Rectangle {...props} /> )"
+      }
+    ],
+    "axes": [
+      {
+        "component": "XAxis",
+        "dataKey": "browser",
+        "tickLine": false,
+        "tickMargin": 10,
+        "axisLine": false,
+        "tickFormatter": "(value) => chartConfig[value as keyof typeof chartConfig]?.label"
+      }
+    ],
+    "grid": {
+      "component": "CartesianGrid",
+      "vertical": false
+    },
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent",
+      "hideLabel": true
+    },
+    "legend": null,
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [
+    "chart.axes[0].tickFormatter",
+    "chart.series[0].shape"
+  ],
+  "unresolved": []
+}

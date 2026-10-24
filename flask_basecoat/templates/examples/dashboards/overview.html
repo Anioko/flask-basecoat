@@ -1,0 +1,127 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/_dashboards.html' as d %}
+{% block title %}Overview dashboard · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set updates = [
+  {'day': '16/08', 'earnings': 1500, 'expense': 1800}, {'day': '17/08', 'earnings': 2700, 'expense': 1100},
+  {'day': '18/08', 'earnings': 2200, 'expense': 2500}, {'day': '19/08', 'earnings': 3000, 'expense': 1500},
+  {'day': '20/08', 'earnings': 1500, 'expense': 600}, {'day': '21/08', 'earnings': 1100, 'expense': 1700},
+  {'day': '22/08', 'earnings': 1400, 'expense': 1200},
+] %}
+{% set monthly = [{'month': 'Jan', 'value': 20}, {'month': 'Feb', 'value': 45}, {'month': 'Mar', 'value': 28}, {'month': 'Apr', 'value': 52}, {'month': 'May', 'value': 30}, {'month': 'Jun', 'value': 70}, {'month': 'Jul', 'value': 48}] %}
+{% set weekly = [{'day': 'Mon', 'sales': 22}, {'day': 'Tue', 'sales': 30}, {'day': 'Wed', 'sales': 72}, {'day': 'Thu', 'sales': 30}, {'day': 'Fri', 'sales': 50}, {'day': 'Sat', 'sales': 28}, {'day': 'Sun', 'sales': 40}] %}
+{% set locations = [{'month': 'Jan', 'india': 40, 'usa': 90}, {'month': 'Feb', 'india': 160, 'usa': 120}, {'month': 'Mar', 'india': 60, 'usa': 120}, {'month': 'Apr', 'india': 100, 'usa': 40}, {'month': 'May', 'india': 70, 'usa': 110}, {'month': 'Jun', 'india': 70, 'usa': 110}] %}
+{% call d.shell('overview', 'Overview', 'Leads, revenue and deliveries at a glance') %}
+<div class="grid grid-cols-1 gap-4 md:gap-6 sm:grid-cols-3 xl:grid-cols-5">
+  {% call ui.card(class='relative overflow-hidden bg-primary text-primary-foreground sm:col-span-3 xl:col-span-2') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Welcome back, Jonathan', class='text-xl') }}{{ ui.card_description(text='Here is how the week is going.', class='text-primary-foreground/70') }}{% endcall %}
+    {% call ui.card_content() %}
+      <div class="inline-flex divide-x divide-primary-foreground/20 rounded-lg bg-primary-foreground/10">
+        {% for value, label in [('573', 'New leads'), ('87%', 'Conversion')] %}<div class="flex flex-col items-center px-5 py-2"><span class="text-lg font-semibold tabular-nums">{{ value }}</span><span class="text-xs text-primary-foreground/70">{{ label }}</span></div>{% endfor %}
+      </div>
+    {% endcall %}
+    <div aria-hidden="true" class="pointer-events-none absolute -right-4 -bottom-6 hidden sm:block">{{ lucide('megaphone', 'size-36 -rotate-12 text-primary-foreground/15') }}</div>
+  {% endcall %}
+  {% for icon, value, change, label, tone in [('refresh-cw', '434', '-12%', 'Refunds', 1), ('chart-pie', '2,358', '+23%', 'Sales', 2), ('circle-dollar-sign', '$245k', '-12%', 'Earnings', 3)] %}
+  {% call ui.card(class='bg-chart-' ~ tone ~ '/10') %}
+    {% call ui.card_header() %}<span class="flex size-10 items-center justify-center rounded-lg bg-background [&_svg]:size-4">{{ lucide(icon) }}</span>{% endcall %}
+    {% call ui.card_content(class='mt-auto flex flex-col gap-1') %}<span class="flex items-center gap-2 text-2xl font-semibold tabular-nums">{{ value }} {{ d.delta(change) }}</span><span class="text-sm text-muted-foreground">{{ label }}</span>{% endcall %}
+  {% endcall %}
+  {% endfor %}
+</div>
+
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  {% call ui.card(class='xl:col-span-2') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Revenue updates') }}{{ ui.card_description(text='Earnings and expenses per day') }}{% call ui.card_action() %}{{ d.period('updates-year', ['Year 2026', 'Year 2025'], 'Year 2026') }}{% endcall %}{% endcall %}
+    {% call ui.card_content(class='grid gap-6 lg:grid-cols-[1fr_14rem]') %}
+      {{ d.chart('bar', updates, [{'key': 'earnings', 'label': 'Earnings', 'color': 'var(--chart-1)'}, {'key': 'expense', 'label': 'Expense', 'color': 'var(--chart-3)'}], x='day', class='aspect-auto h-[360px] w-full', label='Earnings and expenses per day') }}
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center gap-3">{{ d.icon_tile('layout-grid') }}<div class="grid"><span class="text-2xl font-semibold tabular-nums">$63,489.50</span><span class="text-sm text-muted-foreground">Total earnings</span></div></div>
+        {% for label, value, tone in [('Earnings this month', '$48,820', 1), ('Expense this month', '$26,498', 3)] %}
+        <div class="grid gap-1"><span class="flex items-center gap-2 text-sm text-muted-foreground"><span class="size-2 rounded-full bg-chart-{{ tone }}"></span>{{ label }}</span><span class="text-xl font-semibold tabular-nums">{{ value }}</span></div>
+        {% endfor %}
+        {{ ui.button(text='View full report', href='#', class='mt-auto w-full') }}
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  <div class="flex flex-col gap-4 md:gap-6">
+    {% call ui.card() %}
+      {% call ui.card_header() %}{{ ui.card_title(text='Monthly earnings') }}{% call ui.card_action() %}{{ d.icon_tile('circle-dollar-sign') }}{% endcall %}{% endcall %}
+      {% call ui.card_content(class='flex flex-col gap-2') %}
+        <span class="text-2xl font-semibold tabular-nums">$6,820</span>
+        <span class="flex items-center gap-2 text-sm text-muted-foreground">{{ d.delta('-9%') }} than last year</span>
+        {{ d.chart('area', monthly, [{'key': 'value', 'label': 'Earnings', 'color': 'var(--chart-1)'}], grid=false, class='aspect-auto h-[110px] w-full', label='Monthly earnings') }}
+      {% endcall %}
+    {% endcall %}
+    {% call ui.card() %}
+      {% call ui.card_header() %}{{ ui.card_title(text='Yearly breakup') }}{% endcall %}
+      {% call ui.card_content(class='flex items-center justify-between gap-4') %}
+        <div class="flex flex-col gap-2">
+          <span class="text-2xl font-semibold tabular-nums">$36,358</span>
+          <span class="flex items-center gap-2 text-sm whitespace-nowrap text-muted-foreground">{{ d.delta('+9%') }} last year</span>
+          {{ d.legend([('2025', 1), ('2026', 2)], 'mt-2') }}
+        </div>
+        {{ d.chart('donut', [{'year': '2025', 'value': 62, 'fill': 'var(--chart-1)'}, {'year': '2026', 'value': 38, 'fill': 'var(--chart-2)'}], [{'key': 'value', 'label': 'Share'}], x='year', grid=false, class='aspect-square h-[120px]', label='Earnings by year') }}
+      {% endcall %}
+    {% endcall %}
+  </div>
+
+  {% call ui.card() %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Weekly stats') }}{{ ui.card_description(text='Average sales') }}{% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      {{ d.chart('area', weekly, [{'key': 'sales', 'label': 'Sales', 'color': 'var(--chart-1)'}], x='day', grid=false, class='aspect-auto h-[160px] w-full', label='Sales per day') }}
+      {% call ui.item_group(class='gap-1') %}
+        {% for icon, title, detail, change in [('presentation', 'Top sales', 'Jonathan Doe', '+76'), ('star', 'Best seller', 'Footwear', '+68'), ('message-square', 'Most commented', 'Fashionware', '+52')] %}
+        {% call ui.item(size='sm', class='px-0') %}{% call ui.item_media() %}{{ d.icon_tile(icon) }}{% endcall %}{% call ui.item_content() %}{{ ui.item_title(text=title) }}{{ ui.item_description(text=detail) }}{% endcall %}{% call ui.item_actions() %}{{ ui.badge(text=change, variant='secondary') }}{% endcall %}{% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Sales from locations') }}{{ ui.card_description(text='This year') }}{% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      {{ d.chart('stacked-bar', locations, [{'key': 'india', 'label': 'India', 'color': 'var(--chart-1)'}, {'key': 'usa', 'label': 'USA', 'color': 'var(--chart-2)'}], class='aspect-auto h-[280px] w-full', legend=true, label='Sales by country') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Recent transactions') }}
+    {% call ui.card_content() %}{{ d.transactions([('wallet', 'PayPal', 'Big brands', '+$6,235'), ('briefcase', 'Wallet', 'Big brands', '+$345'), ('credit-card', 'Credit card', 'Money reversed', '+$2,235'), ('landmark', 'Bank transfer', 'Money added', '+$320'), ('receipt', 'Refund', 'Bill payment', '-$32')]) }}{% endcall %}
+    {% call ui.card_footer() %}{{ ui.button(text='View full report', href='#', class='w-full') }}{% endcall %}
+  {% endcall %}
+
+  <div class="xl:col-span-2">
+    {{ d.projects_table([
+      ('app-window', 1, 'Web app project', '04 June 2026', '$12,000', 'Olivia Rhye', 'olivia@northwind.example', 'OR', 45),
+      ('layout-dashboard', 2, 'Admin console', '09 January 2026', '$8,000', 'Barbara Steele', 'barbara@northwind.example', 'BS', 30),
+      ('megaphone', 3, 'Digital marketing', '15 April 2026', '$15,000', 'Leonard Gordon', 'leonard@northwind.example', 'LG', 40),
+      ('palette', 4, 'Brand refresh', '30 March 2026', '$1,000', 'Evelyn Pope', 'evelyn@northwind.example', 'EP', 25),
+      ('paintbrush', 5, 'Graphic design', '23 October 2026', '$7,000', 'Tommy Garza', 'tommy@northwind.example', 'TG', 90),
+    ]) }}
+  </div>
+
+  {% call ui.card() %}
+    {{ d.card_head('Upcoming schedules', 'Shipments this week') }}
+    {% call ui.card_content() %}
+      {% call ui.tabs(value='all') %}
+        {% call ui.tabs_list(class='w-full') %}{% for v, label in [('all', 'All'), ('delivered', 'Delivered'), ('shipping', 'Shipping')] %}{{ ui.tabs_trigger(text=label, value=v, active=(v == 'all')) }}{% endfor %}{% endcall %}
+        {% set shipments = [('truck', 'Scooter freight', 'SF-9002-125423', 'Delivered', [('building-2', 'Messina Harbor', 'Sicily, Italy'), ('map-pin', 'Hektor Container Hotel', 'Tallinn, Estonia')]), ('truck', 'Tram freight', 'TF-1245-780652', 'Shipping', [('building-2', 'Messina Harbor', 'Leicester, United Kingdom'), ('map-pin', 'Laxmi Empire Hotel', 'Mumbai, India')])] %}
+        {% for v in ['all', 'delivered', 'shipping'] %}
+        {% call ui.tabs_content(value=v, active=(v == 'all'), class='flex flex-col gap-4 pt-2') %}
+          {% for icon, name, ref, state, stops in shipments if v == 'all' or state | lower == v %}
+          <div class="flex flex-col gap-3 {{ 'border-t pt-4' if not loop.first else '' }}">
+            <div class="flex items-start gap-3">{{ d.icon_tile(icon) }}<div class="grid flex-1"><span class="text-sm text-muted-foreground">{{ name }}</span><span class="font-semibold">{{ ref }}</span></div>{{ d.status(state) }}</div>
+            {% for sicon, place, city in stops %}<div class="flex items-start gap-3">{{ d.icon_tile(sicon) }}<div class="grid"><span class="text-sm text-muted-foreground">{{ place }}</span><span class="font-medium">{{ city }}</span></div></div>{% endfor %}
+          </div>
+          {% endfor %}
+        {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+</div>
+{% endcall %}
+{% endblock %}

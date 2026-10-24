@@ -1,0 +1,66 @@
+{
+  "name": "carousel",
+  "source": "upstream/shadcn/radix/ui/carousel.tsx",
+  "slots": {
+    "carousel": {
+      "component": "Carousel",
+      "element": "div",
+      "base_classes": "relative",
+      "data_attrs": []
+    },
+    "carousel-content": {
+      "component": "CarouselContent",
+      "element": "div",
+      "base_classes": "overflow-hidden",
+      "data_attrs": []
+    },
+    "CarouselContent:div": {
+      "component": "CarouselContent",
+      "element": "div",
+      "base_classes": "flex",
+      "data_attrs": []
+    },
+    "carousel-item": {
+      "component": "CarouselItem",
+      "element": "div",
+      "base_classes": "min-w-0 shrink-0 grow-0 basis-full",
+      "data_attrs": []
+    },
+    "carousel-previous": {
+      "component": "CarouselPrevious",
+      "element": "Button",
+      "base_classes": "cn-carousel-previous absolute touch-manipulation",
+      "data_attrs": []
+    },
+    "CarouselPrevious:IconPlaceholder": {
+      "component": "CarouselPrevious",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip",
+      "data_attrs": []
+    },
+    "CarouselPrevious:span": {
+      "component": "CarouselPrevious",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    },
+    "carousel-next": {
+      "component": "CarouselNext",
+      "element": "Button",
+      "base_classes": "cn-carousel-next absolute touch-manipulation",
+      "data_attrs": []
+    },
+    "CarouselNext:IconPlaceholder": {
+      "component": "CarouselNext",
+      "element": "IconPlaceholder",
+      "base_classes": "cn-rtl-flip",
+      "data_attrs": []
+    },
+    "CarouselNext:span": {
+      "component": "CarouselNext",
+      "element": "span",
+      "base_classes": "sr-only",
+      "data_attrs": []
+    }
+  }
+}

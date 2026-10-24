@@ -1,0 +1,118 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Notifications · Flask-Basecoat{% endblock %}
+{% block head %}
+<script>
+  let activeTab = 'all';
+
+  function setTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.notification-item').forEach((item) => {
+      const isUnread = item.getAttribute('data-unread') === 'true';
+      const type = item.getAttribute('data-type');
+      let show = true;
+      if (tab === 'unread') show = isUnread;
+      else if (tab === 'mentions') show = type === 'mention';
+      else if (tab === 'system') show = type === 'system';
+      item.style.display = show ? '' : 'none';
+    });
+  }
+
+  function markItemAsRead(el) {
+    el.setAttribute('data-unread', 'false');
+    const dot = el.querySelector('.unread-dot');
+    if (dot) dot.remove();
+    el.classList.remove('bg-muted/30');
+    updateUnreadCount();
+  }
+
+  function markAllAsRead() {
+    document.querySelectorAll('.notification-item').forEach(markItemAsRead);
+  }
+
+  function dismissItem(trigger, e) {
+    e.stopPropagation();
+    const item = trigger.closest('.notification-item');
+    if (item) {
+      item.remove();
+      updateUnreadCount();
+    }
+  }
+
+  function updateUnreadCount() {
+    const unreadItems = document.querySelectorAll('.notification-item[data-unread="true"]').length;
+    const badge = document.getElementById('unread-badge');
+    if (!badge) return;
+    badge.textContent = `${unreadItems} unread`;
+    badge.classList.toggle('hidden', unreadItems === 0);
+  }
+
+  document.addEventListener('DOMContentLoaded', updateUnreadCount);
+</script>
+{% endblock %}
+{% block body %}
+{% set notifications = [
+  {'id': 'n-1', 'type': 'mention', 'unread': true, 'initials': 'OG', 'tone': 'bg-chart-1/15 text-chart-1', 'time': '5m ago',
+   'title': '<span class="font-semibold">Olivia Grant</span> mentioned you in <span class="font-medium text-primary">PR #42</span>',
+   'body': '"Looks good, ready to merge! Flask-Basecoat components match shadcn 100%."'},
+  {'id': 'n-2', 'type': 'mention', 'unread': true, 'initials': 'SD', 'tone': 'bg-chart-2/15 text-chart-2', 'time': '25m ago',
+   'title': '<span class="font-semibold">Sofia Davis</span> assigned you to <span class="font-semibold">Workplace Safety Guide 2024</span>',
+   'body': 'Task priority is set to Low Priority with due date Nov 15.'},
+  {'id': 'n-3', 'type': 'system', 'unread': true, 'icon': 'triangle-alert', 'tone': 'bg-chart-4/15 text-chart-4', 'time': '1h ago',
+   'title': 'API Token Expiration Notice',
+   'body': 'Your production deployment API token will expire in 3 days. Please regenerate your credentials.'},
+  {'id': 'n-4', 'type': 'system', 'unread': true, 'icon': 'wallet', 'tone': 'bg-chart-3/15 text-chart-3', 'time': '3h ago',
+   'title': 'Subscription Renewed',
+   'body': 'Your Pro Plan subscription was renewed successfully for $372.00/yr. Invoice INV-2026-88 is available.'},
+  {'id': 'n-5', 'type': 'mention', 'unread': false, 'initials': 'AR', 'tone': 'bg-chart-5/15 text-chart-5', 'time': '1d ago',
+   'title': '<span class="font-semibold">Alex Rivers</span> merged branch <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">feat/basecoat-shadcn-canonical</code>',
+   'body': 'All automated CI ratchet verification checks passed with 100% success rate.'},
+  {'id': 'n-6', 'type': 'mention', 'unread': false, 'initials': 'ET', 'tone': 'bg-primary/10 text-primary', 'time': '2d ago',
+   'title': '<span class="font-semibold">Ethan Taylor</span> commented on <span class="font-semibold">Q2 Roadmap</span>',
+   'body': '"Great alignment across the team. Let\'s make sure the sprint backlog is prioritized."'}
+] %}
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+  {% call ui.card(class='gap-0 overflow-hidden py-0') %}
+    {% call ui.card_header(class='gap-4 border-b py-6') %}
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl font-semibold tracking-tight">Notifications</h1>
+          {{ ui.badge(text='4 unread', variant='secondary', id='unread-badge') }}
+        </div>
+        {% call ui.button(variant='outline', size='sm', attrs={'onclick': 'markAllAsRead()'}) %}{{ lucide('check') }} Mark all as read{% endcall %}
+      </div>
+      {% call ui.tabs() %}
+        {% call ui.tabs_list() %}
+          {% for value, label in [('all', 'All'), ('unread', 'Unread'), ('mentions', 'Mentions'), ('system', 'System')] %}
+            {{ ui.tabs_trigger(text=label, active=(value == 'all'), attrs={'data-value': value, 'onclick': "setTab('" ~ value ~ "')"}) }}
+          {% endfor %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}
+
+    {# Notification feed #}
+    <div id="notifications-feed" class="divide-y divide-border">
+      {% for n in notifications %}
+      {% call ui.item(id=n.id, class='notification-item cursor-pointer rounded-none border-0 p-4 transition-colors hover:bg-muted/40 sm:p-5' ~ (' bg-muted/30' if n.unread else ''), attrs={'data-unread': 'true' if n.unread else 'false', 'data-type': n.type, 'onclick': 'markItemAsRead(this)'}) %}
+        {% call ui.item_media() %}
+          {% call ui.avatar(class='size-10') %}
+            {% call ui.avatar_fallback(class=n.tone ~ ' font-semibold') %}{% if n.initials %}{{ n.initials }}{% else %}{{ lucide(n.icon, 'size-5') }}{% endif %}{% endcall %}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.item_content() %}
+          <div class="flex items-start justify-between gap-2">
+            {% call ui.item_title(class='text-sm font-medium') %}{{ n.title|safe }}{% endcall %}
+            <span class="shrink-0 text-xs text-muted-foreground">{{ n.time }}</span>
+          </div>
+          {{ ui.item_description(text=n.body) }}
+        {% endcall %}
+        {% call ui.item_actions() %}
+          {% if n.unread %}<span class="unread-dot size-2 shrink-0 rounded-full bg-primary"></span>{% endif %}
+          {% call ui.button(variant='ghost', size='icon-xs', class='text-muted-foreground opacity-0 group-hover/item:opacity-100 focus-visible:opacity-100', attrs={'onclick': 'dismissItem(this, event)', 'aria-label': 'Dismiss notification'}) %}{{ lucide('x') }}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% endfor %}
+    </div>
+  {% endcall %}
+</div>
+{% endblock %}

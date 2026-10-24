@@ -1,0 +1,106 @@
+{
+ "type": "pie",
+ "component": "PieChart",
+ "config": {
+  "visitors": {
+   "label": "Visitors"
+  },
+  "chrome": {
+   "label": "Chrome",
+   "color": "var(--chart-1)"
+  },
+  "safari": {
+   "label": "Safari",
+   "color": "var(--chart-2)"
+  },
+  "firefox": {
+   "label": "Firefox",
+   "color": "var(--chart-3)"
+  },
+  "edge": {
+   "label": "Edge",
+   "color": "var(--chart-4)"
+  },
+  "other": {
+   "label": "Other",
+   "color": "var(--chart-5)"
+  }
+ },
+ "data": [
+  {
+   "browser": "chrome",
+   "visitors": 275,
+   "fill": "var(--color-chrome)"
+  },
+  {
+   "browser": "safari",
+   "visitors": 200,
+   "fill": "var(--color-safari)"
+  },
+  {
+   "browser": "firefox",
+   "visitors": 187,
+   "fill": "var(--color-firefox)"
+  },
+  {
+   "browser": "edge",
+   "visitors": 173,
+   "fill": "var(--color-edge)"
+  },
+  {
+   "browser": "other",
+   "visitors": 90,
+   "fill": "var(--color-other)"
+  }
+ ],
+ "props": {},
+ "series": [
+  {
+   "component": "Pie",
+   "data": [
+    {
+     "browser": "chrome",
+     "visitors": 275,
+     "fill": "var(--color-chrome)"
+    },
+    {
+     "browser": "safari",
+     "visitors": 200,
+     "fill": "var(--color-safari)"
+    },
+    {
+     "browser": "firefox",
+     "visitors": 187,
+     "fill": "var(--color-firefox)"
+    },
+    {
+     "browser": "edge",
+     "visitors": 173,
+     "fill": "var(--color-edge)"
+    },
+    {
+     "browser": "other",
+     "visitors": 90,
+     "fill": "var(--color-other)"
+    }
+   ],
+   "dataKey": "visitors",
+   "labelLine": false,
+   "label": {
+    "$fn": "payloadText",
+    "key": "visitors",
+    "fill": "var(--foreground)"
+   },
+   "nameKey": "browser"
+  }
+ ],
+ "axes": [],
+ "grid": null,
+ "tooltip": {
+  "nameKey": "visitors",
+  "hideLabel": true,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

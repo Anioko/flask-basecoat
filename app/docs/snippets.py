@@ -188,7 +188,7 @@ _LOGIN_VARIANTS: Dict[str, Dict[str, object]] = {
 }
 
 _SIGNUP_VARIANTS: Dict[str, Dict[str, object]] = {
-    "signup-01": {"layout": "card", "headline": "Create account", "subtitle": "Start building with Basecoat."},
+    "signup-01": {"layout": "card", "headline": "Create account", "subtitle": "Start building with Flask-Basecoat."},
     "signup-02": {"layout": "split", "headline": "Join the workspace", "subtitle": "A few details to get started.", "cover": "gradient"},
     "signup-03": {"layout": "muted", "headline": "Welcome aboard", "subtitle": "Enter your details below."},
     "signup-04": {"layout": "media", "headline": "Marketing suite", "subtitle": "Grow your audience with us.", "cover": "team"},

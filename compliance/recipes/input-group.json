@@ -1,0 +1,78 @@
+{
+  "name": "input-group",
+  "source": "upstream/shadcn/radix/ui/input-group.tsx",
+  "slots": {
+    "input-group": {
+      "component": "InputGroup",
+      "element": "div",
+      "base_classes": "group/input-group cn-input-group relative flex w-full min-w-0 items-center outline-none has-[>textarea]:h-auto",
+      "data_attrs": []
+    },
+    "input-group-addon": {
+      "component": "InputGroupAddon",
+      "element": "div",
+      "base_classes": "",
+      "data_attrs": [
+        "data-align"
+      ],
+      "cva": "inputGroupAddonVariants",
+      "variants": {
+        "base": "cn-input-group-addon flex cursor-text items-center justify-center select-none",
+        "variants": {
+          "align": {
+            "inline-start": "cn-input-group-addon-align-inline-start order-first",
+            "inline-end": "cn-input-group-addon-align-inline-end order-last",
+            "block-start": "cn-input-group-addon-align-block-start order-first w-full justify-start",
+            "block-end": "cn-input-group-addon-align-block-end order-last w-full justify-start"
+          }
+        },
+        "defaults": {
+          "align": "inline-start"
+        }
+      }
+    },
+    "input-group-button": {
+      "component": "InputGroupButton",
+      "element": "Button",
+      "base_classes": "",
+      "data_attrs": [
+        "data-size"
+      ],
+      "cva": "inputGroupButtonVariants",
+      "variants": {
+        "base": "cn-input-group-button flex items-center shadow-none",
+        "variants": {
+          "size": {
+            "xs": "cn-input-group-button-size-xs",
+            "sm": "cn-input-group-button-size-sm",
+            "icon-xs": "cn-input-group-button-size-icon-xs",
+            "icon-sm": "cn-input-group-button-size-icon-sm"
+          }
+        },
+        "defaults": {
+          "size": "xs"
+        }
+      }
+    },
+    "InputGroupText:span": {
+      "component": "InputGroupText",
+      "element": "span",
+      "base_classes": "cn-input-group-text flex items-center [&_svg]:pointer-events-none",
+      "data_attrs": []
+    },
+    "input-group-control": {
+      "component": "InputGroupInput",
+      "element": "Input",
+      "base_classes": "cn-input-group-input flex-1",
+      "data_attrs": [],
+      "alts": [
+        {
+          "component": "InputGroupTextarea",
+          "element": "Textarea",
+          "base_classes": "cn-input-group-textarea flex-1 resize-none",
+          "data_attrs": []
+        }
+      ]
+    }
+  }
+}

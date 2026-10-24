@@ -1,0 +1,6 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui block `sidebar-13` (pinned source in compliance/upstream). #}
+{% block title %}sidebar-13 · Flask-Basecoat{% endblock %}
+{% block body %}
+<div class="flex h-svh items-center justify-center">{% call ui.dialog_trigger(size='sm', variant='default', open=true, aria_controls='radix-_R_0_') %}Open Dialog{% endcall %}</div>{% endblock %}
