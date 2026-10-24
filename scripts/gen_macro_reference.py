@@ -118,6 +118,9 @@ def main():
             out.append('```')
         out.append('')
     (ROOT / 'docs').mkdir(exist_ok=True)
+    extra = ROOT / 'docs' / 'MACROS-canvas.md'   # hand-written: the canvas and capability-map macros compose components, they have no recipe
+    if extra.exists():
+        out += ['', extra.read_text(encoding='utf8').rstrip()]
     (ROOT / 'docs' / 'MACROS.md').write_text('\n'.join(out) + '\n', encoding='utf8')
     print(f'docs/MACROS.md: {len(components)} components')
 

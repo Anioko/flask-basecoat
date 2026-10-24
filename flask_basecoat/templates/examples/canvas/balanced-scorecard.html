@@ -1,0 +1,12 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/canvas/balanced-scorecard.html' as canvas %}
+{#- Balanced Scorecard on the dashboard-01 frame. Tier C2: the drawing is the one marked region.
+    Check:  python compliance/scripts/check_page.py /examples/canvas/balanced-scorecard --nearest dashboard-01 --browser -#}
+{% block title %}Balanced Scorecard · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% block body %}
+{% call shell('Balanced Scorecard') %}
+  <div class="px-4 lg:px-6">{{ canvas.balanced_scorecard(data) }}</div>
+{% endcall %}
+{% endblock %}

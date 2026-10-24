@@ -1,0 +1,178 @@
+{
+  "title": "Northwind Flow · parcel delivery for online retailers",
+  "subtitle": "Wardley Map · Simon Wardley",
+  "components": [
+    {
+      "id": "retailer",
+      "name": "Online retailer",
+      "kind": "user",
+      "evolution": 0.6,
+      "visibility": 0.0,
+      "depends_on": [
+        "parcel-delivered",
+        "tracking",
+        "portal",
+        "carbon"
+      ],
+      "label": "right",
+      "notes": "Anchor: the shipper who pays for delivery and needs its buyers to be happy."
+    },
+    {
+      "id": "parcel-delivered",
+      "name": "Parcel delivered on time",
+      "kind": "component",
+      "evolution": 0.68,
+      "visibility": 0.12,
+      "depends_on": [
+        "fleet",
+        "routing",
+        "hubs",
+        "customs"
+      ],
+      "label": "right",
+      "notes": "The user need. Buyers expect the parcel inside the slot they were promised."
+    },
+    {
+      "id": "portal",
+      "name": "Booking portal",
+      "kind": "component",
+      "evolution": 0.36,
+      "visibility": 0.26,
+      "depends_on": [
+        "cloud"
+      ],
+      "label": "right",
+      "notes": "Built in-house in 2016. Inertia: shippers have integrated with the old API.",
+      "inertia": true
+    },
+    {
+      "id": "tracking",
+      "name": "Shipment tracking",
+      "kind": "component",
+      "evolution": 0.56,
+      "visibility": 0.28,
+      "depends_on": [
+        "eta",
+        "telematics"
+      ],
+      "label": "right",
+      "notes": "Expected by every shipper; buyers now see it too."
+    },
+    {
+      "id": "carbon",
+      "name": "Carbon reporting",
+      "kind": "component",
+      "evolution": 0.12,
+      "visibility": 0.36,
+      "depends_on": [
+        "telematics"
+      ],
+      "label": "right",
+      "notes": "Measured CO2e per parcel. Nobody else in the market offers it yet."
+    },
+    {
+      "id": "customs",
+      "name": "Customs declarations",
+      "kind": "component",
+      "evolution": 0.46,
+      "visibility": 0.44,
+      "depends_on": [],
+      "label": "above",
+      "notes": "Generated from order data. Moving toward a product as brokers adopt the same templates.",
+      "movement": {
+        "to": 0.62,
+        "label": "Customs as a product",
+        "place": "above"
+      }
+    },
+    {
+      "id": "eta",
+      "name": "ETA prediction",
+      "kind": "component",
+      "evolution": 0.2,
+      "visibility": 0.48,
+      "depends_on": [
+        "telematics",
+        "cloud"
+      ],
+      "label": "right",
+      "notes": "Our own model on nine years of stop data. The differentiator; keep in-house."
+    },
+    {
+      "id": "fleet",
+      "name": "Delivery fleet",
+      "kind": "component",
+      "evolution": 0.7,
+      "visibility": 0.5,
+      "depends_on": [
+        "energy"
+      ],
+      "label": "above",
+      "notes": "Evolving: owned diesel vans to leased electric vans on a utility contract.",
+      "movement": {
+        "to": 0.88,
+        "label": "Leased electric fleet",
+        "place": "above"
+      }
+    },
+    {
+      "id": "routing",
+      "name": "Route optimisation",
+      "kind": "component",
+      "evolution": 0.4,
+      "visibility": 0.56,
+      "depends_on": [
+        "telematics"
+      ],
+      "label": "above",
+      "notes": "Evolving: replace the in-house planner with an off-the-shelf product.",
+      "movement": {
+        "to": 0.66,
+        "label": "Off-the-shelf routing",
+        "place": "below"
+      }
+    },
+    {
+      "id": "hubs",
+      "name": "Hub operations",
+      "kind": "component",
+      "evolution": 0.62,
+      "visibility": 0.66,
+      "depends_on": [],
+      "label": "right",
+      "notes": "Six cross-dock hubs with standard sortation equipment."
+    },
+    {
+      "id": "telematics",
+      "name": "Telematics data",
+      "kind": "component",
+      "evolution": 0.48,
+      "visibility": 0.74,
+      "depends_on": [
+        "cloud"
+      ],
+      "label": "right",
+      "notes": "Feeds ETA, routing and carbon. Keep in-house."
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "kind": "component",
+      "evolution": 0.86,
+      "visibility": 0.8,
+      "depends_on": [],
+      "label": "left",
+      "notes": "Diesel and grid power bought at market price."
+    },
+    {
+      "id": "cloud",
+      "name": "Cloud hosting",
+      "kind": "component",
+      "evolution": 0.92,
+      "visibility": 0.94,
+      "depends_on": [],
+      "label": "left",
+      "notes": "Utility compute and storage."
+    }
+  ]
+}

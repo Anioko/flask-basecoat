@@ -1,0 +1,54 @@
+{
+  "title": "Northwind Logistics · Q1 2027",
+  "subtitle": "OKR · Objectives and Key Results, after Andy Grove and John Doerr",
+  "quarter": "Q1 2027 · 1 Jan to 31 Mar",
+  "week": "Week 9 of 13",
+  "objectives": [
+    {
+      "id": "O1",
+      "title": "Make Northwind the carrier online retailers trust to keep their delivery promise",
+      "owner": "Dana Okafor, COO",
+      "confidence": 7,
+      "key_results": [
+        {"title": "Raise deliveries inside the 30-minute ETA window from 81% to 95%", "owner": "Operations", "start": 81, "current": 91, "target": 95, "unit": "%", "status": "On track",
+         "initiatives": [{"name": "ETA model v2 with live traffic data", "state": "Done"}, {"name": "Dispatcher retraining in all six hubs", "state": "In progress"}]},
+        {"title": "Cut delivery tickets from 9.3 to 4 per 1,000 parcels", "owner": "Customer success", "start": 9.3, "current": 6.1, "target": 4, "unit": "", "status": "On track",
+         "initiatives": [{"name": "Buyer ETA SMS switched on for every shipper", "state": "In progress"}, {"name": "Self-serve redelivery from the tracking page", "state": "Not started"}]},
+        {"title": "Onboard 150 new shippers to Northwind Flow", "owner": "Sales", "start": 0, "current": 58, "target": 150, "unit": "", "status": "At risk",
+         "initiatives": [{"name": "Shopify app relisted with one-click setup", "state": "Done"}, {"name": "Referral deal with three 3PL warehouses", "state": "In progress"}]},
+        {"title": "Publish measured CO2e per parcel for 100% of deliveries", "owner": "Platform", "start": 0, "current": 100, "target": 100, "unit": "%", "status": "Done",
+         "initiatives": [{"name": "Telematics feed into the carbon engine", "state": "Done"}, {"name": "Carbon CSV export for CSRD reports", "state": "Done"}]}
+      ]
+    },
+    {
+      "id": "O2",
+      "title": "Make cross-border parcels as easy as domestic ones",
+      "owner": "Priya Raman, Head of Customs",
+      "confidence": 5,
+      "key_results": [
+        {"title": "Raise customs declarations accepted first time from 91% to 98%", "owner": "Customs", "start": 91, "current": 95, "target": 98, "unit": "%", "status": "On track",
+         "initiatives": [{"name": "Auto-filled declarations from order data", "state": "Done"}, {"name": "Commodity code suggestions in the portal", "state": "In progress"}]},
+        {"title": "Cut median UK to EU clearance time from 26 to 8 hours", "owner": "Customs", "start": 26, "current": 17, "target": 8, "unit": " hours", "status": "At risk",
+         "initiatives": [{"name": "Pre-lodge declarations before the ferry sails", "state": "In progress"}]},
+        {"title": "Open pre-filled declarations on 5 trade lanes", "owner": "Product", "start": 0, "current": 3, "target": 5, "unit": " lanes", "status": "On track",
+         "initiatives": [{"name": "Rotterdam and Felixstowe lanes live", "state": "Done"}, {"name": "Hamburg and Dublin lanes", "state": "Not started"}]},
+        {"title": "Add 2 customs brokers at the Dover crossing", "owner": "Partnerships", "start": 0, "current": 0, "target": 2, "unit": " brokers", "status": "Off track",
+         "initiatives": [{"name": "Shortlist and reference checks", "state": "Not started"}]}
+      ]
+    },
+    {
+      "id": "O3",
+      "title": "Build an operation that drivers want to stay in",
+      "owner": "Tomasz Wieczorek, Head of People",
+      "confidence": 8,
+      "key_results": [
+        {"title": "Raise 12-month driver retention from 71% to 85%", "owner": "People", "start": 71, "current": 77, "target": 85, "unit": "%", "status": "On track",
+         "initiatives": [{"name": "Pay ladder tied to service years", "state": "Done"}, {"name": "Rota choice two weeks ahead", "state": "In progress"}]},
+        {"title": "Certify 120 drivers on electric vans", "owner": "Fleet", "start": 0, "current": 64, "target": 120, "unit": " drivers", "status": "On track",
+         "initiatives": [{"name": "Four-day EV course at Hub 2", "state": "In progress"}]},
+        {"title": "Run all 6 hubs on live dashboards every day", "owner": "Operations", "start": 2, "current": 4, "target": 6, "unit": " hubs", "status": "On track",
+         "initiatives": [{"name": "Ops analytics rollout", "state": "In progress"}, {"name": "Shift lead dashboard training", "state": "Not started"}]}
+      ]
+    }
+  ]
+}

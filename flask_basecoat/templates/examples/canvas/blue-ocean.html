@@ -1,0 +1,12 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/canvas/blue-ocean.html' as canvas %}
+{#- Blue Ocean Strategy on the dashboard-01 frame. Tier C2: the drawing is the one marked region.
+    Check:  python compliance/scripts/check_page.py /examples/canvas/blue-ocean --nearest dashboard-01 --browser -#}
+{% block title %}Blue Ocean Strategy · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% block body %}
+{% call shell('Blue Ocean Strategy') %}
+  <div class="px-4 lg:px-6">{{ canvas.blue_ocean(data) }}</div>
+{% endcall %}
+{% endblock %}

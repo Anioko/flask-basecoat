@@ -1,0 +1,15 @@
+{# Barrel: every strategy canvas macro. Usage: {% import 'basecoat/canvas/index.html' as canvas %} then {{ canvas.swot_analysis(data) }} #}
+{% import 'basecoat/canvas/business-model-canvas.html' as _business_model_canvas %}{% set business_model_canvas = _business_model_canvas.business_model_canvas %}
+{% import 'basecoat/canvas/lean-canvas.html' as _lean_canvas %}{% set lean_canvas = _lean_canvas.lean_canvas %}
+{% import 'basecoat/canvas/value-proposition-canvas.html' as _value_proposition_canvas %}{% set value_proposition_canvas = _value_proposition_canvas.value_proposition_canvas %}
+{% import 'basecoat/canvas/swot-analysis.html' as _swot_analysis %}{% set swot_analysis = _swot_analysis.swot_analysis %}
+{% import 'basecoat/canvas/pestle-analysis.html' as _pestle_analysis %}{% set pestle_analysis = _pestle_analysis.pestle_analysis %}
+{% import 'basecoat/canvas/porters-five-forces.html' as _porters_five_forces %}{% set porters_five_forces = _porters_five_forces.porters_five_forces %}
+{% import 'basecoat/canvas/ansoff-matrix.html' as _ansoff_matrix %}{% set ansoff_matrix = _ansoff_matrix.ansoff_matrix %}
+{% import 'basecoat/canvas/balanced-scorecard.html' as _balanced_scorecard %}{% set balanced_scorecard = _balanced_scorecard.balanced_scorecard %}
+{% import 'basecoat/canvas/blue-ocean.html' as _blue_ocean %}{% set blue_ocean = _blue_ocean.blue_ocean %}
+{% import 'basecoat/canvas/mckinsey-7s.html' as _mckinsey_7s %}{% set mckinsey_7s = _mckinsey_7s.mckinsey_7s %}
+{% import 'basecoat/canvas/empathy-map.html' as _empathy_map %}{% set empathy_map = _empathy_map.empathy_map %}
+{% import 'basecoat/canvas/product-vision-board.html' as _product_vision_board %}{% set product_vision_board = _product_vision_board.product_vision_board %}
+{% import 'basecoat/canvas/okr.html' as _okr %}{% set okr = _okr.okr %}
+{% import 'basecoat/canvas/wardley-mapping.html' as _wardley_mapping %}{% set wardley_mapping = _wardley_mapping.wardley_mapping %}

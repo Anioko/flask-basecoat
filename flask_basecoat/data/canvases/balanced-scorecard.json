@@ -1,0 +1,28 @@
+{
+  "title": "Northwind Logistics · scorecard for 2027",
+  "subtitle": "Balanced Scorecard · Kaplan and Norton",
+  "vision": "The delivery partner online retailers trust to keep their promise to buyers.",
+  "strategy": "Win on precise delivery times, cross-border ease and measured carbon, not on price.",
+  "perspectives": {
+    "financial": [
+      {"objective": "Grow profitable revenue", "measure": "Revenue growth", "target": "+14%", "initiative": "Flow Pro launch; Hamburg hub"},
+      {"objective": "Improve margin", "measure": "Operating margin", "target": "8.5%", "initiative": "Route optimisation; pallet repricing"},
+      {"objective": "Reduce customer concentration", "measure": "Share of revenue from the top 3 shippers", "target": "Below 20%", "initiative": "Mid-market sales team"}
+    ],
+    "customer": [
+      {"objective": "Be the carrier shippers recommend", "measure": "Net Promoter Score", "target": "45", "initiative": "Quarterly service reviews"},
+      {"objective": "Fewer delivery questions", "measure": "Tickets per 1,000 parcels", "target": "Below 4", "initiative": "Buyer ETA SMS for all shippers"},
+      {"objective": "Keep the customers we win", "measure": "Annual shipper churn", "target": "Below 5%", "initiative": "Named account managers"}
+    ],
+    "internal": [
+      {"objective": "Deliver on the promised slot", "measure": "Deliveries inside the 30-minute window", "target": "95%", "initiative": "ETA model v2; dispatcher retraining"},
+      {"objective": "Clear customs first time", "measure": "Declarations accepted first time", "target": "98%", "initiative": "Auto-filled declarations"},
+      {"objective": "Cut emissions per parcel", "measure": "g CO2e per parcel", "target": "-18%", "initiative": "120 more electric vans"}
+    ],
+    "learning": [
+      {"objective": "Keep and grow our drivers", "measure": "Driver retention", "target": "85%", "initiative": "EV training; pay ladder"},
+      {"objective": "Run on data", "measure": "Hubs using live dashboards daily", "target": "6 of 6", "initiative": "Ops analytics rollout"},
+      {"objective": "Modern shipper platform", "measure": "Portal traffic on the new stack", "target": "100%", "initiative": "Retire the 2016 portal"}
+    ]
+  }
+}

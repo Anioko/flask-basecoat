@@ -1,0 +1,89 @@
+{# Blue Ocean Strategy, C2. After W. Chan Kim and Renee Mauborgne, Blue Ocean Strategy (2005) and "Blue Ocean Strategy"
+   (Harvard Business Review, 2004): the Strategy Canvas, a line chart of value curves (the factors the industry competes
+   on along the x axis, the offering level from low to high up the y axis, one line per company), above the Four Actions
+   Framework: Eliminate and Raise on the top row, Reduce and Create beneath, as the authors draw the grid.
+   The chart is the shipped chart-line-multiple spec with its data, series and axes replaced.
+   Usage: {{ canvas.blue_ocean(data) }}, data = {'title', 'subtitle', 'companies': [{'key', 'name'}] (at most five, one
+   chart colour each), 'factors': [{'name', 'scores': {<company key>: 0 to 10}}],
+   'actions': {'eliminate'|'reduce'|'raise'|'create': [note, ...]}}.
+   The list route holds every factor score and every action note. Notes of the four actions are shown, not edited. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% import 'basecoat/index.html' as ui %}
+
+{% set ACTIONS = [
+  {'key': 'eliminate', 'title': 'Eliminate', 'icon': 'circle-x', 'question': 'Which factors the industry takes for granted should be eliminated?'},
+  {'key': 'raise', 'title': 'Raise', 'icon': 'arrow-up', 'question': 'Which factors should be raised well above the industry standard?'},
+  {'key': 'reduce', 'title': 'Reduce', 'icon': 'arrow-down', 'question': 'Which factors should be reduced well below the industry standard?'},
+  {'key': 'create', 'title': 'Create', 'icon': 'sparkles', 'question': 'Which factors should be created that the industry has never offered?'},
+] %}
+
+{% macro blue_ocean(data, id='blue-ocean') -%}
+{%- set rows = [] -%}
+{%- for fa in data.factors -%}
+  {%- set cells = ['Strategy canvas', fa.name] -%}
+  {%- for c in data.companies %}{% set _ = cells.append(fa.scores[c.key] ~ ' of 10') %}{% endfor -%}
+  {%- set _ = rows.append(['factor-' ~ loop.index] + cells) -%}
+{%- endfor -%}
+{%- for a in ACTIONS -%}{%- for n in data.actions[a.key] -%}
+  {%- set cells = [a.title, n] -%}
+  {%- for c in data.companies %}{% set _ = cells.append('Not scored') %}{% endfor -%}
+  {%- set _ = rows.append([a.key] + cells) -%}
+{%- endfor -%}{%- endfor -%}
+
+{#- the chart: chart-line-multiple with the company curves -#}
+{%- set spec = chart_spec('chart-line-multiple') -%}
+{%- set cfg = {} -%}{%- set series = [] -%}{%- set points = [] -%}
+{#- The first company is the subject: the strongest chart token in each theme and a heavier line. The others are
+    told apart by their dash pattern as well as their tone, so colour is never the only signal. -#}
+{%- set dashes = ['0', '6 4', '2 4', '10 4 2 4'] -%}
+{%- for c in data.companies -%}
+  {%- set n = loop.index -%}
+  {%- set light = 'var(--chart-' ~ (4 - n if n < 4 else n) ~ ')' -%}
+  {%- set dark = 'var(--chart-' ~ n ~ ')' -%}
+  {%- set _ = cfg.update({c.key: {'label': c.name, 'theme': {'light': light, 'dark': dark}}}) -%}
+  {%- set _ = series.append({'component': 'Line', 'dataKey': c.key, 'type': 'linear', 'stroke': 'var(--color-' ~ c.key ~ ')', 'strokeWidth': 3 if n == 1 else 2,
+      'strokeDasharray': dashes[n - 1] if n <= 4 else '0', 'dot': {'fill': 'var(--color-' ~ c.key ~ ')'}}) -%}
+{%- endfor -%}
+{%- for fa in data.factors -%}
+  {%- set pt = {'factor': fa.name} -%}{%- set _ = pt.update(fa.scores) -%}{%- set _ = points.append(pt) -%}
+{%- endfor -%}
+{%- set _ = spec.update({
+  'config': cfg, 'data': points, 'series': series,
+  'props': {'accessibilityLayer': true, 'margin': {'left': 8, 'right': 40, 'top': 12}},
+  'axes': [
+    {'component': 'XAxis', 'dataKey': 'factor', 'tickLine': false, 'axisLine': false, 'tickMargin': 8, 'interval': 0},
+    {'component': 'YAxis', 'tickLine': false, 'axisLine': false, 'tickMargin': 8, 'width': 28, 'domain': [0, 10], 'tickCount': 6}],
+  'legend': {'$class': 'flex items-center justify-center gap-4 pt-3'}}) -%}
+
+{% call f.frame(id, 'C2', 'Blue ocean strategy canvas', data, rows,
+    'Scroll sideways on a narrow screen to see the whole canvas. The List view gives every score and every action as a table.',
+    credit='Strategy Canvas and Four Actions Framework after W. Chan Kim and Renee Mauborgne, Blue Ocean Strategy.',
+    width='min-w-240', columns=['Part', 'Factor or action'] + (data.companies|map(attribute='name')|list)) %}
+  <div class="flex flex-col gap-2 rounded-lg border bg-muted/30 p-2">
+    {% call ui.card() %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text='Strategy Canvas') }}
+        {{ ui.card_description(text='Offering level on each factor the industry competes on, from 0 (low) to 10 (high), for ' ~ (data.companies|length) ~ ' companies across ' ~ (data.factors|length) ~ ' factors.') }}
+      {% endcall %}
+      {% call ui.card_content() %}
+        {{ ui.chart_from_spec(spec, id=id ~ '-curves', class='aspect-auto h-[250px] w-full') }}
+      {% endcall %}
+    {% endcall %}
+    <div class="grid grid-cols-2 gap-2">
+      {% for a in ACTIONS %}
+      {% call ui.card(size='sm') %}
+        {% call ui.card_header() %}
+          {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide(a.icon, 'size-4 text-muted-foreground') }}<span>{{ a.title }}</span>{% endcall %}
+          {{ ui.card_description(text=a.question, class='text-xs') }}
+        {% endcall %}
+        {% call ui.card_content() %}
+          <ul class="flex flex-col gap-1.5" data-blue-ocean-action="{{ a.key }}" aria-label="{{ a.title }} notes">
+            {% for n in data.actions[a.key] %}<li class="rounded-md border bg-muted px-2 py-1.5 text-sm">{{ n }}</li>{% endfor %}
+          </ul>
+        {% endcall %}
+      {% endcall %}
+      {% endfor %}
+    </div>
+  </div>
+{% endcall %}
+{%- endmacro %}

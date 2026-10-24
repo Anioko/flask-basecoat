@@ -1,0 +1,82 @@
+{# OKR, C2. After Andy Grove (High Output Management, 1983) and John Doerr (Measure What Matters, 2018): each Objective is
+   one qualitative goal with three to five measurable Key Results, each scored 0.0 to 1.0 (0.7 counts as success on a stretch
+   goal). A Key Result shows its progress bar, its number (now of target), its score and a status Badge, and lists the
+   initiatives that move it. Several Objectives stack in reading order.
+   Usage: {{ canvas.okr(data) }}, data = {'title', 'subtitle', 'quarter', 'week', 'objectives': [{'id', 'title', 'owner',
+   'confidence' (1 to 10), 'key_results': [{'title', 'owner', 'start', 'current', 'target', 'unit', 'status'
+   (On track | At risk | Off track | Done), 'initiatives': [{'name', 'state' (Done | In progress | Not started)}]}]}]}.
+   The score is (current - start) / (target - start), kept between 0 and 1; it works when lower is better. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% import 'basecoat/index.html' as ui %}
+
+{% set STATUS = {'On track': ['outline', 'circle-check'], 'At risk': ['secondary', 'triangle-alert'], 'Off track': ['default', 'circle-x'], 'Done': ['outline', 'check']} %}
+{% set STATE_ICON = {'Done': 'circle-check', 'In progress': 'loader-circle', 'Not started': 'circle-dashed'} %}
+
+{% macro score_of(kr) -%}
+{%- set span = kr.target - kr.start -%}
+{%- set raw = ((kr.current - kr.start) / span) if span else 1 -%}
+{{- [0, [raw, 1]|min]|max -}}
+{%- endmacro %}
+
+{% macro okr(data, id='okr') -%}
+{%- set rows = [] -%}
+{%- for o in data.objectives -%}{%- for kr in o.key_results -%}
+  {%- set sc = score_of(kr)|float -%}
+  {%- set ins = [] -%}{%- for i in kr.initiatives %}{% set _ = ins.append(i.name ~ ' (' ~ i.state|lower ~ ')') %}{% endfor -%}
+  {%- set _ = rows.append([o.id ~ '-kr' ~ loop.index, o.id ~ ' ' ~ o.title, o.owner, o.confidence ~ ' of 10', 'KR' ~ loop.index ~ ' ' ~ kr.title, kr.owner,
+      kr.start ~ kr.unit, kr.current ~ kr.unit, kr.target ~ kr.unit, '%.1f'|format(sc), kr.status,
+      ins|join('; ')]) -%}
+{%- endfor -%}{%- endfor -%}
+{% call f.frame(id, 'C2', 'OKR', data, rows,
+    'Scroll sideways on a narrow screen to see every key result. Scores run from 0.0 to 1.0; 0.7 counts as success on a stretch goal.',
+    credit='OKR after Andy Grove, High Output Management (1983), and John Doerr, Measure What Matters (2018).',
+    width='min-w-200',
+    columns=['Objective', 'Owner', 'Confidence', 'Key result', 'Result owner', 'Start', 'Now', 'Target', 'Score', 'Status', 'Initiatives']) %}
+  <div class="flex flex-col gap-3 rounded-lg border bg-muted/30 p-2">
+  {% for o in data.objectives %}
+    {%- set scores = [] -%}
+    {%- for kr in o.key_results %}{% set _ = scores.append(score_of(kr)|float) %}{% endfor -%}
+    {%- set avg = (scores|sum) / (scores|length) -%}
+    {% call ui.card() %}
+      {% call ui.card_header() %}
+        {{ ui.card_description(text='Objective ' ~ o.id) }}
+        {{ ui.card_title(text=o.title, class='text-xl font-semibold') }}
+        {% call ui.card_action() %}{% call ui.badge(variant='secondary') %}{{ lucide('gauge') }}Confidence {{ o.confidence }}/10{% endcall %}{% endcall %}
+      {% endcall %}
+      {% call ui.card_content(class='flex flex-col gap-4') %}
+        <div class="flex flex-wrap items-center gap-x-8 gap-y-2 text-sm">
+          <div class="flex flex-col"><span class="text-xs text-muted-foreground">Owner</span><span class="font-medium">{{ o.owner }}</span></div>
+          <div class="flex flex-col"><span class="text-xs text-muted-foreground">Quarter</span><span class="font-medium">{{ data.quarter }}</span></div>
+          <div class="flex flex-col"><span class="text-xs text-muted-foreground">Average score</span><span class="font-medium tabular-nums">{{ '%.2f'|format(avg) }} · {{ data.week|lower }}</span></div>
+        </div>
+        {{ ui.separator() }}
+        <ul class="flex flex-col gap-4" aria-label="Key results of {{ o.id }}">
+        {% for kr in o.key_results %}
+          {%- set sc = score_of(kr)|float -%}
+          {%- set pct = (sc * 100)|round|int -%}
+          {%- set st = STATUS[kr.status] -%}
+          <li class="grid grid-cols-12 items-start gap-3" data-okr-kr="{{ o.id }}-kr{{ loop.index }}">
+            <span class="col-span-1 text-sm font-medium text-muted-foreground tabular-nums">KR{{ loop.index }}</span>
+            <div class="col-span-5 flex flex-col gap-2">
+              <span class="text-sm font-medium">{{ kr.title }}</span>
+              <ul class="flex flex-col gap-1">
+                {% for i in kr.initiatives %}
+                <li class="flex items-center gap-2 text-xs text-muted-foreground">{{ lucide(STATE_ICON[i.state], 'size-3.5 shrink-0') }}<span>{{ i.name }}</span><span>· {{ i.state }}</span></li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="col-span-3 flex flex-col gap-1.5">
+              <div class="flex items-center justify-between gap-2 text-xs text-muted-foreground"><span>{{ kr.owner }}</span><span class="tabular-nums">{{ kr.current }}{{ kr.unit }} of {{ kr.target }}{{ kr.unit }}</span></div>
+              {% call ui.progress(value=pct, attrs={'aria-label': o.id ~ ' KR' ~ loop.index ~ ' progress, ' ~ pct ~ ' percent'}) %}{{ ui.progress_indicator(value=pct) }}{% endcall %}
+            </div>
+            <div class="col-span-1 flex justify-end">{% call ui.badge(variant=('default' if sc >= 0.7 else ('secondary' if sc >= 0.4 else 'outline')), class='tabular-nums') %}{{ '%.1f'|format(sc) }}{% endcall %}</div>
+            <div class="col-span-2 flex justify-end">{% call ui.badge(variant=st[0]) %}{{ lucide(st[1]) }}{{ kr.status }}{% endcall %}</div>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endcall %}
+    {% endcall %}
+  {% endfor %}
+  </div>
+{% endcall %}
+{%- endmacro %}

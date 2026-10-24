@@ -1,0 +1,86 @@
+{# Balanced Scorecard, C2. After Kaplan and Norton, "Using the Balanced Scorecard as a Strategic Management System"
+   (Harvard Business Review, January-February 1996): Vision and Strategy in the middle, the four perspectives around it
+   (Financial above, Learning and Growth below, Internal Business Processes and Customer at the sides), each with
+   Objectives, Measures, Targets and Initiatives. The arrows run from Learning and Growth up through Internal Business
+   Processes and Customer to Financial: the cause-and-effect chain of the strategy.
+   Usage: {{ canvas.balanced_scorecard(data) }}, data = {'title', 'subtitle', 'vision', 'strategy',
+   'perspectives': {'financial'|'customer'|'internal'|'learning': [{'objective', 'measure', 'target', 'initiative'}]}}.
+   The list route holds one row per objective, plus the vision and the strategy. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% import 'basecoat/index.html' as ui %}
+
+{% set PERSPECTIVES = {
+  'financial': {'title': 'Financial', 'icon': 'banknote', 'question': 'To succeed financially, how should we appear to our shareholders?',
+                'area': 'col-span-16 col-start-5 row-start-1'},
+  'internal': {'title': 'Internal Business Processes', 'icon': 'settings', 'question': 'To satisfy our shareholders and customers, what business processes must we excel at?',
+               'area': 'col-span-9 col-start-1 row-start-3'},
+  'customer': {'title': 'Customer', 'icon': 'users', 'question': 'To achieve our vision, how should we appear to our customers?',
+               'area': 'col-span-9 col-start-16 row-start-3'},
+  'learning': {'title': 'Learning and Growth', 'icon': 'book-open', 'question': 'To achieve our vision, how will we sustain our ability to change and improve?',
+               'area': 'col-span-16 col-start-5 row-start-5'},
+} %}
+{% set ORDER = ['financial', 'internal', 'customer', 'learning'] %}
+
+{% macro arrow(icon, area) -%}
+<div class="flex items-center justify-center text-muted-foreground {{ area }}" aria-hidden="true">{{ lucide(icon, 'size-6') }}</div>
+{%- endmacro %}
+
+{% macro perspective(key, p, rows) -%}
+{% call ui.card(size='sm', class=p.area) %}
+  {% call ui.card_header() %}
+    {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide(p.icon, 'size-4 text-muted-foreground') }}<span>{{ p.title }}</span>{% endcall %}
+    {{ ui.card_description(text=p.question, class='text-xs') }}
+  {% endcall %}
+  {% call ui.card_content() %}
+    {% call ui.table_container() %}{% call ui.table(class='text-xs', attrs={'aria-label': p.title ~ ' perspective'}) %}
+      {% call ui.table_header() %}{% call ui.table_row() %}
+        {% for c in ['Objectives', 'Measures', 'Targets', 'Initiatives'] %}{{ ui.table_head(text=c, attrs={'scope': 'col'}) }}{% endfor %}
+      {% endcall %}{% endcall %}
+      {% call ui.table_body() %}
+        {% for r in rows %}{% call ui.table_row() %}
+          {{ ui.table_cell(text=r.objective, class='font-medium whitespace-normal') }}
+          {{ ui.table_cell(text=r.measure, class='whitespace-normal text-muted-foreground') }}
+          {{ ui.table_cell(text=r.target, class='tabular-nums') }}
+          {{ ui.table_cell(text=r.initiative, class='whitespace-normal text-muted-foreground') }}
+        {% endcall %}{% endfor %}
+      {% endcall %}
+    {% endcall %}{% endcall %}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro balanced_scorecard(data, id='balanced-scorecard') -%}
+{%- set rows = [] -%}
+{%- set _ = rows.append(['vision', 'Vision and Strategy', 'Vision: ' ~ data.vision, 'Not applicable', 'Not applicable', 'Not applicable']) -%}
+{%- set _ = rows.append(['strategy', 'Vision and Strategy', 'Strategy: ' ~ data.strategy, 'Not applicable', 'Not applicable', 'Not applicable']) -%}
+{%- for k in ORDER -%}{%- for r in data.perspectives[k] -%}
+  {%- set _ = rows.append([k, PERSPECTIVES[k].title, r.objective, r.measure, r.target, r.initiative]) -%}
+{%- endfor -%}{%- endfor -%}
+{% call f.frame(id, 'C2', 'Balanced scorecard', data, rows,
+    'Scroll sideways on a narrow screen to see all four perspectives. Arrows show cause and effect: learning drives internal processes, which drive customer results, which drive financial results.',
+    credit='Balanced Scorecard after Robert S. Kaplan and David P. Norton, Harvard Business Review, 1996.',
+    width='min-w-270', columns=['Perspective', 'Objective', 'Measure', 'Target', 'Initiative']) %}
+  <div class="grid grid-cols-24 gap-y-1 rounded-lg border bg-muted/30 p-2">
+    {{ perspective('financial', PERSPECTIVES.financial, data.perspectives.financial) }}
+    {{ arrow('arrow-up', 'col-start-18 row-start-2') }}
+    {{ arrow('arrow-up-down', 'col-span-4 col-start-11 row-start-2') }}
+    {{ perspective('internal', PERSPECTIVES.internal, data.perspectives.internal) }}
+    {{ arrow('arrow-right', 'col-start-10 row-start-3') }}
+    {% call ui.card(size='sm', class='col-span-4 col-start-11 row-start-3 self-center') %}
+      {% call ui.card_header() %}
+        {% call ui.card_title(class='flex items-center gap-2') %}{{ lucide('target', 'size-4 text-muted-foreground') }}<span>Vision and Strategy</span>{% endcall %}
+      {% endcall %}
+      {% call ui.card_content(class='flex flex-col gap-3 text-sm') %}
+        <div class="flex flex-col gap-1"><span class="text-xs font-medium text-muted-foreground">Vision</span><p>{{ data.vision }}</p></div>
+        {{ ui.separator() }}
+        <div class="flex flex-col gap-1"><span class="text-xs font-medium text-muted-foreground">Strategy</span><p>{{ data.strategy }}</p></div>
+      {% endcall %}
+    {% endcall %}
+    {{ arrow('arrow-right', 'col-start-15 row-start-3') }}
+    {{ perspective('customer', PERSPECTIVES.customer, data.perspectives.customer) }}
+    {{ arrow('arrow-up', 'col-start-7 row-start-4') }}
+    {{ arrow('arrow-up-down', 'col-span-4 col-start-11 row-start-4') }}
+    {{ perspective('learning', PERSPECTIVES.learning, data.perspectives.learning) }}
+  </div>
+{% endcall %}
+{%- endmacro %}

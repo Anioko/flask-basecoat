@@ -1,0 +1,41 @@
+{
+  "title": "Northwind Flow · leaving the price war in parcel delivery",
+  "subtitle": "Blue Ocean Strategy · Kim and Mauborgne",
+  "companies": [
+    {"key": "northwind", "name": "Northwind Flow"},
+    {"key": "continental", "name": "Continental Post"},
+    {"key": "quickship", "name": "QuickShip Express"}
+  ],
+  "factors": [
+    {"name": "Price", "scores": {"northwind": 5, "continental": 7, "quickship": 3}},
+    {"name": "Minimum volume", "scores": {"northwind": 0, "continental": 6, "quickship": 2}},
+    {"name": "Coverage", "scores": {"northwind": 5, "continental": 9, "quickship": 6}},
+    {"name": "Account support", "scores": {"northwind": 3, "continental": 6, "quickship": 1}},
+    {"name": "Delivery window", "scores": {"northwind": 9, "continental": 3, "quickship": 2}},
+    {"name": "Live tracking", "scores": {"northwind": 9, "continental": 4, "quickship": 3}},
+    {"name": "Customs handling", "scores": {"northwind": 8, "continental": 3, "quickship": 1}},
+    {"name": "Carbon data", "scores": {"northwind": 9, "continental": 0, "quickship": 0}}
+  ],
+  "actions": {
+    "eliminate": [
+      "Minimum monthly volume commitments",
+      "A separate fuel surcharge on every invoice",
+      "Paper customs forms filled in by the shipper"
+    ],
+    "reduce": [
+      "Coverage: UK and Benelux only, no pan-European promise",
+      "Account management for shippers under 2,000 parcels a month",
+      "Price matching against national posts"
+    ],
+    "raise": [
+      "Delivery window: from a whole day to 30 minutes",
+      "Live tracking shown to the buyer, not just the shipper",
+      "Customs handled end to end on UK to EU parcels"
+    ],
+    "create": [
+      "A measured carbon receipt for every parcel",
+      "The buyer picks a 30-minute slot from the tracking page",
+      "Carbon data export for CSRD reporting"
+    ]
+  }
+}

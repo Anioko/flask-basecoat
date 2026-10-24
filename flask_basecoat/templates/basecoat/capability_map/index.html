@@ -1,0 +1,14 @@
+{# Barrel: the capability-map macros. Usage: {% import 'basecoat/capability_map/index.html' as capmap %} then {{ capmap.capability_map(data) }} #}
+{% import 'basecoat/capability_map/capability-map.html' as _capability_map %}
+{% set capability_map = _capability_map.capability_map %}
+{% import 'basecoat/capability_map/capability-tree.html' as _capability_tree %}
+{% set capability_tree = _capability_tree.capability_tree %}
+{% import 'basecoat/capability_map/applications-by-capability.html' as _applications_by_capability %}
+{% set applications_by_capability = _applications_by_capability.applications_by_capability %}
+{% import 'basecoat/capability_map/capability-planning.html' as _capability_planning %}
+{% set capability_planning = _capability_planning.capability_planning %}
+{% import 'basecoat/capability_map/capability-dialogs.html' as _capability_dialogs %}
+{% set form_dialog = _capability_dialogs.form_dialog %}
+{% set metadata_dialog = _capability_dialogs.metadata_dialog %}
+{% set type_dialog = _capability_dialogs.type_dialog %}
+{% set delete_dialog = _capability_dialogs.delete_dialog %}
