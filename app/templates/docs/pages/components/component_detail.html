@@ -26,9 +26,12 @@
 <section class="docs-section">
   <h2>Usage Examples</h2>
   <p>Here are some practical examples of using the {{ component.title.lower() }} component:</p>
+  {% set entry = basecoat_entry(component.name) %}
+  {% if entry and entry.docs %}
+{{ basecoat_render_docs(entry.docs) }}
+  {% else %}
 
-  {% set entry = basecoat_entry(component.name) %}{% if entry and entry.docs %}
-{{ basecoat_render_docs(entry.docs) }}  {% endif %}
+  {% endif %}
 </section>
 
 <section class="docs-section">
