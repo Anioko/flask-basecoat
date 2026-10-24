@@ -45,6 +45,11 @@
                 <p class="text-sm text-muted-foreground mt-1">100% shadcn/ui-aligned canonical components for Flask & Jinja2.</p>
             </div>
             <div class="flex items-center gap-3">
+                <nav aria-label="Component pages" data-slot="gallery-index">
+                    <ul class="flex items-center gap-3 text-sm">
+                        <li><a href="{{ url_for('basecoat_gallery.gallery_select') }}" class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">Select</a></li>
+                    </ul>
+                </nav>
                 <a href="{{ url_for('basecoat_gallery.gallery_button') }}" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 hover:bg-accent hover:text-accent-foreground">Button states</a>
                 <a href="{{ url_for('basecoat_gallery.gallery_textarea') }}" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 hover:bg-accent hover:text-accent-foreground">Textarea states</a>
                 <a href="{{ url_for('basecoat_gallery.gallery_label') }}" data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 hover:bg-accent hover:text-accent-foreground">Label states</a>

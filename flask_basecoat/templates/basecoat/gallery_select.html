@@ -1,0 +1,78 @@
+{% from 'basecoat/select.html' import select, select_group, select_item, select_separator %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select - Basecoat UI Component Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/basecoat.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <script src="{{ url_for('basecoat.static', filename='js/all.min.js') }}" defer></script>
+    <script src="{{ url_for('basecoat.static', filename='js/select-placeholder.js') }}" defer></script>
+    <script src="{{ url_for('basecoat.static', filename='js/select-scroll.js') }}" defer></script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 md:p-10 font-sans">
+    <main class="max-w-3xl mx-auto space-y-10">
+        <header class="flex items-center justify-between border-b border-border pb-6">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">Select</h1>
+                <p class="text-sm text-muted-foreground mt-1">Displays a list of options for the user to pick from, triggered by a button.</p>
+            </div>
+            <a href="{{ url_for('basecoat_gallery.gallery') }}" class="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">All components</a>
+        </header>
+
+        <section class="space-y-3" data-gallery-state="default">
+            <h2 class="text-xl font-semibold tracking-tight">Default with placeholder</h2>
+            {{ select(name='fruit', id='sel-default', placeholder='Select a fruit', label='Fruit', options=[('apple', 'Apple'), ('banana', 'Banana'), ('blueberry', 'Blueberry'), ('grapes', 'Grapes'), ('pineapple', 'Pineapple')], class='w-[180px]') }}
+        </section>
+
+        <section class="space-y-3" data-gallery-state="value">
+            <h2 class="text-xl font-semibold tracking-tight">With a selected value</h2>
+            {{ select(name='size_value', id='sel-value', value='banana', label='Favourite fruit', options=[('apple', 'Apple'), ('banana', 'Banana'), ('blueberry', 'Blueberry')], class='w-[180px]') }}
+        </section>
+
+        <section class="space-y-3" data-gallery-state="sizes">
+            <h2 class="text-xl font-semibold tracking-tight">Sizes</h2>
+            <div class="flex flex-wrap items-center gap-4">
+                {{ select(name='size_default', id='sel-size-default', placeholder='Default size', label='Default size', options=[('a', 'Option A'), ('b', 'Option B')], class='w-[180px]') }}
+                {{ select(name='size_sm', id='sel-size-sm', size='sm', placeholder='Small size', label='Small size', options=[('a', 'Option A'), ('b', 'Option B')], class='w-[180px]') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" data-gallery-state="groups">
+            <h2 class="text-xl font-semibold tracking-tight">Groups, labels and separators</h2>
+            {% call select(name='timezone', id='sel-groups', placeholder='Select a timezone', label='Timezone', class='w-[280px]') %}
+                {% call select_group(label='North America', id='sel-groups-na') %}
+                    {{ select_item(value='est', content='Eastern Standard Time (EST)') }}
+                    {{ select_item(value='cst', content='Central Standard Time (CST)') }}
+                    {{ select_item(value='pst', content='Pacific Standard Time (PST)') }}
+                {% endcall %}
+                {{ select_separator() }}
+                {% call select_group(label='Europe & Africa', id='sel-groups-eu') %}
+                    {{ select_item(value='gmt', content='Greenwich Mean Time (GMT)') }}
+                    {{ select_item(value='cet', content='Central European Time (CET)') }}
+                {% endcall %}
+            {% endcall %}
+        </section>
+
+        <section class="space-y-3" data-gallery-state="scrollable">
+            <h2 class="text-xl font-semibold tracking-tight">Scrollable list</h2>
+            {{ select(name='number', id='sel-scroll', placeholder='Pick a number', label='Number', options=numbers, class='w-[180px]') }}
+        </section>
+
+        <section class="space-y-3" data-gallery-state="disabled">
+            <h2 class="text-xl font-semibold tracking-tight">Disabled</h2>
+            <div class="flex flex-wrap items-center gap-4">
+                {{ select(name='disabled_select', id='sel-disabled', disabled=True, placeholder='Disabled select', label='Disabled select', options=[('a', 'Option A')], class='w-[180px]') }}
+                {{ select(name='disabled_item', id='sel-disabled-item', placeholder='Disabled option inside', label='Disabled option inside', options=[{'value': 'a', 'label': 'Available'}, {'value': 'b', 'label': 'Unavailable', 'disabled': True}, {'value': 'c', 'label': 'Also available'}], class='w-[200px]') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" data-gallery-state="invalid">
+            <h2 class="text-xl font-semibold tracking-tight">Invalid</h2>
+            {{ select(name='invalid_select', id='sel-invalid', invalid=True, required=True, placeholder='Required choice', label='Required choice', options=[('a', 'Option A'), ('b', 'Option B')], class='w-[180px]') }}
+            <p class="text-sm text-destructive">Please choose an option.</p>
+        </section>
+    </main>
+</body>
+</html>

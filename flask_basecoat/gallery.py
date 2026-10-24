@@ -41,6 +41,12 @@ def gallery():
     )
 
 
+@gallery_bp.route('/gallery/select')
+def gallery_select():
+    numbers = [(n, f'Number {n}') for n in range(1, 31)]
+    return render_template('basecoat/gallery_select.html', numbers=numbers)
+
+
 @gallery_bp.route('/gallery/input')
 def gallery_input():
     return render_template('basecoat/gallery_input.html')
