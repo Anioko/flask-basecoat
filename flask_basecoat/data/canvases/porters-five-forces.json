@@ -1,0 +1,34 @@
+{
+  "title": "Northwind Logistics · UK and Benelux parcel delivery for online retailers",
+  "subtitle": "Porter's Five Forces · Michael E. Porter",
+  "boxes": {
+    "new-entrants": [
+      "Hubs, fleet and customs licences cost over 40m GBP to replicate",
+      "But gig-courier platforms enter cities with no assets",
+      "Amazon Shipping opening to third-party sellers"
+    ],
+    "suppliers": [
+      "Only two EV van leasing firms can supply at our volume",
+      "Drivers scarce, wages up 7% a year",
+      "Fuel and power bought at market price",
+      "Software and maps easy to switch"
+    ],
+    "rivalry": [
+      "Four national carriers and a dozen regional players",
+      "Price cuts of up to 9% from national posts this year",
+      "Low switching costs for shippers using plugins",
+      "Capacity glut outside the November peak",
+      "Competition moving from price to tracking quality and carbon data"
+    ],
+    "buyers": [
+      "Top 3 shippers are 28% of revenue and tender every year",
+      "Small merchants compare rates in one click",
+      "Buyers value reliability over price for timed deliveries"
+    ],
+    "substitutes": [
+      "Pickup lockers and click-and-collect at stores",
+      "Retailers running their own vans in dense cities",
+      "Cargo-bike cooperatives for central zones"
+    ]
+  }
+}

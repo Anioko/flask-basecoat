@@ -1,0 +1,46 @@
+{# Ansoff matrix, C2. After H. Igor Ansoff, "Strategies for Diversification" (Harvard Business Review, 1957): products
+   across (Existing, New), markets down (Existing, New). Market Penetration (existing products, existing markets) and
+   Product Development (new products, existing markets) on top; Market Development (existing products, new markets) and
+   Diversification (new products, new markets) below. Growth risk rises from Market Penetration to Diversification: each
+   box says its risk in words and an arrow row under the matrix reads it.
+   Usage: {{ canvas.ansoff_matrix(data) }}. Box keys: market-penetration product-development market-development diversification. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% import 'basecoat/index.html' as ui %}
+{% set SPEC = {
+  'form': 'C2', 'name': 'Ansoff matrix',
+  'hint': 'Scroll sideways on a narrow screen to see both product columns.',
+  'boxes': [
+    {'key': 'market-penetration', 'title': 'Market Penetration', 'icon': 'target', 'question': 'Existing products, existing markets. Lowest risk.', 'area': 'col-span-4 col-start-4 row-start-3'},
+    {'key': 'product-development', 'title': 'Product Development', 'icon': 'lightbulb', 'question': 'New products, existing markets. Medium risk.', 'area': 'col-span-4 col-start-8 row-start-3'},
+    {'key': 'market-development', 'title': 'Market Development', 'icon': 'map', 'question': 'Existing products, new markets. Medium risk.', 'area': 'col-span-4 col-start-4 row-start-4'},
+    {'key': 'diversification', 'title': 'Diversification', 'icon': 'shuffle', 'question': 'New products, new markets. Highest risk.', 'area': 'col-span-4 col-start-8 row-start-4'},
+  ]} %}
+
+{% macro ansoff_matrix(data, id='ansoff-matrix') -%}
+{%- set boxes = data.boxes or {} -%}
+{%- set rows = [] -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, width='min-w-240') %}
+  <div class="flex flex-col gap-3">
+    <div class="grid grid-cols-11 gap-2 rounded-lg border bg-muted/30 p-2">
+      <div class="col-start-4 col-span-8 row-start-1 flex items-center justify-center gap-2 text-sm font-semibold">{{ lucide('package', 'size-4 text-muted-foreground') }}Products</div>
+      <div class="col-start-4 col-span-4 row-start-2 flex justify-center text-sm text-muted-foreground">Existing products</div>
+      <div class="col-start-8 col-span-4 row-start-2 flex justify-center text-sm text-muted-foreground">New products</div>
+      <div class="col-start-1 row-start-3 row-span-2 flex items-center justify-center text-sm font-semibold">Markets</div>
+      <div class="col-start-2 col-span-2 row-start-3 flex items-center justify-end px-2 text-sm text-muted-foreground">Existing markets</div>
+      <div class="col-start-2 col-span-2 row-start-4 flex items-center justify-end px-2 text-sm text-muted-foreground">New markets</div>
+      {% for b in SPEC.boxes %}{{ f.box(id, b, boxes) }}{% endfor %}
+    </div>
+    <div class="flex items-center gap-3 text-xs text-muted-foreground">
+      {{ ui.badge(text='Lowest risk', variant='outline') }}
+      <span>Market Penetration</span>
+      {{ lucide('arrow-right', 'size-4') }}
+      {{ ui.badge(text='Medium risk', variant='secondary') }}
+      <span>Product Development, Market Development</span>
+      {{ lucide('arrow-right', 'size-4') }}
+      {{ ui.badge(text='Highest risk', variant='default') }}
+      <span>Diversification</span>
+    </div>
+  </div>
+{% endcall %}
+{%- endmacro %}

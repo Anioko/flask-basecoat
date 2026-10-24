@@ -1,0 +1,31 @@
+{# Porter's Five Forces, C2. After Michael E. Porter, "How Competitive Forces Shape Strategy" (Harvard Business Review,
+   March-April 1979): the cross. Rivalry among existing competitors in the centre, Threat of new entrants above, Threat of
+   substitutes below, Bargaining power of suppliers to the left, Bargaining power of buyers to the right, joined to the
+   centre by arrows (Lucide arrow icons) that point inward. The corners stay empty, as in the published figure.
+   Usage: {{ canvas.porters_five_forces(data) }}. Box keys: new-entrants suppliers rivalry buyers substitutes. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% set SPEC = {
+  'form': 'C2', 'name': "Porter's five forces",
+  'hint': 'Scroll sideways on a narrow screen to see the whole cross.',
+  'credit': "Five forces after Michael E. Porter, How Competitive Forces Shape Strategy, Harvard Business Review, 1979.",
+  'boxes': [
+    {'key': 'new-entrants', 'title': 'Threat of New Entrants', 'icon': 'log-in', 'question': 'How easy is it for new competitors to enter?', 'area': 'col-span-4 col-start-5 row-start-1'},
+    {'key': 'suppliers', 'title': 'Bargaining Power of Suppliers', 'icon': 'factory', 'question': 'How much leverage do suppliers have over us?', 'area': 'col-span-3 col-start-1 row-start-3'},
+    {'key': 'rivalry', 'title': 'Rivalry among Existing Competitors', 'icon': 'flame', 'question': 'How intense is competition among existing firms?', 'area': 'col-span-4 col-start-5 row-start-3'},
+    {'key': 'buyers', 'title': 'Bargaining Power of Buyers', 'icon': 'shopping-cart', 'question': 'How much leverage do customers have over us?', 'area': 'col-span-3 col-start-10 row-start-3'},
+    {'key': 'substitutes', 'title': 'Threat of Substitutes', 'icon': 'repeat', 'question': 'What other ways could customers meet the same need?', 'area': 'col-span-4 col-start-5 row-start-5'},
+  ]} %}
+{% set ARROWS = [('arrow-down', 'col-start-5 col-span-4 row-start-2'), ('arrow-right', 'col-start-4 row-start-3'),
+                 ('arrow-left', 'col-start-9 row-start-3'), ('arrow-up', 'col-start-5 col-span-4 row-start-4')] %}
+
+{% macro porters_five_forces(data, id='porters-five-forces') -%}
+{%- set boxes = data.boxes or {} -%}
+{%- set rows = [] -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, credit=SPEC.credit, width='min-w-260') %}
+  <div class="grid grid-cols-12 gap-2 rounded-lg border bg-muted/30 p-2">
+    {% for b in SPEC.boxes %}{{ f.box(id, b, boxes) }}{% endfor %}
+    {% for icon, area in ARROWS %}<div class="{{ area }} flex items-center justify-center text-muted-foreground" aria-hidden="true">{{ lucide(icon, 'size-8') }}</div>{% endfor %}
+  </div>
+{% endcall %}
+{%- endmacro %}

@@ -1,0 +1,30 @@
+{# SWOT analysis, C2. The textbook matrix (Albert Humphrey, Stanford Research Institute, 1960s; the helpful/harmful by
+   internal/external layout of the common published template): columns Helpful | Harmful, rows Internal origin |
+   External origin, so Strengths and Weaknesses sit over Opportunities and Threats. The column and row headers are text.
+   Usage: {{ canvas.swot_analysis(data) }}, data = {'title', 'subtitle', 'boxes': {'strengths': [notes], ...}}.
+   Box keys: strengths weaknesses opportunities threats. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% set SPEC = {
+  'form': 'C2', 'name': 'SWOT analysis',
+  'hint': 'Scroll sideways on a narrow screen to see both columns.',
+  'boxes': [
+    {'key': 'strengths', 'title': 'Strengths', 'icon': 'trending-up', 'question': 'What do we do well? What do customers value in us?', 'area': 'col-span-2 col-start-2 row-start-2'},
+    {'key': 'weaknesses', 'title': 'Weaknesses', 'icon': 'triangle-alert', 'question': 'Where do we fall short? What do competitors do better?', 'area': 'col-span-2 col-start-4 row-start-2'},
+    {'key': 'opportunities', 'title': 'Opportunities', 'icon': 'target', 'question': 'Which trends and openings can we use?', 'area': 'col-span-2 col-start-2 row-start-3'},
+    {'key': 'threats', 'title': 'Threats', 'icon': 'shield', 'question': 'What could harm us?', 'area': 'col-span-2 col-start-4 row-start-3'},
+  ]} %}
+
+{% macro swot_analysis(data, id='swot-analysis') -%}
+{%- set boxes = data.boxes or {} -%}
+{%- set rows = [] -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, width='min-w-240') %}
+  <div class="grid grid-cols-5 gap-2 rounded-lg border bg-muted/30 p-2">
+    <div class="col-start-2 col-span-2 row-start-1 flex flex-col items-center gap-0.5 py-1"><span class="text-sm font-semibold">Helpful</span><span class="text-xs text-muted-foreground">to achieving the objective</span></div>
+    <div class="col-start-4 col-span-2 row-start-1 flex flex-col items-center gap-0.5 py-1"><span class="text-sm font-semibold">Harmful</span><span class="text-xs text-muted-foreground">to achieving the objective</span></div>
+    <div class="col-start-1 row-start-2 flex flex-col justify-center gap-0.5 px-2"><span class="text-sm font-semibold">Internal origin</span><span class="text-xs text-muted-foreground">attributes of the organisation</span></div>
+    <div class="col-start-1 row-start-3 flex flex-col justify-center gap-0.5 px-2"><span class="text-sm font-semibold">External origin</span><span class="text-xs text-muted-foreground">attributes of the environment</span></div>
+    {% for b in SPEC.boxes %}{{ f.box(id, b, data.boxes or {}) }}{% endfor %}
+  </div>
+{% endcall %}
+{%- endmacro %}

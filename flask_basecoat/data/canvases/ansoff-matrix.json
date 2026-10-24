@@ -1,0 +1,29 @@
+{
+  "title": "Northwind Logistics · growth options for 2027",
+  "subtitle": "Ansoff Matrix · H. Igor Ansoff",
+  "boxes": {
+    "market-penetration": [
+      "Volume discounts for shippers above 5,000 parcels a month",
+      "Win back 40 accounts lost to national posts in 2026",
+      "Sell Sunday delivery to the top 100 shippers",
+      "Target: +12% parcels from current customers"
+    ],
+    "product-development": [
+      "Flow Pro: carbon reports and delivery analytics",
+      "Returns pickup booked from the buyer's tracking page",
+      "Temperature-controlled vans for healthcare distributors",
+      "Target: 2.4m GBP new revenue"
+    ],
+    "market-development": [
+      "Open a Hamburg hub to cover northern Germany",
+      "Sell UK-EU delivery to US brands entering Europe",
+      "Acquire one Benelux regional carrier",
+      "Target: 9% of revenue from new countries"
+    ],
+    "diversification": [
+      "Micro-fulfilment: store and pick stock for small brands in city hubs",
+      "Sell our ETA prediction as an API to other carriers",
+      "Pilot only, capped at 1.5m GBP until proven"
+    ]
+  }
+}

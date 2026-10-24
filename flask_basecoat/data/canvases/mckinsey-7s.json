@@ -1,0 +1,48 @@
+{
+  "title": "Northwind Logistics · organisation check before the Northwind Flow rollout",
+  "subtitle": "McKinsey 7S Framework · Peters and Waterman",
+  "boxes": {
+    "shared-values": [
+      "Keep the promise made to the buyer",
+      "Safety before speed, always",
+      "Measure it before we claim it",
+      "Drivers are the face of the company",
+      "Tested in staff survey: 81% agree the values guide daily decisions"
+    ],
+    "strategy": [
+      "Compete on precise delivery times, customs ease and measured carbon",
+      "Grow mid-market e-commerce from 62% to 70% of revenue",
+      "Stay in the UK and Benelux until margin passes 8%"
+    ],
+    "structure": [
+      "Six hub general managers report to the COO",
+      "Platform team of 9 sits under the CTO",
+      "New customer success team of 5 under sales",
+      "Operations control centralised in Leeds"
+    ],
+    "systems": [
+      "Route planner and telematics on every van",
+      "Shipper portal moving off the 2016 codebase",
+      "Monthly operations review per hub",
+      "Customs declarations generated from orders"
+    ],
+    "skills": [
+      "Dense urban last-mile routing",
+      "UK and EU customs know-how",
+      "Data science is new: 2 people, needs to grow",
+      "Gap: product management for the platform"
+    ],
+    "style": [
+      "Hands-on leadership that grew up in operations",
+      "Decisions made fast at hub level",
+      "Needs more patience for product discovery work",
+      "Monthly all-hands in every hub"
+    ],
+    "staff": [
+      "1,200 people, 780 of them drivers",
+      "Driver turnover 24% a year, target 15%",
+      "EV training for 300 drivers in 2027",
+      "Hiring 6 engineers and 2 data scientists"
+    ]
+  }
+}

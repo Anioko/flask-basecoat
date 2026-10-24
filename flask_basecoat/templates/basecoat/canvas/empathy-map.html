@@ -1,0 +1,24 @@
+{# Empathy Map, C4. Dave Gray, XPLANE (the empathy map, 2009; Gamestorming, 2010), in the four-quadrant form: the user at the
+   centre, Says and Thinks above, Does and Feels below, with Pains and Gains as two equal halves of a strip underneath.
+   The quadrant labels are the published ones of the Says / Thinks / Does / Feels map; the older See / Hear variant is not used.
+   DOM order: the user first (who the map is about), then the quadrants in reading order, then Pains and Gains.
+   Usage: {{ canvas.empathy_map(data) }}, data = {'title', 'subtitle', 'boxes': {'user': [notes], 'says': [notes], ...}}.
+   Box keys: user says thinks does feels pains gains. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% set SPEC = {
+  'form': 'C4', 'name': 'Empathy map', 'grid': 'grid-cols-12 grid-rows-[auto_auto_auto]',
+  'hint': 'Scroll sideways on a narrow screen to see the whole map.',
+  'credit': 'Empathy Map by Dave Gray, XPLANE.',
+  'boxes': [
+    {'key': 'user', 'title': 'User', 'icon': 'user', 'question': 'Who are we empathising with?', 'area': 'col-span-4 col-start-5 row-span-2 row-start-1 justify-center'},
+    {'key': 'says', 'title': 'Says', 'icon': 'message-circle', 'question': 'What do we hear them say out loud?', 'area': 'col-span-4 col-start-1 row-start-1'},
+    {'key': 'thinks', 'title': 'Thinks', 'icon': 'brain', 'question': 'What might they be thinking but not saying?', 'area': 'col-span-4 col-start-9 row-start-1'},
+    {'key': 'does', 'title': 'Does', 'icon': 'footprints', 'question': 'What do we see them do?', 'area': 'col-span-4 col-start-1 row-start-2'},
+    {'key': 'feels', 'title': 'Feels', 'icon': 'heart', 'question': 'What are they feeling?', 'area': 'col-span-4 col-start-9 row-start-2'},
+    {'key': 'pains', 'title': 'Pains', 'icon': 'triangle-alert', 'question': 'Fears, frustrations and obstacles.', 'area': 'col-span-6 col-start-1 row-start-3'},
+    {'key': 'gains', 'title': 'Gains', 'icon': 'trending-up', 'question': 'Wants, needs and measures of success.', 'area': 'col-span-6 col-start-7 row-start-3'},
+  ]} %}
+
+{% macro empathy_map(data, id='empathy-map') -%}
+{{ f.grid_canvas(SPEC, data, id) }}
+{%- endmacro %}

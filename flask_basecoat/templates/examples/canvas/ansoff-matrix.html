@@ -1,0 +1,12 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/canvas/ansoff-matrix.html' as canvas %}
+{#- Ansoff Matrix on the dashboard-01 frame. Tier C2: the drawing is the one marked region.
+    Check:  python compliance/scripts/check_page.py /examples/canvas/ansoff-matrix --nearest dashboard-01 --browser -#}
+{% block title %}Ansoff Matrix · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% block body %}
+{% call shell('Ansoff Matrix') %}
+  <div class="px-4 lg:px-6">{{ canvas.ansoff_matrix(data) }}</div>
+{% endcall %}
+{% endblock %}

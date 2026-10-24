@@ -1,0 +1,12 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/canvas/value-proposition-canvas.html' as canvas %}
+{#- Value Proposition Canvas on the dashboard-01 frame. Tier C4: the value proposition canvas drawing is the one marked region.
+    Check:  python compliance/scripts/check_page.py /examples/canvas/value-proposition-canvas --nearest dashboard-01 --browser -#}
+{% block title %}Value Proposition Canvas · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% block body %}
+{% call shell('Value Proposition Canvas') %}
+  <div class="px-4 lg:px-6">{{ canvas.value_proposition_canvas(data) }}</div>
+{% endcall %}
+{% endblock %}

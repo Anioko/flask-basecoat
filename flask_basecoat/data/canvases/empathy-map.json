@@ -1,0 +1,45 @@
+{
+  "title": "Northwind Logistics · Northwind Flow",
+  "subtitle": "Empathy Map · Dave Gray, XPLANE · research with e-commerce operations managers, October 2026",
+  "boxes": {
+    "user": [
+      "Priya Shah",
+      "Head of E-commerce Operations, Brightwell Home",
+      "9,000 parcels a month, UK and EU buyers",
+      "Goal: ship every order on the promised day without her team chasing carriers"
+    ],
+    "says": [
+      "\"Every November I get 300 'where is my order' emails a day.\"",
+      "\"I need one carrier for the UK and the EU, not four.\"",
+      "\"Our biggest stockist wants carbon per order by March.\""
+    ],
+    "thinks": [
+      "If peak goes badly again, it lands on me",
+      "The carbon numbers we publish now are guesses",
+      "Switching carrier is risky in the middle of the season"
+    ],
+    "does": [
+      "Checks four carrier portals every morning",
+      "Copies tracking links into support replies by hand",
+      "Builds a monthly carbon estimate in a spreadsheet",
+      "Upgrades to express at peak just to be safe"
+    ],
+    "feels": [
+      "Anxious before every sale weekend",
+      "Embarrassed when buyers complain in public reviews",
+      "Relieved when a delivery date can be promised and kept"
+    ],
+    "pains": [
+      "Support team overwhelmed on peak days",
+      "Parcels stuck at the UK-EU border for days",
+      "Carbon figures she cannot defend to auditors",
+      "Invoices from four carriers that never reconcile"
+    ],
+    "gains": [
+      "Buyers who know the half hour their parcel arrives",
+      "One contract and one invoice across the UK and EU",
+      "Carbon per order she can hand straight to retailers",
+      "Fewer than 4 delivery tickets per 1,000 orders"
+    ]
+  }
+}

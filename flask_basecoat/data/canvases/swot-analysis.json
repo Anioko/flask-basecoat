@@ -1,0 +1,33 @@
+{
+  "title": "Northwind Logistics · entering cross-border e-commerce delivery, 2027",
+  "subtitle": "SWOT Analysis · Albert Humphrey, SRI",
+  "boxes": {
+    "strengths": [
+      "On-time delivery of 97.2% over the last 12 months",
+      "Own fleet of 640 vans with telematics in every one",
+      "Hubs on both sides of the Channel, licensed for customs",
+      "Nine years of stop-level delivery data",
+      "Customer churn of 6% a year, half the sector average"
+    ],
+    "weaknesses": [
+      "Brand barely known outside the UK",
+      "Shipper portal still on a 2016 codebase",
+      "Thin margins on pallets (4%)",
+      "No Sunday or evening delivery yet",
+      "Dependence on 3 customers for 28% of revenue"
+    ],
+    "opportunities": [
+      "UK-EU e-commerce growing 11% a year with customs still confusing sellers",
+      "CSRD makes large retailers ask suppliers for carbon per shipment",
+      "Two regional rivals up for sale in the Benelux",
+      "City low-emission zones favour our electric vans"
+    ],
+    "threats": [
+      "National posts cutting parcel prices by up to 9%",
+      "Amazon Shipping opening to third-party sellers",
+      "Driver shortage pushing wages up 7% a year",
+      "Diesel van bans in Amsterdam and Brussels from 2027",
+      "A new UK-EU customs dispute"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "title": "Northwind Logistics · Northwind Flow",
+  "subtitle": "Value Proposition Canvas · Osterwalder and Pigneur · for e-commerce operations managers",
+  "boxes": {
+    "products-services": [
+      "Shipper portal and tracking API",
+      "Next-day UK and Benelux delivery",
+      "Customs declarations",
+      "Carbon report per parcel",
+      "Shopify and WooCommerce apps"
+    ],
+    "gain-creators": [
+      "30-minute ETA sent to buyers by SMS",
+      "CO2e figures that pass retailer audits",
+      "One invoice across 4 countries"
+    ],
+    "pain-relievers": [
+      "Fewer 'where is my order' tickets",
+      "Customs forms filled from the order",
+      "No minimum volume or long contract"
+    ],
+    "gains": [
+      "Buyers who trust the delivery date",
+      "Scope 3 numbers for the annual report",
+      "Growth into the EU without new carriers"
+    ],
+    "pains": [
+      "Support swamped on peak days",
+      "Parcels held at the border",
+      "Carrier invoices that cannot be reconciled"
+    ],
+    "customer-jobs": [
+      "Get orders to buyers on the promised day",
+      "Answer delivery questions fast",
+      "Report carbon per order to big retailers"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Northwind Logistics · operating environment, UK and Benelux, 2027 to 2029",
+  "subtitle": "PESTLE Analysis · after Francis Aguilar",
+  "boxes": {
+    "political": [
+      "UK-EU trade rules still shifting after the 2025 reset",
+      "City councils backing cargo bikes and EV-only zones",
+      "Public money for depot charging in NL and BE"
+    ],
+    "economic": [
+      "Online retail growing 6% a year in our markets",
+      "Driver wages up 7% a year",
+      "Diesel and power prices volatile",
+      "Shippers renegotiating rates every 12 months"
+    ],
+    "social": [
+      "Buyers expect a delivery hour, not a day",
+      "Growing preference for pickup lockers",
+      "Ageing driver workforce, fewer young recruits"
+    ],
+    "technological": [
+      "Machine-learned ETAs now beat dispatcher estimates",
+      "Electric van range above 250 km",
+      "Carrier APIs becoming standard in shop platforms",
+      "Autonomous yard tractors in trials"
+    ],
+    "legal": [
+      "CSRD requires Scope 3 reporting from 2026",
+      "EU Mobility Package rules on driver rest",
+      "UK Customs Declaration Service replacing CHIEF",
+      "GDPR limits on buyer location data"
+    ],
+    "environmental": [
+      "Low-emission zones in 14 of our cities by 2028",
+      "Retailers committing to net-zero delivery",
+      "Flooding risk at the Rotterdam hub",
+      "Packaging waste rules for returns"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "title": "Northwind Logistics · Northwind Flow",
+  "subtitle": "Product Vision Board · Roman Pichler",
+  "boxes": {
+    "vision": [
+      "Every online shopper knows exactly when their parcel will arrive, and every retailer can show what each delivery cost the planet."
+    ],
+    "target-group": [
+      "Customers: online retailers shipping 500 to 20,000 parcels a month in the UK and Benelux",
+      "Users: e-commerce operations managers and their support teams",
+      "Also used by: the retailers' buyers, via the tracking page"
+    ],
+    "needs": [
+      "Promise buyers a delivery time and keep it",
+      "Cut 'where is my order' contacts",
+      "Ship to the EU without customs headaches",
+      "Report carbon per order to their own big customers"
+    ],
+    "product": [
+      "Shipper portal and API with live tracking",
+      "30-minute ETA window sent to buyers by SMS",
+      "Auto-generated customs declarations",
+      "Measured CO2e per parcel from van telematics",
+      "Stands out: only carrier with measured, not estimated, carbon"
+    ],
+    "business-goals": [
+      "Grow mid-market e-commerce revenue by 25% in 2027",
+      "Raise operating margin from 6.1% to 8.5%",
+      "500 shippers on Flow Pro by December 2027",
+      "Cut support cost per parcel by 30%"
+    ]
+  }
+}

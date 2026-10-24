@@ -1,0 +1,64 @@
+{
+  "title": "Northwind Logistics · Northwind Flow",
+  "subtitle": "Lean Canvas · Ash Maurya",
+  "boxes": {
+    "problem": [
+      "Retailers cannot tell buyers when a parcel will arrive, so 'where is my order' tickets eat support time",
+      "Cross-border UK-EU parcels stall in customs",
+      "Large customers now ask for carbon figures per order and nobody can supply them"
+    ],
+    "existing-alternatives": [
+      "National carriers with day-wide windows",
+      "Spreadsheets of courier invoices",
+      "Offsetting at checkout with no real data"
+    ],
+    "solution": [
+      "30-minute ETA window pushed to the buyer by SMS",
+      "Customs declarations generated from the order",
+      "Measured CO2e per parcel from telematics, not averages"
+    ],
+    "key-metrics": [
+      "Weekly active shippers",
+      "Parcels on Flow per month",
+      "ETA accuracy within the window (target 95%)",
+      "Tickets per 1,000 parcels",
+      "Net revenue retention"
+    ],
+    "unique-value-proposition": [
+      "Tell every buyer when their parcel arrives, to the half hour, and show what it cost the planet.",
+      "No minimum volume. One contract for the UK and Benelux."
+    ],
+    "high-level-concept": [
+      "Flight tracking for parcels, with a carbon receipt"
+    ],
+    "unfair-advantage": [
+      "Nine years of stop-level delivery data across 6 hubs",
+      "Own fleet with telematics in every van, so carbon is measured",
+      "Customs licences in both the UK and the EU"
+    ],
+    "channels": [
+      "Shopify and WooCommerce app listings",
+      "Referrals from 3PL warehouse partners",
+      "Inside sales to retailers above 2,000 parcels a month"
+    ],
+    "customer-segments": [
+      "Online retailers shipping 500 to 20,000 parcels a month in the UK and Benelux",
+      "Mid-market brands selling into the EU after Brexit"
+    ],
+    "early-adopters": [
+      "Apparel and homeware brands with a sustainability promise and a retailer asking them for Scope 3 figures"
+    ],
+    "cost-structure": [
+      "Platform team of 9: 85k GBP a month",
+      "Hosting, maps and SMS: 0.6p per parcel",
+      "Customer acquisition: 1,400 GBP per new shipper",
+      "Support: 2 agents per million parcels"
+    ],
+    "revenue-streams": [
+      "Delivery fee per parcel, from 3.40 GBP (margin 14%)",
+      "Customs fee: 2.10 GBP per declaration",
+      "Flow Pro: 149 GBP a month for analytics and carbon reports",
+      "Break-even at 410 paying shippers"
+    ]
+  }
+}

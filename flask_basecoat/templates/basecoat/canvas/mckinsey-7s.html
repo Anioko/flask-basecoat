@@ -1,0 +1,51 @@
+{# McKinsey 7S, C2. After Tom Peters and Robert Waterman, In Search of Excellence (1982), from the 7-S framework of
+   Waterman, Peters and Phillips, "Structure Is Not Organization" (Business Horizons, 1980). Shared Values in the centre,
+   the other six elements on a hexagon around it, clockwise from the upper left: Strategy, Structure, Systems (the hard S
+   elements) then Skills, Style, Staff (the soft S elements), every element joined to its neighbours and to the centre by
+   a line. The hard and soft split is written in each box's question and in the legend above the drawing.
+   The hexagon is a six-column grid of boxes two columns wide: the upper and lower rows are offset by one column.
+   Usage: {{ canvas.mckinsey_7s(data) }}. Box keys: shared-values strategy structure systems skills style staff. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% import 'basecoat/index.html' as ui %}
+{% set SPEC = {
+  'form': 'C2', 'name': 'McKinsey 7S',
+  'hint': 'Scroll sideways on a narrow screen to see the whole hexagon.',
+  'credit': 'McKinsey 7S framework after Tom Peters and Robert Waterman, as published in In Search of Excellence (1982).',
+  'boxes': [
+    {'key': 'shared-values', 'title': 'Shared Values', 'icon': 'heart', 'question': 'At the centre. What do we stand for and believe in?', 'area': 'col-span-2 col-start-3 row-start-2'},
+    {'key': 'strategy', 'title': 'Strategy', 'icon': 'target', 'question': 'Hard S. How will we build and keep our advantage?', 'area': 'col-span-2 col-start-2 row-start-1'},
+    {'key': 'structure', 'title': 'Structure', 'icon': 'layout-grid', 'question': 'Hard S. How is the company organised and who reports to whom?', 'area': 'col-span-2 col-start-4 row-start-1'},
+    {'key': 'systems', 'title': 'Systems', 'icon': 'server', 'question': 'Hard S. Which processes and tools run the daily work?', 'area': 'col-span-2 col-start-5 row-start-2'},
+    {'key': 'skills', 'title': 'Skills', 'icon': 'award', 'question': 'Soft S. What are we distinctively good at?', 'area': 'col-span-2 col-start-4 row-start-3'},
+    {'key': 'style', 'title': 'Style', 'icon': 'messages-square', 'question': 'Soft S. How do leaders behave and decide?', 'area': 'col-span-2 col-start-2 row-start-3'},
+    {'key': 'staff', 'title': 'Staff', 'icon': 'users', 'question': 'Soft S. Who works here and how do we develop them?', 'area': 'col-span-2 col-start-1 row-start-2'},
+  ]} %}
+{#- Centres of the boxes in percent of the drawing: [x, y]. Ring order is the clockwise order of the hexagon. -#}
+{% set AT = {'shared-values': (50, 50), 'strategy': (33.3, 16.7), 'structure': (66.7, 16.7), 'systems': (83.3, 50),
+             'skills': (66.7, 83.3), 'style': (33.3, 83.3), 'staff': (16.7, 50)} %}
+{% set RING = ['strategy', 'structure', 'systems', 'skills', 'style', 'staff'] %}
+
+{% macro mckinsey_7s(data, id='mckinsey-7s') -%}
+{%- set boxes = data.boxes or {} -%}
+{%- set rows = [] -%}
+{%- for b in SPEC.boxes -%}{%- for n in boxes.get(b.key) or ['No notes yet'] %}{% set _ = rows.append([b.key, b.title, n]) %}{% endfor -%}{%- endfor -%}
+{% call f.frame(id, SPEC.form, SPEC.name, data, rows, SPEC.hint, credit=SPEC.credit, width='min-w-240') %}
+  <div class="flex flex-col gap-3">
+    <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      {{ ui.badge(text='Hard S', variant='default') }}<span>Strategy, Structure, Systems</span>
+      {{ ui.badge(text='Soft S', variant='outline', class='ml-4') }}<span>Skills, Style, Staff</span>
+    </div>
+    <div class="relative rounded-lg border bg-muted/30 p-2">
+      <svg class="absolute inset-0 size-full stroke-muted-foreground" aria-hidden="true">
+        {% for k in RING %}{% set n = RING[(loop.index0 + 1) % 6] %}
+        <line x1="{{ AT[k][0] }}%" y1="{{ AT[k][1] }}%" x2="{{ AT[n][0] }}%" y2="{{ AT[n][1] }}%" stroke-width="2"/>
+        <line x1="{{ AT[k][0] }}%" y1="{{ AT[k][1] }}%" x2="{{ AT['shared-values'][0] }}%" y2="{{ AT['shared-values'][1] }}%" stroke-width="2"/>
+        {% endfor %}
+      </svg>
+      <div class="relative grid auto-rows-fr grid-cols-6 gap-x-10 gap-y-8">
+        {% for b in SPEC.boxes %}{{ f.box(id, b, boxes) }}{% endfor %}
+      </div>
+    </div>
+  </div>
+{% endcall %}
+{%- endmacro %}

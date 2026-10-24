@@ -1,0 +1,31 @@
+{# Lean Canvas, C4. Ash Maurya, Running Lean (2012; leanstack.com), adapted from the Business Model Canvas by Osterwalder and
+   Pigneur. Ten-column grid, five columns: Problem (Existing alternatives at its foot) | Solution over Key Metrics |
+   Unique Value Proposition (High-level concept) | Unfair Advantage over Channels | Customer Segments (Early adopters);
+   Cost Structure and Revenue Streams are equal halves of the bottom strip. Each block carries the number of the order
+   Maurya suggests filling them in (1 Customer Segments ... 9 Unfair Advantage). DOM order is column by column.
+   Usage: {{ canvas.lean_canvas(data) }}, data = {'title', 'subtitle', 'boxes': {'problem': [notes], ...}}.
+   Box keys: problem existing-alternatives solution key-metrics unique-value-proposition high-level-concept
+   unfair-advantage channels customer-segments early-adopters cost-structure revenue-streams. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% set SPEC = {
+  'form': 'C4', 'name': 'Lean canvas', 'grid': 'grid-cols-10 grid-rows-[auto_auto_auto]',
+  'hint': 'Scroll sideways on a narrow screen to see all nine blocks. The number on each block is the order to fill them in.',
+  'credit': 'Lean Canvas adapted by Ash Maurya from the Business Model Canvas, CC BY-SA.',
+  'boxes': [
+    {'key': 'problem', 'title': 'Problem', 'number': '2', 'question': 'What are the top three problems?', 'area': 'col-span-2 col-start-1 row-span-2 row-start-1',
+     'subs': [{'key': 'existing-alternatives', 'title': 'Existing alternatives', 'question': 'How do they cope today?'}]},
+    {'key': 'solution', 'title': 'Solution', 'number': '4', 'question': 'What is the smallest thing that fixes each problem?', 'area': 'col-span-2 col-start-3 row-start-1'},
+    {'key': 'key-metrics', 'title': 'Key Metrics', 'number': '8', 'question': 'Which numbers tell you it is working?', 'area': 'col-span-2 col-start-3 row-start-2'},
+    {'key': 'unique-value-proposition', 'title': 'Unique Value Proposition', 'number': '3', 'question': 'Why are you different, in one line?', 'area': 'col-span-2 col-start-5 row-span-2 row-start-1',
+     'subs': [{'key': 'high-level-concept', 'title': 'High-level concept', 'question': 'X for Y'}]},
+    {'key': 'unfair-advantage', 'title': 'Unfair Advantage', 'number': '9', 'question': 'What cannot be copied or bought?', 'area': 'col-span-2 col-start-7 row-start-1'},
+    {'key': 'channels', 'title': 'Channels', 'number': '5', 'question': 'How will you reach them?', 'area': 'col-span-2 col-start-7 row-start-2'},
+    {'key': 'customer-segments', 'title': 'Customer Segments', 'number': '1', 'question': 'Who exactly has this problem?', 'area': 'col-span-2 col-start-9 row-span-2 row-start-1',
+     'subs': [{'key': 'early-adopters', 'title': 'Early adopters', 'question': 'Who would use it first?'}]},
+    {'key': 'cost-structure', 'title': 'Cost Structure', 'number': '7', 'question': 'Customer acquisition, hosting, people', 'area': 'col-span-5 col-start-1 row-start-3'},
+    {'key': 'revenue-streams', 'title': 'Revenue Streams', 'number': '6', 'question': 'Revenue model and lifetime value', 'area': 'col-span-5 col-start-6 row-start-3'},
+  ]} %}
+
+{% macro lean_canvas(data, id='lean-canvas') -%}
+{{ f.grid_canvas(SPEC, data, id) }}
+{%- endmacro %}

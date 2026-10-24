@@ -1,0 +1,20 @@
+{# PESTLE analysis, C2. Six external factor boxes in the published template order (Political, Economic, Social,
+   Technological, Legal, Environmental; Francis Aguilar's ETPS scan, 1967, extended to PESTLE), laid out as three
+   columns by two rows, reading left to right then down. The mnemonic order is the reading order.
+   Usage: {{ canvas.pestle_analysis(data) }}, data = {'title', 'subtitle', 'boxes': {'political': [notes], ...}}. #}
+{% import 'basecoat/canvas/_frame.html' as f %}
+{% set SPEC = {
+  'form': 'C2', 'name': 'PESTLE analysis', 'grid': 'grid-cols-3',
+  'hint': 'Scroll sideways on a narrow screen to see all six factors.',
+  'boxes': [
+    {'key': 'political', 'title': 'Political', 'icon': 'landmark', 'question': 'Government policy, trade and stability.', 'area': ''},
+    {'key': 'economic', 'title': 'Economic', 'icon': 'banknote', 'question': 'Growth, costs and spending.', 'area': ''},
+    {'key': 'social', 'title': 'Social', 'icon': 'users', 'question': 'Habits, expectations and the workforce.', 'area': ''},
+    {'key': 'technological', 'title': 'Technological', 'icon': 'zap', 'question': 'Tools that change how delivery works.', 'area': ''},
+    {'key': 'legal', 'title': 'Legal', 'icon': 'shield-check', 'question': 'Laws and regulation we must meet.', 'area': ''},
+    {'key': 'environmental', 'title': 'Environmental', 'icon': 'globe', 'question': 'Climate, emissions and the physical world.', 'area': ''},
+  ]} %}
+
+{% macro pestle_analysis(data, id='pestle-analysis') -%}
+{{ f.grid_canvas(SPEC, data, id) }}
+{%- endmacro %}
