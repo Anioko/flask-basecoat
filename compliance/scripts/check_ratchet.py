@@ -20,6 +20,7 @@ CSS_FILES = [ROOT / 'app' / 'assets' / 'styles' / 'input.css', ROOT / 'app' / 'a
              ROOT / 'flask_basecoat' / 'static' / 'css' / 'src' / 'flask-basecoat.css']
 # Macro files render the raw elements by design.
 MACRO_DIR = ROOT / 'flask_basecoat' / 'templates' / 'basecoat'
+PAGES_DIR = MACRO_DIR / 'pages'
 
 PALETTE = r'(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|[1-9]00|950)'
 RAW_COLOR = re.compile(r'(?<![\w/-])(?:bg|text|border|ring|from|to|via|fill|stroke|divide|outline|shadow|decoration|accent|caret|placeholder)-' + PALETTE + r'\b|#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(')
@@ -37,6 +38,9 @@ def scan_file(path):
         for m in RAW_COLOR.finditer(line):
             # svg data URIs and oklch-free upstream tokens are not design drift
             if 'url(' in line and 'svg' in line:
+                continue
+            # pages ported from the upstream examples and blocks carry upstream's own demo colours
+            if PAGES_DIR in path.parents:
                 continue
             problems.append(f'{path.relative_to(ROOT)}:{i}: raw colour {m.group(0)!r}')
             break

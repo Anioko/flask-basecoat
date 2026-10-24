@@ -16,15 +16,16 @@
     const desc = FB.qs(content, `[data-slot="${kind}-description"]`);
     if (title) content.setAttribute('aria-labelledby', FB.ensureId(title, `${kind}-title`));
     if (desc) content.setAttribute('aria-describedby', FB.ensureId(desc, `${kind}-description`));
-    let layer = null, untrap = null, previouslyFocused = null, closing = null;
+    let layer = null, untrap = null, previouslyFocused = null, closing = null, opener = null;
 
     function finishHide() {
       [overlay, content].forEach((el) => el && el.removeAttribute('data-fb-animating'));
       closing = null;
     }
-    function open() {
+    function open(from) {
       if (FB.isOpen(content)) return;
       if (closing) { clearTimeout(closing); finishHide(); }
+      opener = from || null;
       previouslyFocused = document.activeElement;
       // Portal to <body> so stacking is independent of the trigger's ancestors.
       if (overlay && overlay.parentNode !== document.body) document.body.appendChild(overlay);
@@ -56,7 +57,9 @@
       if (untrap) { untrap(); untrap = null; }
       if (layer) { FB.removeLayer(layer); layer = null; }
       closing = setTimeout(finishHide, 220);
-      if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus({ preventScroll: true });
+      // Radix returns focus to the trigger; fall back to whatever had focus before opening.
+      const target = (opener && opener.isConnected) ? opener : (trigger && trigger.isConnected ? trigger : previouslyFocused);
+      if (target && target.focus) target.focus({ preventScroll: true });
       FB.emit(content, 'close', { kind });
     }
     if (trigger) trigger.addEventListener('click', (e) => { e.preventDefault(); open(); });
@@ -69,8 +72,8 @@
     if (content.getAttribute('data-state') === 'open') { FB.setState(content, 'closed'); open(); }
     // Any element elsewhere may open this dialog through data-fb-open="<id>"
     document.addEventListener('click', (e) => {
-      const opener = e.target.closest && e.target.closest(`[data-fb-open="${id}"]`);
-      if (opener) { e.preventDefault(); open(); }
+      const from = e.target.closest && e.target.closest(`[data-fb-open="${id}"]`);
+      if (from) { e.preventDefault(); open(from); }
     });
   }
 

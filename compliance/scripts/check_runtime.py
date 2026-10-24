@@ -38,9 +38,12 @@ def exercise(page):
       for (const [kind, how] of Object.entries(families)) {
         const wrappers = Array.from(document.querySelectorAll(`[data-fb="${kind}"]`)).slice(0, 4);
         for (const w of wrappers) {
-          const trigger = w.querySelector(`[data-slot="${kind === 'menubar-menu' ? 'menubar' : kind}-trigger"], [data-slot="input-group-button"][role=combobox], [data-slot="combobox-input"], [data-slot="combobox-chip-input"]`);
           const content = openOf(w, kind);
-          if (!trigger || !content) { problems.push(`${kind}: wrapper without trigger/content`); continue; }
+          let trigger = w.querySelector(`[data-slot="${kind === 'menubar-menu' ? 'menubar' : kind}-trigger"], [data-slot="input-group-button"][role=combobox], [data-slot="combobox-input"], [data-slot="combobox-chip-input"]`);
+          if (!trigger && content && content.id) trigger = document.querySelector(`[data-fb-open="${content.id}"]`);
+          if (!content) { problems.push(`${kind}: wrapper without content`); continue; }
+          if (!trigger) continue; // opened programmatically only
+          if (trigger.closest('[data-state="closed"][data-slot$="-content"]')) continue; // lives inside another closed popup
           if (trigger.disabled) continue;
           trigger.scrollIntoView({ block: 'center' });
           if (how === 'click') trigger.click();
@@ -51,14 +54,15 @@ def exercise(page):
           const cs = getComputedStyle(content);
           if (cs.display === 'none' || cs.visibility === 'hidden') problems.push(`${kind}: open but not displayed`);
           if (how === 'hover') { trigger.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true })); trigger.blur(); await sleep(500); }
-          else { esc(); await sleep(60); }
+          else { for (let i = 0; i < 4 && content.getAttribute('data-state') === 'open'; i++) { esc(); await sleep(60); } } // inner layers close first, like Radix
           if (content.getAttribute('data-state') !== 'closed') problems.push(`${kind}: did not close`);
           if (how === 'click' && kind !== 'select' && kind !== 'combobox' && document.activeElement !== trigger && !['tooltip', 'hover-card', 'context-menu'].includes(kind)) problems.push(`${kind}: focus not returned to trigger`);
           await sleep(260);
         }
       }
       // tabs
-      for (const tabs of Array.from(document.querySelectorAll('[data-slot="tabs"]')).slice(0, 3)) {
+      const hiddenIn = (el) => !!el.closest('[data-state="closed"][data-slot$="-content"], [data-state="inactive"][data-slot="tabs-content"], [hidden]');
+      for (const tabs of Array.from(document.querySelectorAll('[data-slot="tabs"]')).filter((t) => !hiddenIn(t)).slice(0, 3)) {
         const triggers = Array.from(tabs.querySelectorAll('[data-slot="tabs-trigger"]'));
         if (triggers.length < 2) continue;
         triggers[0].focus(); key(triggers[0], 'ArrowRight'); await sleep(20);
@@ -67,21 +71,21 @@ def exercise(page):
         if (triggers[0].getAttribute('data-state') !== 'active') problems.push('tabs: click did not activate');
       }
       for (const sel of ['[data-slot="checkbox"]', '[data-slot="switch"]']) {
-        const el = Array.from(document.querySelectorAll(sel)).find((e) => !e.disabled);
+        const el = Array.from(document.querySelectorAll(sel)).find((e) => !e.disabled && !hiddenIn(e));
         if (!el) continue;
         const before = el.getAttribute('aria-checked'); el.click(); await sleep(10);
         if (el.getAttribute('aria-checked') === before) problems.push(`${sel}: click did not toggle aria-checked`);
         el.click();
       }
-      const toggle = Array.from(document.querySelectorAll('[data-slot="toggle"]')).find((e) => !e.disabled && !e.closest('[data-slot="toggle-group"]'));
+      const toggle = Array.from(document.querySelectorAll('[data-slot="toggle"]')).find((e) => !e.disabled && !e.closest('[data-slot="toggle-group"]') && !hiddenIn(e));
       if (toggle) { const b = toggle.getAttribute('aria-pressed'); toggle.click(); await sleep(10); if (toggle.getAttribute('aria-pressed') === b) problems.push('toggle: click did not toggle aria-pressed'); toggle.click(); }
-      const radio = document.querySelector('[data-slot="radio-group"]');
+      const radio = Array.from(document.querySelectorAll('[data-slot="radio-group"]')).find((e) => !hiddenIn(e));
       if (radio) { const items = Array.from(radio.querySelectorAll('[data-slot="radio-group-item"]:not([disabled])')); if (items.length > 1) { items[1].click(); await sleep(10); if (items[1].getAttribute('aria-checked') !== 'true') problems.push('radio-group: click did not select'); } }
-      const acc = document.querySelector('[data-slot="accordion-trigger"]');
+      const acc = Array.from(document.querySelectorAll('[data-slot="accordion-trigger"]')).find((e) => !hiddenIn(e));
       if (acc) { const before = acc.getAttribute('aria-expanded'); acc.click(); await sleep(10); if (acc.getAttribute('aria-expanded') === before) problems.push('accordion: click did not toggle'); acc.click(); await sleep(260); }
-      const col = document.querySelector('[data-slot="collapsible-trigger"]');
+      const col = Array.from(document.querySelectorAll('[data-slot="collapsible-trigger"]')).find((e) => !hiddenIn(e));
       if (col) { const before = col.getAttribute('aria-expanded'); col.click(); await sleep(10); if (col.getAttribute('aria-expanded') === before) problems.push('collapsible: click did not toggle'); col.click(); await sleep(260); }
-      const thumb = Array.from(document.querySelectorAll('[data-slot="slider-thumb"]')).find((t) => !t.closest('[data-slot="slider"][aria-disabled="true"]'));
+      const thumb = Array.from(document.querySelectorAll('[data-slot="slider-thumb"]')).find((t) => !t.closest('[data-slot="slider"][aria-disabled="true"]') && !hiddenIn(t));
       if (thumb) { const v = Number(thumb.getAttribute('aria-valuenow') || 0); thumb.focus(); key(thumb, 'ArrowRight'); await sleep(10); if (Number(thumb.getAttribute('aria-valuenow')) <= v && v < Number(thumb.getAttribute('aria-valuemax'))) problems.push('slider: ArrowRight did not raise the value'); }
       return problems;
     }""", OPEN_FAMILIES)

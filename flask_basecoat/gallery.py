@@ -42,7 +42,7 @@ def has_page(kind, name):
 class DemoForm(Form):
     name = StringField('Full Name', [validators.Length(min=4, max=25), validators.InputRequired()], description="Enter your full legal name.")
     email = StringField('Email Address', [validators.Email(), validators.InputRequired()], description="We'll never share your email.")
-    password = PasswordField('Password', [validators.Length(min=8)])
+    password = PasswordField('Password', [validators.Optional(), validators.Length(min=8)], description='At least 8 characters.')
     role = SelectField('Team Role', choices=[('dev', 'Developer'), ('lead', 'Tech Lead'), ('pm', 'Product Manager')])
     bio = TextAreaField('Short Biography', [validators.Optional(), validators.Length(max=200)], description="A brief summary.")
     terms = BooleanField('I agree to the terms and privacy policy', [validators.InputRequired()])

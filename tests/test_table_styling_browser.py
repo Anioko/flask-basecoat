@@ -42,7 +42,7 @@ def login(driver, email=TEST_ADMIN_EMAIL, password=TEST_ADMIN_PASSWORD):
 
     driver.find_element(By.NAME, 'email').send_keys(email)
     driver.find_element(By.NAME, 'password').send_keys(password)
-    driver.find_element(By.CSS_SELECTOR, 'input[type="submit"]').click()
+    driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
 
     # Wait for redirect
     WebDriverWait(driver, 10).until(
@@ -60,7 +60,7 @@ class TestTableStyling:
 
         # Wait for table to load
         table = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '.table'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="table"]'))
         )
 
         # Check table exists
@@ -76,20 +76,20 @@ class TestTableStyling:
         driver.get(f'{TEST_SERVER_BASE_URL}/account/manage')
 
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '.table'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="table"]'))
         )
 
-        thead_elements = driver.find_elements(By.CSS_SELECTOR, '.table thead')
+        thead_elements = driver.find_elements(By.CSS_SELECTOR, '[data-slot="table"] thead tr')
         if not thead_elements:
-            rows = driver.find_elements(By.CSS_SELECTOR, '.table tbody tr')
+            rows = driver.find_elements(By.CSS_SELECTOR, '[data-slot="table"] tbody tr')
             assert len(rows) > 0, "Should have table rows"
             return
 
         thead = thead_elements[0]
 
-        # Check thead has bottom border
+        # Check the header row has a bottom border (shadcn: [&_tr]:border-b on the header)
         border_bottom = thead.value_of_css_property('border-bottom-width')
-        assert border_bottom == '2px', f"Table thead should have 2px bottom border, got {border_bottom}"
+        assert border_bottom == '1px', f"Table header row should have 1px bottom border, got {border_bottom}"
 
         # Check border color is visible (not transparent)
         border_color = thead.value_of_css_property('border-bottom-color')
@@ -102,7 +102,7 @@ class TestTableStyling:
 
         # Wait for tbody rows
         rows = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table tbody tr'))
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-slot="table"] tbody tr'))
         )
 
         # There should be at least 3 rows (Full name, Email, Account type)
@@ -124,7 +124,7 @@ class TestTableStyling:
 
         # Wait for table cells
         cells = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table tbody td'))
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-slot="table"] tbody td'))
         )
 
         assert len(cells) > 0, "Should have table cells"
@@ -134,9 +134,9 @@ class TestTableStyling:
         padding_left = first_cell.value_of_css_property('padding-left')
         padding_top = first_cell.value_of_css_property('padding-top')
 
-        # Should have at least 12px padding (1rem = 16px, but we check for minimum)
-        assert float(padding_left.replace('px', '')) >= 12, f"Cell should have at least 12px left padding, got {padding_left}"
-        assert float(padding_top.replace('px', '')) >= 10, f"Cell should have at least 10px top padding, got {padding_top}"
+        # shadcn TableCell is p-2 (0.5rem = 8px)
+        assert float(padding_left.replace('px', '')) >= 8, f"Cell should have at least 8px left padding, got {padding_left}"
+        assert float(padding_top.replace('px', '')) >= 8, f"Cell should have at least 8px top padding, got {padding_top}"
 
     def test_table_header_has_background(self, driver):
         """Test that table header has visible background color"""
@@ -144,22 +144,23 @@ class TestTableStyling:
         driver.get(f'{TEST_SERVER_BASE_URL}/account/manage')
 
         # Wait for thead th elements
-        headers = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table thead th'))
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="table"]'))
         )
+        headers = driver.find_elements(By.CSS_SELECTOR, '[data-slot="table"] thead th')
 
         # Note: The account manage table uses tbody only, no thead
         # So we test the td cells instead
         if len(headers) == 0:
             # This table doesn't have thead, that's okay
             # Check that tbody tr elements still have proper styling
-            rows = driver.find_elements(By.CSS_SELECTOR, '.table tbody tr')
+            rows = driver.find_elements(By.CSS_SELECTOR, '[data-slot="table"] tbody tr')
             assert len(rows) > 0, "Should have table rows"
         else:
-            # If thead exists, check background
+            # If thead exists, the header cells are medium-weight, visible text (shadcn TableHead)
             first_header = headers[0]
-            bg_color = first_header.value_of_css_property('background-color')
-            assert bg_color != 'rgba(0, 0, 0, 0)', "Header should have visible background color"
+            assert first_header.value_of_css_property('font-weight') in ('500', 'medium'), "Header should use medium weight"
+            assert first_header.value_of_css_property('color') != 'rgba(0, 0, 0, 0)', "Header text should be visible"
 
     def test_table_hover_effect(self, driver):
         """Test that table rows have hover effect"""
@@ -168,7 +169,7 @@ class TestTableStyling:
 
         # Wait for table rows
         rows = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table tbody tr'))
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-slot="table"] tbody tr'))
         )
 
         assert len(rows) > 0, "Should have table rows"
@@ -196,7 +197,7 @@ class TestTableStyling:
 
         # Wait for table cells
         cells = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table tbody td'))
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-slot="table"] tbody td'))
         )
 
         assert len(cells) > 0, "Should have table cells"
@@ -220,25 +221,27 @@ class TestTableStyling:
 
         # Wait for table
         table = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '.table'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="table"]'))
         )
 
         # Check this table has thead (unlike account table)
-        thead = table.find_element(By.CSS_SELECTOR, 'thead')
+        thead = table.find_element(By.CSS_SELECTOR, 'thead tr')
         assert thead is not None, "Admin table should have thead"
 
-        # Check thead has bottom border
+        # Check the header row has a bottom border
         border_bottom = thead.value_of_css_property('border-bottom-width')
-        assert border_bottom == '2px', f"Admin table thead should have 2px bottom border, got {border_bottom}"
+        assert border_bottom == '1px', f"Admin table header row should have 1px bottom border, got {border_bottom}"
 
         # Check tbody rows
         rows = table.find_elements(By.CSS_SELECTOR, 'tbody tr')
         assert len(rows) > 0, "Admin table should have rows"
 
-        # Check first row has border
-        first_row = rows[0]
-        border_bottom = first_row.value_of_css_property('border-bottom-width')
-        assert border_bottom == '1px', f"Admin table row should have 1px bottom border, got {border_bottom}"
+        # Every row but the last has a bottom border (shadcn TableBody: [&_tr:last-child]:border-0)
+        for row in rows[:-1]:
+            border_bottom = row.value_of_css_property('border-bottom-width')
+            assert border_bottom == '1px', f"Admin table row should have 1px bottom border, got {border_bottom}"
+        last_border = rows[-1].value_of_css_property('border-bottom-width')
+        assert last_border == '0px', f"Last admin table row should have no bottom border, got {last_border}"
 
 
 if __name__ == '__main__':

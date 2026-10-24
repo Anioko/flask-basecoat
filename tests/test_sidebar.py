@@ -61,15 +61,16 @@ class SidebarRoutesTestCase(unittest.TestCase):
 
         # Check for sidebar container
         self.assertIn('id="main-sidebar"', html)
-        self.assertIn('class="sidebar', html)
+        self.assertIn('data-slot="sidebar"', html)
 
         # Check for navigation items
         self.assertIn('Dashboard', html)
         self.assertIn('Projects', html)
         self.assertIn('Settings', html)
 
-        # Check for JavaScript includes
-        self.assertIn('sidebar.js', html)
+        # The sidebar behaviour comes from the flask-basecoat runtime
+        self.assertIn('flask-basecoat.js', html)
+        self.assertIn('data-slot="sidebar-trigger"', html)
 
     def test_sidebar_demo_new_guest_user(self):
         """Test sidebar with guest user (not authenticated)"""
@@ -150,7 +151,8 @@ class SidebarTemplateTestCase(unittest.TestCase):
         html = template.render()
 
         self.assertIn('id="test-sidebar"', html)
-        self.assertIn('class="sidebar', html)
+        self.assertIn('data-slot="sidebar"', html)
+        self.assertIn('data-slot="sidebar-rail"', html)
 
     def test_sidebar_macro_renders_with_items(self):
         """Test sidebar macro with navigation items"""
@@ -189,7 +191,8 @@ class SidebarTemplateTestCase(unittest.TestCase):
         self.assertIn('Projects', html)
         self.assertIn('Active', html)
         self.assertIn('Archived', html)
-        self.assertIn('sidebar-group', html)
+        self.assertIn('data-slot="collapsible"', html)
+        self.assertIn('data-slot="sidebar-menu-sub"', html)
 
     def test_breadcrumb_macro_renders(self):
         """Test breadcrumb macro rendering"""
@@ -208,6 +211,8 @@ class SidebarTemplateTestCase(unittest.TestCase):
         self.assertIn('Home', html)
         self.assertIn('Components', html)
         self.assertIn('Sidebar', html)
+        self.assertIn('data-slot="breadcrumb"', html)
+        self.assertIn('aria-current="page"', html)
 
     def test_sidebar_user_macro_renders(self):
         """Test user profile macro rendering"""
@@ -221,6 +226,8 @@ class SidebarTemplateTestCase(unittest.TestCase):
 
         self.assertIn('John Doe', html)
         self.assertIn('john@example.com', html)
+        self.assertIn('data-slot="avatar"', html)
+        self.assertIn('data-slot="dropdown-menu-trigger"', html)
 
 
 if __name__ == '__main__':

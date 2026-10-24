@@ -30,6 +30,16 @@ basecoat_bp = Blueprint(
 )
 
 
+@basecoat_bp.route('/placeholder.svg')
+def placeholder():
+    """The neutral image the upstream blocks reference for cover art and avatars."""
+    from flask import Response
+    svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">'
+           '<rect width="1200" height="1200" fill="oklch(0.97 0 0)"/>'
+           '<path d="M0 0L1200 1200M1200 0L0 1200" stroke="oklch(0.922 0 0)" stroke-width="4"/></svg>')
+    return Response(svg, mimetype='image/svg+xml')
+
+
 def lucide(name, class_name='', **attrs):
     """Jinja global rendering a Lucide icon exactly as lucide-react does (``class="lucide lucide-<name> ..."``)."""
     return _lucide_svg(name, class_name, **attrs)

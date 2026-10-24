@@ -123,7 +123,9 @@ def run(targets, width, out_json):
     results = []
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        ctx = browser.new_context(viewport={'width': width, 'height': 900}, device_scale_factor=1)
+        # The golden pages are React's static render (pre-hydration). Our pages are compared without their
+        # runtime so both sides are the server output; behaviour is covered by check_runtime.py.
+        ctx = browser.new_context(viewport={'width': width, 'height': 900}, device_scale_factor=1, java_script_enabled=False)
         page = ctx.new_page()
         for kind, name in targets:
             gpath = f'/golden/{"blocks/" if kind == "blocks" else ""}{name}.html'
@@ -135,7 +137,7 @@ def run(targets, width, out_json):
                     # Freeze transitions and animations so colours are sampled at their final values.
                     page.add_style_tag(content='*, *::before, *::after { transition: none !important; animation: none !important; }')
                     page.evaluate(f"document.documentElement.classList.toggle('dark', {str(mode == 'dark').lower()})")
-                    page.wait_for_timeout(150)
+                    page.wait_for_timeout(100)
                     return page.evaluate(SCRIPT, PROPS)
                 gold = grab(gpath)
                 ours = grab(opath)

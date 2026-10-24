@@ -57,14 +57,21 @@
   function collapsible(kind) {
     return {
       init(root) {
-        const trigger = FB.qs(root, `[data-slot="${kind}-trigger"]`);
+        // The trigger is usually [data-slot=kind-trigger]; with asChild upstream it keeps the child's slot (sidebar-group-label, sidebar-menu-button).
+        const trigger = FB.qs(root, `[data-slot="${kind}-trigger"]`) || FB.qsa(root, '[aria-expanded]').find((t) => t.closest(`[data-slot="${kind}"]`) === root);
         const content = FB.qs(root, `[data-slot="${kind}-content"]`);
-        if (!trigger || !content) return;
-        trigger.setAttribute('aria-controls', FB.ensureId(content, `${kind}-content`));
+        if (!trigger) return;
+        if (content) trigger.setAttribute('aria-controls', FB.ensureId(content, `${kind}-content`));
         trigger.addEventListener('click', (e) => {
           e.preventDefault();
           const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-          toggleContent(trigger, content, !isOpen, '--radix-collapsible-content-height');
+          if (content) toggleContent(trigger, content, !isOpen, '--radix-collapsible-content-height');
+          else {
+            // No panel upstream (state-driven content): only the state flips; CSS swaps [data-fb-preview]/[data-fb-full].
+            FB.setState(trigger, isOpen ? 'closed' : 'open');
+            trigger.setAttribute('aria-expanded', String(!isOpen));
+            FB.setState(root, isOpen ? 'closed' : 'open');
+          }
           FB.emit(root, 'change', { open: !isOpen });
         });
       },

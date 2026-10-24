@@ -39,7 +39,7 @@
       if (!FB.isOpen(content)) return;
       FB.setState(content, 'closed');
       FB.setState(trigger, 'closed');
-      if (kind === 'popover') { trigger.setAttribute('aria-expanded', 'false'); if (content.contains(document.activeElement)) trigger.focus(); }
+      if (kind === 'popover') { trigger.setAttribute('aria-expanded', 'false'); trigger.focus({ preventScroll: true }); }
       if (layer) { FB.removeLayer(layer); layer = null; }
       FB.emit(content, 'close', { kind });
     }

@@ -68,11 +68,11 @@ class SidebarBrowserTest(unittest.TestCase):
 
         # Wait for sidebar to load
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'sidebar-icon'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="sidebar-menu-button"] svg'))
         )
 
-        # Get all icon containers
-        icon_containers = self.driver.find_elements(By.CLASS_NAME, 'sidebar-icon')
+        # Get all menu icons (the menu button recipe sizes them with [&_svg]:size-4)
+        icon_containers = self.driver.find_elements(By.CSS_SELECTOR, '[data-slot="sidebar-menu-button"] svg')
 
         self.assertGreater(len(icon_containers), 0, "No sidebar icons found")
 
@@ -81,7 +81,7 @@ class SidebarBrowserTest(unittest.TestCase):
         icon_width = first_icon.size['width']
         icon_height = first_icon.size['height']
 
-        # Icons should be around 20px (w-5 = 1.25rem = 20px)
+        # Icons should be around 16px (size-4 = 1rem)
         # Allow some tolerance for browser rendering
         self.assertLess(icon_width, 30, f"Icon width {icon_width}px is too large (expected ~20px)")
         self.assertLess(icon_height, 30, f"Icon height {icon_height}px is too large (expected ~20px)")
@@ -94,11 +94,11 @@ class SidebarBrowserTest(unittest.TestCase):
 
         # Wait for sidebar
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'sidebar-icon'))
+            EC.presence_of_element_located((By.ID, 'main-sidebar'))
         )
 
-        # Find SVG within icon container
-        svg_elements = self.driver.find_elements(By.CSS_SELECTOR, '.sidebar-icon svg')
+        # Find every SVG inside the sidebar
+        svg_elements = self.driver.find_elements(By.CSS_SELECTOR, '#main-sidebar svg')
 
         self.assertGreater(len(svg_elements), 0, "No SVG elements found in sidebar icons")
 
@@ -116,7 +116,7 @@ class SidebarBrowserTest(unittest.TestCase):
         self.driver.get(f'{self.base_url}/sidebar-demo-new')
 
         toggle_btn = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'sidebar-toggle'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '[data-slot="sidebar-trigger"]'))
         )
 
         self.assertTrue(toggle_btn.is_displayed())
@@ -134,9 +134,9 @@ class SidebarBrowserTest(unittest.TestCase):
         initial_width = sidebar.size['width']
 
         WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, 'sidebar-toggle'))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-slot="sidebar-trigger"]'))
         )
-        toggle_btn = self.driver.find_element(By.CLASS_NAME, 'sidebar-toggle')
+        toggle_btn = self.driver.find_element(By.CSS_SELECTOR, '[data-slot="sidebar-trigger"]')
         self.driver.execute_script("arguments[0].click();", toggle_btn)
 
         # Wait for animation to complete
@@ -149,9 +149,11 @@ class SidebarBrowserTest(unittest.TestCase):
         self.assertLess(collapsed_width, initial_width,
                        f"Sidebar didn't collapse (was {initial_width}px, now {collapsed_width}px)")
 
+        self.assertEqual(sidebar.get_attribute('data-state'), 'collapsed')
+
         # Click again to expand
         WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, 'sidebar-toggle'))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-slot="sidebar-trigger"]'))
         )
         self.driver.execute_script("arguments[0].click();", toggle_btn)
         time.sleep(0.5)
@@ -181,7 +183,7 @@ class SidebarBrowserTest(unittest.TestCase):
         self.driver.get(f'{self.base_url}/sidebar-demo-new')
 
         groups = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME, 'sidebar-group'))
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#main-sidebar [data-slot="collapsible"]'))
         )
 
         self.assertGreater(len(groups), 0, "No collapsible groups found")

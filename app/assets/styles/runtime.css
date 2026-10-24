@@ -70,6 +70,11 @@
   [data-slot="combobox-empty"][hidden] {
     display: none;
   }
+  /* State-driven text swaps (preview / full text, "Show more" / "Show less"). */
+  [data-state="closed"] [data-fb-full],
+  [data-state="open"] [data-fb-preview] {
+    display: none;
+  }
   /* The clear button of a combobox appears once it has a value. */
   [data-slot="combobox-clear"]:not([data-visible]) {
     display: none;
