@@ -8,10 +8,25 @@ from app import create_app, db
 from app.models import Role, User
 
 TEST_SERVER_HOST = "127.0.0.1"
-TEST_SERVER_PORT = 5100
+TEST_SERVER_PORT = int(os.environ.get("TEST_SERVER_PORT", "5100"))
 TEST_SERVER_BASE_URL = f"http://{TEST_SERVER_HOST}:{TEST_SERVER_PORT}"
 TEST_ADMIN_EMAIL = "admin@admin.com"
 TEST_ADMIN_PASSWORD = "admin"
+
+
+def _add_member(fallback_role):
+    """Second account so table rows are not all :last-child (shadcn drops that border)."""
+    role = Role.query.filter_by(default=True).first() or fallback_role
+    db.session.add(
+        User(
+            first_name="Member",
+            last_name="User",
+            email="member@example.com",
+            password=TEST_ADMIN_PASSWORD,
+            confirmed=True,
+            role=role,
+        )
+    )
 
 
 class LiveServerManager:
@@ -48,6 +63,7 @@ class LiveServerManager:
                     role=admin_role,
                 )
                 db.session.add(user)
+                _add_member(admin_role)
                 db.session.commit()
 
     def start(self):
@@ -82,6 +98,7 @@ class LiveServerManager:
                 role=admin_role,
             )
             db.session.add(user)
+            _add_member(admin_role)
             db.session.commit()
 
         self._server = make_server(TEST_SERVER_HOST, TEST_SERVER_PORT, app)

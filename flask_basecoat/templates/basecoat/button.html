@@ -1,10 +1,29 @@
-{# shadcn button macro - exact class parity with shadcn/ui button.tsx #}
+{# shadcn button macro - exact class parity with shadcn/ui button.tsx.
+   Children: pass content='...' or use {% call button() %}...{% endcall %}.
+   variant: default | destructive | outline | secondary | ghost | link
+   size: default | sm | lg | icon (icon-only buttons need aria_label)
+   href: render an <a> with the button classes (shadcn asChild on a link)
+   loading: spinner before the children, disabled and aria-busy
+   invalid: aria-invalid, which drives the destructive ring classes #}
 {% macro button(
     content='',
     variant='default',
     size='default',
     type='button',
     disabled=false,
+    loading=false,
+    invalid=false,
+    href=none,
+    aria_label=none,
+    aria_pressed=none,
+    aria_expanded=none,
+    aria_controls=none,
+    aria_describedby=none,
+    id=none,
+    name=none,
+    value=none,
+    target=none,
+    rel=none,
     class=''
 ) %}
 {%- set base_classes = "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive" -%}
@@ -38,13 +57,32 @@
 {%- endif -%}
 
 {%- set all_classes = [base_classes, variant_classes, size_classes, class]|reject('equalto', '')|join(' ') -%}
+{%- set is_disabled = disabled or loading -%}
+{%- set tag = 'a' if href is not none else 'button' -%}
 
-<button
-    type="{{ type }}"
-    class="{{ all_classes }}"
+<{{ tag }}
     data-slot="button"
-    {%- if disabled %} disabled{% endif %}
+    class="{{ all_classes }}"
+    {%- if tag == 'button' %} type="{{ type }}"{% endif %}
+    {%- if tag == 'a' and not is_disabled %} href="{{ href }}"{% endif %}
+    {%- if tag == 'a' and target %} target="{{ target }}"{% endif %}
+    {%- if tag == 'a' and (rel or target == '_blank') %} rel="{{ rel or 'noopener noreferrer' }}"{% endif %}
+    {%- if id %} id="{{ id }}"{% endif %}
+    {%- if name and tag == 'button' %} name="{{ name }}"{% endif %}
+    {%- if value is not none and tag == 'button' %} value="{{ value }}"{% endif %}
+    {%- if is_disabled and tag == 'button' %} disabled{% endif %}
+    {%- if is_disabled and tag == 'a' %} aria-disabled="true" tabindex="-1" role="link"{% endif %}
+    {%- if loading %} aria-busy="true"{% endif %}
+    {%- if invalid %} aria-invalid="true"{% endif %}
+    {%- if aria_label %} aria-label="{{ aria_label }}"{% endif %}
+    {%- if aria_pressed is not none %} aria-pressed="{{ 'true' if aria_pressed else 'false' }}"{% endif %}
+    {%- if aria_expanded is not none %} aria-expanded="{{ 'true' if aria_expanded else 'false' }}"{% endif %}
+    {%- if aria_controls %} aria-controls="{{ aria_controls }}"{% endif %}
+    {%- if aria_describedby %} aria-describedby="{{ aria_describedby }}"{% endif %}
 >
-    {{- content|safe -}}
-</button>
+    {%- if loading -%}
+    <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+    {%- endif -%}
+    {{- caller() if caller else content|safe -}}
+</{{ tag }}>
 {%- endmacro -%}
