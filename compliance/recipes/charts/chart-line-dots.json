@@ -1,0 +1,125 @@
+{
+  "name": "chart-line-dots",
+  "group": "line",
+  "fullWidth": false,
+  "description": "A line chart with dots",
+  "card": {
+    "title": "Line Chart - Dots",
+    "description": "January - June 2024",
+    "headerClassName": null,
+    "contentClassName": null,
+    "footerClassName": "flex-col items-start gap-2 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex gap-2 leading-none font-medium"
+      },
+      {
+        "text": "Showing total visitors for the last 6 months",
+        "icons": [],
+        "className": "leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "line",
+    "component": "LineChart",
+    "container": {
+      "id": null,
+      "className": null
+    },
+    "config": {
+      "desktop": {
+        "label": "Desktop",
+        "color": "var(--chart-1)"
+      },
+      "mobile": {
+        "label": "Mobile",
+        "color": "var(--chart-2)"
+      }
+    },
+    "data": [
+      {
+        "month": "January",
+        "desktop": 186,
+        "mobile": 80
+      },
+      {
+        "month": "February",
+        "desktop": 305,
+        "mobile": 200
+      },
+      {
+        "month": "March",
+        "desktop": 237,
+        "mobile": 120
+      },
+      {
+        "month": "April",
+        "desktop": 73,
+        "mobile": 190
+      },
+      {
+        "month": "May",
+        "desktop": 209,
+        "mobile": 130
+      },
+      {
+        "month": "June",
+        "desktop": 214,
+        "mobile": 140
+      }
+    ],
+    "props": {
+      "accessibilityLayer": true,
+      "margin": {
+        "left": 12,
+        "right": 12
+      }
+    },
+    "series": [
+      {
+        "component": "Line",
+        "dataKey": "desktop",
+        "type": "natural",
+        "stroke": "var(--color-desktop)",
+        "strokeWidth": 2,
+        "dot": {
+          "fill": "var(--color-desktop)"
+        },
+        "activeDot": {
+          "r": 6
+        }
+      }
+    ],
+    "axes": [
+      {
+        "component": "XAxis",
+        "dataKey": "month",
+        "tickLine": false,
+        "axisLine": false,
+        "tickMargin": 8,
+        "tickFormatter": "(value) => value.slice(0, 3)"
+      }
+    ],
+    "grid": {
+      "component": "CartesianGrid",
+      "vertical": false
+    },
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent",
+      "hideLabel": true
+    },
+    "legend": null,
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [
+    "chart.axes[0].tickFormatter"
+  ],
+  "unresolved": []
+}

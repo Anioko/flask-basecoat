@@ -497,8 +497,12 @@ def convert(kind, name):
 def main(argv):
     names = [a for a in argv if not a.startswith('--')]
     comps = sorted(p.stem for p in GOLDEN.glob('*.html'))
-    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html'))
+    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html') if '.' not in p.stem)  # <name>.chart*.html are chart goldens
     targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks]
+    # dashboard-01's chart is drawn from a spec wired by hand (see scripts/gen_dashboard01_chart_spec.py); regenerating
+    # the page from its server-rendered golden would bring back the empty chart, so it is skipped unless named.
+    if 'dashboard-01' not in names:
+        targets = [t for t in targets if t != ('blocks', 'dashboard-01')]
     if names:
         targets = [t for t in targets if t[1] in names]
     for kind, name in targets:

@@ -52,6 +52,21 @@
       ],
       "@/components/markdown": [
         "./stubs/markdown.tsx"
+      ],
+      "@/styles/radix-nova/ui/*": [
+        "../upstream/shadcn/radix/ui/*"
+      ],
+      "@/styles/radix-nova/ui-rtl/*": [
+        "../upstream/shadcn/radix/ui/*"
+      ],
+      "@/styles/base-nova/ui/*": [
+        "../upstream/shadcn/radix/ui/*"
+      ],
+      "@/components/language-selector": [
+        "../upstream/shadcn/site/language-selector.tsx"
+      ],
+      "@/registry/new-york-v4/charts/*": [
+        "../upstream/shadcn/charts/*"
       ]
     }
   },

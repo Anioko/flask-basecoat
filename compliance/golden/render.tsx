@@ -39,6 +39,12 @@ ${body}
 
 for (const name of names) {
   if (only.length && !only.includes(name)) continue
+  if (name === "chart") {
+    // Recharts draws nothing under ReactDOMServer (ResponsiveContainer measures its parent in a browser).
+    // out/chart.html is written by the browser pipeline: python charts/render_charts.py chart
+    manifest[name] = { status: "rendered", source: "browser (charts/render_charts.py)" }
+    continue
+  }
   let file = path.join(examplesDir, `${name}-example.tsx`)
   let source = "upstream-example"
   if (!fs.existsSync(file)) {

@@ -39,6 +39,34 @@ names.update(['XIcon','CheckIcon','ChevronDownIcon','ChevronUpIcon','ChevronRigh
               'CircleIcon','MinusIcon','PlusIcon','SearchIcon','EllipsisIcon','MoreHorizontalIcon','PanelLeftIcon','GripVerticalIcon',
               'Loader2Icon','LoaderCircleIcon','CopyIcon','ArrowDownIcon','ArrowUpIcon','ArrowLeftIcon','ArrowRightIcon','CalendarIcon','InfoIcon',
               'CircleAlertIcon','TriangleAlertIcon','CircleCheckIcon','OctagonXIcon','MenuIcon','SunIcon','MoonIcon','SquareIcon','DotIcon'])
+# Icons used by the dashboard example screens.
+names.update(['LightbulbIcon','MegaphoneIcon','PackageIcon','UserPlusIcon','UserCheckIcon','HandshakeIcon','CircleDollarSignIcon',
+              'LandmarkIcon','ReceiptIcon','RocketIcon','StickyNoteIcon','TicketIcon','NotebookPenIcon','LayersIcon','ChartColumnIcon',
+              'ChartNoAxesColumnIcon','ArrowUpDownIcon','MapPinIcon','TruckIcon','StoreIcon','CalendarDaysIcon','CircleCheckBigIcon',
+              'BanknoteIcon','PiggyBankIcon','MousePointerClickIcon','PercentIcon','FunnelIcon','ShieldCheckIcon','KeyRoundIcon','LogInIcon',
+              'GiftIcon','AwardIcon','BriefcaseIcon','TargetIcon','GlobeIcon','ChartPieIcon','ChartLineIcon','ChartAreaIcon','MonitorIcon',
+              'ShoppingBagIcon','UsersIcon','TrophyIcon','ActivityIcon','EllipsisVerticalIcon','SparklesIcon','ArrowUpRightIcon','ArrowDownRightIcon',
+              'TrendingUpIcon','TrendingDownIcon','LayoutDashboardIcon','FileTextIcon','MailIcon','PhoneIcon','VideoIcon','MessageSquareIcon',
+              'SettingsIcon','HouseIcon','ClipboardListIcon','KanbanIcon','WalletIcon','CreditCardIcon','CirclePlayIcon','FlameIcon','HeartIcon'])
+# Icons used by the app example screens (mail, chat, music, social, calendar, boards).
+names.update(['ForwardIcon','ReplyIcon','ReplyAllIcon','PuzzleIcon','SkipBackIcon','SkipForwardIcon','ShuffleIcon','LibraryIcon',
+              'Repeat2Icon','RepeatIcon','CalendarCheckIcon','MessagesSquareIcon','UsersRoundIcon','ArchiveXIcon','MousePointerClickIcon'])
+
+# Icons used by the marketing example screens.
+names.update(['Share2Icon','PlayIcon','PauseIcon','CircleXIcon','CircleCheckIcon','LoaderCircleIcon'])
+
+# Icons used by the content example screens (blog, changelog, updates, roadmap, timeline, activity, projects, playground).
+names.update(['PanelTopIcon','BookOpenTextIcon','ClipboardCheckIcon','ImageUpIcon','ListTodoIcon','CookieIcon','PartyPopperIcon',
+              'ExternalLinkIcon','ClockIcon','TagIcon','FilterIcon','RotateCcwIcon','SendIcon','MessageCircleIcon','UserIcon'])
+
+# Icons used by the commerce example screens (cart, checkout, products, settings, profile, onboarding).
+names.update(['Grid3X3Icon','BoxIcon','UploadIcon','KeyIcon','FactoryIcon'])
+
+# Icons used by the admin example screens (dashboards, file managers, point of sale, tasks, todo list).
+names.update(['DiamondIcon','UploadIcon','HeadphonesIcon','ChevronFirstIcon','ChevronLastIcon','HistoryIcon','WarehouseIcon',
+              'QrCodeIcon','CircleOffIcon','FolderPlusIcon','FileIcon','EyeIcon','EyeOffIcon','Building2Icon','ImageIcon','ListIcon',
+              'FunnelIcon','CircleHelpIcon','ColumnsIcon','Columns3Icon','LoaderIcon','CircleDashedIcon','FileChartColumnIcon',
+              'GripVerticalIcon','TimerIcon','Settings2Icon','DownloadIcon','InfoIcon','CalendarDaysIcon','StarIcon','QrCodeIcon'])
 
 out, missing = {}, []
 for n in sorted(names):

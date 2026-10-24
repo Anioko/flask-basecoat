@@ -1,0 +1,65 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_content.html' as c %}
+{% block title %}Blog Page · Flask-Basecoat{% endblock %}
+{% set featured = [
+  'Revolutionizing industries through SaaS implementation',
+  'Synergizing saas and UX design for elevating digital experiences',
+  'Navigating saas waters with intuitive UI and UX',
+  'Sculpting saas success - the art of UI and UX design',
+  'Transforming saas platforms - a UI/UX design odyssey',
+] %}
+{% set recent = [
+  {'title': 'Mastering UI Elements: A Practical Guide for Designers', 'description': 'Dive into the world of user interfaces with our expert guides, latest trends, and practical tips.', 'author': 'Jennifer Taylor', 'read': '3 min'},
+  {'title': 'Crafting Seamless Experiences: The Art of Intuitive UI Design', 'description': 'Explore the principles and techniques that drive user-centric UI design, ensuring a seamless and intuitive experience for your audience.', 'author': 'Jennifer Taylor', 'read': '5 min'},
+  {'title': 'Beyond Aesthetics: The Power of Emotional UX Design', 'description': 'Delve into the realm of emotional design and discover how incorporating empathy and psychological insights can elevate user experiences.', 'author': 'Ryan A.', 'read': '2 min'},
+] %}
+{% block body %}
+<div class="container mx-auto px-4 py-8 md:px-6 lg:px-8">
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div class="relative h-[400px] overflow-hidden rounded-lg shadow-lg md:h-[500px] lg:col-span-2">
+      <img src="{{ c.ph(600, 400) }}" alt="Unlocking Business Efficiency with SaaS Solutions" class="h-full w-full object-cover">
+      <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
+        {{ ui.badge(text='Business', class='mb-2 w-fit bg-white/20 text-white backdrop-blur-sm') }}
+        <h2 class="text-2xl leading-tight font-bold md:text-3xl">Unlocking Business Efficiency with SaaS Solutions</h2>
+      </div>
+    </div>
+
+    <div class="bg-card text-card-foreground space-y-6 rounded-lg border p-6 lg:col-span-1">
+      <h3 class="text-xl font-semibold">Other featured posts</h3>
+      <div class="space-y-4">
+        {% for title in featured %}
+        <div class="flex items-center gap-4">
+          <img src="{{ c.ph(64, 64) }}" alt="{{ title }}" width="64" height="64" class="aspect-square rounded-md object-cover">
+          <h4 class="text-sm leading-snug font-medium">{{ title }}</h4>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-12">
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-2xl font-bold">Recent Posts</h2>
+      {{ ui.button(text='All Posts', variant='outline', href='#') }}
+    </div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {% for post in recent %}
+      <div class="bg-card text-card-foreground overflow-hidden rounded-lg border">
+        <img src="{{ c.ph(400, 225) }}" alt="{{ post.title }}" width="400" height="225" class="h-48 w-full object-cover">
+        <div class="grid gap-2 p-4">
+          <h3 class="text-lg leading-tight font-semibold">{{ post.title }}</h3>
+          <p class="text-muted-foreground line-clamp-3 text-sm">{{ post.description }}</p>
+          <div class="text-muted-foreground flex items-center gap-2 text-sm">
+            {% call ui.avatar(class='h-6 w-6') %}{{ ui.avatar_fallback(text=c.initials(post.author)) }}{% endcall %}
+            <span>{{ post.author }}</span>
+            <span>•</span>
+            <span>{{ post.read }} read</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

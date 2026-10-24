@@ -1,0 +1,262 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_admin.html' as admin %}
+{% block title %}Tasks{% endblock %}
+{#- data:tasks_rows -#}{% set tasks_rows = [{"id": "TASK-8782", "title": "You can't compress the program without quantifying the open-source SSD pixel!", "status": "in progress", "label": "documentation", "priority": "medium"}, {"id": "TASK-7878", "title": "Try to calculate the EXE feed, maybe it will index the multi-byte pixel!", "status": "backlog", "label": "documentation", "priority": "medium"}, {"id": "TASK-7839", "title": "We need to bypass the neural TCP card!", "status": "todo", "label": "bug", "priority": "high"}, {"id": "TASK-5562", "title": "The SAS interface is down, bypass the open-source pixel so we can back up the PNG bandwidth!", "status": "backlog", "label": "feature", "priority": "medium"}, {"id": "TASK-8686", "title": "I'll parse the wireless SSL protocol, that should driver the API panel!", "status": "canceled", "label": "feature", "priority": "medium"}, {"id": "TASK-1280", "title": "Use the digital TLS panel, then you can transmit the haptic system!", "status": "done", "label": "bug", "priority": "high"}, {"id": "TASK-7262", "title": "The UTF8 application is down, parse the neural bandwidth so we can back up the PNG firewall!", "status": "done", "label": "feature", "priority": "high"}, {"id": "TASK-1138", "title": "Generating the driver won't do anything, we need to quantify the 1080p SMTP bandwidth!", "status": "in progress", "label": "feature", "priority": "medium"}, {"id": "TASK-7184", "title": "We need to program the back-end THX pixel!", "status": "todo", "label": "feature", "priority": "low"}, {"id": "TASK-5160", "title": "Calculating the bus won't do anything, we need to navigate the back-end JSON protocol!", "status": "in progress", "label": "documentation", "priority": "high"}, {"id": "TASK-5618", "title": "Generating the driver won't do anything, we need to index the online SSL application!", "status": "done", "label": "documentation", "priority": "medium"}, {"id": "TASK-6699", "title": "I'll transmit the wireless JBOD capacitor, that should hard drive the SSD feed!", "status": "backlog", "label": "documentation", "priority": "medium"}, {"id": "TASK-2858", "title": "We need to override the online UDP bus!", "status": "backlog", "label": "bug", "priority": "medium"}, {"id": "TASK-9864", "title": "I'll reboot the 1080p FTP panel, that should matrix the HEX hard drive!", "status": "done", "label": "bug", "priority": "high"}, {"id": "TASK-8404", "title": "We need to generate the virtual HEX alarm!", "status": "in progress", "label": "bug", "priority": "low"}, {"id": "TASK-5365", "title": "Backing up the pixel won't do anything, we need to transmit the primary IB array!", "status": "in progress", "label": "documentation", "priority": "low"}, {"id": "TASK-1780", "title": "The CSS feed is down, index the bluetooth transmitter so we can compress the CLI protocol!", "status": "todo", "label": "documentation", "priority": "high"}, {"id": "TASK-6938", "title": "Use the redundant SCSI application, then you can hack the optical alarm!", "status": "todo", "label": "documentation", "priority": "high"}, {"id": "TASK-9885", "title": "We need to compress the auxiliary VGA driver!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-3216", "title": "Transmitting the transmitter won't do anything, we need to compress the virtual HDD sensor!", "status": "backlog", "label": "documentation", "priority": "medium"}, {"id": "TASK-9285", "title": "The IP monitor is down, copy the haptic alarm so we can generate the HTTP transmitter!", "status": "todo", "label": "bug", "priority": "high"}, {"id": "TASK-1024", "title": "Overriding the microchip won't do anything, we need to transmit the digital OCR transmitter!", "status": "in progress", "label": "documentation", "priority": "low"}, {"id": "TASK-7068", "title": "You can't generate the capacitor without indexing the wireless HEX pixel!", "status": "canceled", "label": "bug", "priority": "low"}, {"id": "TASK-6502", "title": "Navigating the microchip won't do anything, we need to bypass the back-end SQL bus!", "status": "todo", "label": "bug", "priority": "high"}, {"id": "TASK-5326", "title": "We need to hack the redundant UTF8 transmitter!", "status": "todo", "label": "bug", "priority": "low"}, {"id": "TASK-6274", "title": "Use the virtual PCI circuit, then you can parse the bluetooth alarm!", "status": "canceled", "label": "documentation", "priority": "low"}, {"id": "TASK-1571", "title": "I'll input the neural DRAM circuit, that should protocol the SMTP interface!", "status": "in progress", "label": "feature", "priority": "medium"}, {"id": "TASK-9518", "title": "Compressing the interface won't do anything, we need to compress the online SDD matrix!", "status": "canceled", "label": "documentation", "priority": "medium"}, {"id": "TASK-5581", "title": "I'll synthesize the digital COM pixel, that should transmitter the UTF8 protocol!", "status": "backlog", "label": "documentation", "priority": "high"}, {"id": "TASK-2197", "title": "Parsing the feed won't do anything, we need to copy the bluetooth DRAM bus!", "status": "todo", "label": "documentation", "priority": "low"}, {"id": "TASK-8484", "title": "We need to parse the solid state UDP firewall!", "status": "in progress", "label": "bug", "priority": "low"}, {"id": "TASK-9892", "title": "If we back up the application, we can get to the UDP application through the multi-byte THX capacitor!", "status": "done", "label": "documentation", "priority": "high"}, {"id": "TASK-9616", "title": "We need to synthesize the cross-platform ASCII pixel!", "status": "in progress", "label": "feature", "priority": "medium"}, {"id": "TASK-9744", "title": "Use the back-end IP card, then you can input the solid state hard drive!", "status": "done", "label": "documentation", "priority": "low"}, {"id": "TASK-1376", "title": "Generating the alarm won't do anything, we need to generate the mobile IP capacitor!", "status": "backlog", "label": "documentation", "priority": "low"}, {"id": "TASK-7382", "title": "If we back up the firewall, we can get to the RAM alarm through the primary UTF8 pixel!", "status": "todo", "label": "feature", "priority": "low"}, {"id": "TASK-2290", "title": "I'll compress the virtual JSON panel, that should application the UTF8 bus!", "status": "canceled", "label": "documentation", "priority": "high"}, {"id": "TASK-1533", "title": "You can't input the firewall without overriding the wireless TCP firewall!", "status": "done", "label": "bug", "priority": "high"}, {"id": "TASK-4920", "title": "Bypassing the hard drive won't do anything, we need to input the bluetooth JSON program!", "status": "in progress", "label": "bug", "priority": "high"}, {"id": "TASK-5168", "title": "If we synthesize the bus, we can get to the IP panel through the virtual TLS array!", "status": "in progress", "label": "feature", "priority": "low"}, {"id": "TASK-7103", "title": "We need to parse the multi-byte EXE bandwidth!", "status": "canceled", "label": "feature", "priority": "low"}, {"id": "TASK-4314", "title": "If we compress the program, we can get to the XML alarm through the multi-byte COM matrix!", "status": "in progress", "label": "bug", "priority": "high"}, {"id": "TASK-3415", "title": "Use the cross-platform XML application, then you can quantify the solid state feed!", "status": "todo", "label": "feature", "priority": "high"}, {"id": "TASK-8339", "title": "Try to calculate the DNS interface, maybe it will input the bluetooth capacitor!", "status": "in progress", "label": "feature", "priority": "low"}, {"id": "TASK-6995", "title": "Try to hack the XSS bandwidth, maybe it will override the bluetooth matrix!", "status": "todo", "label": "feature", "priority": "high"}, {"id": "TASK-8053", "title": "If we connect the program, we can get to the UTF8 matrix through the digital UDP protocol!", "status": "todo", "label": "feature", "priority": "medium"}, {"id": "TASK-4336", "title": "If we synthesize the microchip, we can get to the SAS sensor through the optical UDP program!", "status": "todo", "label": "documentation", "priority": "low"}, {"id": "TASK-8790", "title": "I'll back up the optical COM alarm, that should alarm the RSS capacitor!", "status": "done", "label": "bug", "priority": "medium"}, {"id": "TASK-8980", "title": "Try to navigate the SQL transmitter, maybe it will back up the virtual firewall!", "status": "canceled", "label": "bug", "priority": "low"}, {"id": "TASK-7342", "title": "Use the neural CLI card, then you can parse the online port!", "status": "backlog", "label": "documentation", "priority": "low"}, {"id": "TASK-5608", "title": "I'll hack the haptic SSL program, that should bus the UDP transmitter!", "status": "canceled", "label": "documentation", "priority": "low"}, {"id": "TASK-1606", "title": "I'll generate the bluetooth PNG firewall, that should pixel the SSL driver!", "status": "done", "label": "feature", "priority": "medium"}, {"id": "TASK-7872", "title": "Transmitting the circuit won't do anything, we need to reboot the 1080p RSS monitor!", "status": "canceled", "label": "feature", "priority": "medium"}, {"id": "TASK-4167", "title": "Use the cross-platform SMS circuit, then you can synthesize the optical feed!", "status": "canceled", "label": "bug", "priority": "medium"}, {"id": "TASK-9581", "title": "You can't index the port without hacking the cross-platform XSS monitor!", "status": "backlog", "label": "documentation", "priority": "low"}, {"id": "TASK-8806", "title": "We need to bypass the back-end SSL panel!", "status": "done", "label": "bug", "priority": "medium"}, {"id": "TASK-6542", "title": "Try to quantify the RSS firewall, maybe it will quantify the open-source system!", "status": "done", "label": "feature", "priority": "low"}, {"id": "TASK-6806", "title": "The VGA protocol is down, reboot the back-end matrix so we can parse the CSS panel!", "status": "canceled", "label": "documentation", "priority": "low"}, {"id": "TASK-9549", "title": "You can't bypass the bus without connecting the neural JBOD bus!", "status": "todo", "label": "feature", "priority": "high"}, {"id": "TASK-1075", "title": "Backing up the driver won't do anything, we need to parse the redundant RAM pixel!", "status": "done", "label": "feature", "priority": "medium"}, {"id": "TASK-1427", "title": "Use the auxiliary PCI circuit, then you can calculate the cross-platform interface!", "status": "done", "label": "documentation", "priority": "high"}, {"id": "TASK-1907", "title": "Hacking the circuit won't do anything, we need to back up the online DRAM system!", "status": "todo", "label": "documentation", "priority": "high"}, {"id": "TASK-4309", "title": "If we generate the system, we can get to the TCP sensor through the optical GB pixel!", "status": "backlog", "label": "bug", "priority": "medium"}, {"id": "TASK-3973", "title": "I'll parse the back-end ADP array, that should bandwidth the RSS bandwidth!", "status": "todo", "label": "feature", "priority": "medium"}, {"id": "TASK-7962", "title": "Use the wireless RAM program, then you can hack the cross-platform feed!", "status": "canceled", "label": "bug", "priority": "low"}, {"id": "TASK-3360", "title": "You can't quantify the program without synthesizing the neural OCR interface!", "status": "done", "label": "feature", "priority": "medium"}, {"id": "TASK-9887", "title": "Use the auxiliary ASCII sensor, then you can connect the solid state port!", "status": "backlog", "label": "bug", "priority": "medium"}, {"id": "TASK-3649", "title": "I'll input the virtual USB system, that should circuit the DNS monitor!", "status": "in progress", "label": "feature", "priority": "medium"}, {"id": "TASK-3586", "title": "If we quantify the circuit, we can get to the CLI feed through the mobile SMS hard drive!", "status": "in progress", "label": "bug", "priority": "low"}, {"id": "TASK-5150", "title": "I'll hack the wireless XSS port, that should transmitter the IP interface!", "status": "canceled", "label": "feature", "priority": "medium"}, {"id": "TASK-3652", "title": "The SQL interface is down, override the optical bus so we can program the ASCII interface!", "status": "backlog", "label": "feature", "priority": "low"}, {"id": "TASK-6884", "title": "Use the digital PCI circuit, then you can synthesize the multi-byte microchip!", "status": "canceled", "label": "feature", "priority": "high"}, {"id": "TASK-1591", "title": "We need to connect the mobile XSS driver!", "status": "in progress", "label": "feature", "priority": "high"}, {"id": "TASK-3802", "title": "Try to override the ASCII protocol, maybe it will parse the virtual matrix!", "status": "in progress", "label": "feature", "priority": "low"}, {"id": "TASK-7253", "title": "Programming the capacitor won't do anything, we need to bypass the neural IB hard drive!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-9739", "title": "We need to hack the multi-byte HDD bus!", "status": "done", "label": "documentation", "priority": "medium"}, {"id": "TASK-4424", "title": "Try to hack the HEX alarm, maybe it will connect the optical pixel!", "status": "in progress", "label": "documentation", "priority": "medium"}, {"id": "TASK-3922", "title": "You can't back up the capacitor without generating the wireless PCI program!", "status": "backlog", "label": "bug", "priority": "low"}, {"id": "TASK-4921", "title": "I'll index the open-source IP feed, that should system the GB application!", "status": "canceled", "label": "bug", "priority": "low"}, {"id": "TASK-5814", "title": "We need to calculate the 1080p AGP feed!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-2645", "title": "Synthesizing the system won't do anything, we need to navigate the multi-byte HDD firewall!", "status": "todo", "label": "documentation", "priority": "medium"}, {"id": "TASK-4535", "title": "Try to copy the JSON circuit, maybe it will connect the wireless feed!", "status": "in progress", "label": "feature", "priority": "low"}, {"id": "TASK-4463", "title": "We need to copy the solid state AGP monitor!", "status": "done", "label": "documentation", "priority": "low"}, {"id": "TASK-9745", "title": "If we connect the protocol, we can get to the GB system through the bluetooth PCI microchip!", "status": "canceled", "label": "feature", "priority": "high"}, {"id": "TASK-2080", "title": "If we input the bus, we can get to the RAM matrix through the auxiliary RAM card!", "status": "todo", "label": "bug", "priority": "medium"}, {"id": "TASK-3838", "title": "I'll bypass the online TCP application, that should panel the AGP system!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-1340", "title": "We need to navigate the virtual PNG circuit!", "status": "todo", "label": "bug", "priority": "medium"}, {"id": "TASK-6665", "title": "If we parse the monitor, we can get to the SSD hard drive through the cross-platform AGP alarm!", "status": "canceled", "label": "feature", "priority": "low"}, {"id": "TASK-7585", "title": "If we calculate the hard drive, we can get to the SSL program through the multi-byte CSS microchip!", "status": "backlog", "label": "feature", "priority": "low"}, {"id": "TASK-6319", "title": "We need to copy the multi-byte SCSI program!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-4369", "title": "Try to input the SCSI bus, maybe it will generate the 1080p pixel!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-9035", "title": "We need to override the solid state PNG array!", "status": "canceled", "label": "documentation", "priority": "low"}, {"id": "TASK-3970", "title": "You can't index the transmitter without quantifying the haptic ASCII card!", "status": "todo", "label": "documentation", "priority": "medium"}, {"id": "TASK-4473", "title": "You can't bypass the protocol without overriding the neural RSS program!", "status": "todo", "label": "documentation", "priority": "low"}, {"id": "TASK-4136", "title": "You can't hack the hard drive without hacking the primary JSON program!", "status": "canceled", "label": "bug", "priority": "medium"}, {"id": "TASK-3939", "title": "Use the back-end SQL firewall, then you can connect the neural hard drive!", "status": "done", "label": "feature", "priority": "low"}, {"id": "TASK-2007", "title": "I'll input the back-end USB protocol, that should bandwidth the PCI system!", "status": "backlog", "label": "bug", "priority": "high"}, {"id": "TASK-7516", "title": "Use the primary SQL program, then you can generate the auxiliary transmitter!", "status": "done", "label": "documentation", "priority": "medium"}, {"id": "TASK-6906", "title": "Try to back up the DRAM system, maybe it will reboot the online transmitter!", "status": "done", "label": "feature", "priority": "high"}, {"id": "TASK-5207", "title": "The SMS interface is down, copy the bluetooth bus so we can quantify the VGA card!", "status": "in progress", "label": "bug", "priority": "low"}] %}{#- /data -#}
+{% set labels = [('bug', 'Bug'), ('feature', 'Feature'), ('documentation', 'Documentation')] %}
+{% set statuses = [('backlog', 'Backlog', 'circle-help'), ('todo', 'Todo', 'circle'), ('in progress', 'In Progress', 'timer'), ('done', 'Done', 'circle-check'), ('canceled', 'Canceled', 'circle-off')] %}
+{% set priorities = [('low', 'Low', 'arrow-down'), ('medium', 'Medium', 'arrow-right'), ('high', 'High', 'arrow-up')] %}
+{% set label_names = dict(labels) %}
+
+{% macro faceted_filter(column, title, options) -%}
+{%- call ui.popover() -%}
+  {%- call ui.popover_trigger(variant='outline', size='sm', class='h-8 border-dashed', attrs={'data-facet-trigger': column}) -%}
+    {{ lucide('circle-plus') }}{{ title }}
+    <span class="contents" data-facet-summary hidden>
+      {{ ui.separator(orientation='vertical', class='mx-2 h-4') }}
+      {{ ui.badge(text='0', variant='secondary', class='rounded-sm px-1 font-normal lg:hidden', attrs={'data-facet-count': ''}) }}
+      <div class="hidden gap-1 lg:flex">
+        {{ ui.badge(text='0 selected', variant='secondary', class='rounded-sm px-1 font-normal', attrs={'data-facet-many': '', 'hidden': true}) }}
+        {% for value, label, icon in options %}{{ ui.badge(text=label, variant='secondary', class='rounded-sm px-1 font-normal', attrs={'data-facet-badge': value, 'hidden': true}) }}{% endfor %}
+      </div>
+    </span>
+  {%- endcall -%}
+  {%- call ui.popover_content(align='start', class='w-[200px] p-0') -%}
+    {%- call ui.command(attrs={'data-facet': column}) -%}
+      {%- call ui.command_input_wrapper() -%}
+        {%- call ui.input_group(class='cn-command-input-group') -%}
+          {{ ui.command_input(attrs={'placeholder': title, 'aria-label': title}) }}
+          {% call ui.input_group_addon(align='inline-start') %}{{ lucide('search', 'cn-command-input-icon') }}{% endcall %}
+        {%- endcall -%}
+      {%- endcall -%}
+      {%- call ui.command_list() -%}
+        {{ ui.command_empty(text='No results found.') }}
+        {%- call ui.command_group() -%}
+          {%- for value, label, icon in options -%}
+          {%- call ui.command_item(attrs={'data-value': value, 'data-option': value}) -%}
+            <div class="flex size-4 items-center justify-center rounded-[4px] border border-input data-[selected=true]:border-primary data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground [&:not([data-selected=true])_svg]:invisible" data-check>{{ lucide('check', 'size-3.5 text-primary-foreground') }}</div>
+            {{ lucide(icon, 'size-4 text-muted-foreground') }}<span>{{ label }}</span>
+            <span class="ml-auto flex size-4 items-center justify-center font-mono text-xs text-muted-foreground">{{ tasks_rows | selectattr(column, 'equalto', value) | list | length }}</span>
+          {%- endcall -%}
+          {%- endfor -%}
+        {%- endcall -%}
+        <div data-facet-clear hidden>
+          {{ ui.command_separator() }}
+          {% call ui.command_group() %}{{ ui.command_item(text='Clear filters', class='justify-center text-center', attrs={'data-value': '__clear', 'data-clear': ''}) }}{% endcall %}
+        </div>
+      {%- endcall -%}
+    {%- endcall -%}
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{% macro column_header(column, title) -%}
+<div class="flex items-center gap-2">
+  {%- call ui.dropdown_menu() -%}
+    {%- call ui.dropdown_menu_trigger(variant='ghost', size='sm', class='-ml-3 h-8 data-[state=open]:bg-accent', attrs={'data-sort-trigger': column}) -%}
+      <span>{{ title }}</span><span class="contents" data-sort-icon="none">{{ lucide('chevrons-up-down') }}</span><span class="contents" data-sort-icon="asc" hidden>{{ lucide('arrow-up') }}</span><span class="contents" data-sort-icon="desc" hidden>{{ lucide('arrow-down') }}</span>
+    {%- endcall -%}
+    {%- call ui.dropdown_menu_content(align='start') -%}
+      {% call ui.dropdown_menu_item(attrs={'data-sort': column, 'data-dir': 'asc'}) %}{{ lucide('arrow-up') }}Asc{% endcall %}
+      {% call ui.dropdown_menu_item(attrs={'data-sort': column, 'data-dir': 'desc'}) %}{{ lucide('arrow-down') }}Desc{% endcall %}
+      {{ ui.dropdown_menu_separator() }}
+      {% call ui.dropdown_menu_item(attrs={'data-hide-col': column}) %}{{ lucide('eye-off') }}Hide{% endcall %}
+    {%- endcall -%}
+  {%- endcall -%}
+</div>
+{%- endmacro %}
+
+{% block body %}
+<div class="h-full flex-1 flex-col gap-8 p-8 md:flex">
+  <div class="flex items-center justify-between gap-2">
+    <div class="flex flex-col gap-1">
+      <h2 class="text-2xl font-semibold tracking-tight">Welcome back!</h2>
+      <p class="text-muted-foreground">Here&apos;s a list of your tasks for this month.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(variant='ghost', class='relative h-8 w-8 rounded-full', attrs={'aria-label': 'Account'}) %}
+          {% call ui.avatar(class='h-9 w-9') %}{{ ui.avatar_fallback(text='SC') }}{% endcall %}
+        {% endcall %}
+        {% call ui.dropdown_menu_content(align='end', class='w-56') %}
+          {% call ui.dropdown_menu_label(class='font-normal') %}
+            <div class="flex flex-col space-y-1"><p class="text-sm leading-none font-medium">shadcn</p><p class="text-xs leading-none text-muted-foreground">m@example.com</p></div>
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}Profile{{ ui.dropdown_menu_shortcut(text='⇧⌘P') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}Billing{{ ui.dropdown_menu_shortcut(text='⌘B') }}{% endcall %}
+            {% call ui.dropdown_menu_item() %}Settings{{ ui.dropdown_menu_shortcut(text='⌘S') }}{% endcall %}
+            {{ ui.dropdown_menu_item(text='New Team') }}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_item() %}Log out{{ ui.dropdown_menu_shortcut(text='⇧⌘Q') }}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-1 items-center gap-2">
+        {{ ui.input(id='task-filter', placeholder='Filter tasks...', class='h-8 w-[150px] lg:w-[250px]', attrs={'aria-label': 'Filter tasks'}) }}
+        {{ faceted_filter('status', 'Status', statuses) }}
+        {{ faceted_filter('priority', 'Priority', priorities) }}
+        {% call ui.button(variant='ghost', size='sm', attrs={'data-reset': '', 'hidden': true}) %}Reset{{ lucide('x') }}{% endcall %}
+      </div>
+      <div class="flex items-center gap-2">
+        {% call ui.dropdown_menu() %}
+          {% call ui.dropdown_menu_trigger(variant='outline', size='sm', class='ml-auto hidden h-8 lg:flex') %}{{ lucide('settings-2') }}View{% endcall %}
+          {% call ui.dropdown_menu_content(align='end', class='w-[150px]') %}
+            {{ ui.dropdown_menu_label(text='Toggle columns') }}
+            {{ ui.dropdown_menu_separator() }}
+            {% for col in ['title', 'status', 'priority'] %}{{ admin.menu_check(col, class='capitalize', attrs={'data-toggle-col': col}) }}{% endfor %}
+          {% endcall %}
+        {% endcall %}
+        {{ ui.button(text='Add Task', size='sm') }}
+      </div>
+    </div>
+
+    <div class="rounded-md border">
+      {% call ui.table() %}
+        {% call ui.table_header() %}{% call ui.table_row() %}
+          {% call ui.table_head() %}{{ ui.checkbox(class='translate-y-[2px]', attrs={'aria-label': 'Select all', 'data-select-all': 'tasks'}) }}{% endcall %}
+          {% call ui.table_head() %}<div>Task</div>{% endcall %}
+          {% call ui.table_head(attrs={'data-col': 'title'}) %}{{ column_header('title', 'Title') }}{% endcall %}
+          {% call ui.table_head(attrs={'data-col': 'status'}) %}{{ column_header('status', 'Status') }}{% endcall %}
+          {% call ui.table_head(attrs={'data-col': 'priority'}) %}{{ column_header('priority', 'Priority') }}{% endcall %}
+          {{ ui.table_head() }}
+        {% endcall %}{% endcall %}
+        {% call ui.table_body(attrs={'data-table': 'tasks'}) %}
+          {% for task in tasks_rows %}
+          {% set status = statuses | selectattr(0, 'equalto', task.status) | first %}
+          {% set priority = priorities | selectattr(0, 'equalto', task.priority) | first %}
+          {% call ui.table_row(attrs={'data-row': task.id, 'data-order': loop.index0, 'data-title': task.title, 'data-status': task.status, 'data-priority': task.priority, 'hidden': loop.index > 10}) %}
+            {% call ui.table_cell() %}{{ ui.checkbox(class='translate-y-[2px]', attrs={'aria-label': 'Select row'}) }}{% endcall %}
+            {% call ui.table_cell() %}<div class="w-[80px]">{{ task.id }}</div>{% endcall %}
+            {% call ui.table_cell(attrs={'data-col': 'title'}) %}<div class="flex gap-2">{{ ui.badge(text=label_names[task.label], variant='outline') }}<span class="max-w-[500px] truncate font-medium">{{ task.title }}</span></div>{% endcall %}
+            {% call ui.table_cell(attrs={'data-col': 'status'}) %}<div class="flex w-[100px] items-center gap-2">{{ lucide(status[2], 'size-4 text-muted-foreground') }}<span>{{ status[1] }}</span></div>{% endcall %}
+            {% call ui.table_cell(attrs={'data-col': 'priority'}) %}<div class="flex items-center gap-2">{{ lucide(priority[2], 'size-4 text-muted-foreground') }}<span>{{ priority[1] }}</span></div>{% endcall %}
+            {% call ui.table_cell() %}
+              {% call ui.dropdown_menu() %}
+                {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='size-8 data-[state=open]:bg-muted') %}{{ lucide('ellipsis') }}<span class="sr-only">Open menu</span>{% endcall %}
+                {% call ui.dropdown_menu_content(align='end', class='w-[160px]') %}
+                  {{ ui.dropdown_menu_item(text='Edit') }}{{ ui.dropdown_menu_item(text='Make a copy') }}{{ ui.dropdown_menu_item(text='Favorite') }}
+                  {{ ui.dropdown_menu_separator() }}
+                  {% call ui.dropdown_menu_sub() %}
+                    {% call ui.dropdown_menu_sub_trigger() %}Labels{{ lucide('chevron-right', 'cn-rtl-flip ml-auto') }}{% endcall %}
+                    {% call ui.dropdown_menu_sub_content() %}
+                      {% call ui.dropdown_menu_radio_group() %}
+                        {% for value, label in labels %}
+                        {% call ui.dropdown_menu_radio_item(checked=(value == task.label), attrs={'data-value': value}) %}{% call ui.dropdown_menu_radio_item_indicator(checked=(value == task.label)) %}{{ lucide('circle', 'cn-dropdown-menu-radio-item-indicator-icon') }}{% endcall %}{{ label }}{% endcall %}
+                        {% endfor %}
+                      {% endcall %}
+                    {% endcall %}
+                  {% endcall %}
+                  {{ ui.dropdown_menu_separator() }}
+                  {% call ui.dropdown_menu_item(variant='destructive') %}Delete{{ ui.dropdown_menu_shortcut(text='⌘⌫') }}{% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% endfor %}
+          {% call ui.table_row(attrs={'data-empty': '', 'hidden': true}) %}{{ ui.table_cell(text='No results.', class='h-24 text-center', attrs={'colspan': 6}) }}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+    </div>
+
+    <div class="flex items-center justify-between px-2">
+      <div class="flex-1 text-sm text-muted-foreground" data-selected-count="tasks">0 of {{ tasks_rows | length }} row(s) selected.</div>
+      <div class="flex items-center space-x-6 lg:space-x-8">
+        <div class="flex items-center space-x-2">
+          <p class="text-sm font-medium">Rows per page</p>
+          {{ admin.select_box('tasks-page-size', ['10', '20', '25', '30', '40', '50'], selected='10', class='h-8 w-[70px]', side='top', attrs={'aria-label': 'Rows per page'}) }}
+        </div>
+        <div class="flex w-[100px] items-center justify-center text-sm font-medium" data-page-label="tasks">Page 1 of {{ ((tasks_rows | length) / 10) | round(0, 'ceil') | int }}</div>
+        <div class="flex items-center space-x-2">{{ admin.pager_buttons('tasks', first_class='hidden size-8 lg:flex', first_size='icon') }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ admin.table_script() }}
+<script>
+  (function () {
+    var table = window.AdminTable('tasks', { size: 10 });
+    var body = document.querySelector('[data-table="tasks"]');
+    var filters = { status: new Set(), priority: new Set() }, query = '';
+    var STATUS = {{ statuses | map('first') | list | tojson }}, PRIORITY = {{ priorities | map('first') | list | tojson }};
+
+    function apply() {
+      body.querySelectorAll('[data-row]').forEach(function (r) {
+        var ok = r.getAttribute('data-title').toLowerCase().indexOf(query) !== -1
+          && (!filters.status.size || filters.status.has(r.getAttribute('data-status')))
+          && (!filters.priority.size || filters.priority.has(r.getAttribute('data-priority')));
+        r.toggleAttribute('data-filtered', !ok);
+      });
+      document.querySelector('[data-reset]').hidden = !(filters.status.size || filters.priority.size || query);
+      ['status', 'priority'].forEach(function (col) {
+        var set = filters[col], trigger = document.querySelector('[data-facet-trigger="' + col + '"]');
+        trigger.querySelector('[data-facet-summary]').hidden = set.size === 0;
+        trigger.querySelector('[data-facet-count]').textContent = set.size;
+        var many = trigger.querySelector('[data-facet-many]');
+        many.hidden = set.size <= 2; many.textContent = set.size + ' selected';
+        trigger.querySelectorAll('[data-facet-badge]').forEach(function (b) { b.hidden = set.size > 2 || !set.has(b.getAttribute('data-facet-badge')); });
+        var cmd = document.querySelector('[data-facet="' + col + '"]');
+        cmd.querySelectorAll('[data-option]').forEach(function (it) { it.querySelector('[data-check]').setAttribute('data-selected', String(set.has(it.getAttribute('data-option')))); });
+        cmd.querySelector('[data-facet-clear]').hidden = set.size === 0;
+      });
+      table.state.page = 0;
+      table.render();
+    }
+    document.getElementById('task-filter').addEventListener('input', function (e) { query = e.target.value.toLowerCase(); apply(); });
+    document.addEventListener('basecoat:select', function (e) {
+      var cmd = e.target.closest && e.target.closest('[data-facet]');
+      if (!cmd) return;
+      var col = cmd.getAttribute('data-facet'), it = e.detail.item;
+      if (it.hasAttribute('data-clear')) filters[col].clear();
+      else { var v = it.getAttribute('data-option'); filters[col].has(v) ? filters[col].delete(v) : filters[col].add(v); }
+      apply();
+    });
+    document.querySelector('[data-reset]').addEventListener('click', function () { filters.status.clear(); filters.priority.clear(); apply(); });
+
+    // Sorting from the column header menus, and hiding columns from there or from the View menu.
+    var ORDER = { status: STATUS, priority: PRIORITY };
+    function sortBy(col, dir) {
+      var rows = Array.prototype.slice.call(body.querySelectorAll('[data-row]'));
+      var key = function (r) {
+        if (col === 'id') return r.getAttribute('data-row');
+        if (col === 'title') return r.getAttribute('data-title').toLowerCase();
+        return ORDER[col].indexOf(r.getAttribute('data-' + col));
+      };
+      rows.sort(function (a, b) { var x = key(a), y = key(b); return (x < y ? -1 : x > y ? 1 : 0) * (dir === 'desc' ? -1 : 1); });
+      var empty = body.querySelector('[data-empty]');
+      rows.forEach(function (r) { body.insertBefore(r, empty); });
+      document.querySelectorAll('[data-sort-trigger]').forEach(function (t) {
+        var active = t.getAttribute('data-sort-trigger') === col;
+        t.querySelectorAll('[data-sort-icon]').forEach(function (i) { i.hidden = i.getAttribute('data-sort-icon') !== (active ? dir : 'none'); });
+      });
+      table.render();
+    }
+    function setColumn(col, visible) {
+      document.querySelectorAll('[data-col="' + col + '"]').forEach(function (c) { c.hidden = !visible; });
+      var item = document.querySelector('[data-toggle-col="' + col + '"]');
+      if (item) {
+        item.setAttribute('data-state', visible ? 'checked' : 'unchecked'); item.setAttribute('aria-checked', String(visible));
+        var ind = item.querySelector('[data-slot="dropdown-menu-checkbox-item-indicator"]');
+        if (ind) ind.setAttribute('data-state', visible ? 'checked' : 'unchecked');
+      }
+    }
+    document.addEventListener('click', function (e) {
+      var s = e.target.closest && e.target.closest('[data-sort]');
+      if (s) sortBy(s.getAttribute('data-sort'), s.getAttribute('data-dir'));
+      var h = e.target.closest && e.target.closest('[data-hide-col]');
+      if (h) setColumn(h.getAttribute('data-hide-col'), false);
+    });
+    document.addEventListener('basecoat:change', function (e) {
+      var col = e.target.getAttribute && e.target.getAttribute('data-toggle-col');
+      if (col) setColumn(col, e.detail.checked);
+    });
+  })();
+</script>
+{% endblock %}

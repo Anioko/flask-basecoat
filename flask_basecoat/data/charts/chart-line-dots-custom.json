@@ -1,0 +1,97 @@
+{
+ "type": "line",
+ "component": "LineChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  },
+  "mobile": {
+   "label": "Mobile",
+   "color": "var(--chart-2)"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "desktop": 186,
+   "mobile": 80
+  },
+  {
+   "month": "February",
+   "desktop": 305,
+   "mobile": 200
+  },
+  {
+   "month": "March",
+   "desktop": 237,
+   "mobile": 120
+  },
+  {
+   "month": "April",
+   "desktop": 73,
+   "mobile": 190
+  },
+  {
+   "month": "May",
+   "desktop": 209,
+   "mobile": 130
+  },
+  {
+   "month": "June",
+   "desktop": 214,
+   "mobile": 140
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true,
+  "margin": {
+   "left": 12,
+   "right": 12
+  }
+ },
+ "series": [
+  {
+   "component": "Line",
+   "dataKey": "desktop",
+   "type": "natural",
+   "stroke": "var(--color-desktop)",
+   "strokeWidth": 2,
+   "dot": {
+    "$fn": "iconDot",
+    "icon": "git-commit-vertical",
+    "size": 24,
+    "fill": "hsl(var(--background))",
+    "stroke": "var(--color-desktop)"
+   }
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "dataKey": "month",
+   "tickLine": false,
+   "axisLine": false,
+   "tickMargin": 8,
+   "tickFormatter": {
+    "$fn": "slice",
+    "start": 0,
+    "end": 3
+   }
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {
+  "cursor": false,
+  "hideLabel": true,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": [],
+ "icons": {
+  "git-commit-vertical": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-git-commit-vertical\" aria-hidden=\"true\"><path d=\"M12 3v6\" /><circle cx=\"12\" cy=\"12\" r=\"3\" /><path d=\"M12 15v6\" /></svg>"
+ }
+}

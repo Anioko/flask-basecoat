@@ -1,0 +1,9 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui chart `chart-tooltip-indicator-none` (pinned source in compliance/upstream/shadcn/charts). #}
+{% block title %}chart-tooltip-indicator-none · Flask-Basecoat{% endblock %}
+{% macro card() -%}
+{% call ui.card(size='default') %}{% call ui.card_header() %}{% call ui.card_title() %}Tooltip - No Indicator{% endcall %}{% call ui.card_description() %}Tooltip with no indicator.{% endcall %}{% endcall %}{% call ui.card_content() %}{{ ui.chart_from_spec(chart_spec('chart-tooltip-indicator-none'), id='tooltip-indicator-none') }}{% endcall %}{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div data-chart-frame="regular" style="width: 384px;"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div>{% endblock %}

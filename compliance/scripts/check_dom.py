@@ -4,7 +4,15 @@ For a component the golden file is compliance/golden/out/<name>.html (the pinned
 rendered by React) and ours is GET /basecoat/components/<name> from a bare Flask app that only has
 the extension installed. Both documents are reduced to their data-slot elements in document order
 and compared on tag, data-slot, class set and the state attributes Radix emits. Blocks use
-compliance/golden/out/blocks/<name>.html and /basecoat/blocks/<name>.
+compliance/golden/out/blocks/<name>.html and /basecoat/blocks/<name>, charts use
+compliance/golden/out/charts/<name>.html and /basecoat/charts/<name>.
+
+Pages that contain charts (the 70 chart pages and the `chart` component example) are also read from headless
+Chromium after the runtime has drawn them, because the golden charts are browser renders, and the inside of
+every .recharts-wrapper of the drawn page is compared with the golden: element tags, classes, text, and the geometry and
+presentation attributes, numbers within 0.5px (see chart_compare.py). A chart that draws nothing fails.
+A block whose chart has a browser golden (out/blocks/<name>.chart.html, e.g. dashboard-01) is also drawn at the block
+viewport recorded in the charts manifest (1440x900), and its .recharts-wrapper is compared with that golden the same way.
 
 Usage: python compliance/scripts/check_dom.py [name ...] [--json out.json]
 Exit status is non-zero when any requested component differs.
@@ -35,7 +43,30 @@ PRESENCE_ATTRS = ['id', 'href', 'aria-label', 'aria-labelledby', 'aria-described
 IGNORED_CLASS_PREFIXES = ()  # class sets are compared in full
 
 
-def load_ours(kind, name):
+_BROWSER = None
+
+
+def chart_browser():
+    global _BROWSER
+    if _BROWSER is None:
+        from chart_compare import ChartBrowser
+        _BROWSER = ChartBrowser()
+    return _BROWSER
+
+
+def load_ours(kind, name, browser=False, viewport=None):
+    if browser:
+        # one shared browser for a whole run (main), or a short-lived one for a single check (tests)
+        if _BROWSER is not None:
+            status, text = _BROWSER.load(f'/basecoat/{kind}/{name}', viewport=viewport)
+        else:
+            from chart_compare import ChartBrowser
+            b = ChartBrowser()
+            try:
+                status, text = b.load(f'/basecoat/{kind}/{name}', viewport=viewport)
+            finally:
+                b.close()
+        return (text, None) if status == 200 else (None, f'HTTP {status}')
     from flask_basecoat.testing import make_app
     app = make_app()
     with app.test_client() as c:
@@ -112,16 +143,41 @@ def diff(gold, ours):
     return problems
 
 
+def golden_path(kind, name):
+    return GOLDEN / {'blocks': 'blocks', 'charts': 'charts'}.get(kind, '') / f'{name}.html'
+
+
 def check(kind, name):
-    gpath = GOLDEN / ('blocks' if kind == 'blocks' else '') / f'{name}.html'
+    gpath = golden_path(kind, name)
     if not gpath.exists():
         return {'name': name, 'kind': kind, 'status': 'no-golden'}
+    golden_text = gpath.read_text(encoding='utf8')
+    from chart_compare import has_drawn_chart
+    charted = kind == 'charts' or has_drawn_chart(golden_text)
+    # data-slot parts are compared on the server output, like every other page; the charts on the drawn page
     ours_text, err = load_ours(kind, name)
     if err:
         return {'name': name, 'kind': kind, 'status': 'page-error', 'error': err}
-    gold = reduce(gpath.read_text(encoding='utf8'))
+    gold = reduce(golden_text)
     ours = reduce(ours_text)
     problems = diff(gold, ours)
+    if charted:
+        from chart_compare import compare_wrappers
+        drawn, err = load_ours(kind, name, browser=True)
+        if err:
+            return {'name': name, 'kind': kind, 'status': 'page-error', 'error': err}
+        problems += compare_wrappers(golden_text, drawn, label='chart')[2]
+    from chart_compare import block_chart
+    bchart = block_chart(name) if kind == 'blocks' else None
+    if bchart:
+        # The block's SSR golden holds an empty Recharts shell; its chart is compared with the browser golden of the
+        # chart (out/blocks/<name>.chart.html), our page drawn at the block viewport.
+        from chart_compare import compare_wrappers
+        drawn, err = load_ours(kind, name, browser=True, viewport=bchart['viewport'])
+        if err:
+            return {'name': name, 'kind': kind, 'status': 'page-error', 'error': err}
+        chart_golden = (GOLDEN / bchart['golden']).read_text(encoding='utf8')
+        problems += compare_wrappers(chart_golden, drawn, label='chart')[2]
     return {
         'name': name, 'kind': kind,
         'status': 'pass' if not problems else 'fail',
@@ -132,8 +188,17 @@ def check(kind, name):
 
 def all_names():
     comps = sorted(p.stem for p in GOLDEN.glob('*.html'))
-    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html'))
-    return [('components', c) for c in comps] + [('blocks', b) for b in blocks]
+    from chart_compare import block_names, chart_names
+    blocks = block_names()
+    return [('components', c) for c in comps] + [('blocks', b) for b in blocks] + [('charts', c) for c in chart_names()]
+
+
+def kind_of(name):
+    if name.startswith('chart-'):
+        return 'charts'
+    if name.split('-')[0] in ('dashboard', 'login', 'signup', 'sidebar') and name[-1].isdigit():
+        return 'blocks'
+    return 'components'
 
 
 def main(argv):
@@ -142,8 +207,14 @@ def main(argv):
         i = argv.index('--json')
         out_json = argv[i + 1]
         argv = argv[:i] + argv[i + 2:]
-    targets = all_names() if not argv else [(('blocks' if n.split('-')[0] in ('dashboard', 'login', 'signup', 'sidebar') and n[-1].isdigit() else 'components'), n) for n in argv]
-    results = [check(k, n) for k, n in targets]
+    targets = all_names() if not argv else [(kind_of(n), n) for n in argv]
+    if any(k == 'charts' or n == 'chart' for k, n in targets):
+        chart_browser()
+    try:
+        results = [check(k, n) for k, n in targets]
+    finally:
+        if _BROWSER is not None:
+            _BROWSER.close()
     failed = 0
     for r in results:
         mark = {'pass': 'PASS', 'fail': 'FAIL', 'no-golden': 'SKIP', 'page-error': 'ERR '}[r['status']]

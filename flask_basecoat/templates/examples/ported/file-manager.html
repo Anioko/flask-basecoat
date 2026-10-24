@@ -1,0 +1,228 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_admin.html' as admin %}
+{% block title %}File Manager{% endblock %}
+{#- data:files -#}{% set files = [{"id": "1", "name": "Design", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "5.8 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/01.png"}, "parentPath": "", "children": [{"id": "1-1", "name": "UI Components", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "2.1 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/02.png"}, "parentPath": "Design"}, {"id": "1-2", "name": "Mockups", "type": "file", "icon": "figma", "date": "12.09.20", "size": "45 MB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/03.png"}, "parentPath": "Design"}]}, {"id": "2", "name": "Projects", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "3.2 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/04.png"}, "parentPath": "", "children": [{"id": "2-1", "name": "Website Redesign", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "1.8 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/05.png"}, "parentPath": "Projects"}, {"id": "2-2", "name": "Mobile App", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "1.4 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/06.png"}, "parentPath": "Projects"}]}, {"id": "3", "name": "Music", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "1.5 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/01.png"}, "parentPath": "", "children": [{"id": "3-1", "name": "Playlist 2020", "type": "file", "icon": "audio", "date": "12.09.20", "size": "250 MB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/07.png"}, "parentPath": "Music"}]}, {"id": "4", "name": "Pictures", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "1.7 GB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/09.png"}, "parentPath": "", "children": [{"id": "4-1", "name": "Vacation 2020", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "890 MB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/08.png"}, "parentPath": "Pictures"}]}, {"id": "5", "name": "Documents", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "440 MB", "owner": {"name": "User", "avatar": "https://bundui-images.netlify.app/avatars/09.png"}, "parentPath": "", "children": [{"id": "5-1", "name": "Contracts", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "120 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": "Documents"}, {"id": "5-2", "name": "Invoice Template", "type": "file", "icon": "word", "date": "12.09.20", "size": "2.4 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": "Documents"}]}, {"id": "6", "name": "Downloads", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "10.1 GB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": "", "children": [{"id": "6-1", "name": "Software", "type": "folder", "icon": "folder", "date": "12.09.20", "size": "8.2 GB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": "Downloads"}]}, {"id": "7", "name": "Rocket – Admin Dashboard & UI Kit", "type": "file", "icon": "figma", "date": "12.09.20", "size": "1.8 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "8", "name": "Rocket – Admin Dashboard & UI Kit", "type": "file", "icon": "sketch", "date": "12.09.20", "size": "1.5 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "9", "name": "Arion – Admin Dashboard & UI Kit", "type": "file", "icon": "sketch", "date": "12.09.20", "size": "1.2 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "10", "name": "Project Brief", "type": "file", "icon": "figma", "date": "12.09.20", "size": "1.4 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "11", "name": "Design", "type": "file", "icon": "illustrator", "date": "12.09.20", "size": "1.9 GB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "12", "name": "vCard – Resume", "type": "file", "icon": "photoshop", "date": "12.09.20", "size": "2.5 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "13", "name": "Project Brief", "type": "file", "icon": "word", "date": "12.09.20", "size": "1.2 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "14", "name": "Brand Styles Guide", "type": "file", "icon": "pdf", "date": "12.09.20", "size": "4.5 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}, {"id": "15", "name": "Brand Styles Guide", "type": "file", "icon": "pdf", "date": "12.09.20", "size": "4.5 MB", "owner": {"name": "User", "avatar": "/placeholder.svg?height=32&width=32"}, "parentPath": ""}] %}{#- /data -#}
+{% set current_path = request.args.get('path', '') %}
+{% set segments = current_path.split('/') | select | list %}
+{% if not current_path %}
+  {% set items = files | rejectattr('parentPath') | list %}
+{% else %}
+  {% set parents = files | selectattr('name', 'equalto', segments[-1]) | list %}
+  {% set items = (parents[0].children if parents and parents[0].children else []) %}
+{% endif %}
+{% set items = items | sort(attribute='name') %}
+{% set letter_tiles = {'figma': ('F', 2), 'sketch': ('S', 3), 'word': ('W', 4), 'illustrator': ('Ai', 5), 'photoshop': ('Ps', 4), 'audio': ('♪', 3)} %}
+
+{% macro file_icon(icon) -%}
+{%- if icon == 'folder' -%}{{ lucide('folder', 'h-5 w-5 text-chart-3') }}
+{%- elif icon == 'pdf' -%}<div class="flex h-5 w-5 items-center justify-center rounded bg-destructive text-xs font-bold text-white">{{ lucide('file-text', 'size-3') }}</div>
+{%- elif icon in letter_tiles -%}<div class="flex h-5 w-5 items-center justify-center rounded bg-chart-{{ letter_tiles[icon][1] }} text-xs font-bold text-white">{{ letter_tiles[icon][0] }}</div>
+{%- else -%}{{ lucide('file', 'h-5 w-5 text-muted-foreground') }}{%- endif -%}
+{%- endmacro %}
+
+{% macro detail_content() -%}
+<div class="space-y-6 px-4">
+  <div class="flex flex-col items-center space-y-8 py-4">
+    <div class="flex items-center"><div class="scale-[3]" data-detail="icon"></div></div>
+    <h2 class="text-center text-foreground" data-detail="name"></h2>
+  </div>
+  <div>
+    <h3 class="mb-4 text-xs font-semibold tracking-wider text-foreground uppercase">Info</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between"><span class="text-sm text-muted-foreground">Type</span><span class="text-sm text-foreground capitalize" data-detail="type"></span></div>
+      <div class="flex justify-between"><span class="text-sm text-muted-foreground">Size</span><span class="text-sm text-foreground" data-detail="size"></span></div>
+      <div class="flex justify-between"><span class="text-sm text-muted-foreground">Owner</span><span class="text-sm text-foreground">ArtTemplate</span></div>
+      <div class="flex justify-between"><span class="text-sm text-muted-foreground">Location</span><span class="text-sm">{{ 'My Files/' ~ current_path if current_path else 'My Files' }}</span></div>
+      <div class="flex justify-between"><span class="text-sm text-muted-foreground">Modified</span><span class="text-sm text-foreground">Sep 17, 2020 4:25</span></div>
+      <div class="flex justify-between"><span class="text-sm text-muted-foreground">Created</span><span class="text-sm text-foreground">Sep 10, 2020 2:25</span></div>
+    </div>
+  </div>
+  <div>
+    <h3 class="mb-4 text-xs font-semibold tracking-wider text-foreground uppercase">Settings</h3>
+    <div class="space-y-4">
+      {% for label, on in [('File Sharing', true), ('Backup', false), ('Sync', false)] %}
+      <div class="flex items-center justify-between"><span class="text-sm text-foreground">{{ label }}</span>{% call ui.switch(checked=on, attrs={'aria-label': label}) %}{{ ui.switch_thumb(checked=on) }}{% endcall %}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% block body %}
+<div class="flex p-4">
+  <div class="min-w-0 flex-1 space-y-4 border-border">
+    <div class="flex justify-between">
+      <div class="flex items-center gap-4">
+        <h1 class="text-2xl font-bold tracking-tight">File Manager</h1>
+        {% if segments %}
+        {{ ui.separator(orientation='vertical', class='mx-2 data-[orientation=vertical]:h-4') }}
+        <div class="flex items-center overflow-x-auto border-border/50 bg-muted/20">
+          {% call ui.breadcrumb() %}{% call ui.breadcrumb_list() %}
+            {% call ui.breadcrumb_item(class='cursor-pointer') %}<a href="?" aria-label="My Files">{{ lucide('house', 'h-4 w-4') }}</a>{% endcall %}
+            {% call ui.breadcrumb_separator() %}{{ lucide('chevron-right', 'cn-rtl-flip') }}{% endcall %}
+            {% for segment in segments %}
+            {% call ui.breadcrumb_item(class='cursor-pointer') %}<a href="?path={{ segments[:loop.index] | join('/') | urlencode }}">{{ segment }}</a>{% endcall %}
+            {% if not loop.last %}{% call ui.breadcrumb_separator() %}{{ lucide('chevron-right', 'cn-rtl-flip') }}{% endcall %}{% endif %}
+            {% endfor %}
+          {% endcall %}{% endcall %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="flex items-center justify-between gap-2 border-border">
+        {% call ui.dialog() %}
+          {% call ui.dialog_trigger(variant='default', size='default') %}{{ lucide('upload') }}Upload{% endcall %}
+          {{ ui.dialog_overlay() }}
+          {% call ui.dialog_content(class='sm:max-w-xl') %}
+            {% call ui.dialog_header() %}
+              {{ ui.dialog_title(text='Upload Files') }}
+              {{ ui.dialog_description(text='Drag and drop files here or click to select files') }}
+            {% endcall %}
+            <div class="mt-2 flex flex-col items-center justify-center rounded-lg border border-dashed border-foreground/25 px-6 py-10 data-[active=true]:bg-muted" data-dropzone>
+              <div class="text-center">
+                {{ lucide('upload', 'mx-auto size-10 opacity-25', aria_hidden='true') }}
+                <div class="mt-4 flex text-sm leading-none">
+                  {% call ui.label(for_='file-upload', class='relative cursor-pointer') %}<span>Upload a file</span>{{ ui.input(id='file-upload', name='file-upload', type='file', multiple=true, class='sr-only h-auto p-0') }}{% endcall %}
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs leading-5 text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
+              </div>
+            </div>
+            <div hidden data-selected-files>
+              <h4 class="text-sm">Selected Files</h4>
+              <ul class="mt-2 divide-y rounded-md border" data-file-list></ul>
+            </div>
+            {% call ui.dialog_footer() %}
+              {{ ui.dialog_close(text='Cancel', variant='outline', size='default') }}
+              {{ ui.button(text='Start Upload', disabled=true, attrs={'data-start-upload': ''}) }}
+            {% endcall %}
+            {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+
+    <div class="flex border-t">
+      <div class="min-w-0 grow">
+        {% for item in items %}
+        <div class="flex cursor-pointer items-center justify-between border-b p-2 hover:bg-muted data-[selected=true]:bg-muted lg:p-4" data-item="{{ admin.json_attr({'id': item.id, 'name': item.name, 'type': item.type, 'icon': item.icon, 'size': item.size}) }}" data-href="{{ '?path=' ~ (((current_path ~ '/') if current_path else '') ~ item.name) | urlencode if item.type == 'folder' else '' }}">
+          <div class="flex min-w-0 items-center space-x-4">
+            {{ ui.checkbox(attrs={'aria-label': 'Select ' ~ item.name}) }}
+            <div class="shrink-0" data-icon>{{ file_icon(item.icon) }}</div>
+            <div class="min-w-0 truncate">{{ item.name }}</div>
+          </div>
+          <div class="flex items-center space-x-4 text-sm text-muted-foreground">
+            <span class="hidden w-16 text-right lg:inline">{{ item.date }}</span>
+            <span class="hidden w-16 text-right lg:inline">{{ item.size }}</span>
+            {% call ui.avatar(class='h-6 w-6') %}{{ ui.avatar_fallback(text=item.owner.name[0], class='text-xs') }}{% endcall %}
+            {% call ui.dropdown_menu() %}
+              {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', attrs={'aria-label': 'Actions for ' ~ item.name}) %}{{ lucide('ellipsis') }}{% endcall %}
+              {% call ui.dropdown_menu_content(align='end') %}
+                {{ ui.dropdown_menu_item(text='Compress') }}{{ ui.dropdown_menu_item(text='Archive') }}{{ ui.dropdown_menu_item(text='Share') }}
+                {{ ui.dropdown_menu_separator() }}
+                {{ ui.dropdown_menu_item(text='Move') }}{{ ui.dropdown_menu_item(text='Copy') }}{{ ui.dropdown_menu_item(text='Delete', class='text-destructive!') }}
+              {% endcall %}
+            {% endcall %}
+          </div>
+        </div>
+        {% endfor %}
+
+        {% if not items and current_path %}
+        <div class="flex h-[calc(100vh-var(--header-height,0px)-3rem)] flex-col items-center justify-center">
+          <div class="mx-auto max-w-md space-y-4 text-center">
+            {{ lucide('folder-plus', 'mx-auto size-14 opacity-50') }}
+            <h2 class="text-muted-foreground">This folder is empty.</h2>
+            <div>{% call ui.button() %}{{ lucide('upload') }}Upload{% endcall %}</div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if not segments %}
+        <div class="mt-4">
+          <div class="flex items-center justify-between gap-4 lg:gap-8">
+            <div class="flex items-center gap-3">
+              {{ ui.label(text='Rows per page', for_='files-per-page', class='hidden lg:block') }}
+              {{ admin.select_box('files-per-page', ['10', '25', '50', '100'], selected='25', placeholder='Select number of results', class='w-fit whitespace-nowrap', content_class='[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2') }}
+            </div>
+            <div class="flex grow justify-end text-sm whitespace-nowrap text-muted-foreground">
+              <p class="text-sm whitespace-nowrap text-muted-foreground" aria-live="polite"><span class="text-foreground">1-25</span> of <span class="text-foreground">100</span></p>
+            </div>
+            <div>
+              {% call ui.pagination() %}{% call ui.pagination_content() %}
+                {% for icon, label in [('chevron-first', 'Go to first page'), ('chevron-left', 'Go to previous page'), ('chevron-right', 'Go to next page'), ('chevron-last', 'Go to last page')] %}
+                {% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', class='aria-disabled:pointer-events-none aria-disabled:opacity-50', attrs={'aria-label': label, 'aria-disabled': 'true', 'role': 'link'}) %}{{ lucide(icon, 'size-4', aria_hidden='true') }}{% endcall %}{% endcall %}
+                {% endfor %}
+              {% endcall %}{% endcall %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="relative hidden w-80 border-s py-6 md:block" data-details hidden>
+        {% call ui.button(variant='ghost', size='icon', class='absolute top-2 right-0', attrs={'aria-label': 'Close details', 'data-close-details': ''}) %}{{ lucide('x') }}{% endcall %}
+        {{ detail_content() }}
+      </div>
+    </div>
+  </div>
+
+  {% call ui.sheet() %}
+    {{ ui.sheet_overlay() }}
+    {% call ui.sheet_content(id='file-details-sheet', side='right') %}
+      {% call ui.sheet_header() %}{{ ui.sheet_title(text='File Details') }}{% endcall %}
+      {{ detail_content() }}
+      {% call ui.sheet_close(variant='ghost', size='icon-sm', class='cn-sheet-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+    {% endcall %}
+  {% endcall %}
+</div>
+<script>
+  (function () {
+    var panel = document.querySelector('[data-details]');
+    var sheet = document.getElementById('file-details-sheet');
+    var mobile = window.matchMedia('(max-width: 767px)');
+    function fill(root, item, row) {
+      root.querySelector('[data-detail="icon"]').innerHTML = row.querySelector('[data-icon]').innerHTML;
+      ['name', 'type', 'size'].forEach(function (k) { root.querySelector('[data-detail="' + k + '"]').textContent = item[k]; });
+    }
+    document.addEventListener('click', function (e) {
+      var row = e.target.closest('[data-item]');
+      if (!row || e.target.closest('[data-slot="checkbox"], [data-slot="dropdown-menu-trigger"], [data-slot="dropdown-menu-content"]')) return;
+      if (row.getAttribute('data-href')) { location.search = row.getAttribute('data-href'); return; }
+      var item = JSON.parse(row.getAttribute('data-item'));
+      document.querySelectorAll('[data-item]').forEach(function (r) { r.setAttribute('data-selected', String(r === row)); });
+      if (mobile.matches) { fill(sheet, item, row); sheet.fbOpen && sheet.fbOpen(); }
+      else { fill(panel, item, row); panel.hidden = false; }
+    });
+    document.querySelector('[data-close-details]').addEventListener('click', function () {
+      panel.hidden = true;
+      document.querySelectorAll('[data-item]').forEach(function (r) { r.removeAttribute('data-selected'); });
+    });
+
+    // Upload dialog: picked or dropped files are listed and can be removed; Start Upload closes the dialog.
+    var files = [], list = document.querySelector('[data-file-list]'), wrap = document.querySelector('[data-selected-files]');
+    var start = document.querySelector('[data-start-upload]'), zone = document.querySelector('[data-dropzone]');
+    function draw() {
+      list.innerHTML = '';
+      files.forEach(function (f, i) {
+        var li = document.createElement('li');
+        li.className = 'flex items-center justify-between py-2 pr-2 pl-4 text-sm leading-6';
+        li.innerHTML = '<div class="flex w-0 flex-1 items-center"><div class="flex min-w-0 flex-1 gap-2"><span class="truncate font-medium"></span><span class="shrink-0 text-muted-foreground"></span></div></div>';
+        li.querySelector('.truncate').textContent = f.name;
+        li.querySelector('.shrink-0').textContent = (f.size / 1024).toFixed(2) + ' kb';
+        var removeButton = document.getElementById('remove-file-template').content.firstElementChild.cloneNode(true);
+        removeButton.addEventListener('click', function () { files.splice(i, 1); draw(); });
+        var holder = document.createElement('div'); holder.className = 'shrink-0'; holder.appendChild(removeButton); li.appendChild(holder);
+        list.appendChild(li);
+      });
+      wrap.hidden = files.length === 0;
+      start.disabled = files.length === 0;
+    }
+    document.getElementById('file-upload').addEventListener('change', function (e) { files = files.concat(Array.prototype.slice.call(e.target.files)); draw(); });
+    ['dragenter', 'dragover'].forEach(function (t) { zone.addEventListener(t, function (e) { e.preventDefault(); zone.setAttribute('data-active', 'true'); }); });
+    zone.addEventListener('dragleave', function (e) { e.preventDefault(); zone.removeAttribute('data-active'); });
+    zone.addEventListener('drop', function (e) { e.preventDefault(); zone.removeAttribute('data-active'); files = files.concat(Array.prototype.slice.call(e.dataTransfer.files)); draw(); });
+    start.addEventListener('click', function () { files = []; draw(); var c = start.closest('[data-slot="dialog-content"]'); c.fbClose && c.fbClose(); });
+  })();
+</script>
+<template id="remove-file-template">{% call ui.button(variant='ghost', size='icon') %}{{ lucide('x') }}<span class="sr-only">Remove file</span>{% endcall %}</template>
+{% endblock %}

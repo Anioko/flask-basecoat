@@ -1,0 +1,575 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Event Calendar · Flask-Basecoat{% endblock %}
+{% block body %}
+{#- Sample events, relative to today like upstream: [id, title, description, start, end, allDay, color, location].
+    start/end are [dayOffset, hour, minute]; all-day events use hour -1. -#}
+{% set events = [
+  ['1', 'Annual Planning', 'Strategic planning for next year', [-24, -1, 0], [-23, -1, 0], true, 'sky', 'Main Conference Hall'],
+  ['2', 'Project Deadline', 'Submit final deliverables', [-9, 13, 0], [-9, 15, 30], false, 'amber', 'Office'],
+  ['3', 'Quarterly Budget Review', 'Strategic planning for next year', [-13, -1, 0], [-13, -1, 0], true, 'orange', 'Main Conference Hall'],
+  ['4', 'Team Meeting', 'Weekly team sync', [0, 10, 0], [0, 11, 0], false, 'sky', 'Conference Room A'],
+  ['5', 'Lunch with Client', 'Discuss new project requirements', [1, 12, 0], [1, 13, 15], false, 'emerald', 'Downtown Cafe'],
+  ['6', 'Product Launch', 'New product release', [3, -1, 0], [6, -1, 0], true, 'violet', ''],
+  ['7', 'Sales Conference', 'Discuss about new clients', [4, 14, 30], [5, 14, 45], false, 'rose', 'Downtown Cafe'],
+  ['8', 'Team Meeting', 'Weekly team sync', [5, 9, 0], [5, 10, 30], false, 'orange', 'Conference Room A'],
+  ['9', 'Review contracts', 'Weekly team sync', [5, 14, 0], [5, 15, 30], false, 'sky', 'Conference Room A'],
+  ['10', 'Team Meeting', 'Weekly team sync', [5, 9, 45], [5, 11, 0], false, 'amber', 'Conference Room A'],
+  ['11', 'Marketing Strategy Session', 'Quarterly marketing planning', [9, 10, 0], [9, 15, 30], false, 'emerald', 'Marketing Department'],
+  ['12', 'Annual Shareholders Meeting', 'Presentation of yearly results', [17, -1, 0], [17, -1, 0], true, 'sky', 'Grand Conference Center'],
+  ['13', 'Product Development Workshop', 'Brainstorming for new features', [26, 9, 0], [27, 17, 0], false, 'rose', 'Innovation Lab'],
+] %}
+{% set colors = [('sky', 'Sky', 'bg-chart-1 data-[state=checked]:bg-chart-1', 'border-chart-1 data-[state=checked]:border-chart-1'),
+                 ('amber', 'Amber', 'bg-chart-2 data-[state=checked]:bg-chart-2', 'border-chart-2 data-[state=checked]:border-chart-2'),
+                 ('violet', 'Violet', 'bg-chart-3 data-[state=checked]:bg-chart-3', 'border-chart-3 data-[state=checked]:border-chart-3'),
+                 ('rose', 'Rose', 'bg-destructive data-[state=checked]:bg-destructive', 'border-destructive data-[state=checked]:border-destructive'),
+                 ('emerald', 'Emerald', 'bg-chart-4 data-[state=checked]:bg-chart-4', 'border-chart-4 data-[state=checked]:border-chart-4'),
+                 ('orange', 'Orange', 'bg-chart-5 data-[state=checked]:bg-chart-5', 'border-chart-5 data-[state=checked]:border-chart-5')] %}
+{# Event chip tones, one theme token per upstream colour. #}
+{% set tones = {
+  'sky': 'bg-chart-1/40 hover:bg-chart-1/30 text-foreground shadow-chart-1/10',
+  'amber': 'bg-chart-2/30 hover:bg-chart-2/25 text-foreground shadow-chart-2/10',
+  'violet': 'bg-chart-3/30 hover:bg-chart-3/25 dark:bg-chart-3/70 dark:hover:bg-chart-3/60 text-foreground shadow-chart-3/10',
+  'rose': 'bg-destructive/20 hover:bg-destructive/15 text-foreground shadow-destructive/10',
+  'emerald': 'bg-chart-4/30 hover:bg-chart-4/25 dark:bg-chart-4/70 dark:hover:bg-chart-4/60 text-foreground shadow-chart-4/10',
+  'orange': 'bg-chart-5/30 hover:bg-chart-5/25 dark:bg-chart-5/70 dark:hover:bg-chart-5/60 text-foreground shadow-chart-5/10',
+} %}
+
+{% macro time_select(id) -%}
+{% call ui.select() %}
+  {% call ui.select_trigger(as_='select-trigger', size='default', id=id, class='w-full') %}
+    {% call ui.select_value() %}Select time{% endcall %}
+    {{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
+  {% endcall %}
+  {% call ui.select_content(class='max-h-72') %}
+    {% for hour in range(0, 25) %}{% for minute in [0, 15, 30, 45] %}
+    {{ ui.select_item(text=('%d:%02d %s'|format((hour % 12) or 12, minute, 'AM' if hour % 24 < 12 else 'PM')), value=('%02d:%02d'|format(hour, minute))) }}
+    {% endfor %}{% endfor %}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% macro date_picker(id) -%}
+{% call ui.popover() %}
+  {% call ui.popover_trigger(variant='outline', id=id, class='group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]') %}
+    <span class="truncate" data-ec-date-label>Pick a date</span>
+    {{ lucide('calendar', 'text-muted-foreground/80 shrink-0 size-4') }}
+  {% endcall %}
+  {% call ui.popover_content(class='w-auto p-2', align='start') %}
+    {{ ui.calendar(attrs={'data-mode': 'single', 'data-ec-calendar': id}) }}
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+<div class="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1" style="--event-height: 24px; --event-gap: 4px; --week-cells-height: 64px" id="event-calendar">
+  <div class="flex items-center justify-between p-2 sm:p-4">
+    <div class="flex items-center gap-1 sm:gap-4">
+      {% call ui.button(variant='outline', class='max-[479px]:aspect-square max-[479px]:p-0!', attrs={'data-ec-today': ''}) %}{{ lucide('calendar-check', 'min-[480px]:hidden size-4', aria_hidden='true') }}<span class="max-[479px]:sr-only">Today</span>{% endcall %}
+      <div class="flex items-center sm:gap-2">
+        {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Previous', 'data-ec-prev': ''}) %}{{ lucide('chevron-left', 'size-4', aria_hidden='true') }}{% endcall %}
+        {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Next', 'data-ec-next': ''}) %}{{ lucide('chevron-right', 'size-4', aria_hidden='true') }}{% endcall %}
+      </div>
+      <h2 class="text-sm font-semibold sm:text-lg md:text-xl" id="ec-title"></h2>
+    </div>
+    <div class="flex items-center gap-2">
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(variant='outline', class='gap-1.5 max-[479px]:h-8') %}
+          <span><span class="min-[480px]:hidden" aria-hidden="true" data-ec-view-short>M</span><span class="max-[479px]:sr-only" data-ec-view-label>Month</span></span>
+          {{ lucide('chevron-down', '-me-1 opacity-60 size-4', aria_hidden='true') }}
+        {% endcall %}
+        {% call ui.dropdown_menu_content(align='end', class='min-w-32') %}
+          {% for view, key in [('Month', 'M'), ('Week', 'W'), ('Day', 'D'), ('Agenda', 'A')] %}
+          {% call ui.dropdown_menu_item(attrs={'data-ec-set-view': view|lower}) %}{{ view }} {{ ui.dropdown_menu_shortcut(text=key) }}{% endcall %}
+          {% endfor %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.button(size='sm', class='max-[479px]:aspect-square max-[479px]:p-0!', attrs={'data-ec-new': ''}) %}{{ lucide('plus', 'opacity-60 sm:-ms-1 size-4', aria_hidden='true') }}<span class="max-sm:sr-only">New event</span>{% endcall %}
+    </div>
+  </div>
+
+  <div class="flex flex-1 flex-col" id="ec-view"></div>
+</div>
+
+{# "+ N more" popover, anchored to the clicked cell button. #}
+{% call ui.popover() %}
+  {{ ui.popover_trigger(as_=none, tag='span', id='ec-more-anchor', class='pointer-events-none fixed opacity-0', attrs={'aria-hidden': 'true', 'tabindex': '-1'}) }}
+  {% call ui.popover_content(align='center', class='max-w-52 p-3', id='ec-more', attrs={'style': '--event-height: 24px'}) %}
+    <div class="space-y-2">
+      <div class="text-sm font-medium" id="ec-more-title"></div>
+      <div class="space-y-1" id="ec-more-list"></div>
+    </div>
+  {% endcall %}
+{% endcall %}
+
+{# Create / edit dialog #}
+{% call ui.dialog() %}
+  {{ ui.dialog_overlay() }}
+  {% call ui.dialog_content(class='sm:max-w-[425px]', id='ec-dialog') %}
+    {% call ui.dialog_header() %}
+      {{ ui.dialog_title(text='Create Event', id='ec-dialog-title') }}
+      {{ ui.dialog_description(text='Add a new event to your calendar', class='sr-only', id='ec-dialog-description') }}
+    {% endcall %}
+    <div class="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm" id="ec-error" hidden></div>
+    <div class="grid gap-4 py-4">
+      <div class="*:not-first:mt-1.5">
+        {{ ui.label(text='Title', for_='title') }}
+        {{ ui.input(id='title') }}
+      </div>
+      <div class="*:not-first:mt-1.5">
+        {{ ui.label(text='Description', for_='description') }}
+        {{ ui.textarea(id='description', rows='3') }}
+      </div>
+      <div class="flex gap-4">
+        <div class="flex-1 *:not-first:mt-1.5">
+          {{ ui.label(text='Start Date', for_='start-date') }}
+          {{ date_picker('start-date') }}
+        </div>
+        <div class="min-w-28 *:not-first:mt-1.5" data-ec-timed>
+          {{ ui.label(text='Start Time', for_='start-time') }}
+          {{ time_select('start-time') }}
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex-1 *:not-first:mt-1.5">
+          {{ ui.label(text='End Date', for_='end-date') }}
+          {{ date_picker('end-date') }}
+        </div>
+        <div class="min-w-28 *:not-first:mt-1.5" data-ec-timed>
+          {{ ui.label(text='End Time', for_='end-time') }}
+          {{ time_select('end-time') }}
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        {{ ui.checkbox(id='all-day', checked=false) }}
+        {{ ui.label(text='All day', for_='all-day') }}
+      </div>
+      <div class="*:not-first:mt-1.5">
+        {{ ui.label(text='Location', for_='location') }}
+        {{ ui.input(id='location') }}
+      </div>
+      <fieldset class="space-y-4">
+        <legend class="text-foreground text-sm leading-none font-medium">Etiquette</legend>
+        {% call ui.radio_group(class='flex gap-1.5', id='ec-colors') %}
+          {% for value, label, bg, border in colors %}
+          {% call ui.radio_group_item(id='color-' ~ value, value=value, checked=loop.first, class='size-6 shadow-none ' ~ bg ~ ' ' ~ border, attrs={'aria-label': label}) %}{% call ui.radio_group_indicator(checked=loop.first) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}
+          {% endfor %}
+        {% endcall %}
+      </fieldset>
+    </div>
+    {% call ui.dialog_footer(class='flex-row sm:justify-between') %}
+      {% call ui.button(variant='outline', size='icon', id='ec-delete', attrs={'aria-label': 'Delete event'}) %}{{ lucide('trash-2', 'size-4', aria_hidden='true') }}{% endcall %}
+      <div class="flex flex-1 justify-end gap-2">
+        {{ ui.button(text='Cancel', variant='outline', attrs={'data-fb-close': ''}) }}
+        {{ ui.button(text='Save', id='ec-save') }}
+      </div>
+    {% endcall %}
+    {% call ui.dialog_close(variant='ghost', size='icon-sm', class='cn-dialog-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+  {% endcall %}
+{% endcall %}
+
+<script type="application/json" id="ec-data">{{ {'events': events, 'tones': tones}|tojson }}</script>
+<script>
+  (function () {
+    // Calendars open on the current month.
+    (function () { var n = new Date(), m = n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0'); document.querySelectorAll('[data-slot="calendar"]:not([data-month])').forEach(function (c) { c.setAttribute('data-month', m); }); })();
+    var cfg = JSON.parse(document.getElementById('ec-data').textContent);
+    var TONES = cfg.tones;
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var AGENDA_DAYS = 30, CELL = 64;
+
+    // ---- date helpers (date-fns equivalents) ----
+    var sod = function (d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); };
+    var addDays = function (d, n) { var r = new Date(d); r.setDate(r.getDate() + n); return r; };
+    var sameDay = function (a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); };
+    var isToday = function (d) { return sameDay(d, new Date()); };
+    var startOfWeek = function (d) { return addDays(sod(d), -d.getDay()); };
+    var mon3 = function (d) { return MONTHS[d.getMonth()].slice(0, 3); };
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var hm = function (d) { var h = d.getHours() % 12 || 12, ap = d.getHours() < 12 ? 'am' : 'pm'; return d.getMinutes() ? h + ':' + pad(d.getMinutes()) + ap : h + ap; };
+    var ppp = function (d) { var n = d.getDate(), s = (n % 10 === 1 && n !== 11) ? 'st' : (n % 10 === 2 && n !== 12) ? 'nd' : (n % 10 === 3 && n !== 13) ? 'rd' : 'th'; return MONTHS[d.getMonth()] + ' ' + n + s + ', ' + d.getFullYear(); };
+    var mdy = function (d) { return mon3(d) + ' ' + d.getDate() + ', ' + d.getFullYear(); };
+    var minutes = function (a, b) { return Math.round((b - a) / 60000); };
+    var multiDay = function (e) { return e.allDay || e.start.getDate() !== e.end.getDate(); };
+    var covers = function (e, day) { return sameDay(day, e.start) || sameDay(day, e.end) || (day > e.start && day < e.end); };
+    var sortEvents = function (list) { return list.slice().sort(function (a, b) { var am = multiDay(a), bm = multiDay(b); if (am && !bm) return -1; if (!am && bm) return 1; return a.start - b.start; }); };
+
+    var today = sod(new Date());
+    var at = function (spec) { var d = addDays(today, spec[0]); if (spec[1] >= 0) d.setHours(spec[1], spec[2], 0, 0); else d = addDays(new Date(), spec[0]); return d; };
+    var events = cfg.events.map(function (r) { return { id: r[0], title: r[1], description: r[2], start: at(r[3]), end: at(r[4]), allDay: r[5], color: r[6], location: r[7] }; });
+
+    var view = 'month', current = new Date();
+    var root = document.getElementById('ec-view');
+
+    // ---- element helpers ----
+    function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function radius(first, last) { return first && last ? 'rounded' : first ? 'rounded-l rounded-r-none' : last ? 'rounded-r rounded-l-none' : 'rounded-none'; }
+    function chip(e, cls, first, last) {
+      var b = el('button', 'focus-visible:border-ring focus-visible:ring-ring/50 flex size-full overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through sm:px-2 ' + TONES[e.color || 'sky'] + ' ' + radius(first !== false, last !== false) + ' ' + cls);
+      b.type = 'button';
+      if (e.end < new Date()) b.setAttribute('data-past-event', 'true');
+      b.addEventListener('click', function (ev) { ev.stopPropagation(); openDialog(e); });
+      b.draggable = true;
+      b.addEventListener('dragstart', function (ev) { dragging = e; ev.dataTransfer.setData('text/plain', e.id); b.setAttribute('data-dragging', 'true'); });
+      b.addEventListener('dragend', function () { b.removeAttribute('data-dragging'); dragging = null; });
+      return b;
+    }
+    function monthChip(e, day, invisible) {
+      var b = chip(e, 'mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs', sameDay(day, e.start), sameDay(day, e.end));
+      var span = el('span', 'truncate' + (invisible ? ' invisible' : ''));
+      if (invisible) span.setAttribute('aria-hidden', 'true');
+      if (!e.allDay) span.appendChild(el('span', 'truncate font-normal opacity-70 sm:text-[11px]', hm(e.start) + ' '));
+      span.appendChild(document.createTextNode(e.title));
+      b.appendChild(span);
+      return b;
+    }
+    function timedChip(e, isWeek) {
+      var dur = minutes(e.start, e.end);
+      var b = chip(e, 'py-1 ' + (dur < 45 ? 'items-center' : 'flex-col') + ' ' + (isWeek ? 'text-[10px] sm:text-xs' : 'text-xs'));
+      if (dur < 45) { var t = el('div', 'truncate', e.title + ' '); t.appendChild(el('span', 'opacity-70', hm(e.start))); b.appendChild(t); }
+      else { b.appendChild(el('div', 'truncate font-medium', e.title)); b.appendChild(el('div', 'truncate font-normal opacity-70 sm:text-[11px]', e.allDay ? 'All day' : hm(e.start) + ' - ' + hm(e.end))); }
+      return b;
+    }
+    function agendaChip(e) {
+      var b = el('button', 'focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90 ' + TONES[e.color || 'sky']);
+      b.type = 'button';
+      if (e.end < new Date()) b.setAttribute('data-past-event', 'true');
+      b.appendChild(el('div', 'text-sm font-medium', e.title));
+      var meta = el('div', 'text-xs opacity-70');
+      meta.appendChild(e.allDay ? el('span', '', 'All day') : el('span', 'uppercase', hm(e.start) + ' - ' + hm(e.end)));
+      if (e.location) { meta.appendChild(el('span', 'px-1 opacity-35', ' · ')); meta.appendChild(el('span', '', e.location)); }
+      b.appendChild(meta);
+      if (e.description) b.appendChild(el('div', 'my-1 text-xs opacity-90', e.description));
+      b.addEventListener('click', function () { openDialog(e); });
+      return b;
+    }
+
+    // ---- drag and drop onto cells ----
+    var dragging = null;
+    function dropTarget(node, day, hour) {
+      node.addEventListener('dragover', function (ev) { if (dragging) { ev.preventDefault(); node.setAttribute('data-dragging', 'true'); } });
+      node.addEventListener('dragleave', function () { node.removeAttribute('data-dragging'); });
+      node.addEventListener('drop', function (ev) {
+        ev.preventDefault(); node.removeAttribute('data-dragging');
+        var e = dragging; if (!e) return;
+        var length = e.end - e.start;
+        var start = new Date(day);
+        if (hour != null) start.setHours(Math.floor(hour), (hour % 1) * 60, 0, 0); else start.setHours(e.start.getHours(), e.start.getMinutes(), 0, 0);
+        if (start.getTime() === e.start.getTime()) return;
+        e.start = start; e.end = new Date(start.getTime() + length);
+        toast('Event "' + e.title + '" moved', mdy(e.start));
+        render();
+      });
+    }
+
+    // ---- views ----
+    function renderMonth() {
+      var wrap = el('div', 'contents'); wrap.setAttribute('data-slot', 'month-view');
+      var head = el('div', 'border-border/70 grid grid-cols-7 border-b');
+      for (var i = 0; i < 7; i++) head.appendChild(el('div', 'text-muted-foreground/70 py-2 text-center text-sm', DAYS[i].slice(0, 3)));
+      wrap.appendChild(head);
+      var body = el('div', 'grid flex-1 auto-rows-fr');
+      var first = new Date(current.getFullYear(), current.getMonth(), 1);
+      var last = new Date(current.getFullYear(), current.getMonth() + 1, 0);
+      var day = startOfWeek(first), end = addDays(startOfWeek(last), 6);
+      var cells = [];
+      while (day <= end) {
+        var row = el('div', 'grid grid-cols-7 [&:last-child>*]:border-b-0');
+        for (var d = 0; d < 7; d++, day = addDays(day, 1)) {
+          var cellDay = day;
+          var cell = el('div', 'group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0');
+          if (isToday(cellDay)) cell.setAttribute('data-today', 'true');
+          if (cellDay.getMonth() !== current.getMonth()) cell.setAttribute('data-outside-cell', 'true');
+          var drop = el('div', 'data-dragging:bg-accent flex h-full flex-col overflow-hidden px-0.5 py-1 sm:px-1');
+          drop.appendChild(el('div', 'group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm', String(cellDay.getDate())));
+          var content = el('div', 'min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]');
+          drop.appendChild(content);
+          (function (dd) { drop.addEventListener('click', function () { var s = new Date(dd); s.setHours(9, 0, 0, 0); openDialog(null, s); }); })(cellDay);
+          dropTarget(drop, cellDay, null);
+          cell.appendChild(drop); row.appendChild(cell);
+          cells.push({ day: cellDay, content: content });
+        }
+        body.appendChild(row);
+      }
+      wrap.appendChild(body);
+      root.replaceChildren(wrap);
+      var capacity = Math.floor(cells[0].content.clientHeight / 28);
+      cells.forEach(function (c) {
+        var list = sortEvents(events.filter(function (e) { return (multiDay(e) && covers(e, c.day)) || sameDay(c.day, e.start); }));
+        var visible = list.length <= capacity ? list.length : Math.max(capacity - 1, 0);
+        list.forEach(function (e, i) {
+          var holder = el('div', 'aria-hidden:hidden');
+          if (i >= visible) holder.setAttribute('aria-hidden', 'true');
+          holder.appendChild(monthChip(e, c.day, !sameDay(c.day, e.start)));
+          c.content.appendChild(holder);
+        });
+        if (list.length > visible) {
+          var more = el('button', 'focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-[var(--event-gap)] flex h-[var(--event-height)] w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs');
+          more.type = 'button';
+          var label = el('span', '', '+ ' + (list.length - visible) + ' ');
+          label.appendChild(el('span', 'max-sm:sr-only', 'more'));
+          more.appendChild(label);
+          more.addEventListener('click', function (ev) { ev.stopPropagation(); showMore(more, c.day); });
+          c.content.appendChild(more);
+        }
+      });
+    }
+
+    function timeGrid(days, isWeek) {
+      var wrap = el('div', isWeek ? 'flex h-full flex-col' : 'contents');
+      wrap.setAttribute('data-slot', isWeek ? 'week-view' : 'day-view');
+      var cols = isWeek ? 'grid-cols-8' : 'grid-cols-[3rem_1fr] sm:grid-cols-[4rem_1fr]';
+      if (isWeek) {
+        var head = el('div', 'bg-background/80 border-border/70 sticky top-0 z-30 grid grid-cols-8 border-b backdrop-blur-md');
+        var off = -new Date().getTimezoneOffset(), tz = 'GMT' + (off ? (off > 0 ? '+' : '-') + Math.floor(Math.abs(off) / 60) + (Math.abs(off) % 60 ? ':' + pad(Math.abs(off) % 60) : '') : '');
+        var tzCell = el('div', 'text-muted-foreground/70 py-2 text-center text-sm'); tzCell.appendChild(el('span', 'max-[479px]:sr-only', tz)); head.appendChild(tzCell);
+        days.forEach(function (d) {
+          var h = el('div', 'data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium');
+          if (isToday(d)) h.setAttribute('data-today', 'true');
+          var short = el('span', 'sm:hidden', DAYS[d.getDay()][0] + ' ' + d.getDate()); short.setAttribute('aria-hidden', 'true');
+          h.appendChild(short); h.appendChild(el('span', 'max-sm:hidden', DAYS[d.getDay()].slice(0, 3) + ' ' + pad(d.getDate())));
+          head.appendChild(h);
+        });
+        wrap.appendChild(head);
+      }
+      var allDay = events.filter(function (e) { return multiDay(e) && days.some(function (d) { return covers(e, d); }); });
+      if (allDay.length) {
+        var sec = el('div', isWeek ? 'border-border/70 bg-muted/50 border-b' : 'border-border/70 bg-muted/50 border-t');
+        var grid = el('div', 'grid ' + cols);
+        var lab = el('div', isWeek ? 'border-border/70 relative border-r' : 'relative');
+        lab.appendChild(el('span', 'text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs', 'All day'));
+        grid.appendChild(lab);
+        days.forEach(function (d, di) {
+          var c = el('div', 'border-border/70 relative border-r p-1 last:border-r-0');
+          allDay.filter(function (e) { return covers(e, d); }).forEach(function (e) {
+            var show = sameDay(d, e.start) || (di === 0 && e.start < days[0]);
+            var b = chip(e, 'mt-[var(--event-gap)] h-[var(--event-height)] items-center text-[10px] sm:text-xs', sameDay(d, e.start), sameDay(d, e.end));
+            var t = el('div', 'truncate' + (show ? '' : ' invisible'), e.title); if (!show) t.setAttribute('aria-hidden', 'true');
+            b.appendChild(t); c.appendChild(b);
+          });
+          grid.appendChild(c);
+        });
+        sec.appendChild(grid); wrap.appendChild(sec);
+      }
+      var body = el('div', 'grid flex-1 ' + cols + ' overflow-hidden' + (isWeek ? '' : ' border-border/70 border-t'));
+      var gutter = el('div', isWeek ? 'border-border/70 grid auto-cols-fr border-r' : '');
+      for (var h = 0; h < 24; h++) {
+        var hc = el('div', 'border-border/70 relative ' + (isWeek ? 'min-h-[var(--week-cells-height)]' : 'h-[var(--week-cells-height)]') + ' border-b last:border-b-0');
+        if (h > 0) hc.appendChild(el('span', 'bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs', (h % 12 || 12) + ' ' + (h < 12 ? 'AM' : 'PM')));
+        gutter.appendChild(hc);
+      }
+      body.appendChild(gutter);
+      var now = new Date();
+      days.forEach(function (d) {
+        var col = el('div', isWeek ? 'border-border/70 relative grid auto-cols-fr border-r last:border-r-0' : 'relative');
+        if (isToday(d)) col.setAttribute('data-today', 'true');
+        var timed = events.filter(function (e) { return !multiDay(e) && covers(e, d); }).sort(function (a, b) { return (a.start - b.start) || ((b.end - b.start) - (a.end - a.start)); });
+        var columns = [];
+        timed.forEach(function (e) {
+          var s = sameDay(d, e.start) ? e.start : sod(d), en = sameDay(d, e.end) ? e.end : addDays(sod(d), 1);
+          var sh = s.getHours() + s.getMinutes() / 60, eh = sameDay(d, e.end) ? en.getHours() + en.getMinutes() / 60 : 24;
+          var ci = 0;
+          while ((columns[ci] || []).some(function (o) { return s < o.end && en > o.start; })) ci++;
+          (columns[ci] = columns[ci] || []).push(e);
+          var box = el('div', 'absolute z-10 px-0.5');
+          box.style.cssText = 'top:' + (sh * CELL) + 'px;height:' + ((eh - sh) * CELL) + 'px;left:' + (ci ? ci * 10 : 0) + '%;width:' + (ci ? 90 : 100) + '%;z-index:' + (10 + ci);
+          box.addEventListener('click', function (ev) { ev.stopPropagation(); });
+          var inner = el('div', 'size-full'); inner.appendChild(timedChip(e, isWeek)); box.appendChild(inner);
+          col.appendChild(box);
+        });
+        var inWeek = isWeek ? now >= days[0] && now < addDays(days[6], 1) : sameDay(now, d);
+        if (inWeek && isToday(d)) {
+          var line = el('div', 'pointer-events-none absolute right-0 left-0 z-20');
+          line.style.top = ((now.getHours() * 60 + now.getMinutes()) / 1440 * 100) + '%';
+          var lr = el('div', 'relative flex items-center');
+          lr.appendChild(el('div', 'bg-primary absolute -left-1 h-2 w-2 rounded-full')); lr.appendChild(el('div', 'bg-primary h-[2px] w-full'));
+          line.appendChild(lr); col.appendChild(line);
+        }
+        for (var hh = 0; hh < 24; hh++) {
+          var slot = el('div', 'border-border/70 relative ' + (isWeek ? 'min-h-[var(--week-cells-height)]' : 'h-[var(--week-cells-height)]') + ' border-b last:border-b-0');
+          [0, 1, 2, 3].forEach(function (q) {
+            var cell = el('div', 'data-dragging:bg-accent absolute h-[calc(var(--week-cells-height)/4)] w-full ' + ['top-0', 'top-[calc(var(--week-cells-height)/4)]', 'top-[calc(var(--week-cells-height)/4*2)]', 'top-[calc(var(--week-cells-height)/4*3)]'][q]);
+            var hour = hh;
+            cell.addEventListener('click', function () { var s = new Date(d); s.setHours(hour, q * 15, 0, 0); openDialog(null, s); });
+            dropTarget(cell, d, hour + q * 0.25);
+            slot.appendChild(cell);
+          });
+          col.appendChild(slot);
+        }
+        body.appendChild(col);
+      });
+      wrap.appendChild(body);
+      root.replaceChildren(wrap);
+    }
+
+    function renderAgenda() {
+      var wrap = el('div', 'border-border/70 border-t px-4');
+      var any = false;
+      for (var i = 0; i < AGENDA_DAYS; i++) {
+        var d = addDays(sod(current), i);
+        var list = events.filter(function (e) { return covers(e, d); }).sort(function (a, b) { return a.start - b.start; });
+        if (!list.length) continue;
+        any = true;
+        var block = el('div', 'border-border/70 relative my-12 border-t');
+        var label = el('span', 'bg-background absolute -top-3 left-0 flex h-6 items-center pe-4 text-[10px] uppercase data-today:font-medium sm:pe-4 sm:text-xs', d.getDate() + ' ' + mon3(d) + ', ' + DAYS[d.getDay()]);
+        if (isToday(d)) label.setAttribute('data-today', 'true');
+        block.appendChild(label);
+        var items = el('div', 'mt-6 space-y-2');
+        list.forEach(function (e) { items.appendChild(agendaChip(e)); });
+        block.appendChild(items); wrap.appendChild(block);
+      }
+      if (!any) {
+        var empty = el('div', 'flex min-h-[70svh] flex-col items-center justify-center py-16 text-center');
+        empty.appendChild(document.getElementById('ec-empty-icon').content.firstElementChild.cloneNode(true));
+        empty.appendChild(el('h3', 'text-lg font-medium', 'No events found'));
+        empty.appendChild(el('p', 'text-muted-foreground', 'There are no events scheduled for this time period.'));
+        wrap.appendChild(empty);
+      }
+      root.replaceChildren(wrap);
+    }
+
+    function title() {
+      var t = document.getElementById('ec-title');
+      if (view === 'week' || view === 'agenda') {
+        var s = view === 'week' ? startOfWeek(current) : current, e = view === 'week' ? addDays(startOfWeek(current), 6) : addDays(current, AGENDA_DAYS - 1);
+        t.textContent = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear() ? MONTHS[s.getMonth()] + ' ' + s.getFullYear() : mon3(s) + ' - ' + mon3(e) + ' ' + e.getFullYear();
+      } else if (view === 'day') {
+        t.replaceChildren();
+        var a = el('span', 'min-[480px]:hidden', mdy(current)); a.setAttribute('aria-hidden', 'true');
+        var b = el('span', 'max-[479px]:hidden min-md:hidden', MONTHS[current.getMonth()] + ' ' + current.getDate() + ', ' + current.getFullYear()); b.setAttribute('aria-hidden', 'true');
+        t.appendChild(a); t.appendChild(b);
+        t.appendChild(el('span', 'max-md:hidden', DAYS[current.getDay()].slice(0, 3) + ' ' + MONTHS[current.getMonth()] + ' ' + current.getDate() + ', ' + current.getFullYear()));
+      } else t.textContent = MONTHS[current.getMonth()] + ' ' + current.getFullYear();
+      document.querySelector('[data-ec-view-label]').textContent = view.charAt(0).toUpperCase() + view.slice(1);
+      document.querySelector('[data-ec-view-short]').textContent = view.charAt(0).toUpperCase();
+    }
+
+    function render() {
+      title();
+      if (view === 'month') renderMonth();
+      else if (view === 'week') timeGrid(Array.from({ length: 7 }, function (_, i) { return addDays(startOfWeek(current), i); }), true);
+      else if (view === 'day') timeGrid([sod(current)], false);
+      else renderAgenda();
+    }
+    function setView(v) { view = v; render(); }
+    function shift(sign) {
+      if (view === 'month') current = new Date(current.getFullYear(), current.getMonth() + sign, 1);
+      else current = addDays(current, sign * (view === 'week' ? 7 : view === 'day' ? 1 : AGENDA_DAYS));
+      render();
+    }
+    document.querySelector('[data-ec-prev]').addEventListener('click', function () { shift(-1); });
+    document.querySelector('[data-ec-next]').addEventListener('click', function () { shift(1); });
+    document.querySelector('[data-ec-today]').addEventListener('click', function () { current = new Date(); render(); });
+    document.querySelectorAll('[data-ec-set-view]').forEach(function (i) { i.addEventListener('click', function () { setView(i.getAttribute('data-ec-set-view')); }); });
+    var dialog = document.getElementById('ec-dialog');
+    window.addEventListener('keydown', function (e) {
+      if (dialog.getAttribute('data-state') === 'open' || e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target instanceof HTMLElement && e.target.isContentEditable)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      var v = { m: 'month', w: 'week', d: 'day', a: 'agenda' }[e.key.toLowerCase()];
+      if (v) setView(v);
+    });
+
+    // ---- "+ N more" popover ----
+    function showMore(button, day) {
+      var anchor = document.getElementById('ec-more-anchor'), r = button.getBoundingClientRect();
+      anchor.style.cssText = 'top:' + r.top + 'px;left:' + r.left + 'px;width:' + r.width + 'px;height:' + r.height + 'px';
+      document.getElementById('ec-more-title').textContent = DAYS[day.getDay()].slice(0, 3) + ' ' + day.getDate();
+      var list = document.getElementById('ec-more-list');
+      list.replaceChildren();
+      sortEvents(events.filter(function (e) { return covers(e, day); })).forEach(function (e) {
+        var c = monthChip(e, day, false);
+        c.addEventListener('click', function () { document.getElementById('ec-more').fbClose(); });
+        list.appendChild(c);
+      });
+      var content = document.getElementById('ec-more');
+      if (content.fbOpen) content.fbOpen();
+    }
+
+    // ---- dialog ----
+    var editing = null, state = {}, syncing = false;
+    var $ = function (id) { return document.getElementById(id); };
+    function setDate(which, d) {
+      state[which] = sod(d);
+      $(which).querySelector('[data-ec-date-label]').textContent = ppp(d);
+    }
+    function setTime(id, d) {
+      var v = pad(d.getHours()) + ':' + pad(Math.floor(d.getMinutes() / 15) * 15);
+      var item = Array.from(document.querySelectorAll('[data-slot="select-item"]')).find(function (i) { return i.getAttribute('value') === v && i.closest('[data-slot="select-content"]') === $(id).fbSelectContent; });
+      if (item && $(id).fbSelect) $(id).fbSelect(item);
+    }
+    function setAllDay(on) {
+      var box = $('all-day');
+      if ((box.getAttribute('aria-checked') === 'true') !== on) box.click();
+      document.querySelectorAll('[data-ec-timed]').forEach(function (n) { n.hidden = on; });
+    }
+    function setColor(c) { var item = $('color-' + c); if (item && item.getAttribute('data-state') !== 'checked') item.click(); }
+    function openDialog(e, start) {
+      editing = e;
+      var s = e ? e.start : (start || new Date()), en = e ? e.end : (start ? new Date(start.getTime() + 3600000) : new Date());
+      $('ec-dialog-title').textContent = e ? 'Edit Event' : 'Create Event';
+      $('ec-dialog-description').textContent = e ? 'Edit the details of this event' : 'Add a new event to your calendar';
+      $('ec-error').hidden = true;
+      $('title').value = e ? e.title : '';
+      $('description').value = e ? (e.description || '') : '';
+      $('location').value = e ? (e.location || '') : '';
+      setDate('start-date', s); setDate('end-date', en);
+      syncing = true;
+      document.querySelectorAll('[data-ec-calendar]').forEach(function (cal) { if (cal.fbSelect) cal.fbSelect(state[cal.getAttribute('data-ec-calendar')]); });
+      syncing = false;
+      if (e || start) { setTime('start-time', s); setTime('end-time', en); }
+      else { var a = new Date(); a.setHours(9, 0); var b = new Date(); b.setHours(10, 0); setTime('start-time', a); setTime('end-time', b); }
+      setAllDay(!!(e && e.allDay));
+      setColor(e ? (e.color || 'sky') : 'sky');
+      $('ec-delete').hidden = !e;
+      dialog.fbOpen();
+    }
+    function toast(title, description) { if (window.FlaskBasecoat && FlaskBasecoat.toast) FlaskBasecoat.toast({ title: title, description: description }); }
+    function fail(msg) { $('ec-error').textContent = msg; $('ec-error').hidden = false; }
+    $('ec-save').addEventListener('click', function () {
+      var allDay = $('all-day').getAttribute('aria-checked') === 'true';
+      var start = new Date(state['start-date']), end = new Date(state['end-date']);
+      if (!allDay) {
+        var st = ($('start-time').getAttribute('data-value') || '09:00').split(':').map(Number), et = ($('end-time').getAttribute('data-value') || '10:00').split(':').map(Number);
+        if (st[0] > 24 || et[0] > 24) return fail('Selected time must be between 0:00 and 24:00');
+        start.setHours(st[0], st[1], 0, 0); end.setHours(et[0], et[1], 0, 0);
+      } else { start.setHours(0, 0, 0, 0); end.setHours(23, 59, 59, 999); }
+      if (end < start) return fail('End date cannot be before start date');
+      var checked = document.querySelector('#ec-colors [data-state="checked"]');
+      var data = { title: $('title').value.trim() ? $('title').value : '(no title)', description: $('description').value, start: start, end: end, allDay: allDay, location: $('location').value, color: checked ? checked.getAttribute('value') : 'sky' };
+      if (editing) { Object.assign(editing, data); toast('Event "' + data.title + '" updated', mdy(start)); }
+      else { data.id = Math.random().toString(36).slice(2, 11); events.push(data); toast('Event "' + data.title + '" added', mdy(start)); }
+      dialog.fbClose(); render();
+    });
+    $('ec-delete').addEventListener('click', function () {
+      if (!editing) return;
+      events = events.filter(function (x) { return x !== editing; });
+      toast('Event "' + editing.title + '" deleted', mdy(editing.start));
+      dialog.fbClose(); render();
+    });
+    $('all-day').addEventListener('basecoat:change', function (ev) { document.querySelectorAll('[data-ec-timed]').forEach(function (n) { n.hidden = ev.detail.checked === true; }); });
+    document.querySelector('[data-ec-new]').addEventListener('click', function () { openDialog(null); });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Pair each time trigger with its listbox, and let the date calendars drive the date buttons.
+      ['start-time', 'end-time'].forEach(function (id) {
+        var content = Array.from(document.querySelectorAll('[data-slot="select-content"]')).find(function (c) { return c.fbClose && $(id).fbClose === c.fbClose; });
+        $(id).fbSelectContent = content;
+      });
+      document.querySelectorAll('[data-ec-calendar]').forEach(function (cal) {
+        var which = cal.getAttribute('data-ec-calendar');
+        cal.addEventListener('basecoat:change', function (ev) {
+          var v = ev.detail.value[0]; if (!v || syncing) return;
+          var p = v.split('-').map(Number), d = new Date(p[0], p[1] - 1, p[2]);
+          setDate(which, d);
+          if (which === 'start-date' && state['end-date'] < d) setDate('end-date', d);
+          $('ec-error').hidden = true;
+          var pop = cal.closest('[data-slot="popover-content"]'); if (pop && pop.fbClose) pop.fbClose();
+        });
+      });
+      render();
+      var resize; window.addEventListener('resize', function () { clearTimeout(resize); resize = setTimeout(function () { if (view === 'month') render(); }, 150); });
+    });
+  })();
+</script>
+<template id="ec-empty-icon">{{ lucide('calendar-days', 'text-muted-foreground/50 mb-2 size-8') }}</template>
+{% endblock %}

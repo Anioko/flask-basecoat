@@ -1,0 +1,12 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Dashboard Layouts{% endblock %}
+{% block body %}
+{% call ui.empty() %}
+  {% call ui.empty_header() %}
+    {% call ui.empty_icon(variant='icon') %}{{ lucide('loader-circle', '-ms-1 size-4 animate-spin') }}{% endcall %}
+  {% endcall %}
+  {{ ui.empty_title(text='Coming Soon') }}
+  {{ ui.empty_description(text='This example is currently under development and will be shipped as soon as possible.') }}
+{% endcall %}
+{% endblock %}

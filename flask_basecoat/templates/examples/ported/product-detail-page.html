@@ -1,0 +1,107 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Stonewind Trekker{% endblock %}
+{% block body %}
+{% set posted = request.method == 'POST' %}
+{% set color = request.form.get('color', 'ocean-blue') if posted else 'ocean-blue' %}
+{% set size = request.form.get('size', 'm') if posted else 'm' %}
+{% set quantity = (request.form.get('quantity', '1') | int(1)) if posted else 1 %}
+{% set size_label = 'flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border border-input bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground' %}
+{% macro choice(group, value, checked) -%}
+{%- if checked %}{% call ui.radio_group_item(id=group ~ '-' ~ value, value=value, checked=true, class='sr-only') %}{% call ui.radio_group_indicator(checked=true) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}{% else %}{{ ui.radio_group_item(id=group ~ '-' ~ value, value=value, checked=false, class='sr-only') }}{% endif -%}
+{%- endmacro %}
+<form method="post" action="{{ request.path }}" class="mx-auto max-w-7xl space-y-6 px-4 py-8">
+  <div class="flex items-start justify-between">
+    <div class="grid gap-2">
+      <div class="text-muted-foreground text-sm">Jacket</div>
+      <h1 class="text-3xl font-bold">Stonewind Trekker</h1>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-0.5">{{ c.stars(4, 'h-4 w-4', 'fill-primary text-primary', 'fill-muted-foreground/30 text-muted-foreground/30') }}</div>
+        <span class="text-muted-foreground text-sm">4.9</span>
+      </div>
+    </div>
+    {% call ui.button(variant='ghost', size='icon', class='rounded-full', type='button') %}{{ lucide('share-2', 'h-5 w-5') }}<span class="sr-only">Share</span>{% endcall %}
+  </div>
+  {{ ui.separator() }}
+  <div class="grid items-start gap-8 md:grid-cols-2 lg:gap-12">
+    <div class="grid gap-4 md:grid-cols-[100px_1fr] lg:grid-cols-[120px_1fr]">
+      <div class="hidden flex-col gap-4 md:flex" id="product-thumbs">
+        {% for i in range(1, 5) %}
+        {% call ui.button(variant='ghost', type='button', class='h-auto overflow-hidden rounded-lg border p-0 transition-colors hover:border-foreground hover:bg-transparent', attrs={'data-thumb': i}) %}<img src="{{ c.placeholder(600, 450) }}" alt="Product thumbnail {{ i }}" class="aspect-4/3 object-cover"><span class="sr-only">View Image {{ i }}</span>{% endcall %}
+        {% endfor %}
+      </div>
+      <div class="relative">
+        <img src="{{ c.placeholder(600, 400) }}" alt="Stonewind Trekker Jacket" class="aspect-4/3 h-[410px] w-full rounded-lg border object-cover">
+        <div class="bg-destructive text-white absolute top-4 left-4 rounded-full px-3 py-1 text-xs font-medium">New Arrival</div>
+        {% call ui.button(variant='ghost', size='icon', type='button', class='bg-background/80 hover:bg-background absolute top-1/2 left-4 -translate-y-1/2 rounded-full') %}{{ lucide('chevron-left', 'h-5 w-5') }}<span class="sr-only">Previous image</span>{% endcall %}
+        {% call ui.button(variant='ghost', size='icon', type='button', class='bg-background/80 hover:bg-background absolute top-1/2 right-4 -translate-y-1/2 rounded-full') %}{{ lucide('chevron-right', 'h-5 w-5') }}<span class="sr-only">Next image</span>{% endcall %}
+      </div>
+    </div>
+
+    <div class="grid gap-6">
+      <div class="flex items-baseline gap-2">
+        <span class="text-3xl font-bold">$99.29</span>
+        <span class="text-muted-foreground text-lg line-through">$102.97</span>
+      </div>
+      <div class="text-muted-foreground text-sm">498 products sold out</div>
+
+      <div class="grid gap-4">
+        <div class="grid gap-2">
+          {{ ui.label(text='Color (Ocean Blue)', for_='color', class='text-base font-medium', attrs={'id': 'color-label'}) }}
+          {% call ui.radio_group(id='color', name='color', class='flex items-center gap-3', attrs={'aria-labelledby': 'color-label'}) %}
+            {% for value, name, n in [('ocean-blue', 'Ocean Blue', 1), ('black', 'Black', 2)] %}
+            {% call ui.label(for_='color-' ~ value, class='relative cursor-pointer rounded-lg border-2 border-transparent has-[[data-state=checked]]:border-foreground') %}
+              {{ choice('color', value, color == value) }}
+              <img src="{{ c.placeholder(80, 80) }}" alt="{{ name }} color" class="aspect-square w-20 rounded-md object-cover">
+              <span class="sr-only">{{ name }}</span>
+            {% endcall %}
+            {% endfor %}
+          {% endcall %}
+        </div>
+
+        <div class="grid gap-2">
+          {% call ui.label(for_='size', class='text-base font-medium', attrs={'id': 'size-label'}) %}Size<a href="#" class="text-muted-foreground ml-2 text-sm hover:underline">Size Guide</a>{% endcall %}
+          {% call ui.radio_group(id='size', name='size', class='flex items-center gap-2', attrs={'aria-labelledby': 'size-label'}) %}
+            {% for value, text in [('s', 'S'), ('m', 'M'), ('l', 'L'), ('xl', 'XL'), ('2xl', '2XL')] %}
+            {% call ui.label(for_='size-' ~ value, class=size_label) %}{{ choice('size', value, size == value) }}{{ text }}{% endcall %}
+            {% endfor %}
+          {% endcall %}
+        </div>
+
+        <div class="grid gap-2">
+          {{ ui.label(text='Composition', for_='composition', class='text-base font-medium') }}
+          <p class="text-muted-foreground text-sm" id="composition">Premium Fabric Blend: 70% Merino Wool &amp; 30% Acrylic</p>
+        </div>
+
+        <div class="grid gap-2">
+          {{ ui.label(text='Quantity', for_='quantity', class='text-base font-medium') }}
+          <div class="flex items-center gap-2">
+            {% call ui.button(variant='outline', size='icon', type='button', class='h-8 w-8 bg-transparent', attrs={'data-qty-step': '-1'}) %}{{ lucide('minus', 'h-4 w-4') }}<span class="sr-only">Decrease quantity</span>{% endcall %}
+            <div class="border-input bg-background flex h-8 w-12 items-center justify-center rounded-md border text-sm font-medium" id="quantity-display">{{ quantity }}</div>
+            <input type="hidden" name="quantity" id="quantity" value="{{ quantity }}">
+            {% call ui.button(variant='outline', size='icon', type='button', class='h-8 w-8 bg-transparent', attrs={'data-qty-step': '1'}) %}{{ lucide('plus', 'h-4 w-4') }}<span class="sr-only">Increase quantity</span>{% endcall %}
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 min-[400px]:flex-row">
+          {% call ui.button(type='submit', name='action', value='cart', class='h-12 flex-1 text-lg') %}{{ lucide('shopping-bag') }}Add to Cart{% endcall %}
+          {{ ui.button(text='Buy Now', type='submit', name='action', value='buy', class='bg-secondary text-secondary-foreground hover:bg-secondary/80 h-12 flex-1 text-lg') }}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+  (function () {
+    var input = document.getElementById('quantity');
+    var display = document.getElementById('quantity-display');
+    document.querySelectorAll('[data-qty-step]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var q = Math.max(1, Number(input.value) + Number(b.getAttribute('data-qty-step')));
+        input.value = q; display.textContent = q;
+      });
+    });
+  })();
+</script>
+{% endblock %}

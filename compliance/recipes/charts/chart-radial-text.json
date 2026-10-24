@@ -1,0 +1,100 @@
+{
+  "name": "chart-radial-text",
+  "group": "radial",
+  "fullWidth": false,
+  "description": "A radial chart with text",
+  "card": {
+    "props": {
+      "className": "flex flex-col"
+    },
+    "title": "Radial Chart - Text",
+    "description": "January - June 2024",
+    "headerClassName": "items-center pb-0",
+    "contentClassName": "flex-1 pb-0",
+    "footerClassName": "flex-col gap-2 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex items-center gap-2 leading-none font-medium"
+      },
+      {
+        "text": "Showing total visitors for the last 6 months",
+        "icons": [],
+        "className": "leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "radial",
+    "component": "RadialBarChart",
+    "container": {
+      "id": null,
+      "className": "mx-auto aspect-square max-h-[250px]"
+    },
+    "config": {
+      "visitors": {
+        "label": "Visitors"
+      },
+      "safari": {
+        "label": "Safari",
+        "color": "var(--chart-2)"
+      }
+    },
+    "data": [
+      {
+        "browser": "safari",
+        "visitors": 200,
+        "fill": "var(--color-safari)"
+      }
+    ],
+    "props": {
+      "startAngle": 0,
+      "endAngle": 250,
+      "outerRadius": 90,
+      "innerRadius": 80
+    },
+    "series": [
+      {
+        "component": "RadialBar",
+        "dataKey": "visitors",
+        "background": true,
+        "cornerRadius": 10
+      }
+    ],
+    "axes": [
+      {
+        "component": "PolarRadiusAxis",
+        "tick": false,
+        "tickLine": false,
+        "axisLine": false,
+        "labels": [
+          {
+            "content": "({ viewBox }) => { if (viewBox && \"cx\" in viewBox && \"cy\" in viewBox) { return ( <text x={viewBox.cx} y={viewBox.cy} textAnchor=\"middle\" dominantBaseline=\"middle\" > <tspan x={viewBox.cx} y={viewBox.cy} className=\"fill-foreground text-4xl font-bold\" > {chartData[0].visitors.toLocaleString()} </tspan> <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className=\"fill-muted-foreground\" > Visitors </tspan> </text> ) } }"
+          }
+        ]
+      }
+    ],
+    "grid": {
+      "component": "PolarGrid",
+      "gridType": "circle",
+      "radialLines": false,
+      "stroke": "none",
+      "className": "first:fill-muted last:fill-background",
+      "polarRadius": [
+        90,
+        80
+      ]
+    },
+    "tooltip": null,
+    "legend": null,
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [
+    "chart.axes[0].labels[0].content"
+  ],
+  "unresolved": []
+}

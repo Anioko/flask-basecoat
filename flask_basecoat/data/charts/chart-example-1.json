@@ -1,0 +1,77 @@
+{
+ "component": "AreaChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "desktop": 186
+  },
+  {
+   "month": "February",
+   "desktop": 305
+  },
+  {
+   "month": "March",
+   "desktop": 237
+  },
+  {
+   "month": "April",
+   "desktop": 73
+  },
+  {
+   "month": "May",
+   "desktop": 209
+  },
+  {
+   "month": "June",
+   "desktop": 214
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true,
+  "margin": {
+   "left": 12,
+   "right": 12
+  }
+ },
+ "series": [
+  {
+   "component": "Area",
+   "dataKey": "desktop",
+   "type": "natural",
+   "fill": "var(--color-desktop)",
+   "fillOpacity": 0.4,
+   "stroke": "var(--color-desktop)"
+  }
+ ],
+ "axes": [
+  {
+   "component": "XAxis",
+   "dataKey": "month",
+   "tickLine": false,
+   "axisLine": false,
+   "tickMargin": 8,
+   "tickFormatter": {
+    "$fn": "slice",
+    "start": 0,
+    "end": 3
+   }
+  }
+ ],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {
+  "cursor": false,
+  "indicator": "line",
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

@@ -1,0 +1,214 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% from 'examples/ported/_apps.html' import ph %}
+{% block title %}Music App · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set featured = [
+  ("Today's Top Hits", '4,223,172 Followers', 'from-chart-5 to-chart-3'),
+  ('Pop Hits', '8,823,823 Followers', 'from-chart-2 to-chart-1'),
+  ('Workout', '1,611,732 Followers', 'from-chart-3 to-chart-2'),
+  ('Chill Hits', '768,032 Followers', 'from-chart-2 to-chart-1'),
+  ('Sad Feeling', '2,122,820 Followers', 'from-chart-3 to-chart-2'),
+  ("Friday's Love Hits", '827,783 Followers', 'from-chart-5 to-chart-4'),
+] %}
+{% set mine = [
+  ('All is R&B', '56 Songs', 'from-chart-3 to-chart-2'),
+  ('This is Maroon 5', '36 Songs', 'from-foreground to-chart-4'),
+  ('Acoustic Songs', '41 Songs', 'from-chart-1 to-muted'),
+  ('Fresh Songs', '22 Songs', 'from-chart-2 to-chart-1'),
+  ('Classic Hits', '44 Songs', 'from-chart-3 to-chart-2'),
+  ('Best Night Hits', '52 Songs', 'from-chart-5 to-chart-4'),
+] %}
+
+{% macro section_head(title) -%}
+<div class="mb-4 flex items-center justify-between lg:mb-6">
+  <h2 class="text-foreground text-xl font-bold lg:text-2xl">{{ title }}</h2>
+  <div class="hidden gap-2 sm:flex">
+    {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Previous'}) %}{{ lucide('skip-back', 'h-4 w-4') }}{% endcall %}
+    {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Next'}) %}{{ lucide('skip-forward', 'h-4 w-4') }}{% endcall %}
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro playlist_grid(items) -%}
+<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 lg:gap-4">
+  {% for title, followers, color in items %}
+  {% call ui.card(class='group hover:bg-card/80 cursor-pointer transition-colors') %}
+    {% call ui.card_content(class='p-3 lg:p-4') %}
+      <div class="relative mb-3 overflow-hidden rounded-lg bg-gradient-to-br lg:mb-4 {{ color }}">
+        <img src="{{ ph(300, 300) }}" alt="{{ title }}" class="aspect-square w-full object-cover mix-blend-overlay">
+        {% call ui.button(size='icon', class='bg-primary hover:bg-primary/90 absolute right-2 bottom-2 opacity-0 transition-opacity group-hover:opacity-100', attrs={'aria-label': 'Play ' ~ title}) %}{{ lucide('play', 'text-primary-foreground h-4 w-4') }}{% endcall %}
+      </div>
+      <h3 class="text-card-foreground mb-1 text-sm font-semibold text-balance lg:text-base">{{ title }}</h3>
+      <p class="text-muted-foreground text-xs lg:text-sm">{{ followers }}</p>
+    {% endcall %}
+  {% endcall %}
+  {% endfor %}
+</div>
+{%- endmacro %}
+
+<div class="bg-background text-foreground relative flex h-screen">
+  <div class="fixed inset-0 z-40 bg-background/80 lg:hidden" id="music-overlay" hidden></div>
+
+  {# Sidebar #}
+  <div class="-translate-x-full bg-sidebar border-sidebar-border fixed z-50 h-full w-64 border-r transition-transform duration-300 lg:relative lg:z-auto lg:translate-x-0" id="music-sidebar">
+    <div class="p-4">
+      <div class="mb-8 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          {% call ui.button(variant='ghost', size='icon', class='text-sidebar-foreground hover:bg-sidebar-accent lg:hidden', attrs={'data-music-close': '', 'aria-label': 'Close menu'}) %}{{ lucide('x', 'h-5 w-5') }}{% endcall %}
+          <h1 class="text-sidebar-foreground text-xl font-bold">Maise</h1>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-sidebar-accent flex items-center gap-3 rounded-lg p-2">
+          <div class="bg-sidebar-primary flex h-8 w-8 items-center justify-center rounded-full">{{ lucide('user', 'text-sidebar-primary-foreground h-4 w-4') }}</div>
+          <div class="flex-1">
+            <p class="text-sidebar-foreground text-sm font-medium">Vladimir Raksha</p>
+            <p class="text-sidebar-foreground/70 text-xs">Premium Plan</p>
+          </div>
+        </div>
+
+        <nav class="space-y-2">
+          {% for label, icon in [('Storage', 'house'), ('News', 'library'), ('Movies', 'play'), ('Music', 'volume-2'), ('Travel', 'plus')] %}
+          {% call ui.button(variant='ghost', class=('text-sidebar-primary bg-sidebar-accent' if label == 'Music' else 'text-sidebar-foreground hover:bg-sidebar-accent') ~ ' w-full justify-start') %}{{ lucide(icon, 'mr-3 h-4 w-4') }}{{ label }}{% endcall %}
+          {% endfor %}
+        </nav>
+
+        {{ ui.separator(class='bg-sidebar-border') }}
+
+        <nav class="space-y-2">
+          {% for label, icon in [('Account', 'user'), ('Settings', 'menu'), ('Help & Support', 'heart'), ('Log Out', 'skip-forward')] %}
+          {% call ui.button(variant='ghost', class='text-sidebar-foreground hover:bg-sidebar-accent w-full justify-start') %}{{ lucide(icon, 'mr-3 h-4 w-4') }}{{ label }}{% endcall %}
+          {% endfor %}
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  {# Main #}
+  <div class="flex min-w-0 flex-1 flex-col">
+    <header class="border-border border-b p-4 lg:p-6">
+      <div class="mb-4 flex items-center justify-between lg:mb-6">
+        <div class="flex items-center gap-4">
+          {% call ui.button(variant='ghost', size='icon', class='lg:hidden', attrs={'data-music-open': '', 'aria-label': 'Open menu'}) %}{{ lucide('menu', 'h-5 w-5') }}{% endcall %}
+          <nav class="hidden space-x-4 md:flex lg:space-x-8">
+            {{ ui.button(text='Browse', variant='ghost', class='text-primary border-primary border-x-0 border-t-0 border-b-2 font-medium') }}
+            {% for label in ['Categories', 'Charts', 'For You', 'New Releases'] %}
+            {{ ui.button(text=label, variant='ghost', class='text-muted-foreground hover:text-foreground') }}
+            {% endfor %}
+          </nav>
+        </div>
+        <div class="relative">
+          {{ lucide('search', 'text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform') }}
+          {{ ui.input(placeholder='Search...', class='bg-input border-border w-32 pl-10 sm:w-48 lg:w-64', attrs={'aria-label': 'Search'}) }}
+        </div>
+      </div>
+    </header>
+
+    {% call ui.scroll_area(class='min-h-0 flex-1 p-4 lg:p-6') %}
+      {% call ui.scroll_area_viewport(class='size-full', attrs={'style': 'overflow-y:auto'}) %}
+        <div class="space-y-6 lg:space-y-8">
+          <section>
+            {{ section_head('Browse') }}
+            {{ playlist_grid(featured) }}
+          </section>
+          <section>
+            {{ section_head('My Playlists') }}
+            {{ playlist_grid(mine) }}
+          </section>
+          <section>
+            {{ section_head('More Like Lady Gaga') }}
+            <div class="flex gap-3 overflow-x-auto pb-4 lg:gap-4">
+              {% for i in range(1, 7) %}
+              <div class="flex-shrink-0">
+                <div class="mb-3 h-24 w-24 cursor-pointer overflow-hidden rounded-full transition-transform hover:scale-105 lg:h-32 lg:w-32">
+                  <img src="{{ ph(128, 128) }}" alt="Artist {{ i }}" class="h-full w-full object-cover">
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </section>
+        </div>
+      {% endcall %}
+    {% endcall %}
+
+    {# Player #}
+    <div class="border-border bg-card border-t p-3 lg:p-4">
+      <div class="flex items-center justify-between gap-2 lg:gap-4">
+        <div class="flex min-w-0 flex-1 items-center gap-2 lg:flex-none lg:gap-4">
+          <img src="{{ ph(48, 48) }}" alt="Shallow" class="h-10 w-10 flex-shrink-0 rounded-lg object-cover lg:h-12 lg:w-12">
+          <div class="min-w-0 flex-1 lg:flex-none">
+            <h4 class="text-card-foreground truncate text-sm font-medium lg:text-base">Shallow</h4>
+            <p class="text-muted-foreground truncate text-xs lg:text-sm">Lady Gaga</p>
+          </div>
+          {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-primary flex-shrink-0', attrs={'aria-label': 'Like', 'data-music-like': '', 'aria-pressed': 'false'}) %}{{ lucide('heart', 'h-4 w-4') }}{% endcall %}
+        </div>
+
+        <div class="flex max-w-md flex-1 flex-col items-center gap-1 lg:gap-2">
+          <div class="flex items-center gap-2 lg:gap-4">
+            {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-foreground hidden sm:flex', attrs={'aria-label': 'Shuffle'}) %}{{ lucide('shuffle', 'h-4 w-4') }}{% endcall %}
+            {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-foreground', attrs={'aria-label': 'Previous track'}) %}{{ lucide('skip-back', 'h-4 w-4') }}{% endcall %}
+            {% call ui.button(size='icon', class='bg-primary hover:bg-primary/90 text-primary-foreground', id='music-play', attrs={'aria-label': 'Play'}) %}{{ lucide('play', 'h-4 w-4') }}{{ lucide('pause', 'h-4 w-4 hidden') }}{% endcall %}
+            {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-foreground', attrs={'aria-label': 'Next track'}) %}{{ lucide('skip-forward', 'h-4 w-4') }}{% endcall %}
+            {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-foreground hidden sm:flex', attrs={'aria-label': 'Repeat'}) %}{{ lucide('repeat', 'h-4 w-4') }}{% endcall %}
+          </div>
+          <div class="flex w-full items-center gap-2">
+            <span class="text-muted-foreground text-xs" id="music-time">1:24</span>
+            <div class="bg-muted h-1 flex-1 rounded-full">
+              <div class="bg-primary h-full w-1/3 rounded-full" id="music-progress"></div>
+            </div>
+            <span class="text-muted-foreground text-xs">4:56</span>
+          </div>
+        </div>
+
+        <div class="hidden items-center gap-2 lg:flex">
+          {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-foreground', attrs={'aria-label': 'Volume'}) %}{{ lucide('volume-2', 'h-4 w-4') }}{% endcall %}
+          <div class="bg-muted h-1 w-20 rounded-full">
+            <div class="bg-primary h-full w-3/4 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Mobile sidebar open/close.
+    var sidebar = document.getElementById('music-sidebar'), overlay = document.getElementById('music-overlay');
+    function setOpen(open) {
+      sidebar.classList.toggle('-translate-x-full', !open);
+      sidebar.classList.toggle('translate-x-0', open);
+      overlay.hidden = !open;
+    }
+    document.querySelector('[data-music-open]').addEventListener('click', function () { setOpen(true); });
+    document.querySelector('[data-music-close]').addEventListener('click', function () { setOpen(!sidebar.classList.contains('translate-x-0')); });
+    overlay.addEventListener('click', function () { setOpen(false); });
+
+    // Player: play/pause toggles the icon and advances the progress of the 4:56 track.
+    var play = document.getElementById('music-play'), time = document.getElementById('music-time'), bar = document.getElementById('music-progress');
+    var total = 4 * 60 + 56, current = 84, timer = null;
+    function render() {
+      time.textContent = Math.floor(current / 60) + ':' + String(current % 60).padStart(2, '0');
+      bar.classList.remove('w-1/3');
+      bar.style.width = (current / total * 100).toFixed(2) + '%';
+    }
+    play.addEventListener('click', function () {
+      var playing = !timer;
+      play.querySelector('.lucide-play').classList.toggle('hidden', playing);
+      play.querySelector('.lucide-pause').classList.toggle('hidden', !playing);
+      play.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+      if (playing) timer = setInterval(function () { current = Math.min(total, current + 1); render(); }, 1000);
+      else { clearInterval(timer); timer = null; }
+    });
+    var like = document.querySelector('[data-music-like]');
+    like.addEventListener('click', function () {
+      var on = like.getAttribute('aria-pressed') !== 'true';
+      like.setAttribute('aria-pressed', String(on));
+      like.classList.toggle('text-primary', on);
+      like.querySelector('svg').classList.toggle('fill-current', on);
+    });
+  })();
+</script>
+{% endblock %}

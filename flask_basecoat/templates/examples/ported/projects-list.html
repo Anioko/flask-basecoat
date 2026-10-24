@@ -1,0 +1,65 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_content.html' as c %}
+{# Tone classes chosen per project below, listed so the stylesheet build includes them: bg-chart-1/25 bg-chart-1/40 bg-chart-2/30 bg-chart-3/20 bg-chart-4/20 bg-chart-5/20 bg-chart-2 bg-chart-3 bg-chart-4 bg-chart-5 bg-destructive #}
+{% block title %}Projects Board · Flask-Basecoat{% endblock %}
+{% set tones = {'orange': 'bg-chart-2/30', 'blue': 'bg-chart-1/40', 'pink': 'bg-chart-3/20', 'green': 'bg-chart-4/20', 'purple': 'bg-chart-5/20', 'yellow': 'bg-chart-1/25'} %}
+{% set badges = {'orange': 'bg-chart-3', 'blue': 'bg-chart-4', 'pink': 'bg-chart-5', 'green': 'bg-chart-2', 'red': 'bg-destructive'} %}
+{% set projects = [
+  (1, 'Mobile App', 'Prototyping', 78, '1 week left', 'May 01, 2021', 'orange', 'orange', '📱', [1, 2, 3]),
+  (2, 'Design Learn Management System', 'UI/UX Design', 32, '2 week left', 'June 04, 2021', 'blue', 'blue', '💻', [1, 2, 3]),
+  (3, 'Chat Mobile App', 'Prototyping', 64, '6 week left', 'Oct 27, 2021', 'pink', 'pink', '💬', [1, 2, 3]),
+  (4, 'Store Dashboard', 'UI/UX Design', 45, '3 week left', 'Sep 16, 2021', 'green', 'green', '📊', [1, 2, 3]),
+  (5, 'NFT Marketplace App', 'Prototyping', 69, '4 week left', 'Jan 03, 2021', 'purple', 'red', '🎨', [2, 3]),
+  (6, 'Mobile App', 'Prototyping', 56, '2 week left', 'May 09, 2021', 'blue', 'blue', '📱', [1, 3]),
+  (7, 'LMS App Design', 'UI/UX Design', 78, '2 week left', 'Jan 03, 2021', 'yellow', 'orange', '🎓', [1, 2, 3]),
+  (8, 'Design Learn Management System', 'UI/UX Design', 25, '1 week left', 'June 04, 2021', 'blue', 'blue', '💻', [1, 2, 3]),
+] %}
+{% block body %}
+<div class="min-h-screen p-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-8 flex items-center justify-between">
+      <div class="space-y-2">
+        <h1 class="text-2xl font-bold">Projects Board</h1>
+        <p class="text-muted-foreground">List of your ongoing projects</p>
+      </div>
+      {% call ui.button() %}{{ lucide('plus') }}New Project{% endcall %}
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {% for id, title, subtitle, progress, time_left, date, tone, badge, icon, team in projects %}
+      {% call ui.card(class=tones[tone] ~ ' relative overflow-hidden border-0') %}
+        {% call ui.card_content(class='p-6') %}
+          {% call ui.button(variant='ghost', size='sm', class='absolute top-4 right-4 h-auto p-1', attrs={'aria-label': 'Project settings'}) %}{{ lucide('settings', 'h-4 w-4') }}{% endcall %}
+          <div class="mb-4 text-sm opacity-90">{{ date }}</div>
+          <div class="mb-4 text-4xl">{{ icon }}</div>
+          <div class="mb-6">
+            <h3 class="mb-1 text-lg leading-tight font-semibold">{{ title }}</h3>
+            <p class="text-sm opacity-90">{{ subtitle }}</p>
+          </div>
+          <div class="mb-6">
+            <div class="mb-2 flex items-center justify-between">
+              <span class="text-sm opacity-90">Progress</span>
+              <span class="text-sm font-semibold">{{ progress }}%</span>
+            </div>
+            <div class="h-2 w-full rounded-full bg-background/50">
+              <div class="bg-primary h-2 rounded-full transition-all duration-300" style="width: {{ progress }}%"></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+              {% for member in team %}
+              <div class="h-8 w-8 overflow-hidden rounded-full border-2 border-background" style="z-index: {{ (team | length) - loop.index0 }}">
+                <img src="{{ c.ph(32, 32) }}" alt="Team member {{ member }}" width="32" height="32" class="h-full w-full object-cover">
+              </div>
+              {% endfor %}
+            </div>
+            {{ ui.badge(text=time_left, class=badges[badge] ~ ' border-0 text-white') }}
+          </div>
+        {% endcall %}
+      {% endcall %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

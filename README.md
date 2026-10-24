@@ -120,6 +120,15 @@ The gallery at `/basecoat/` (enabled in debug and testing, or with `BASECOAT_GAL
 every component page and block, each a port of the upstream example. `/examples/` holds 27 application screens
 built with the macros, and `/basecoat/gallery` the WTForms adapter with live validation.
 
+## Building pages with an AI coding agent
+
+`AGENTS.md` is the procedure for agents (and people) building new pages: pick the nearest shadcn original, reuse its
+frame, write every part with a macro (`docs/MACROS.md` lists them all), and prove the result with
+`compliance/scripts/check_page.py`, which reports whether a page is composed only of shadcn parts inside the frame of
+a shadcn original. `flask_basecoat/templates/examples/reference/portfolio.html` (served at
+`/examples/reference/portfolio`) is a dashboard built that way. A Claude skill with the same steps is in
+`skills/flask-basecoat/`.
+
 ## How compliance is proven
 
 `compliance/upstream/` pins shadcn-ui/ui (commit e55b60b, 23 October 2026): the component sources, the

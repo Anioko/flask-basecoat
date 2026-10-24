@@ -1,0 +1,84 @@
+{
+ "type": "bar",
+ "component": "BarChart",
+ "config": {
+  "visitors": {
+   "label": "Visitors"
+  }
+ },
+ "data": [
+  {
+   "month": "January",
+   "visitors": 186
+  },
+  {
+   "month": "February",
+   "visitors": 205
+  },
+  {
+   "month": "March",
+   "visitors": -207
+  },
+  {
+   "month": "April",
+   "visitors": 173
+  },
+  {
+   "month": "May",
+   "visitors": -209
+  },
+  {
+   "month": "June",
+   "visitors": 214
+  }
+ ],
+ "props": {
+  "accessibilityLayer": true
+ },
+ "series": [
+  {
+   "component": "Bar",
+   "dataKey": "visitors",
+   "labelList": [
+    {
+     "position": "top",
+     "dataKey": "month",
+     "fillOpacity": 1
+    }
+   ],
+   "cells": [
+    {
+     "fill": "var(--chart-1)"
+    },
+    {
+     "fill": "var(--chart-1)"
+    },
+    {
+     "fill": "var(--chart-2)"
+    },
+    {
+     "fill": "var(--chart-1)"
+    },
+    {
+     "fill": "var(--chart-2)"
+    },
+    {
+     "fill": "var(--chart-1)"
+    }
+   ]
+  }
+ ],
+ "axes": [],
+ "grid": {
+  "component": "CartesianGrid",
+  "vertical": false
+ },
+ "tooltip": {
+  "cursor": false,
+  "hideLabel": true,
+  "hideIndicator": true,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

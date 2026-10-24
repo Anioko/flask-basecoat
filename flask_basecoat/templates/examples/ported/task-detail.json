@@ -1,0 +1,10 @@
+{
+  "id": "task-detail",
+  "title": "Task Detail",
+  "description": "Task overview with assignees, dates, priority, attachments, a description and a phase checklist.",
+  "tags": [
+    "Cards",
+    "Badges",
+    "Checkbox"
+  ]
+}

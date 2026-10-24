@@ -1,0 +1,393 @@
+{# Building blocks shared by the six dashboard screens. Every visible part is a Flask-Basecoat component macro. #}
+{# Tone classes are chosen by number below; listed here so the stylesheet build includes them: bg-chart-1 bg-chart-1/10 bg-chart-1/15 border-chart-1 bg-chart-2 bg-chart-2/10 bg-chart-2/15 border-chart-2 bg-chart-3 bg-chart-3/10 bg-chart-3/15 border-chart-3 bg-chart-4 bg-chart-4/10 bg-chart-4/15 border-chart-4 bg-chart-5 bg-chart-5/10 bg-chart-5/15 border-chart-5 #}
+{% import 'basecoat/index.html' as ui %}
+
+{% set DASHBOARDS = [
+  ('marketing', 'Marketing', 'megaphone'),
+  ('sales', 'Sales', 'chart-column'),
+  ('overview', 'Overview', 'layout-dashboard'),
+  ('analytics', 'Analytics', 'chart-line'),
+  ('insights', 'Insights', 'lightbulb'),
+  ('pipeline', 'Pipeline', 'funnel'),
+] %}
+
+{#- A JSON value as an attribute string. Iterating the JSON yields plain characters, which join escapes for an attribute. -#}
+{% macro json_attr(value) %}{{ value | tojson | list | join('') }}{% endmacro %}
+
+{#- Up or down change, as a small badge. -#}
+{% macro delta(value, suffix='') -%}
+{%- set down = value is string and value.startswith('-') -%}
+{%- call ui.badge(variant='destructive' if down else 'secondary', class='tabular-nums') -%}{{ lucide('trending-down' if down else 'trending-up') }}{{ value }}{{ suffix }}{%- endcall -%}
+{%- endmacro %}
+
+{#- Square icon tile used at the top right of stat cards and in lists. -#}
+{% macro icon_tile(name, class='') -%}
+<span class="flex size-10 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground [&_svg]:size-4 {{ class }}">{{ lucide(name) }}</span>
+{%- endmacro %}
+
+{#- Initials tile for a channel or company, used where a logo would go. -#}
+{% macro mark(text, tone=1) -%}
+<span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-chart-{{ tone }}/15 text-sm font-semibold text-foreground">{{ text }}</span>
+{%- endmacro %}
+
+{#- A KPI card: label, icon, value, period and change. -#}
+{% macro stat_card(title, value, icon, change=none, period='Last 7 days', action=none, class='') -%}
+{%- call ui.card(class='@container/card ' ~ class) -%}
+  {%- call ui.card_header() -%}
+    {{ ui.card_description(text=title) }}
+    {%- call ui.card_title(class='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl') %}{{ value }}{% endcall -%}
+    {%- call ui.card_action() %}{{ icon_tile(icon) }}{% endcall -%}
+  {%- endcall -%}
+  {%- call ui.card_footer(class='flex-wrap gap-2 text-sm') -%}
+    {%- if period %}<span class="text-muted-foreground">{{ period }}</span>{% endif -%}
+    {%- if change %}{{ delta(change) }}{% endif -%}
+    {%- if action %}{% call ui.button(variant='outline', size='sm', href='#', class='ml-auto') %}{{ action }}{{ lucide('arrow-right', 'cn-rtl-flip') }}{% endcall %}{% endif -%}
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Horizontal strip of KPIs inside one card, separated by dividers. -#}
+{% macro stat_strip(items) -%}
+{%- call ui.card(class='gap-0 py-0') -%}
+<div class="grid divide-y sm:grid-cols-2 sm:divide-x lg:grid-cols-4 lg:divide-y-0">
+  {%- for it in items %}
+  <div class="flex flex-col gap-3 p-6">
+    <div class="flex items-start justify-between gap-2">
+      <span class="text-sm text-muted-foreground">{{ it.title }}</span>
+      {{ icon_tile(it.icon, 'rounded-full') }}
+    </div>
+    <span class="text-3xl font-semibold tracking-tight tabular-nums">{{ it.value }}</span>
+    <div class="flex items-center gap-2 text-sm"><span class="text-muted-foreground">{{ it.period or 'Last 7 days' }}</span>{{ delta(it.change) }}</div>
+  </div>
+  {%- endfor %}
+</div>
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Chart container driven by the runtime chart renderer. -#}
+{% macro chart(type, data, series, x='month', class='aspect-auto h-[250px] w-full', legend=false, y_axis=false, dots=false, short=false, grid=true, label='Chart') -%}
+{%- set a = {'data-chart-type': type, 'data-chart-x': x, 'data-chart-data': json_attr(data), 'data-chart-series': json_attr(series), 'role': 'img', 'aria-label': label} -%}
+{%- if not grid %}{% set _ = a.update({'data-chart-no-grid': ''}) %}{% endif -%}
+{%- if legend %}{% set _ = a.update({'data-chart-legend': ''}) %}{% endif -%}
+{%- if y_axis %}{% set _ = a.update({'data-chart-y-axis': ''}) %}{% endif -%}
+{%- if dots %}{% set _ = a.update({'data-chart-dots': ''}) %}{% endif -%}
+{%- if short %}{% set _ = a.update({'data-chart-x-short': ''}) %}{% endif -%}
+{{ ui.chart(class=class, attrs=a) }}
+{%- endmacro %}
+
+{#- Small legend row with coloured dots. items: [(label, tone)] -#}
+{% macro legend(items, class='') -%}
+<div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground {{ class }}">
+  {%- for label, tone in items %}<span class="flex items-center gap-1.5"><span class="size-2 rounded-full bg-chart-{{ tone }}"></span>{{ label }}</span>{% endfor -%}
+</div>
+{%- endmacro %}
+
+{#- A bar split into coloured segments. items: [(label, percent, tone)] -#}
+{% macro segments(items) -%}
+<div class="flex h-2.5 w-full gap-1 overflow-hidden rounded-full">
+  {%- for label, pct, tone in items %}<div class="h-full rounded-full bg-chart-{{ tone }}" style="width:{{ pct }}%" title="{{ label }}"></div>{% endfor -%}
+</div>
+{%- endmacro %}
+
+{#- Progress bar at a percentage. -#}
+{% macro bar(pct, label='') -%}
+{%- call ui.progress(attrs={'aria-label': label or (pct ~ ' percent'), 'aria-valuenow': pct, 'aria-valuemin': 0, 'aria-valuemax': 100}) -%}{{ ui.progress_indicator(attrs={'style': 'transform:translateX(-' ~ (100 - pct) ~ '%)'}) }}{%- endcall -%}
+{%- endmacro %}
+
+{#- Card header with title, optional description and a menu button on the right. -#}
+{% macro card_head(title, description=none, menu=true) -%}
+{%- call ui.card_header() -%}
+  {{ ui.card_title(text=title) }}
+  {%- if description %}{{ ui.card_description(text=description) }}{% endif -%}
+  {%- if menu %}{% call ui.card_action() %}{% call ui.dropdown_menu() %}{% call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', class='text-muted-foreground', attrs={'aria-label': 'More options for ' ~ title}) %}{{ lucide('ellipsis-vertical') }}{% endcall %}{% call ui.dropdown_menu_content(align='end', class='w-40') %}{{ ui.dropdown_menu_item(text='View details') }}{{ ui.dropdown_menu_item(text='Export') }}{{ ui.dropdown_menu_separator() }}{{ ui.dropdown_menu_item(text='Hide card') }}{% endcall %}{% endcall %}{% endcall %}{% endif -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Status badge for campaigns and channels. -#}
+{% macro status(text) -%}
+{%- set v = {'Running': 'secondary', 'Completed': 'secondary', 'Delivered': 'secondary', 'Paused': 'outline', 'Shipping': 'outline', 'Stopped': 'destructive', 'High demand': 'secondary', 'Low demand': 'outline'} -%}
+{{ ui.badge(text=text, variant=v.get(text, 'outline')) }}
+{%- endmacro %}
+
+{#- Channel list: rows of (initials, tone, name, detail, status). -#}
+{% macro channel_list(rows, footer=none) -%}
+{%- call ui.card_content(class='px-0') -%}
+  {%- call ui.item_group(class='gap-0') -%}
+  {%- for initials, tone, name, detail, state in rows -%}
+    {%- if not loop.first %}{{ ui.item_separator() }}{% endif -%}
+    {%- call ui.item(class='px-6 py-3') -%}
+      {%- call ui.item_media() %}{{ mark(initials, tone) }}{% endcall -%}
+      {%- call ui.item_content() %}{{ ui.item_title(text=name) }}{{ ui.item_description(text=detail) }}{% endcall -%}
+      {%- call ui.item_actions() %}{{ status(state) }}{% endcall -%}
+    {%- endcall -%}
+  {%- endfor -%}
+  {%- endcall -%}
+{%- endcall -%}
+{%- if footer %}{% call ui.card_footer() %}{% call ui.button(variant='outline', href='#', class='w-full') %}{{ footer }}{{ lucide('arrow-right', 'cn-rtl-flip') }}{% endcall %}{% endcall %}{% endif -%}
+{%- endmacro %}
+
+{#- Vertical timeline: rows of (time, text, tone). -#}
+{% macro timeline(rows) -%}
+<ol class="relative flex flex-col">
+  {%- for time, text, tone in rows %}
+  <li class="grid grid-cols-[3.5rem_1rem_1fr] gap-x-3 pb-6 last:pb-0">
+    <span class="text-sm font-medium tabular-nums">{{ time }}</span>
+    <span class="relative flex justify-center">
+      <span class="z-10 mt-0.5 size-3.5 rounded-full border-2 border-chart-{{ tone }} bg-background"></span>
+      {%- if not loop.last %}<span class="absolute top-4 -bottom-6 w-px bg-border"></span>{% endif %}
+    </span>
+    <span class="text-sm text-muted-foreground">{{ text }}</span>
+  </li>
+  {%- endfor %}
+</ol>
+{%- endmacro %}
+
+{#- Money movements: rows of (icon, title, detail, amount). -#}
+{% macro transactions(rows) -%}
+{%- call ui.item_group(class='gap-1') -%}
+{%- for icon, title, detail, amount in rows -%}
+  {%- call ui.item(size='sm', class='px-0') -%}
+    {%- call ui.item_media() %}{{ icon_tile(icon) }}{% endcall -%}
+    {%- call ui.item_content() %}{{ ui.item_title(text=title) }}{{ ui.item_description(text=detail) }}{% endcall -%}
+    {%- call ui.item_actions() %}<span class="text-sm font-semibold tabular-nums {{ 'text-destructive' if amount.startswith('-') else '' }}">{{ amount }}</span>{% endcall -%}
+  {%- endcall -%}
+{%- endfor -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Compact period picker. -#}
+{% macro period(id, options, selected) -%}
+{%- call ui.native_select_wrapper(size='sm') -%}{%- call ui.native_select(id=id, size='sm', attrs={'aria-label': 'Period'}) -%}{% for v in options %}{{ ui.native_select_option(text=v, value=v, attrs={'selected': true if v == selected else none}) }}{% endfor %}{%- endcall -%}{{ ui.native_select_icon() }}{%- endcall -%}
+{%- endmacro %}
+
+{#- Search field used in card headers. -#}
+{% macro search(placeholder='Search', class='w-full sm:w-56') -%}
+{%- call ui.input_group(class=class) -%}
+  {% call ui.input_group_addon() %}{{ lucide('search') }}{% endcall %}
+  {{ ui.input_group_control(type='search', placeholder=placeholder, attrs={'aria-label': placeholder}) }}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Initials avatar stack. -#}
+{% macro people(initials) -%}
+{%- call ui.avatar_group() -%}{%- for i in initials %}{% call ui.avatar() %}{{ ui.avatar_fallback(text=i) }}{% endcall %}{% endfor -%}{%- endcall -%}
+{%- endmacro %}
+
+{#- Row actions menu. -#}
+{% macro row_menu(name) -%}
+{%- call ui.dropdown_menu() -%}{%- call ui.dropdown_menu_trigger(variant='ghost', size='icon-sm', class='text-muted-foreground', attrs={'aria-label': 'Actions for ' ~ name}) %}{{ lucide('ellipsis-vertical') }}{% endcall -%}{%- call ui.dropdown_menu_content(align='end', class='w-36') %}{{ ui.dropdown_menu_item(text='Open') }}{{ ui.dropdown_menu_item(text='Edit') }}{{ ui.dropdown_menu_separator() }}{{ ui.dropdown_menu_item(text='Archive', variant='destructive') }}{% endcall -%}{%- endcall -%}
+{%- endmacro %}
+
+{#- Projects table: rows of (icon, tone, name, date, budget, manager, email, initials, progress). -#}
+{% macro projects_table(rows, title='Top projects', description='Budget and progress of the projects in flight') -%}
+{%- call ui.card(class='gap-4') -%}
+  {%- call ui.card_header() -%}{{ ui.card_title(text=title) }}{{ ui.card_description(text=description) }}{% call ui.card_action() %}{{ search('Search projects') }}{% endcall %}{%- endcall -%}
+  {%- call ui.card_content(class='px-0') -%}
+    {%- call ui.table_container() -%}{%- call ui.table() -%}
+      {%- call ui.table_header() %}{% call ui.table_row() %}
+        {% call ui.table_head(class='w-10 pl-6') %}{{ ui.checkbox(attrs={'aria-label': 'Select all projects'}) }}{% endcall %}
+        {{ ui.table_head(text='Project') }}{{ ui.table_head(text='Budget') }}{{ ui.table_head(text='Manager') }}{{ ui.table_head(text='Progress', class='w-32') }}
+        {% call ui.table_head(class='w-12 pr-6') %}<span class="sr-only">Actions</span>{% endcall %}
+      {% endcall %}{% endcall -%}
+      {%- call ui.table_body() -%}
+      {%- for icon, tone, name, date, budget, manager, email, initials, pct in rows -%}
+        {%- call ui.table_row() -%}
+          {% call ui.table_cell(class='pl-6') %}{{ ui.checkbox(attrs={'aria-label': 'Select ' ~ name}) }}{% endcall %}
+          {% call ui.table_cell() %}<div class="flex items-center gap-3"><span class="flex size-9 items-center justify-center rounded-full bg-chart-{{ tone }}/15 [&_svg]:size-4">{{ lucide(icon) }}</span><div class="grid"><span class="font-medium">{{ name }}</span><span class="text-xs text-muted-foreground">{{ date }}</span></div></div>{% endcall %}
+          {{ ui.table_cell(text=budget, class='tabular-nums') }}
+          {% call ui.table_cell() %}<div class="flex items-center gap-3">{% call ui.avatar(size='sm') %}{{ ui.avatar_fallback(text=initials) }}{% endcall %}<div class="grid"><span class="font-medium">{{ manager }}</span><span class="text-xs text-muted-foreground">{{ email }}</span></div></div>{% endcall %}
+          {% call ui.table_cell() %}{{ bar(pct, name ~ ' progress') }}{% endcall %}
+          {% call ui.table_cell(class='pr-6') %}{{ row_menu(name) }}{% endcall %}
+        {%- endcall -%}
+      {%- endfor -%}
+      {%- endcall -%}
+    {%- endcall -%}{%- endcall -%}
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Campaigns table: rows of (icon, name, date, channel, audience initials, performance). -#}
+{% macro campaigns_table(rows) -%}
+{%- call ui.card(class='gap-4') -%}
+  {%- call ui.card_header() -%}{{ ui.card_title(text='Top campaigns') }}{{ ui.card_description(text='Reach and performance by campaign') }}{% call ui.card_action() %}{{ search('Search campaigns') }}{% endcall %}{%- endcall -%}
+  {%- call ui.card_content(class='px-0') -%}
+    {%- call ui.table_container() -%}{%- call ui.table() -%}
+      {%- call ui.table_header() %}{% call ui.table_row() %}
+        {% call ui.table_head(class='w-10 pl-6') %}{{ ui.checkbox(attrs={'aria-label': 'Select all campaigns'}) }}{% endcall %}
+        {{ ui.table_head(text='Campaign') }}{{ ui.table_head(text='Channel') }}{{ ui.table_head(text='Audience') }}{{ ui.table_head(text='Performance', class='w-32') }}
+        {% call ui.table_head(class='w-12 pr-6') %}<span class="sr-only">Actions</span>{% endcall %}
+      {% endcall %}{% endcall -%}
+      {%- call ui.table_body() -%}
+      {%- for icon, name, date, channel, audience, pct in rows -%}
+        {%- call ui.table_row() -%}
+          {% call ui.table_cell(class='pl-6') %}{{ ui.checkbox(attrs={'aria-label': 'Select ' ~ name}) }}{% endcall %}
+          {% call ui.table_cell() %}<div class="flex items-center gap-3"><span class="flex size-9 items-center justify-center rounded-full border [&_svg]:size-4">{{ lucide(icon) }}</span><div class="grid"><span class="font-medium">{{ name }}</span><span class="text-xs text-muted-foreground">{{ date }}</span></div></div>{% endcall %}
+          {% call ui.table_cell() %}{{ ui.badge(text=channel, variant='outline') }}{% endcall %}
+          {% call ui.table_cell() %}{{ people(audience) }}{% endcall %}
+          {% call ui.table_cell() %}{{ bar(pct, name ~ ' performance') }}{% endcall %}
+          {% call ui.table_cell(class='pr-6') %}{{ row_menu(name) }}{% endcall %}
+        {%- endcall -%}
+      {%- endfor -%}
+      {%- endcall -%}
+    {%- endcall -%}{%- endcall -%}
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Star rating out of five. -#}
+{% macro stars(n) -%}
+<span class="flex items-center gap-0.5" role="img" aria-label="{{ n }} out of 5 stars">{% for i in range(5) %}{{ lucide('star', 'size-4 ' ~ ('fill-chart-4 text-chart-4' if i < n else 'text-muted-foreground/40')) }}{% endfor %}</span>
+{%- endmacro %}
+
+{#- Products table with sort headers and a pager: rows of (name, detail, rating, price, demand). -#}
+{% macro products_table(rows, title='Top selling products') -%}
+{%- call ui.card(class='gap-4') -%}
+  {%- call ui.card_header() -%}{{ ui.card_title(text=title) }}{{ ui.card_description(text='Best performers this quarter') }}{% call ui.card_action() %}{{ search('Search products') }}{% endcall %}{%- endcall -%}
+  {%- call ui.card_content(class='px-0') -%}
+    {%- call ui.table_container() -%}{%- call ui.table() -%}
+      {%- call ui.table_header() %}{% call ui.table_row() %}
+        {% call ui.table_head(class='w-10 pl-6') %}{{ ui.checkbox(attrs={'aria-label': 'Select all products'}) }}{% endcall %}
+        {% for h in ['Item', 'Rating', 'Price', 'Status'] %}{% call ui.table_head() %}{% call ui.button(variant='ghost', size='sm', class='-ml-2.5') %}{{ h }}{{ lucide('arrow-up-down') }}{% endcall %}{% endcall %}{% endfor %}
+        {% call ui.table_head(class='w-12 pr-6') %}<span class="sr-only">Actions</span>{% endcall %}
+      {% endcall %}{% endcall -%}
+      {%- call ui.table_body() -%}
+      {%- for name, detail, rating, price, demand in rows -%}
+        {%- call ui.table_row() -%}
+          {% call ui.table_cell(class='pl-6') %}{{ ui.checkbox(attrs={'aria-label': 'Select ' ~ name}) }}{% endcall %}
+          {% call ui.table_cell() %}<div class="grid"><span class="font-medium">{{ name }}</span><span class="text-xs text-muted-foreground">{{ detail }}</span></div>{% endcall %}
+          {% call ui.table_cell() %}{{ stars(rating) }}{% endcall %}
+          {{ ui.table_cell(text=price, class='tabular-nums') }}
+          {% call ui.table_cell() %}{{ status(demand) }}{% endcall %}
+          {% call ui.table_cell(class='pr-6') %}{{ row_menu(name) }}{% endcall %}
+        {%- endcall -%}
+      {%- endfor -%}
+      {%- endcall -%}
+    {%- endcall -%}{%- endcall -%}
+  {%- endcall -%}
+  {%- call ui.card_footer(class='flex-wrap justify-between gap-3 text-sm text-muted-foreground') -%}
+    <div class="flex items-center gap-2">
+      <label for="{{ title | lower | replace(' ', '-') }}-size">Rows per page</label>
+      {% call ui.native_select_wrapper(size='sm') %}{% call ui.native_select(id=title | lower | replace(' ', '-') ~ '-size', size='sm') %}{% for n in [5, 10, 20] %}{{ ui.native_select_option(text=n, value=n) }}{% endfor %}{% endcall %}{{ ui.native_select_icon() }}{% endcall %}
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="tabular-nums">1–{{ rows | length }} of {{ rows | length }}</span>
+      {% call ui.button(variant='outline', size='icon-sm', disabled=true, attrs={'aria-label': 'Previous page'}) %}{{ lucide('chevron-left', 'cn-rtl-flip') }}{% endcall %}
+      {% call ui.button(variant='outline', size='icon-sm', disabled=true, attrs={'aria-label': 'Next page'}) %}{{ lucide('chevron-right', 'cn-rtl-flip') }}{% endcall %}
+    </div>
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Greeting banner with a call to action and a decorative chart glyph. -#}
+{% macro greeting(name, text, class='') -%}
+{%- call ui.card(class='relative overflow-hidden ' ~ class) -%}
+  {%- call ui.card_header(class='max-w-md gap-2') -%}
+    {%- call ui.card_title(class='flex items-center gap-2 text-2xl') %}Good afternoon, {{ name }} {{ lucide('sun', 'size-5 text-chart-4') }}{% endcall -%}
+    {{ ui.card_description(text=text, class='text-base') }}
+  {%- endcall -%}
+  {%- call ui.card_footer() %}{% call ui.button(href='#') %}View full report{{ lucide('arrow-right', 'cn-rtl-flip') }}{% endcall %}{% endcall -%}
+  <div aria-hidden="true" class="pointer-events-none absolute -right-6 -bottom-8 hidden items-end gap-2 opacity-90 sm:flex">
+    {% for h, t in [(16, 3), (24, 2), (20, 3), (32, 1), (28, 2), (40, 1)] %}<span class="w-6 rounded-t-md bg-chart-{{ t }}" style="height:{{ h * 4 }}px"></span>{% endfor %}
+  </div>
+{%- endcall -%}
+{%- endmacro %}
+
+{#- The page frame: sidebar with the dashboards list, header with search, notifications and account menu. -#}
+{% macro shell(active, heading, subheading='') -%}
+{%- set page_body = caller() -%}
+{%- call ui.sidebar_wrapper(attrs={'style': '--sidebar-width:16rem;--sidebar-width-icon:3rem;--header-height:calc(var(--spacing) * 14)'}) -%}
+  {%- call ui.sidebar(variant='inset') -%}
+    {{ ui.sidebar_gap(variant='inset') }}
+    {%- call ui.sidebar_container(variant='inset') -%}
+      {%- call ui.sidebar_inner() -%}
+        {%- call ui.sidebar_header() %}{% call ui.sidebar_menu() %}{% call ui.sidebar_menu_item() %}
+          {%- call ui.dropdown_menu() -%}
+            {%- call ui.dropdown_menu_trigger(as_='sidebar-menu-button', size='lg', active=false, class='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground') -%}
+              <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">{{ lucide('gallery-vertical-end', 'size-4') }}</div>
+              <div class="grid flex-1 text-left text-sm leading-tight"><span class="truncate font-medium">Northwind</span><span class="truncate text-xs">Growth workspace</span></div>
+              {{ lucide('chevrons-up-down', 'ml-auto') }}
+            {%- endcall -%}
+            {%- call ui.dropdown_menu_content(align='start', class='w-56') %}{{ ui.dropdown_menu_label(text='Workspaces', class='text-xs text-muted-foreground') }}{{ ui.dropdown_menu_item(text='Northwind') }}{{ ui.dropdown_menu_item(text='Contoso') }}{{ ui.dropdown_menu_separator() }}{% call ui.dropdown_menu_item() %}{{ lucide('plus') }}Add workspace{% endcall %}{% endcall -%}
+          {%- endcall -%}
+        {% endcall %}{% endcall %}{% endcall -%}
+
+        {%- call ui.sidebar_content() -%}
+          {%- call ui.sidebar_group() -%}
+            {{ ui.sidebar_group_label(text='Dashboards') }}
+            {%- call ui.sidebar_menu() -%}
+            {%- for key, label, icon in DASHBOARDS -%}
+              {%- call ui.sidebar_menu_item() %}{% call ui.sidebar_menu_button(size='default', active=(key == active), href=url_for('basecoat_examples.dashboards', name=key), attrs={'title': label}) %}{{ lucide(icon) }}<span>{{ label }}</span>{% endcall %}{% endcall -%}
+            {%- endfor -%}
+            {%- endcall -%}
+          {%- endcall -%}
+          {%- call ui.sidebar_group() -%}
+            {{ ui.sidebar_group_label(text='Workspace') }}
+            {%- call ui.sidebar_menu() -%}
+              {%- for label, icon, badge in [('Customers', 'users', '24'), ('Campaigns', 'target', none), ('Projects', 'briefcase', '6'), ('Invoices', 'receipt', none)] -%}
+              {%- call ui.sidebar_menu_item() %}{% call ui.sidebar_menu_button(size='default', active=false, href='#') %}{{ lucide(icon) }}<span>{{ label }}</span>{% endcall %}{% if badge %}{{ ui.sidebar_menu_badge(text=badge) }}{% endif %}{% endcall -%}
+              {%- endfor -%}
+              {%- call ui.collapsible(tag='li', open=false, class='group/menu-item relative group/collapsible', attrs={'data-sidebar': 'menu-item'}) -%}
+                {%- call ui.collapsible_trigger(as_='sidebar-menu-button', size='default', open=false, active=false, aria_controls='dash-settings') %}{{ lucide('settings') }}<span>Settings</span>{{ lucide('chevron-right', 'ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 cn-rtl-flip') }}{% endcall -%}
+                {%- call ui.collapsible_content(open=false, id='dash-settings') %}{% call ui.sidebar_menu_sub() %}{% for label in ['General', 'Team', 'Billing', 'Integrations'] %}{% call ui.sidebar_menu_sub_item() %}{% call ui.sidebar_menu_sub_button(size='md', active=false, href='#') %}<span>{{ label }}</span>{% endcall %}{% endcall %}{% endfor %}{% endcall %}{% endcall -%}
+              {%- endcall -%}
+            {%- endcall -%}
+          {%- endcall -%}
+          {%- call ui.sidebar_group(class='mt-auto group-data-[collapsible=icon]:hidden') -%}
+            {%- call ui.card(size='sm', class='gap-3 shadow-none') -%}
+              {%- call ui.card_header() %}{{ ui.card_title(text='Upgrade to Team') }}{{ ui.card_description(text='Shared reports, more seats and audit history.') }}{% endcall -%}
+              {%- call ui.card_content() %}{{ ui.button(text='Upgrade', size='sm', href='#', class='w-full') }}{% endcall -%}
+            {%- endcall -%}
+          {%- endcall -%}
+        {%- endcall -%}
+
+        {%- call ui.sidebar_footer() %}{% call ui.sidebar_menu() %}{% call ui.sidebar_menu_item() %}
+          {%- call ui.dropdown_menu() -%}
+            {%- call ui.dropdown_menu_trigger(as_='sidebar-menu-button', size='lg', active=false, class='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground') -%}
+              {% call ui.avatar(class='size-8 rounded-lg') %}{{ ui.avatar_fallback(text='MA', class='rounded-lg') }}{% endcall %}
+              <div class="grid flex-1 text-left text-sm leading-tight"><span class="truncate font-medium">Maya Adeyemi</span><span class="truncate text-xs text-muted-foreground">maya@northwind.example</span></div>
+              {{ lucide('chevrons-up-down', 'ml-auto size-4') }}
+            {%- endcall -%}
+            {%- call ui.dropdown_menu_content(side='right', align='end', class='w-56') %}{% call ui.dropdown_menu_item() %}{{ lucide('circle-user') }}Account{% endcall %}{% call ui.dropdown_menu_item() %}{{ lucide('credit-card') }}Billing{% endcall %}{% call ui.dropdown_menu_item() %}{{ lucide('bell') }}Notifications{% endcall %}{{ ui.dropdown_menu_separator() }}{% call ui.dropdown_menu_item() %}{{ lucide('log-out') }}Log out{% endcall %}{% endcall -%}
+          {%- endcall -%}
+        {% endcall %}{% endcall %}{% endcall -%}
+      {%- endcall -%}
+    {%- endcall -%}
+  {%- endcall -%}
+
+  {%- call ui.sidebar_inset() -%}
+    <header class="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
+      <div class="flex w-full items-center gap-2 px-4 lg:px-6">
+        {% call ui.sidebar_trigger(size='icon-sm', variant='ghost', class='-ml-1') %}{{ lucide('panel-left', 'cn-rtl-flip') }}<span class="sr-only">Toggle Sidebar</span>{% endcall %}
+        {{ ui.separator(orientation='vertical', class='mr-2 data-vertical:h-4 data-vertical:self-auto') }}
+        <div class="hidden min-w-0 md:block">
+          <h1 class="truncate text-base font-medium">{{ heading }}</h1>
+          {% if subheading %}<p class="truncate text-xs text-muted-foreground">{{ subheading }}</p>{% endif %}
+        </div>
+        <div class="ml-auto flex items-center gap-1">
+          {{ search('Search', 'hidden w-64 lg:flex') }}
+          {% call ui.button(variant='ghost', size='icon', attrs={'data-theme-toggle': '', 'aria-label': 'Toggle theme'}) %}{{ lucide('sun', 'dark:hidden') }}{{ lucide('moon', 'hidden dark:block') }}{% endcall %}
+          {%- call ui.dropdown_menu() -%}
+            {%- call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='relative', attrs={'aria-label': 'Notifications'}) %}{{ lucide('bell') }}<span class="absolute top-2 right-2 size-2 rounded-full bg-destructive ring-2 ring-background"></span>{% endcall -%}
+            {%- call ui.dropdown_menu_content(align='end', class='w-80') -%}
+              {{ ui.dropdown_menu_label(text='Notifications') }}
+              {{ ui.dropdown_menu_separator() }}
+              {%- for title, when in [('Invoice INV-2048 was paid', '2 min ago'), ('New lead from the pricing page', '18 min ago'), ('Weekly report is ready', '1 hour ago')] -%}
+              {% call ui.dropdown_menu_item(class='flex-col items-start gap-0.5') %}<span class="font-medium">{{ title }}</span><span class="text-xs text-muted-foreground">{{ when }}</span>{% endcall %}
+              {%- endfor -%}
+              {{ ui.dropdown_menu_separator() }}
+              {% call ui.dropdown_menu_item(class='justify-center') %}View all{% endcall %}
+            {%- endcall -%}
+          {%- endcall -%}
+          {%- call ui.dropdown_menu() -%}
+            {%- call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='rounded-full', attrs={'aria-label': 'Account'}) %}{% call ui.avatar(size='sm') %}{{ ui.avatar_fallback(text='MA') }}{% endcall %}{% endcall -%}
+            {%- call ui.dropdown_menu_content(align='end', class='w-48') %}{{ ui.dropdown_menu_label(text='Maya Adeyemi') }}{{ ui.dropdown_menu_separator() }}{{ ui.dropdown_menu_item(text='Profile') }}{{ ui.dropdown_menu_item(text='Settings') }}{{ ui.dropdown_menu_separator() }}{{ ui.dropdown_menu_item(text='Log out') }}{% endcall -%}
+          {%- endcall -%}
+        </div>
+      </div>
+    </header>
+    <main class="@container/main flex flex-1 flex-col gap-4 p-4 md:gap-6 md:p-6">
+      {{ page_body }}
+    </main>
+  {%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}

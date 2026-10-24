@@ -65,6 +65,11 @@ class Basecoat:
         app.jinja_env.globals.setdefault('lucide', lucide)
         app.jinja_env.globals.setdefault('slot', _slot)
         app.jinja_env.globals.setdefault('tw', tw)
+        from . import charts as _charts
+        app.jinja_env.globals.setdefault('chart_spec', _charts.load_spec)
+        app.jinja_env.globals.setdefault('chart_style_css', _charts.chart_style_css)
+        app.jinja_env.globals.setdefault('chart_spec_json', _charts.spec_json)
+        app.jinja_env.globals.setdefault('chart_uid', _charts.chart_uid)
 
         @app.context_processor
         def inject_basecoat():

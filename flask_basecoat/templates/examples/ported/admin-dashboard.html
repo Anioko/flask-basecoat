@@ -1,0 +1,377 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_admin.html' as admin %}
+{% block title %}Admin Dashboard{% endblock %}
+{#- data:admin_rows -#}{% set admin_rows = [{"id": 1, "header": "Cover page", "type": "Cover page", "status": "In Process", "target": "18", "limit": "5", "reviewer": "Eddie Lake"}, {"id": 2, "header": "Table of contents", "type": "Table of contents", "status": "Done", "target": "29", "limit": "24", "reviewer": "Eddie Lake"}, {"id": 3, "header": "Executive summary", "type": "Narrative", "status": "Done", "target": "10", "limit": "13", "reviewer": "Eddie Lake"}, {"id": 4, "header": "Technical approach", "type": "Narrative", "status": "Done", "target": "27", "limit": "23", "reviewer": "Jamik Tashpulatov"}, {"id": 5, "header": "Design", "type": "Narrative", "status": "In Process", "target": "2", "limit": "16", "reviewer": "Jamik Tashpulatov"}, {"id": 6, "header": "Capabilities", "type": "Narrative", "status": "In Process", "target": "20", "limit": "8", "reviewer": "Jamik Tashpulatov"}, {"id": 7, "header": "Integration with existing systems", "type": "Narrative", "status": "In Process", "target": "19", "limit": "21", "reviewer": "Jamik Tashpulatov"}, {"id": 8, "header": "Innovation and Advantages", "type": "Narrative", "status": "Done", "target": "25", "limit": "26", "reviewer": "Assign reviewer"}, {"id": 9, "header": "Overview of EMR's Innovative Solutions", "type": "Technical content", "status": "Done", "target": "7", "limit": "23", "reviewer": "Assign reviewer"}, {"id": 10, "header": "Advanced Algorithms and Machine Learning", "type": "Narrative", "status": "Done", "target": "30", "limit": "28", "reviewer": "Assign reviewer"}, {"id": 11, "header": "Adaptive Communication Protocols", "type": "Narrative", "status": "Done", "target": "9", "limit": "31", "reviewer": "Assign reviewer"}, {"id": 12, "header": "Advantages Over Current Technologies", "type": "Narrative", "status": "Done", "target": "12", "limit": "0", "reviewer": "Assign reviewer"}, {"id": 13, "header": "Past Performance", "type": "Narrative", "status": "Done", "target": "22", "limit": "33", "reviewer": "Assign reviewer"}, {"id": 14, "header": "Customer Feedback and Satisfaction Levels", "type": "Narrative", "status": "Done", "target": "15", "limit": "34", "reviewer": "Assign reviewer"}, {"id": 15, "header": "Implementation Challenges and Solutions", "type": "Narrative", "status": "Done", "target": "3", "limit": "35", "reviewer": "Assign reviewer"}, {"id": 16, "header": "Security Measures and Data Protection Policies", "type": "Narrative", "status": "In Process", "target": "6", "limit": "36", "reviewer": "Assign reviewer"}, {"id": 17, "header": "Scalability and Future Proofing", "type": "Narrative", "status": "Done", "target": "4", "limit": "37", "reviewer": "Assign reviewer"}, {"id": 18, "header": "Cost-Benefit Analysis", "type": "Plain language", "status": "Done", "target": "14", "limit": "38", "reviewer": "Assign reviewer"}, {"id": 19, "header": "User Training and Onboarding Experience", "type": "Narrative", "status": "Done", "target": "17", "limit": "39", "reviewer": "Assign reviewer"}, {"id": 20, "header": "Future Development Roadmap", "type": "Narrative", "status": "Done", "target": "11", "limit": "40", "reviewer": "Assign reviewer"}, {"id": 21, "header": "System Architecture Overview", "type": "Technical content", "status": "In Process", "target": "24", "limit": "18", "reviewer": "Maya Johnson"}, {"id": 22, "header": "Risk Management Plan", "type": "Narrative", "status": "Done", "target": "15", "limit": "22", "reviewer": "Carlos Rodriguez"}, {"id": 23, "header": "Compliance Documentation", "type": "Legal", "status": "In Process", "target": "31", "limit": "27", "reviewer": "Sarah Chen"}, {"id": 24, "header": "API Documentation", "type": "Technical content", "status": "Done", "target": "8", "limit": "12", "reviewer": "Raj Patel"}, {"id": 25, "header": "User Interface Mockups", "type": "Visual", "status": "In Process", "target": "19", "limit": "25", "reviewer": "Leila Ahmadi"}, {"id": 26, "header": "Database Schema", "type": "Technical content", "status": "Done", "target": "22", "limit": "20", "reviewer": "Thomas Wilson"}, {"id": 27, "header": "Testing Methodology", "type": "Technical content", "status": "In Process", "target": "17", "limit": "14", "reviewer": "Assign reviewer"}, {"id": 28, "header": "Deployment Strategy", "type": "Narrative", "status": "Done", "target": "26", "limit": "30", "reviewer": "Eddie Lake"}, {"id": 29, "header": "Budget Breakdown", "type": "Financial", "status": "In Process", "target": "13", "limit": "16", "reviewer": "Jamik Tashpulatov"}, {"id": 30, "header": "Market Analysis", "type": "Research", "status": "Done", "target": "29", "limit": "32", "reviewer": "Sophia Martinez"}, {"id": 31, "header": "Competitor Comparison", "type": "Research", "status": "In Process", "target": "21", "limit": "19", "reviewer": "Assign reviewer"}, {"id": 32, "header": "Maintenance Plan", "type": "Technical content", "status": "Done", "target": "16", "limit": "23", "reviewer": "Alex Thompson"}, {"id": 33, "header": "User Personas", "type": "Research", "status": "In Process", "target": "27", "limit": "24", "reviewer": "Nina Patel"}, {"id": 34, "header": "Accessibility Compliance", "type": "Legal", "status": "Done", "target": "18", "limit": "21", "reviewer": "Assign reviewer"}, {"id": 35, "header": "Performance Metrics", "type": "Technical content", "status": "In Process", "target": "23", "limit": "26", "reviewer": "David Kim"}, {"id": 36, "header": "Disaster Recovery Plan", "type": "Technical content", "status": "Done", "target": "14", "limit": "17", "reviewer": "Jamik Tashpulatov"}, {"id": 37, "header": "Third-party Integrations", "type": "Technical content", "status": "In Process", "target": "25", "limit": "28", "reviewer": "Eddie Lake"}, {"id": 38, "header": "User Feedback Summary", "type": "Research", "status": "Done", "target": "20", "limit": "15", "reviewer": "Assign reviewer"}, {"id": 39, "header": "Localization Strategy", "type": "Narrative", "status": "In Process", "target": "12", "limit": "19", "reviewer": "Maria Garcia"}, {"id": 40, "header": "Mobile Compatibility", "type": "Technical content", "status": "Done", "target": "28", "limit": "31", "reviewer": "James Wilson"}, {"id": 41, "header": "Data Migration Plan", "type": "Technical content", "status": "In Process", "target": "19", "limit": "22", "reviewer": "Assign reviewer"}, {"id": 42, "header": "Quality Assurance Protocols", "type": "Technical content", "status": "Done", "target": "30", "limit": "33", "reviewer": "Priya Singh"}, {"id": 43, "header": "Stakeholder Analysis", "type": "Research", "status": "In Process", "target": "11", "limit": "14", "reviewer": "Eddie Lake"}, {"id": 44, "header": "Environmental Impact Assessment", "type": "Research", "status": "Done", "target": "24", "limit": "27", "reviewer": "Assign reviewer"}, {"id": 45, "header": "Intellectual Property Rights", "type": "Legal", "status": "In Process", "target": "17", "limit": "20", "reviewer": "Sarah Johnson"}, {"id": 46, "header": "Customer Support Framework", "type": "Narrative", "status": "Done", "target": "22", "limit": "25", "reviewer": "Jamik Tashpulatov"}, {"id": 47, "header": "Version Control Strategy", "type": "Technical content", "status": "In Process", "target": "15", "limit": "18", "reviewer": "Assign reviewer"}, {"id": 48, "header": "Continuous Integration Pipeline", "type": "Technical content", "status": "Done", "target": "26", "limit": "29", "reviewer": "Michael Chen"}, {"id": 49, "header": "Regulatory Compliance", "type": "Legal", "status": "In Process", "target": "13", "limit": "16", "reviewer": "Assign reviewer"}, {"id": 50, "header": "User Authentication System", "type": "Technical content", "status": "Done", "target": "28", "limit": "31", "reviewer": "Eddie Lake"}, {"id": 51, "header": "Data Analytics Framework", "type": "Technical content", "status": "In Process", "target": "21", "limit": "24", "reviewer": "Jamik Tashpulatov"}, {"id": 52, "header": "Cloud Infrastructure", "type": "Technical content", "status": "Done", "target": "16", "limit": "19", "reviewer": "Assign reviewer"}, {"id": 53, "header": "Network Security Measures", "type": "Technical content", "status": "In Process", "target": "29", "limit": "32", "reviewer": "Lisa Wong"}, {"id": 54, "header": "Project Timeline", "type": "Planning", "status": "Done", "target": "14", "limit": "17", "reviewer": "Eddie Lake"}, {"id": 55, "header": "Resource Allocation", "type": "Planning", "status": "In Process", "target": "27", "limit": "30", "reviewer": "Assign reviewer"}, {"id": 56, "header": "Team Structure and Roles", "type": "Planning", "status": "Done", "target": "20", "limit": "23", "reviewer": "Jamik Tashpulatov"}, {"id": 57, "header": "Communication Protocols", "type": "Planning", "status": "In Process", "target": "15", "limit": "18", "reviewer": "Assign reviewer"}, {"id": 58, "header": "Success Metrics", "type": "Planning", "status": "Done", "target": "30", "limit": "33", "reviewer": "Eddie Lake"}, {"id": 59, "header": "Internationalization Support", "type": "Technical content", "status": "In Process", "target": "23", "limit": "26", "reviewer": "Jamik Tashpulatov"}, {"id": 60, "header": "Backup and Recovery Procedures", "type": "Technical content", "status": "Done", "target": "18", "limit": "21", "reviewer": "Assign reviewer"}, {"id": 61, "header": "Monitoring and Alerting System", "type": "Technical content", "status": "In Process", "target": "25", "limit": "28", "reviewer": "Daniel Park"}, {"id": 62, "header": "Code Review Guidelines", "type": "Technical content", "status": "Done", "target": "12", "limit": "15", "reviewer": "Eddie Lake"}, {"id": 63, "header": "Documentation Standards", "type": "Technical content", "status": "In Process", "target": "27", "limit": "30", "reviewer": "Jamik Tashpulatov"}, {"id": 64, "header": "Release Management Process", "type": "Planning", "status": "Done", "target": "22", "limit": "25", "reviewer": "Assign reviewer"}, {"id": 65, "header": "Feature Prioritization Matrix", "type": "Planning", "status": "In Process", "target": "19", "limit": "22", "reviewer": "Emma Davis"}, {"id": 66, "header": "Technical Debt Assessment", "type": "Technical content", "status": "Done", "target": "24", "limit": "27", "reviewer": "Eddie Lake"}, {"id": 67, "header": "Capacity Planning", "type": "Planning", "status": "In Process", "target": "21", "limit": "24", "reviewer": "Jamik Tashpulatov"}, {"id": 68, "header": "Service Level Agreements", "type": "Legal", "status": "Done", "target": "26", "limit": "29", "reviewer": "Assign reviewer"}] %}{#- /data -#}
+{#- data:admin_chart -#}{% set admin_chart = [{"date": "2024-04-01", "label": "Apr 1", "desktop": 222, "mobile": 150}, {"date": "2024-04-02", "label": "Apr 2", "desktop": 97, "mobile": 180}, {"date": "2024-04-03", "label": "Apr 3", "desktop": 167, "mobile": 120}, {"date": "2024-04-04", "label": "Apr 4", "desktop": 242, "mobile": 260}, {"date": "2024-04-05", "label": "Apr 5", "desktop": 373, "mobile": 290}, {"date": "2024-04-06", "label": "Apr 6", "desktop": 301, "mobile": 340}, {"date": "2024-04-07", "label": "Apr 7", "desktop": 245, "mobile": 180}, {"date": "2024-04-08", "label": "Apr 8", "desktop": 409, "mobile": 320}, {"date": "2024-04-09", "label": "Apr 9", "desktop": 59, "mobile": 110}, {"date": "2024-04-10", "label": "Apr 10", "desktop": 261, "mobile": 190}, {"date": "2024-04-11", "label": "Apr 11", "desktop": 327, "mobile": 350}, {"date": "2024-04-12", "label": "Apr 12", "desktop": 292, "mobile": 210}, {"date": "2024-04-13", "label": "Apr 13", "desktop": 342, "mobile": 380}, {"date": "2024-04-14", "label": "Apr 14", "desktop": 137, "mobile": 220}, {"date": "2024-04-15", "label": "Apr 15", "desktop": 120, "mobile": 170}, {"date": "2024-04-16", "label": "Apr 16", "desktop": 138, "mobile": 190}, {"date": "2024-04-17", "label": "Apr 17", "desktop": 446, "mobile": 360}, {"date": "2024-04-18", "label": "Apr 18", "desktop": 364, "mobile": 410}, {"date": "2024-04-19", "label": "Apr 19", "desktop": 243, "mobile": 180}, {"date": "2024-04-20", "label": "Apr 20", "desktop": 89, "mobile": 150}, {"date": "2024-04-21", "label": "Apr 21", "desktop": 137, "mobile": 200}, {"date": "2024-04-22", "label": "Apr 22", "desktop": 224, "mobile": 170}, {"date": "2024-04-23", "label": "Apr 23", "desktop": 138, "mobile": 230}, {"date": "2024-04-24", "label": "Apr 24", "desktop": 387, "mobile": 290}, {"date": "2024-04-25", "label": "Apr 25", "desktop": 215, "mobile": 250}, {"date": "2024-04-26", "label": "Apr 26", "desktop": 75, "mobile": 130}, {"date": "2024-04-27", "label": "Apr 27", "desktop": 383, "mobile": 420}, {"date": "2024-04-28", "label": "Apr 28", "desktop": 122, "mobile": 180}, {"date": "2024-04-29", "label": "Apr 29", "desktop": 315, "mobile": 240}, {"date": "2024-04-30", "label": "Apr 30", "desktop": 454, "mobile": 380}, {"date": "2024-05-01", "label": "May 1", "desktop": 165, "mobile": 220}, {"date": "2024-05-02", "label": "May 2", "desktop": 293, "mobile": 310}, {"date": "2024-05-03", "label": "May 3", "desktop": 247, "mobile": 190}, {"date": "2024-05-04", "label": "May 4", "desktop": 385, "mobile": 420}, {"date": "2024-05-05", "label": "May 5", "desktop": 481, "mobile": 390}, {"date": "2024-05-06", "label": "May 6", "desktop": 498, "mobile": 520}, {"date": "2024-05-07", "label": "May 7", "desktop": 388, "mobile": 300}, {"date": "2024-05-08", "label": "May 8", "desktop": 149, "mobile": 210}, {"date": "2024-05-09", "label": "May 9", "desktop": 227, "mobile": 180}, {"date": "2024-05-10", "label": "May 10", "desktop": 293, "mobile": 330}, {"date": "2024-05-11", "label": "May 11", "desktop": 335, "mobile": 270}, {"date": "2024-05-12", "label": "May 12", "desktop": 197, "mobile": 240}, {"date": "2024-05-13", "label": "May 13", "desktop": 197, "mobile": 160}, {"date": "2024-05-14", "label": "May 14", "desktop": 448, "mobile": 490}, {"date": "2024-05-15", "label": "May 15", "desktop": 473, "mobile": 380}, {"date": "2024-05-16", "label": "May 16", "desktop": 338, "mobile": 400}, {"date": "2024-05-17", "label": "May 17", "desktop": 499, "mobile": 420}, {"date": "2024-05-18", "label": "May 18", "desktop": 315, "mobile": 350}, {"date": "2024-05-19", "label": "May 19", "desktop": 235, "mobile": 180}, {"date": "2024-05-20", "label": "May 20", "desktop": 177, "mobile": 230}, {"date": "2024-05-21", "label": "May 21", "desktop": 82, "mobile": 140}, {"date": "2024-05-22", "label": "May 22", "desktop": 81, "mobile": 120}, {"date": "2024-05-23", "label": "May 23", "desktop": 252, "mobile": 290}, {"date": "2024-05-24", "label": "May 24", "desktop": 294, "mobile": 220}, {"date": "2024-05-25", "label": "May 25", "desktop": 201, "mobile": 250}, {"date": "2024-05-26", "label": "May 26", "desktop": 213, "mobile": 170}, {"date": "2024-05-27", "label": "May 27", "desktop": 420, "mobile": 460}, {"date": "2024-05-28", "label": "May 28", "desktop": 233, "mobile": 190}, {"date": "2024-05-29", "label": "May 29", "desktop": 78, "mobile": 130}, {"date": "2024-05-30", "label": "May 30", "desktop": 340, "mobile": 280}, {"date": "2024-05-31", "label": "May 31", "desktop": 178, "mobile": 230}, {"date": "2024-06-01", "label": "Jun 1", "desktop": 178, "mobile": 200}, {"date": "2024-06-02", "label": "Jun 2", "desktop": 470, "mobile": 410}, {"date": "2024-06-03", "label": "Jun 3", "desktop": 103, "mobile": 160}, {"date": "2024-06-04", "label": "Jun 4", "desktop": 439, "mobile": 380}, {"date": "2024-06-05", "label": "Jun 5", "desktop": 88, "mobile": 140}, {"date": "2024-06-06", "label": "Jun 6", "desktop": 294, "mobile": 250}, {"date": "2024-06-07", "label": "Jun 7", "desktop": 323, "mobile": 370}, {"date": "2024-06-08", "label": "Jun 8", "desktop": 385, "mobile": 320}, {"date": "2024-06-09", "label": "Jun 9", "desktop": 438, "mobile": 480}, {"date": "2024-06-10", "label": "Jun 10", "desktop": 155, "mobile": 200}, {"date": "2024-06-11", "label": "Jun 11", "desktop": 92, "mobile": 150}, {"date": "2024-06-12", "label": "Jun 12", "desktop": 492, "mobile": 420}, {"date": "2024-06-13", "label": "Jun 13", "desktop": 81, "mobile": 130}, {"date": "2024-06-14", "label": "Jun 14", "desktop": 426, "mobile": 380}, {"date": "2024-06-15", "label": "Jun 15", "desktop": 307, "mobile": 350}, {"date": "2024-06-16", "label": "Jun 16", "desktop": 371, "mobile": 310}, {"date": "2024-06-17", "label": "Jun 17", "desktop": 475, "mobile": 520}, {"date": "2024-06-18", "label": "Jun 18", "desktop": 107, "mobile": 170}, {"date": "2024-06-19", "label": "Jun 19", "desktop": 341, "mobile": 290}, {"date": "2024-06-20", "label": "Jun 20", "desktop": 408, "mobile": 450}, {"date": "2024-06-21", "label": "Jun 21", "desktop": 169, "mobile": 210}, {"date": "2024-06-22", "label": "Jun 22", "desktop": 317, "mobile": 270}, {"date": "2024-06-23", "label": "Jun 23", "desktop": 480, "mobile": 530}, {"date": "2024-06-24", "label": "Jun 24", "desktop": 132, "mobile": 180}, {"date": "2024-06-25", "label": "Jun 25", "desktop": 141, "mobile": 190}, {"date": "2024-06-26", "label": "Jun 26", "desktop": 434, "mobile": 380}, {"date": "2024-06-27", "label": "Jun 27", "desktop": 448, "mobile": 490}, {"date": "2024-06-28", "label": "Jun 28", "desktop": 149, "mobile": 200}, {"date": "2024-06-29", "label": "Jun 29", "desktop": 103, "mobile": 160}, {"date": "2024-06-30", "label": "Jun 30", "desktop": 446, "mobile": 400}] %}{#- /data -#}
+{% set nav_main = [('Dashboard', 'layout-dashboard'), ('Lifecycle', 'list'), ('Analytics', 'chart-bar'), ('Projects', 'folder'), ('Team', 'users')] %}
+{% set documents = [('Data Library', 'database'), ('Reports', 'file-chart-column'), ('Word Assistant', 'file-text')] %}
+{% set nav_secondary = [('Settings', 'settings'), ('Get Help', 'circle-help'), ('Search', 'search')] %}
+{% set section_cards = [
+  ('Total Revenue', '$1,250.00', 'up', '+12.5%', 'Trending up this month', 'Visitors for the last 6 months'),
+  ('New Customers', '1,234', 'down', '-20%', 'Down 20% this period', 'Acquisition needs attention'),
+  ('Active Accounts', '45,678', 'up', '+12.5%', 'Strong user retention', 'Engagement exceed targets'),
+  ('Growth Rate', '4.5%', 'up', '+4.5%', 'Steady performance increase', 'Meets growth projections'),
+] %}
+{% set ranges = [('90d', 'Last 3 months', 90), ('30d', 'Last 30 days', 30), ('7d', 'Last 7 days', 7)] %}
+{% set drawer_chart = [
+  {'month': 'January', 'desktop': 186, 'mobile': 80}, {'month': 'February', 'desktop': 305, 'mobile': 200},
+  {'month': 'March', 'desktop': 237, 'mobile': 120}, {'month': 'April', 'desktop': 73, 'mobile': 190},
+  {'month': 'May', 'desktop': 209, 'mobile': 130}, {'month': 'June', 'desktop': 214, 'mobile': 140}] %}
+{% set series = [{'key': 'mobile', 'label': 'Mobile', 'color': 'var(--primary)'}, {'key': 'desktop', 'label': 'Desktop', 'color': 'var(--primary)'}] %}
+{% set cell_input = 'h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:hover:bg-input/30 dark:focus-visible:bg-input/30' %}
+{% set hideable = ['type', 'status', 'target', 'limit', 'reviewer'] %}
+
+{% block body %}
+{% call ui.sidebar_wrapper(class='min-h-auto', attrs={'style': '--sidebar-width:calc(var(--spacing) * 64);--sidebar-width-icon:3rem;--header-height:calc(var(--spacing) * 12 + 1px)'}) %}
+  {% call ui.sidebar(collapsible='none', class='h-auto border-r') %}
+    {% call ui.sidebar_header(class='border-b') %}{% call ui.sidebar_menu() %}{% call ui.sidebar_menu_item() %}
+      {% call ui.sidebar_menu_button(size='default', active=false, href='#', class='data-[slot=sidebar-menu-button]:p-1.5!') %}{{ lucide('circle-dashed', 'size-5!') }}<span class="text-base font-semibold">Acme Inc.</span>{% endcall %}
+    {% endcall %}{% endcall %}{% endcall %}
+    {% call ui.sidebar_content() %}
+      {% call ui.sidebar_group() %}{% call ui.sidebar_group_content() %}
+        {{ ui.sidebar_group_label(text='Home') }}
+        {% call ui.sidebar_menu() %}
+          {% for title, icon in nav_main %}
+          {% call ui.sidebar_menu_item() %}{% call ui.sidebar_menu_button(tag='button', size='default', active=false, attrs={'title': title}) %}{{ lucide(icon) }}<span>{{ title }}</span>{% endcall %}{% endcall %}
+          {% endfor %}
+        {% endcall %}
+      {% endcall %}{% endcall %}
+      {% call ui.sidebar_group(class='group-data-[collapsible=icon]:hidden') %}
+        {{ ui.sidebar_group_label(text='Documents') }}
+        {% call ui.sidebar_menu() %}
+          {% for name, icon in documents %}
+          {% call ui.sidebar_menu_item() %}
+            {% call ui.sidebar_menu_button(size='default', active=false, href='#') %}{{ lucide(icon) }}<span>{{ name }}</span>{% endcall %}
+            {% call ui.dropdown_menu() %}
+              {% call ui.dropdown_menu_trigger(as_='sidebar-menu-action', class='group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 peer-data-active/menu-button:text-sidebar-accent-foreground aria-expanded:opacity-100 md:opacity-0 rounded-sm data-[state=open]:bg-accent') %}{{ lucide('ellipsis') }}<span class="sr-only">More</span>{% endcall %}
+              {% call ui.dropdown_menu_content(side='right', align='start', class='w-24 rounded-lg') %}
+                {% call ui.dropdown_menu_item() %}{{ lucide('folder') }}<span>Open</span>{% endcall %}
+                {% call ui.dropdown_menu_item() %}{{ lucide('share') }}<span>Share</span>{% endcall %}
+                {{ ui.dropdown_menu_separator() }}
+                {% call ui.dropdown_menu_item(variant='destructive') %}{{ lucide('trash') }}<span>Delete</span>{% endcall %}
+              {% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% endfor %}
+          {% call ui.sidebar_menu_item() %}{% call ui.sidebar_menu_button(tag='button', size='default', active=false, class='text-sidebar-foreground/70') %}{{ lucide('ellipsis', 'text-sidebar-foreground/70') }}<span>More</span>{% endcall %}{% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.sidebar_group(class='mt-auto') %}{% call ui.sidebar_group_content() %}{% call ui.sidebar_menu() %}
+        {% for title, icon in nav_secondary %}
+        {% call ui.sidebar_menu_item() %}{% call ui.sidebar_menu_button(size='default', active=false, href='#') %}{{ lucide(icon) }}<span>{{ title }}</span>{% endcall %}{% endcall %}
+        {% endfor %}
+      {% endcall %}{% endcall %}{% endcall %}
+    {% endcall %}
+    {% call ui.sidebar_footer() %}{% call ui.sidebar_menu() %}{% call ui.sidebar_menu_item() %}
+      {% call ui.dropdown_menu() %}
+        {% call ui.dropdown_menu_trigger(as_='sidebar-menu-button', size='lg', active=false, class='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground') %}
+          {% call ui.avatar(class='h-8 w-8 rounded-lg grayscale') %}{{ ui.avatar_fallback(text='CN', class='rounded-lg') }}{% endcall %}
+          <div class="grid flex-1 text-left text-sm leading-tight"><span class="truncate font-medium">shadcn</span><span class="truncate text-xs text-muted-foreground">m@example.com</span></div>
+          {{ lucide('ellipsis-vertical', 'ml-auto size-4') }}
+        {% endcall %}
+        {% call ui.dropdown_menu_content(side='right', align='end', class='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg', attrs={'data-side-offset': '4'}) %}
+          {% call ui.dropdown_menu_label(class='p-0 font-normal') %}
+            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              {% call ui.avatar(class='h-8 w-8 rounded-lg') %}{{ ui.avatar_fallback(text='CN', class='rounded-lg') }}{% endcall %}
+              <div class="grid flex-1 text-left text-sm leading-tight"><span class="truncate font-medium">shadcn</span><span class="truncate text-xs text-muted-foreground">m@example.com</span></div>
+            </div>
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_group() %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('circle-user') }}Account{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('credit-card') }}Billing{% endcall %}
+            {% call ui.dropdown_menu_item() %}{{ lucide('bell') }}Notifications{% endcall %}
+          {% endcall %}
+          {{ ui.dropdown_menu_separator() }}
+          {% call ui.dropdown_menu_item() %}{{ lucide('log-out') }}Log out{% endcall %}
+        {% endcall %}
+      {% endcall %}
+    {% endcall %}{% endcall %}{% endcall %}
+  {% endcall %}
+
+  {% call ui.sidebar_inset() %}
+    <header class="sticky top-0 z-10 flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/90 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+      <div class="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+        <h1 class="text-base font-medium">Documents</h1>
+        <div class="ml-auto flex items-center gap-2">
+          {% call ui.button(size='sm', class='hidden h-7 sm:flex') %}{{ lucide('circle-plus') }}<span>Quick Create</span>{% endcall %}
+        </div>
+      </div>
+    </header>
+    <div class="flex flex-1 flex-col">
+      <div class="@container/main flex flex-1 flex-col gap-2">
+        <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+
+          <div class="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+            {% for title, value, dir, change, line, note in section_cards %}
+            {% call ui.card(class='@container/card') %}
+              {% call ui.card_header() %}
+                {{ ui.card_description(text=title) }}
+                {{ ui.card_title(text=value, class='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl') }}
+                {% call ui.card_action() %}{% call ui.badge(variant='outline') %}{{ lucide('trending-' ~ dir) }}{{ change }}{% endcall %}{% endcall %}
+              {% endcall %}
+              {% call ui.card_footer(class='flex-col items-start gap-1.5 text-sm') %}
+                <div class="line-clamp-1 flex gap-2 font-medium">{{ line }} {{ lucide('trending-' ~ dir, 'size-4') }}</div>
+                <div class="text-muted-foreground">{{ note }}</div>
+              {% endcall %}
+            {% endcall %}
+            {% endfor %}
+          </div>
+
+          <div class="px-4 lg:px-6">
+            {% call ui.card(class='@container/card') %}
+              {% call ui.card_header() %}
+                {{ ui.card_title(text='Total Visitors') }}
+                {% call ui.card_description() %}
+                  <span class="hidden @[540px]/card:block">Total for the last 3 months</span>
+                  <span class="@[540px]/card:hidden">Last 3 months</span>
+                {% endcall %}
+                {% call ui.card_action() %}
+                  {% call ui.toggle_group(type='single', variant='outline', id='visitors-range', class='hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex') %}
+                    {% for value, label, _ in ranges %}{{ ui.toggle_group_item(text=label, value=value, variant='outline', pressed=(value == '90d'), attrs={'data-value': value}) }}{% endfor %}
+                  {% endcall %}
+                  {{ admin.select_box('visitors-range-select', [('90d', 'Last 3 months'), ('30d', 'Last 30 days'), ('7d', 'Last 7 days')], selected='90d', placeholder='Last 3 months', size='sm', class='flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden', content_class='rounded-xl', item_class='rounded-lg', attrs={'aria-label': 'Select a value'}) }}
+                {% endcall %}
+              {% endcall %}
+              {% call ui.card_content(class='px-2 pt-4 sm:px-6 sm:pt-6') %}
+                {% for value, label, days in ranges %}
+                <div data-range="{{ value }}"{% if value != '90d' %} hidden{% endif %}>
+                  {{ admin.chart('stacked-area', admin_chart[-(days + 1):] if days < 90 else admin_chart, series, x='label', label='Total visitors, ' ~ label) }}
+                </div>
+                {% endfor %}
+              {% endcall %}
+            {% endcall %}
+          </div>
+
+          {% call ui.tabs(class='w-full flex-col justify-start gap-6') %}
+            <div class="flex items-center justify-between px-4 lg:px-6">
+              {{ ui.label(text='View', for_='view-selector', class='sr-only') }}
+              {{ admin.select_box('view-selector', [('outline', 'Outline'), ('past-performance', 'Past Performance'), ('key-personnel', 'Key Personnel'), ('focus-documents', 'Focus Documents')], selected='outline', placeholder='Select a view', size='sm', class='flex w-fit @4xl/main:hidden') }}
+              {% call ui.tabs_list(class='hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex') %}
+                {{ ui.tabs_trigger(text='Outline', active=true, attrs={'data-value': 'outline'}) }}
+                {% call ui.tabs_trigger(attrs={'data-value': 'past-performance'}) %}Past Performance {{ ui.badge(text='3', variant='secondary') }}{% endcall %}
+                {% call ui.tabs_trigger(attrs={'data-value': 'key-personnel'}) %}Key Personnel {{ ui.badge(text='2', variant='secondary') }}{% endcall %}
+                {{ ui.tabs_trigger(text='Focus Documents', attrs={'data-value': 'focus-documents'}) }}
+              {% endcall %}
+              <div class="flex items-center gap-2">
+                {% call ui.dropdown_menu() %}
+                  {% call ui.dropdown_menu_trigger(variant='outline', size='sm') %}{{ lucide('columns-3') }}<span class="hidden lg:inline">Customize Columns</span><span class="lg:hidden">Columns</span>{{ lucide('chevron-down') }}{% endcall %}
+                  {% call ui.dropdown_menu_content(align='end', class='w-56') %}
+                    {% for col in hideable %}{{ admin.menu_check(col, class='capitalize', attrs={'data-toggle-col': col}) }}{% endfor %}
+                  {% endcall %}
+                {% endcall %}
+                {% call ui.button(variant='outline', size='sm') %}{{ lucide('plus') }}<span class="hidden lg:inline">Add Section</span>{% endcall %}
+              </div>
+            </div>
+            {% call ui.tabs_content(active=true, class='relative flex flex-col gap-4 overflow-auto px-4 lg:px-6', attrs={'data-value': 'outline'}) %}
+              <div class="overflow-hidden rounded-lg border">
+                {% call ui.table() %}
+                  {% call ui.table_header(class='sticky top-0 z-10 bg-muted') %}{% call ui.table_row() %}
+                    {{ ui.table_head() }}
+                    {% call ui.table_head() %}<div class="flex items-center justify-center">{{ ui.checkbox(attrs={'aria-label': 'Select all', 'data-select-all': 'outline'}) }}</div>{% endcall %}
+                    {{ ui.table_head(text='Header') }}
+                    {{ ui.table_head(text='Section Type', attrs={'data-col': 'type'}) }}
+                    {{ ui.table_head(text='Status', attrs={'data-col': 'status'}) }}
+                    {% call ui.table_head(attrs={'data-col': 'target'}) %}<div class="w-full text-right">Target</div>{% endcall %}
+                    {% call ui.table_head(attrs={'data-col': 'limit'}) %}<div class="w-full text-right">Limit</div>{% endcall %}
+                    {{ ui.table_head(text='Reviewer', attrs={'data-col': 'reviewer'}) }}
+                    {{ ui.table_head() }}
+                  {% endcall %}{% endcall %}
+                  {% call ui.table_body(class='**:data-[slot=table-cell]:first:w-8', attrs={'data-table': 'outline'}) %}
+                    {% for row in admin_rows %}
+                    {% call ui.table_row(class='relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80', attrs={'data-row': row.id, 'hidden': loop.index > 10}) %}
+                      {% call ui.table_cell() %}{% call ui.button(variant='ghost', size='icon', class='size-7 text-muted-foreground hover:bg-transparent', attrs={'data-drag-handle': ''}) %}{{ lucide('grip-vertical', 'size-3 text-muted-foreground') }}<span class="sr-only">Drag to reorder</span>{% endcall %}{% endcall %}
+                      {% call ui.table_cell() %}<div class="flex items-center justify-center">{{ ui.checkbox(attrs={'aria-label': 'Select row'}) }}</div>{% endcall %}
+                      {% call ui.table_cell() %}{{ ui.button(text=row.header, variant='link', class='w-fit px-0 text-left text-foreground', attrs={'data-fb-open': 'section-viewer', 'data-item': admin.json_attr(row)}) }}{% endcall %}
+                      {% call ui.table_cell(attrs={'data-col': 'type'}) %}<div class="w-32">{{ ui.badge(text=row.type, variant='outline', class='px-1.5 text-muted-foreground') }}</div>{% endcall %}
+                      {% call ui.table_cell(attrs={'data-col': 'status'}) %}{% call ui.badge(variant='outline', class='px-1.5 text-muted-foreground') %}{% if row.status == 'Done' %}{{ lucide('circle-check', 'fill-primary text-primary-foreground') }}{% else %}{{ lucide('loader') }}{% endif %}{{ row.status }}{% endcall %}{% endcall %}
+                      {% for key in ['target', 'limit'] %}
+                      {% call ui.table_cell(attrs={'data-col': key}) %}
+                        <form data-save="{{ row.header }}">
+                          {{ ui.label(text=key | capitalize, for_=row.id ~ '-' ~ key, class='sr-only') }}
+                          {{ ui.input(id=row.id ~ '-' ~ key, value=row[key], class=cell_input) }}
+                        </form>
+                      {% endcall %}
+                      {% endfor %}
+                      {% call ui.table_cell(attrs={'data-col': 'reviewer'}) %}
+                        {%- if row.reviewer != 'Assign reviewer' -%}{{ row.reviewer }}{%- else -%}
+                        {{ ui.label(text='Reviewer', for_=row.id ~ '-reviewer', class='sr-only') }}
+                        {{ admin.select_box(row.id ~ '-reviewer', ['Eddie Lake', 'Jamik Tashpulatov'], placeholder='Assign reviewer', size='sm', class='w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate', align='end') }}
+                        {%- endif -%}
+                      {% endcall %}
+                      {% call ui.table_cell() %}
+                        {% call ui.dropdown_menu() %}
+                          {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='flex size-8 text-muted-foreground data-[state=open]:bg-muted') %}{{ lucide('ellipsis-vertical') }}<span class="sr-only">Open menu</span>{% endcall %}
+                          {% call ui.dropdown_menu_content(align='end', class='w-32') %}
+                            {{ ui.dropdown_menu_item(text='Edit') }}{{ ui.dropdown_menu_item(text='Make a copy') }}{{ ui.dropdown_menu_item(text='Favorite') }}
+                            {{ ui.dropdown_menu_separator() }}
+                            {{ ui.dropdown_menu_item(text='Delete', variant='destructive') }}
+                          {% endcall %}
+                        {% endcall %}
+                      {% endcall %}
+                    {% endcall %}
+                    {% endfor %}
+                    {% call ui.table_row(attrs={'data-empty': '', 'hidden': true}) %}{{ ui.table_cell(text='No results.', class='h-24 text-center', attrs={'colspan': 9}) }}{% endcall %}
+                  {% endcall %}
+                {% endcall %}
+              </div>
+              <div class="flex items-center justify-between px-4">
+                <div class="hidden flex-1 text-sm text-muted-foreground lg:flex" data-selected-count="outline">0 of {{ admin_rows | length }} row(s) selected.</div>
+                <div class="flex w-full items-center gap-8 lg:w-fit">
+                  <div class="hidden items-center gap-2 lg:flex">
+                    {{ ui.label(text='Rows per page', for_='outline-page-size', class='text-sm font-medium') }}
+                    {{ admin.select_box('outline-page-size', ['10', '20', '30', '40', '50'], selected='10', size='sm', class='w-20', side='top') }}
+                  </div>
+                  <div class="flex w-fit items-center justify-center text-sm font-medium" data-page-label="outline">Page 1 of {{ ((admin_rows | length) / 10) | round(0, 'ceil') | int }}</div>
+                  <div class="ml-auto flex items-center gap-2 lg:ml-0">{{ admin.pager_buttons('outline') }}</div>
+                </div>
+              </div>
+            {% endcall %}
+            {% for value in ['past-performance', 'key-personnel', 'focus-documents'] %}
+            {% call ui.tabs_content(class='flex flex-col px-4 lg:px-6', attrs={'data-value': value}) %}<div class="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>{% endcall %}
+            {% endfor %}
+          {% endcall %}
+
+        </div>
+      </div>
+    </div>
+  {% endcall %}
+{% endcall %}
+
+{#- One drawer serves every row; opening it from a row fills the fields with that row. -#}
+{% call ui.drawer() %}
+  {{ ui.drawer_overlay() }}
+  {% call ui.drawer_content(id='section-viewer', side='right', data_vaul_drawer_direction='right') %}
+    {% call ui.drawer_header(class='gap-1') %}
+      {{ ui.drawer_title(text=admin_rows[0].header, attrs={'data-field': 'title'}) }}
+      {{ ui.drawer_description(text='Showing total visitors for the last 6 months') }}
+    {% endcall %}
+    <div class="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
+      {{ admin.chart('stacked-area', drawer_chart, [{'key': 'mobile', 'label': 'Mobile', 'color': 'var(--primary)'}, {'key': 'desktop', 'label': 'Desktop', 'color': 'var(--primary)'}], x='month', short=true, class='aspect-video w-full', label='Visitors for the last 6 months') }}
+      {{ ui.separator() }}
+      <div class="grid gap-2">
+        <div class="flex gap-2 leading-none font-medium">Trending up by 5.2% this month {{ lucide('trending-up', 'size-4') }}</div>
+        <div class="text-muted-foreground">Showing total visitors for the last 6 months. This is just some random text to test the layout. It spans multiple lines and should wrap around.</div>
+      </div>
+      {{ ui.separator() }}
+      <form class="flex flex-col gap-4">
+        <div class="flex flex-col gap-3">
+          {{ ui.label(text='Header', for_='header') }}
+          {{ ui.input(id='header', value=admin_rows[0].header) }}
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-3">
+            {{ ui.label(text='Type', for_='type') }}
+            {{ admin.select_box('type', ['Table of Contents', 'Executive Summary', 'Technical Approach', 'Design', 'Capabilities', 'Focus Documents', 'Narrative', 'Cover Page'], placeholder='Select a type', class='w-full') }}
+          </div>
+          <div class="flex flex-col gap-3">
+            {{ ui.label(text='Status', for_='status') }}
+            {{ admin.select_box('status', ['Done', 'In Progress', 'Not Started'], placeholder='Select a status', class='w-full') }}
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-3">{{ ui.label(text='Target', for_='target') }}{{ ui.input(id='target', value=admin_rows[0].target) }}</div>
+          <div class="flex flex-col gap-3">{{ ui.label(text='Limit', for_='limit') }}{{ ui.input(id='limit', value=admin_rows[0].limit) }}</div>
+        </div>
+        <div class="flex flex-col gap-3">
+          {{ ui.label(text='Reviewer', for_='reviewer') }}
+          {{ admin.select_box('reviewer', ['Eddie Lake', 'Jamik Tashpulatov', 'Emily Whalen'], placeholder='Select a reviewer', class='w-full') }}
+        </div>
+      </form>
+    </div>
+    {% call ui.drawer_footer() %}
+      {{ ui.button(text='Submit') }}
+      {{ ui.drawer_close(text='Done', variant='outline', size='default') }}
+    {% endcall %}
+  {% endcall %}
+{% endcall %}
+
+{{ admin.table_script() }}
+<script>
+  (function () {
+    var table = window.AdminTable('outline', { size: 10 });
+
+    // Visitors chart range: toggle group and select stay in step and show the matching chart.
+    function setRange(value) {
+      if (!value) return;
+      document.querySelectorAll('[data-range]').forEach(function (el) { el.hidden = el.getAttribute('data-range') !== value; });
+      document.querySelectorAll('#visitors-range [data-slot="toggle-group-item"]').forEach(function (b) {
+        var on = b.getAttribute('data-value') === value;
+        b.setAttribute('data-state', on ? 'on' : 'off'); b.setAttribute('aria-checked', String(on));
+      });
+      var trigger = document.getElementById('visitors-range-select');
+      var item = document.querySelector('[data-slot="select-item"][data-value="' + value + '"]');
+      if (trigger && item && trigger.getAttribute('data-value') !== value) {
+        trigger.setAttribute('data-value', value);
+        trigger.querySelector('[data-slot="select-value"]').textContent = item.textContent.trim();
+      }
+    }
+    document.addEventListener('basecoat:change', function (e) {
+      var t = e.target;
+      if (t.id === 'visitors-range') setRange((e.detail.value || [])[0]);
+      else if (t.id === 'visitors-range-select') setRange(e.detail.value);
+      else if (t.id === 'view-selector') {
+        var tab = document.querySelector('[data-slot="tabs-trigger"][data-value="' + e.detail.value + '"]');
+        if (tab) tab.click();
+      } else if (t.getAttribute && t.getAttribute('data-toggle-col')) {
+        var col = t.getAttribute('data-toggle-col');
+        document.querySelectorAll('[data-col="' + col + '"]').forEach(function (c) { c.hidden = !e.detail.checked; });
+      }
+    });
+    if (window.matchMedia('(max-width: 767px)').matches) setRange('7d');
+
+    // Target and limit cells save on Enter.
+    document.querySelectorAll('form[data-save]').forEach(function (f) {
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+        FlaskBasecoat.toast({ title: 'Saving ' + f.getAttribute('data-save'), variant: 'loading', duration: 1000 });
+        setTimeout(function () { FlaskBasecoat.toast({ title: 'Done', variant: 'success' }); }, 1000);
+      });
+    });
+
+    // Opening the section viewer fills it with the row.
+    function pick(id, value) {
+      var trigger = document.getElementById(id);
+      if (!trigger) return;
+      var content = document.getElementById(trigger.getAttribute('aria-controls'));
+      var label = null;
+      if (content) content.querySelectorAll('[data-slot="select-item"]').forEach(function (it) {
+        var on = it.getAttribute('data-value') === value;
+        it.setAttribute('data-state', on ? 'checked' : 'unchecked'); it.setAttribute('aria-selected', String(on));
+        if (on) label = it.textContent.trim();
+      });
+      var v = trigger.querySelector('[data-slot="select-value"]');
+      if (label) { v.textContent = label; trigger.removeAttribute('data-placeholder'); }
+      else { v.textContent = v.getAttribute('data-placeholder-text') || v.textContent; trigger.setAttribute('data-placeholder', ''); }
+    }
+    document.querySelectorAll('#type [data-slot="select-value"], #status [data-slot="select-value"], #reviewer [data-slot="select-value"]').forEach(function (v) { v.setAttribute('data-placeholder-text', v.textContent); });
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-fb-open="section-viewer"]');
+      if (!b) return;
+      var item = JSON.parse(b.getAttribute('data-item'));
+      document.querySelector('#section-viewer [data-field="title"]').textContent = item.header;
+      document.getElementById('header').value = item.header;
+      document.getElementById('target').value = item.target;
+      document.getElementById('limit').value = item.limit;
+      pick('type', item.type); pick('status', item.status); pick('reviewer', item.reviewer);
+    }, true);
+
+    // Rows reorder by dragging the grip handle.
+    var body = document.querySelector('[data-table="outline"]'), dragged = null;
+    body.addEventListener('pointerdown', function (e) {
+      var h = e.target.closest('[data-drag-handle]');
+      if (h) { var row = h.closest('tr'); row.draggable = true; }
+    });
+    body.addEventListener('dragstart', function (e) { dragged = e.target.closest('tr'); dragged.setAttribute('data-dragging', 'true'); e.dataTransfer.effectAllowed = 'move'; });
+    body.addEventListener('dragover', function (e) {
+      if (!dragged) return; e.preventDefault();
+      var over = e.target.closest('tr[data-row]');
+      if (!over || over === dragged) return;
+      var r = over.getBoundingClientRect();
+      over.parentNode.insertBefore(dragged, e.clientY > r.top + r.height / 2 ? over.nextSibling : over);
+    });
+    body.addEventListener('dragend', function () { if (dragged) { dragged.removeAttribute('data-dragging'); dragged.draggable = false; dragged = null; table.render(); } });
+  })();
+</script>
+{% endblock %}

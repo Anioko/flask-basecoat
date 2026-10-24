@@ -1,0 +1,34 @@
+{# Shared pieces for the commerce screens: select, star rating, money formatting, placeholder images. #}
+{% import 'basecoat/index.html' as ui %}
+
+{#- A shadcn Select whose value is submitted under `name`. options: list of (value, label). -#}
+{% macro select_field(name, options, selected=none, placeholder='', class='', id=none, content_class='') -%}
+{%- call ui.select() -%}
+{%- call ui.select_trigger(as_='select-trigger', size='default', class=class, id=id or name, placeholder_shown=(selected is none), attrs={'data-name': name}) -%}
+{%- set ns = namespace(label=placeholder) -%}
+{%- for value, label in options if value == selected %}{% set ns.label = label %}{% endfor -%}
+{{ ui.select_value(text=ns.label, attrs={'style': 'pointer-events:none'}) }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}
+{%- endcall -%}
+{%- call ui.select_content(class=content_class) -%}
+{%- call ui.select_group() -%}
+{%- for value, label in options %}{{ ui.select_item(text=label, attrs={'data-value': value, 'data-state': 'checked' if value == selected else none}) }}{% endfor -%}
+{%- endcall -%}
+{%- endcall -%}
+{%- endcall -%}
+{%- endmacro %}
+
+{#- Five stars, the first `filled` drawn solid. -#}
+{% macro stars(filled, size='h-4 w-4', on='fill-chart-4 text-chart-4', off='fill-muted text-muted') -%}
+{%- for i in range(5) %}{{ lucide('star', size ~ ' ' ~ (on if i < filled else off)) }}{% endfor -%}
+{%- endmacro %}
+
+{#- $1234.50 style money (two decimals, no grouping). -#}
+{% macro money(v) -%}${{ '%.2f' | format(v) }}{%- endmacro %}
+
+{#- The neutral placeholder image the package serves. -#}
+{% macro placeholder(w, h) -%}{{ url_for('basecoat.placeholder', height=h, width=w) }}{%- endmacro %}
+
+{#- A label with a trailing required marker. -#}
+{% macro required_label(text, for_=none, class='') -%}
+{%- call ui.label(for_=for_, class=class) %}{{ text }} <span class="text-destructive">*</span>{% endcall -%}
+{%- endmacro %}

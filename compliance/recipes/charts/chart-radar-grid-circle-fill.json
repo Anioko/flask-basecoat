@@ -1,0 +1,96 @@
+{
+  "name": "chart-radar-grid-circle-fill",
+  "group": "radar",
+  "fullWidth": false,
+  "description": "A radar chart with a grid and circle fill",
+  "card": {
+    "title": "Radar Chart - Grid Circle Filled",
+    "description": "Showing total visitors for the last 6 months",
+    "headerClassName": "items-center pb-4",
+    "contentClassName": "pb-0",
+    "footerClassName": "flex-col gap-2 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex items-center gap-2 leading-none font-medium"
+      },
+      {
+        "text": "January - June 2024",
+        "icons": [],
+        "className": "flex items-center gap-2 leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "radar",
+    "component": "RadarChart",
+    "container": {
+      "id": null,
+      "className": "mx-auto aspect-square max-h-[250px]"
+    },
+    "config": {
+      "desktop": {
+        "label": "Desktop",
+        "color": "var(--chart-1)"
+      }
+    },
+    "data": [
+      {
+        "month": "January",
+        "desktop": 186
+      },
+      {
+        "month": "February",
+        "desktop": 285
+      },
+      {
+        "month": "March",
+        "desktop": 237
+      },
+      {
+        "month": "April",
+        "desktop": 203
+      },
+      {
+        "month": "May",
+        "desktop": 209
+      },
+      {
+        "month": "June",
+        "desktop": 264
+      }
+    ],
+    "props": {},
+    "series": [
+      {
+        "component": "Radar",
+        "dataKey": "desktop",
+        "fill": "var(--color-desktop)",
+        "fillOpacity": 0.5
+      }
+    ],
+    "axes": [
+      {
+        "component": "PolarAngleAxis",
+        "dataKey": "month"
+      }
+    ],
+    "grid": {
+      "component": "PolarGrid",
+      "className": "fill-(--color-desktop) opacity-20",
+      "gridType": "circle"
+    },
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent"
+    },
+    "legend": null,
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [],
+  "unresolved": []
+}

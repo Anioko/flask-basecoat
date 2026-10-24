@@ -1,0 +1,95 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Activity Feed · Flask-Basecoat{% endblock %}
+{% set activity = [
+  {'type': 'status_change', 'name': 'Angelina Gotelli', 'initials': 'AG', 'action': 'has change', 'target': 'PD-979', 'status': ('Completed', 'green'), 'timestamp': '06:20 PM', 'date': 'SUNDAY, 06 MARCH'},
+  {'type': 'comment', 'name': 'Max Alexander', 'initials': 'MA', 'action': 'comment on your', 'target': 'Post', 'comment': "Fine, Java MIGHT be a good example of what a programming language should be like. But Java applications are good examples of what applications SHOULDN'T be like.", 'timestamp': '05:53 PM', 'date': 'SUNDAY, 06 MARCH'},
+  {'type': 'tag_added', 'name': 'Eugene Stewart', 'initials': 'ES', 'action': 'added tags', 'tags': [('Live Issue', 'red'), ('Backend', 'blue')], 'timestamp': '04:40 PM', 'date': 'SUNDAY, 06 MARCH'},
+  {'type': 'file_added', 'name': 'Shannon Baker', 'initials': 'SB', 'action': 'added', 'target': 'document.csv', 'timestamp': '03:18 PM', 'date': 'SUNDAY, 06 MARCH'},
+  {'type': 'mention', 'name': 'Roberta Horton', 'initials': 'RH', 'action': 'mentioned you in a comment', 'target': 'Post', 'comment': '@Carolyn One of the main causes of the fall of the Roman Empire was that-lacking zero-they had no way to indicate successful termination of their C programs.', 'timestamp': '02:17 PM', 'date': 'SUNDAY, 06 MARCH'},
+  {'type': 'assignment', 'name': 'Lee Wheeler', 'initials': 'LW', 'action': 'assigned ticket', 'target': 'PD-1092', 'assignee': 'Alvin Moreno', 'timestamp': '11:13 AM', 'date': 'SUNDAY, 06 MARCH'},
+  {'type': 'comment', 'name': 'Jessica Wells', 'initials': 'JW', 'action': 'comment on your', 'target': 'Post', 'comment': "The trouble with programmers is that you can never tell what a programmer is doing until it's too late.", 'timestamp': '08:49 AM', 'date': 'SATURDAY, 05 MARCH'},
+  {'type': 'status_change', 'name': 'Earl Miles', 'initials': 'EM', 'action': 'has change', 'target': 'PD-977', 'status': ('In progress', 'blue'), 'timestamp': '08:30 AM', 'date': 'SATURDAY, 05 MARCH'},
+] %}
+{% set status_badge = {'green': 'bg-primary/10 text-primary', 'blue': 'bg-chart-2/20 text-foreground'} %}
+{% set status_dot = {'green': 'bg-primary', 'blue': 'bg-chart-2'} %}
+{% set tag_dot = {'red': 'bg-destructive', 'blue': 'bg-chart-2'} %}
+{% set type_icon = {'tag_added': 'tag', 'file_added': 'file-text'} %}
+{% block body %}
+<div class="mx-auto max-w-4xl p-4 md:p-6">
+  <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center md:mb-8">
+    <h1 class="text-foreground text-xl font-semibold md:text-2xl">Activity log</h1>
+    <div class="flex items-center gap-3 md:gap-4">
+      <div class="flex items-center gap-2">
+        {{ ui.label(text='Show mentioned only', for_='mentioned-only', class='text-muted-foreground text-xs font-normal md:text-sm') }}
+        {% call ui.switch(size='default', checked=false, id='mentioned-only') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}
+      </div>
+      {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Filter'}) %}{{ lucide('filter', 'h-4 w-4') }}{% endcall %}
+    </div>
+  </div>
+
+  <div id="activity-list" class="space-y-4 md:space-y-6">
+    {% set ns = namespace(date='') %}
+    {% for item in activity %}
+    <div data-activity-type="{{ item.type }}" data-day="{{ item.date }}">
+      <div data-activity-date class="text-muted-foreground mb-3 text-xs font-medium tracking-wide uppercase md:mb-4 md:text-sm"{% if ns.date == item.date %} hidden{% endif %}>{{ item.date }}</div>
+      {%- set ns.date = item.date %}
+      <div class="relative flex gap-2 md:gap-3">
+        <div class="bg-border absolute top-10 bottom-0 left-3 w-px md:top-12 md:left-4"></div>
+        <div class="relative z-10">
+          {% if item.type in type_icon %}
+          <div class="bg-muted flex h-6 w-6 items-center justify-center rounded-full md:h-8 md:w-8">{{ lucide(type_icon[item.type], 'text-muted-foreground h-4 w-4') }}</div>
+          {% else %}
+          {% call ui.avatar(class='h-6 w-6 md:h-8 md:w-8') %}{{ ui.avatar_fallback(text=item.initials, class='bg-primary text-primary-foreground text-xs font-medium') }}{% endcall %}
+          {% endif %}
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:gap-2 md:text-sm">
+            <div class="flex flex-wrap items-center gap-1 sm:gap-2">
+              <span class="text-foreground font-medium">{{ item.name }}</span>
+              <span class="text-muted-foreground">{{ item.action }}</span>
+              {% if item.target %}<span class="text-foreground font-medium">{{ item.target }}</span>{% endif %}
+              {% if item.status %}
+              <span class="text-muted-foreground">status to</span>
+              {% call ui.badge(variant='secondary', class=status_badge[item.status[1]] ~ ' text-xs') %}<div class="mr-1 h-1.5 w-1.5 rounded-full md:h-2 md:w-2 {{ status_dot[item.status[1]] }}"></div>{{ item.status[0] }}{% endcall %}
+              {% endif %}
+              {% if item.assignee %}
+              <span class="text-muted-foreground">to</span>
+              <span class="text-foreground font-medium">{{ item.assignee }}</span>
+              {% endif %}
+            </div>
+            <span class="text-muted-foreground text-xs sm:ml-auto md:text-sm">{{ item.timestamp }}</span>
+          </div>
+          {% if item.tags %}
+          <div class="mt-2 flex flex-wrap gap-2">
+            {% for text, color in item.tags %}
+            <div class="flex items-center gap-1">
+              <div class="h-1.5 w-1.5 rounded-full md:h-2 md:w-2 {{ tag_dot[color] }}"></div>
+              <span class="text-muted-foreground text-xs md:text-sm">{{ text }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if item.comment %}
+          <div class="bg-muted text-muted-foreground mt-2 rounded-lg p-2 text-xs leading-relaxed md:mt-3 md:p-3 md:text-sm">{{ item.comment }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<script>
+  // "Show mentioned only" narrows the log to the mentions; each day keeps its heading above its first visible entry.
+  document.addEventListener('basecoat:change', function (e) {
+    if (!e.target.matches || !e.target.matches('#mentioned-only')) return;
+    var only = e.detail && e.detail.checked, last = '';
+    document.querySelectorAll('#activity-list > [data-activity-type]').forEach(function (el) {
+      el.hidden = only && el.getAttribute('data-activity-type') !== 'mention';
+      if (el.hidden) return;
+      el.querySelector('[data-activity-date]').hidden = el.dataset.day === last;
+      last = el.dataset.day;
+    });
+  });
+</script>
+{% endblock %}

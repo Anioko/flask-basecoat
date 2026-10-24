@@ -1,0 +1,79 @@
+{
+ "type": "radial",
+ "component": "RadialBarChart",
+ "config": {
+  "visitors": {
+   "label": "Visitors"
+  },
+  "safari": {
+   "label": "Safari",
+   "color": "var(--chart-2)"
+  }
+ },
+ "data": [
+  {
+   "browser": "safari",
+   "visitors": 1260,
+   "fill": "var(--color-safari)"
+  }
+ ],
+ "props": {
+  "endAngle": 100,
+  "innerRadius": 65,
+  "outerRadius": 95
+ },
+ "series": [
+  {
+   "component": "RadialBar",
+   "dataKey": "visitors",
+   "background": true
+  }
+ ],
+ "axes": [
+  {
+   "component": "PolarRadiusAxis",
+   "tick": false,
+   "tickLine": false,
+   "axisLine": false,
+   "labels": [
+    {
+     "content": {
+      "$fn": "centerText",
+      "lines": [
+       {
+        "value": {
+         "pick": "visitors",
+         "index": 0
+        },
+        "className": "fill-foreground text-4xl font-bold",
+        "dy": 0
+       },
+       {
+        "value": {
+         "text": "Visitors"
+        },
+        "className": "fill-muted-foreground",
+        "dy": 24
+       }
+      ],
+      "dominantBaseline": "middle"
+     }
+    }
+   ]
+  }
+ ],
+ "grid": {
+  "component": "PolarGrid",
+  "gridType": "circle",
+  "radialLines": false,
+  "stroke": "none",
+  "className": "first:fill-muted last:fill-background",
+  "polarRadius": [
+   86,
+   74
+  ]
+ },
+ "tooltip": null,
+ "legend": null,
+ "labels": []
+}

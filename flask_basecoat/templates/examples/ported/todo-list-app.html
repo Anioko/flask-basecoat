@@ -1,0 +1,159 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_admin.html' as admin %}
+{% block title %}Todo List App{% endblock %}
+{% set sections = [
+  {'id': 'new-tasks', 'title': 'New tasks', 'icon': '📋', 'todos': [
+    {'id': '1', 'text': 'Get another day full of work done!', 'completed': false, 'priority': 'important', 'progress': 74, 'comments': 18},
+    {'id': '2', 'text': 'Keep my mentality healthy by taking walks outside', 'completed': true, 'progress': 38, 'comments': 18}]},
+  {'id': 'do-today', 'title': 'Do today', 'icon': '⭐', 'todos': [
+    {'id': '3', 'text': 'Figure out how to use Clever from the help center!', 'completed': true, 'progress': 10, 'comments': 18},
+    {'id': '4', 'text': 'Build some new components in Figma', 'completed': false, 'priority': 'new-product', 'progress': 83, 'comments': 18},
+    {'id': '5', 'text': 'Create wireframes for the new dashboard', 'completed': true, 'priority': 'delayed', 'progress': 4, 'comments': 18}]},
+  {'id': 'in-progress', 'title': 'In progress', 'icon': '⚡', 'todos': [
+    {'id': '6', 'text': 'Figure out how to use Clever from the help center!', 'completed': false, 'progress': 10, 'comments': 18},
+    {'id': '7', 'text': 'Build some new components in Figma', 'completed': false, 'priority': 'delayed', 'progress': 83, 'comments': 18},
+    {'id': '8', 'text': 'Create wireframes for the new dashboard', 'completed': true, 'priority': 'delayed', 'progress': 4, 'comments': 18},
+    {'id': '9', 'text': 'Get another day full of work done!', 'completed': true, 'progress': 74, 'comments': 18},
+    {'id': '10', 'text': 'Keep my mentality healthy by taking walks outside', 'completed': false, 'progress': 38, 'comments': 18}]},
+] %}
+{% set priority_text = {'important': 'Important', 'new-product': 'New product', 'delayed': 'Delayed'} %}
+{% set priority_class = {'important': 'bg-destructive/10 text-destructive hover:bg-destructive/20', 'new-product': 'bg-primary/10 text-primary hover:bg-primary/20', 'delayed': 'bg-muted text-muted-foreground hover:bg-muted/80'} %}
+
+{% macro progress_color(p) -%}
+{{ 'text-primary' if p >= 80 else ('text-foreground' if p >= 50 else ('text-muted-foreground' if p >= 20 else 'text-destructive')) }}
+{%- endmacro %}
+
+{% macro todo_item(todo) -%}
+<div class="flex items-center gap-3 rounded-lg border border-border/50 bg-background p-3 transition-all hover:border-border data-[dragging=true]:opacity-50" data-todo="{{ todo.id }}">
+  {% call ui.button(variant='ghost', size='icon', class='h-6 w-6 cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing', attrs={'aria-label': 'Drag to move', 'data-grip': ''}) %}{{ lucide('grip-vertical', 'h-3 w-3') }}{% endcall %}
+  {{ ui.checkbox(checked=todo.completed, attrs={'aria-label': todo.text}) }}
+  <div class="min-w-0 flex-1"><p class="text-sm font-medium {{ 'text-muted-foreground line-through' if todo.completed else '' }}" data-todo-text>{{ todo.text }}</p></div>
+  <div class="flex items-center gap-2">
+    {% if todo.priority %}{{ ui.badge(text=priority_text[todo.priority], variant='secondary', class='border-0 text-xs font-medium ' ~ priority_class[todo.priority]) }}{% endif %}
+    {% if todo.progress is defined %}
+    <div class="flex items-center gap-1">
+      <div class="flex h-4 w-4 items-center justify-center rounded-full border-2 {{ progress_color(todo.progress) }}"><div class="h-2 w-2 rounded-full bg-current"></div></div>
+      <span class="text-xs font-medium {{ progress_color(todo.progress) }}">{{ todo.progress }}%</span>
+    </div>
+    {% endif %}
+    {% if todo.comments %}<div class="flex items-center gap-1 text-muted-foreground">{{ lucide('message-circle', 'h-3 w-3') }}<span class="text-xs">{{ todo.comments }}</span></div>{% endif %}
+    <div class="flex -space-x-1">
+      {% call ui.avatar(class='h-6 w-6 border border-background') %}{{ ui.avatar_fallback(text='JM', class='bg-primary text-xs text-primary-foreground') }}{% endcall %}
+      <div class="flex h-6 w-6 items-center justify-center rounded-full border border-background bg-muted"><span class="text-xs text-muted-foreground">+3</span></div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% block body %}
+<div class="min-h-screen bg-background">
+  <div class="mx-auto max-w-7xl p-4 md:p-6">
+    <div class="mb-8">
+      <div class="mb-6 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1">
+            {% for letter, tone in [('C', 1), ('D', 2), ('A', 3)] %}
+            <div class="flex h-8 w-8 items-center justify-center rounded-md bg-chart-{{ tone }}/30"><span class="text-sm font-semibold text-foreground">{{ letter }}</span></div>
+            {% endfor %}
+            {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 border border-dashed border-border p-0', attrs={'aria-label': 'Add workspace'}) %}{{ lucide('plus', 'h-4 w-4') }}{% endcall %}
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          {{ admin.search_input('Search', class='w-64 border-border bg-background pl-10', id='todo-search') }}
+          {% call ui.button(variant='ghost', size='sm', class='h-9 w-9 p-0', attrs={'aria-label': 'Notifications'}) %}{{ lucide('bell', 'h-4 w-4') }}{% endcall %}
+          {% call ui.avatar(class='h-8 w-8') %}{{ ui.avatar_fallback(text='T', class='bg-primary text-sm text-primary-foreground') }}{% endcall %}
+        </div>
+      </div>
+      <div class="mb-6">
+        <h1 class="mb-4 text-2xl font-bold text-foreground">Launch Clever dashboard theme</h1>
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            {{ ui.button(text='View all', size='sm', class='rounded-full') }}
+            {{ ui.button(text='Most recent', variant='outline', size='sm', class='rounded-full') }}
+            {{ ui.button(text='Popular', variant='outline', size='sm', class='rounded-full') }}
+          </div>
+          <div class="ml-auto flex items-center gap-2">
+            {{ ui.button(text='Share', variant='outline', size='sm') }}
+            {{ ui.button(text='Create', size='sm', class='bg-primary hover:bg-primary/90') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      {% for section in sections %}
+      {% call ui.card(class='border-0 bg-card p-4 shadow-sm transition-colors data-[over=true]:bg-primary/5 data-[over=true]:ring-2 data-[over=true]:ring-primary/50', attrs={'data-section': section.id}) %}
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2"><span class="text-lg">{{ section.icon }}</span><h2 class="font-semibold text-foreground">{{ section.title }}</h2></div>
+            <div class="flex items-center gap-1">
+              {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Schedule ' ~ section.title}) %}{{ lucide('calendar', 'h-4 w-4 text-muted-foreground') }}{% endcall %}
+              {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'More options for ' ~ section.title}) %}{{ lucide('ellipsis', 'h-4 w-4 text-muted-foreground') }}{% endcall %}
+            </div>
+          </div>
+          <div class="min-h-[100px] space-y-2 rounded-md transition-colors" data-dropzone>
+            {% for todo in section.todos %}{{ todo_item(todo) }}{% endfor %}
+            <div class="flex h-20 items-center justify-center text-sm text-muted-foreground" data-no-tasks hidden>No tasks</div>
+          </div>
+        </div>
+      {% endcall %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    // Completing a task strikes it through.
+    document.addEventListener('basecoat:change', function (e) {
+      var item = e.target.closest && e.target.closest('[data-todo]');
+      if (!item) return;
+      var p = item.querySelector('[data-todo-text]');
+      p.classList.toggle('line-through', e.detail.checked === true);
+      p.classList.toggle('text-muted-foreground', e.detail.checked === true);
+    });
+    // Tasks move within and between sections by dragging the grip.
+    var dragged = null;
+    function sync() {
+      document.querySelectorAll('[data-section]').forEach(function (s) {
+        var zone = s.querySelector('[data-dropzone]'), empty = zone.querySelector('[data-no-tasks]');
+        var count = zone.querySelectorAll('[data-todo]').length;
+        empty.hidden = count > 0;
+        empty.textContent = s.getAttribute('data-over') === 'true' ? 'Drop task here' : 'No tasks';
+      });
+    }
+    document.addEventListener('pointerdown', function (e) {
+      var g = e.target.closest && e.target.closest('[data-grip]');
+      if (g) g.closest('[data-todo]').draggable = true;
+    });
+    document.addEventListener('dragstart', function (e) {
+      dragged = e.target.closest && e.target.closest('[data-todo]');
+      if (!dragged) return;
+      e.dataTransfer.effectAllowed = 'move';
+      dragged.setAttribute('data-dragging', 'true');
+    });
+    document.addEventListener('dragover', function (e) {
+      if (!dragged) return;
+      var section = e.target.closest && e.target.closest('[data-section]');
+      document.querySelectorAll('[data-section]').forEach(function (s) { s.setAttribute('data-over', String(s === section)); });
+      if (!section) return;
+      e.preventDefault();
+      var zone = section.querySelector('[data-dropzone]');
+      var over = e.target.closest('[data-todo]');
+      if (over && over !== dragged) {
+        var r = over.getBoundingClientRect();
+        zone.insertBefore(dragged, e.clientY > r.top + r.height / 2 ? over.nextSibling : over);
+      } else if (!over) {
+        zone.insertBefore(dragged, zone.querySelector('[data-no-tasks]'));
+      }
+      sync();
+    });
+    document.addEventListener('dragend', function () {
+      if (!dragged) return;
+      dragged.removeAttribute('data-dragging'); dragged.draggable = false; dragged = null;
+      document.querySelectorAll('[data-section]').forEach(function (s) { s.removeAttribute('data-over'); });
+      sync();
+    });
+  })();
+</script>
+{% endblock %}

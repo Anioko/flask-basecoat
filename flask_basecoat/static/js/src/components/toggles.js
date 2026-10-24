@@ -43,6 +43,9 @@
             el.appendChild(ind);
           }
           if (!ind.firstElementChild && window.FlaskBasecoatIcons) ind.innerHTML = window.FlaskBasecoatIcons.check;
+          // The indicator mirrors the control's state so the closed-state CSS hides it while unchecked.
+          const state = el.getAttribute('aria-checked');
+          FB.setState(ind, state === 'mixed' ? 'indeterminate' : state === 'true' ? 'checked' : 'unchecked');
         }
         const name = el.getAttribute('name') || el.getAttribute('data-name');
         const initial = el.getAttribute('aria-checked') === 'mixed' ? 'mixed' : el.getAttribute('aria-checked') === 'true';
@@ -55,7 +58,8 @@
         });
         el.addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); el.click(); } else if (e.key === 'Enter' && kind === 'switch') { e.preventDefault(); el.click(); } });
         // Click on the associated <label for=id> toggles the control (buttons are not labelable, so emulate it).
-        if (el.id) FB.qsa(document, `label[for="${el.id}"]`).forEach((label) => label.addEventListener('click', (e) => { e.preventDefault(); el.click(); el.focus(); }));
+        // A click on the control itself bubbles to a wrapping label; it has already toggled, so the label ignores it.
+        if (el.id) FB.qsa(document, `label[for="${el.id}"]`).forEach((label) => label.addEventListener('click', (e) => { if (el.contains(e.target)) return; e.preventDefault(); el.click(); el.focus(); }));
       },
     });
   });
@@ -96,7 +100,7 @@
         if (nav(e)) { select(document.activeElement, false); return; }
         if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); select(r, false); }
       });
-      items().forEach((r) => { if (r.id) FB.qsa(document, `label[for="${r.id}"]`).forEach((l) => l.addEventListener('click', (e) => { e.preventDefault(); select(r, true); })); });
+      items().forEach((r) => { if (r.id) FB.qsa(document, `label[for="${r.id}"]`).forEach((l) => l.addEventListener('click', (e) => { if (r.contains(e.target)) return; e.preventDefault(); select(r, true); })); });
     },
   });
 
@@ -130,8 +134,16 @@
         const on = it.getAttribute('data-state') === 'on';
         if (multiple) set(it, !on);
         else items().forEach((o) => set(o, o === it ? !on : false));
-        FB.emit(group, 'change', { value: items().filter((o) => o.getAttribute('data-state') === 'on').map((o) => o.getAttribute('data-value') || o.getAttribute('value')) });
+        FB.emit(group, 'change', { value: values() });
       });
+      const valueOf = (o) => o.getAttribute('data-value') || o.getAttribute('value');
+      const values = () => items().filter((o) => o.getAttribute('data-state') === 'on').map(valueOf);
+      // Programmatic value (a controlled ToggleGroup): group.fbSetValue('30d') or (['a', 'b']); '' or [] presses none.
+      group.fbSetValue = (value) => {
+        const want = (Array.isArray(value) ? value : [value]).filter((v) => v !== '' && v != null).map(String);
+        items().forEach((o) => set(o, want.includes(valueOf(o))));
+      };
+      group.fbGetValue = () => (multiple ? values() : (values()[0] || ''));
       const nav = FB.roving(items, { orientation: group.getAttribute('data-orientation') === 'vertical' ? 'vertical' : 'horizontal', loop: true, typeahead: false });
       group.addEventListener('keydown', (e) => { if (!nav(e) && (e.key === ' ' || e.key === 'Enter')) { const it = e.target.closest('[data-slot="toggle-group-item"]'); if (it) { e.preventDefault(); it.click(); } } });
     },

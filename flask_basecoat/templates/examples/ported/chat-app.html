@@ -1,0 +1,131 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% from 'examples/ported/_apps.html' import ph %}
+{% block title %}Chat App · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set contacts = [
+  {'id': '1', 'name': 'Shannon Baker', 'last': 'Will do. Appreciat...', 'time': '07:39 AM', 'unread': false},
+  {'id': '2', 'name': 'Jessica Wells', 'last': "Perfect. I'll pack...", 'time': '05:39 PM', 'unread': true},
+  {'id': '3', 'name': 'Arlene Pierce', 'last': 'Okay, Thanks 👋', 'time': '03:49 PM', 'unread': false},
+  {'id': '4', 'name': 'Max Alexander', 'last': "I'd love that! Let's ...", 'time': '01:59 PM', 'unread': false},
+  {'id': '5', 'name': 'Jeremiah Minsk', 'last': 'No problem. G... 😬', 'time': '02:59 AM', 'unread': false},
+  {'id': '6', 'name': 'Camila Simmons', 'last': "True! I'll be more c...", 'time': '10:19 PM', 'unread': false},
+] %}
+{% set messages = [
+  {'user': false, 'text': "I think you should go for it. You're more than capable and it sounds like a great opportunity for growth."},
+  {'user': true, 'text': "It's a bigger company and a more challenging role. I'm worried it might be too much to handle."},
+  {'user': true, 'text': "Thanks, Mark. I needed that encouragement. I'll start working on my application tonight."},
+  {'user': false, 'text': 'Anytime! Let me know if you need any help with your resume or cover letter.'},
+  {'user': true, 'text': 'Will do. Appreciate it!'},
+] %}
+
+{% macro bubble(text, user) -%}
+<div class="flex items-start gap-3{{ ' justify-end' if user }}">
+  {% if not user %}
+  {% call ui.avatar(class='h-8 w-8') %}{{ ui.avatar_image(src=ph(32, 32), alt='User Avatar') }}{{ ui.avatar_fallback(text='U') }}{% endcall %}
+  {% endif %}
+  <div class="max-w-[70%] rounded-lg p-3 {{ 'bg-primary text-primary-foreground rounded-br-none' if user else 'rounded-bl-none' }}">
+    <p class="text-sm">{{ text }}</p>
+  </div>
+</div>
+{%- endmacro %}
+
+<div class="flex h-screen">
+  {# Sidebar #}
+  <div class="flex w-80 flex-col border border-r p-4">
+    <div class="mb-6 flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Chat</h1>
+      {{ lucide('search', 'text-muted-foreground h-5 w-5 cursor-pointer') }}
+    </div>
+
+    <div class="mb-6 flex rounded-lg border p-1" id="chat-tabs">
+      {% call ui.button(variant='ghost', class='h-9 flex-1 rounded-md text-sm font-medium shadow-sm', attrs={'data-chat-tab': 'personal', 'aria-pressed': 'true'}) %}{{ lucide('user', 'mr-2 h-4 w-4') }}Personal{% endcall %}
+      {% call ui.button(variant='ghost', class='h-9 flex-1 rounded-md text-sm font-medium text-muted-foreground hover:bg-transparent', attrs={'data-chat-tab': 'groups', 'aria-pressed': 'false'}) %}{{ lucide('users', 'mr-2 h-4 w-4') }}Groups{% endcall %}
+    </div>
+
+    <div class="flex-1 space-y-2 overflow-y-auto pr-2" id="chat-contacts">
+      {% for c in contacts %}
+      <div class="hover:bg-muted flex cursor-pointer items-center gap-3 rounded-lg p-3 transition-colors{{ ' bg-muted' if c.id == '1' }}" data-contact="{{ c.id }}" role="button" tabindex="0">
+        {% call ui.avatar() %}{{ ui.avatar_image(src=ph(40, 40), alt=c.name) }}{{ ui.avatar_fallback(text=c.name[0]) }}{% endcall %}
+        <div class="flex-1">
+          <div class="flex items-center justify-between">
+            <span class="font-medium">{{ c.name }}</span>
+            <span class="text-muted-foreground text-xs">{{ c.time }}</span>
+          </div>
+          <div class="text-muted-foreground flex items-center justify-between text-sm">
+            <p class="truncate">{{ c.last }}</p>
+            {% if c.unread %}<div class="ml-2 h-2 w-2 rounded-full bg-primary"></div>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="mt-6">
+      {{ ui.button(text='New chat', class='w-full') }}
+    </div>
+  </div>
+
+  {# Conversation #}
+  <div class="m-4 flex flex-1 flex-col rounded-lg shadow-sm">
+    <div class="flex items-center justify-between border border-b p-4">
+      <div class="flex items-center gap-3">
+        {% call ui.avatar(class='h-10 w-10') %}{{ ui.avatar_image(src=ph(40, 40), alt='Shannon Baker') }}{{ ui.avatar_fallback(text='S') }}{% endcall %}
+        <div>
+          <h2 class="font-semibold">Shannon Baker</h2>
+          <p class="text-muted-foreground text-sm">last seen recently</p>
+        </div>
+      </div>
+      {{ lucide('ellipsis-vertical', 'text-muted-foreground h-5 w-5 cursor-pointer') }}
+    </div>
+
+    <div class="flex-1 space-y-4 overflow-y-auto p-6" id="chat-messages">
+      {% for m in messages %}{{ bubble(m.text, m.user) }}{% endfor %}
+    </div>
+
+    <form class="flex items-center gap-3 border border-t p-4" id="chat-composer">
+      {{ lucide('image', 'text-muted-foreground h-5 w-5 cursor-pointer') }}
+      {{ ui.input(placeholder='Enter a prompt here', class='flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0', attrs={'aria-label': 'Message'}) }}
+      {% call ui.button(size='icon', type='submit', class='rounded-full', attrs={'aria-label': 'Send'}) %}{{ lucide('arrow-right') }}{% endcall %}
+    </form>
+  </div>
+</div>
+
+<template id="chat-user-bubble">{{ bubble('', true) }}</template>
+<script>
+  (function () {
+    // Personal / Groups switch and active conversation, as the upstream sidebar state does.
+    document.querySelectorAll('[data-chat-tab]').forEach(function (tabButton) {
+      tabButton.addEventListener('click', function () {
+        document.querySelectorAll('[data-chat-tab]').forEach(function (b) {
+          var on = b === tabButton;
+          b.setAttribute('aria-pressed', String(on));
+          b.classList.toggle('shadow-sm', on);
+          b.classList.toggle('text-muted-foreground', !on);
+          b.classList.toggle('hover:bg-transparent', !on);
+        });
+      });
+    });
+    document.querySelectorAll('[data-contact]').forEach(function (row) {
+      var pick = function () {
+        document.querySelectorAll('[data-contact]').forEach(function (r) { r.classList.toggle('bg-muted', r === row); });
+      };
+      row.addEventListener('click', pick);
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    });
+    var form = document.getElementById('chat-composer');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = form.querySelector('[data-slot="input"]');
+      var text = input.value.trim();
+      if (!text) return;
+      var node = document.getElementById('chat-user-bubble').content.firstElementChild.cloneNode(true);
+      node.querySelector('p').textContent = text;
+      var list = document.getElementById('chat-messages');
+      list.appendChild(node);
+      list.scrollTop = list.scrollHeight;
+      input.value = '';
+    });
+  })();
+</script>
+{% endblock %}

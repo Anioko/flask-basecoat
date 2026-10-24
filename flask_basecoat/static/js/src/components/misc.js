@@ -44,7 +44,8 @@
   /* Resizable panels: drag the handle to resize neighbouring panels (flex-basis percentages). */
   FB.register('resizable-panel-group', {
     init(group) {
-      const vertical = group.getAttribute('data-orientation') === 'vertical' || group.getAttribute('aria-orientation') === 'vertical';
+      // A vertical group stacks panels (flex-direction: column); upstream may say so only through its inline style.
+      const vertical = group.getAttribute('data-orientation') === 'vertical' || group.getAttribute('aria-orientation') === 'vertical' || group.style.flexDirection === 'column';
       const children = Array.from(group.children);
       children.forEach((c) => { if (c.getAttribute('data-slot') === 'resizable-panel' && !c.style.flex) c.style.flex = `${Number(c.getAttribute('data-default-size') || 50)} 1 0px`; });
       // Panels that end up scrollable must be reachable from the keyboard.
@@ -58,7 +59,8 @@
       FB.qsa(group, ':scope > [data-slot="resizable-handle"]').forEach((handle) => {
         const prev = handle.previousElementSibling, next = handle.nextElementSibling;
         if (!prev || !next) return;
-        handle.setAttribute('aria-orientation', vertical ? 'vertical' : 'horizontal');
+        // The separator runs across the group: a row of panels has vertical handles (react-resizable-panels semantics).
+        handle.setAttribute('aria-orientation', vertical ? 'horizontal' : 'vertical');
         let start = 0, prevSize = 0, nextSize = 0, total = 0;
         function sizes() { const r1 = prev.getBoundingClientRect(), r2 = next.getBoundingClientRect(); return vertical ? [r1.height, r2.height] : [r1.width, r2.width]; }
         function applyPct(p1, p2) { prev.style.flex = `${p1} 1 0px`; next.style.flex = `${p2} 1 0px`; prev.setAttribute('data-size', p1.toFixed(1)); next.setAttribute('data-size', p2.toFixed(1)); }

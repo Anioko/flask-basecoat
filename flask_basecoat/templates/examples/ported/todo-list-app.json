@@ -1,0 +1,11 @@
+{
+  "id": "todo-list-app",
+  "title": "Todo List App",
+  "description": "Project todo board with sections, priority badges, progress markers and drag-and-drop between sections.",
+  "tags": [
+    "Todo",
+    "Cards",
+    "Checkbox",
+    "Drag and drop"
+  ]
+}

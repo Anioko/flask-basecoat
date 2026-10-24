@@ -1,0 +1,98 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/_dashboards.html' as d %}
+{% block title %}Pipeline dashboard · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set revenue = [
+  {'month': 'Jan', 'closed': 5500, 'pipeline': 5500}, {'month': 'Feb', 'closed': 10000, 'pipeline': 10000}, {'month': 'Mar', 'closed': 9000, 'pipeline': 10000},
+  {'month': 'Apr', 'closed': 7000, 'pipeline': 7000}, {'month': 'May', 'closed': 10000, 'pipeline': 10000}, {'month': 'Jun', 'closed': 8000, 'pipeline': 8000},
+  {'month': 'Jul', 'closed': 9500, 'pipeline': 9500}, {'month': 'Aug', 'closed': 7000, 'pipeline': 7000}, {'month': 'Sep', 'closed': 6000, 'pipeline': 6000},
+  {'month': 'Oct', 'closed': 13000, 'pipeline': 13000}, {'month': 'Nov', 'closed': 5500, 'pipeline': 5500}, {'month': 'Dec', 'closed': 8500, 'pipeline': 8500},
+] %}
+{% set funnel = [{'week': 'W1', 'rate': 12}, {'week': 'W2', 'rate': 19}, {'week': 'W3', 'rate': 11}, {'week': 'W4', 'rate': 9}, {'week': 'W5', 'rate': 13}, {'week': 'W6', 'rate': 8}, {'week': 'W7', 'rate': 18}] %}
+{% set weekly = [{'day': 'Mon', 'sales': 60}, {'day': 'Tue', 'sales': 100}, {'day': 'Wed', 'sales': 72}, {'day': 'Thu', 'sales': 60}, {'day': 'Fri', 'sales': 92}, {'day': 'Sat', 'sales': 80}, {'day': 'Sun', 'sales': 60}] %}
+{% call d.shell('pipeline', 'Pipeline', 'Customers, leads and deals in motion') %}
+{{ d.stat_strip([
+  {'title': 'Total customers', 'value': '5,868', 'icon': 'users', 'change': '+12%'},
+  {'title': 'New leads', 'value': '1,245', 'icon': 'user-plus', 'change': '+8%'},
+  {'title': 'Deals closed', 'value': '326', 'icon': 'circle-check', 'change': '+12%'},
+  {'title': 'Lost deals', 'value': '89', 'icon': 'trending-down', 'change': '-3%'},
+]) }}
+
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  {% call ui.card(class='xl:col-span-2') %}
+    {% call ui.card_header() %}
+      {{ ui.card_description(text='Revenue overview') }}
+      {% call ui.card_title(class='flex flex-wrap items-baseline gap-2 text-3xl font-semibold tabular-nums') %}$640,000 <span class="flex items-center gap-2 text-sm font-normal text-muted-foreground">{{ d.delta('+18%') }} vs last month</span>{% endcall %}
+      {% call ui.card_action() %}{{ d.legend([('Closed deals', 1), ('Pipeline revenue', 3)]) }}{% endcall %}
+    {% endcall %}
+    {% call ui.card_content() %}
+      {{ d.chart('stacked-bar', revenue, [{'key': 'closed', 'label': 'Closed deals', 'color': 'var(--chart-1)'}, {'key': 'pipeline', 'label': 'Pipeline revenue', 'color': 'var(--chart-3)'}], class='aspect-auto h-[280px] w-full', label='Closed deals and pipeline revenue') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Revenue sources') }}
+    {% call ui.card_content(class='flex flex-col gap-6') %}
+      <div class="relative">
+        {{ d.chart('donut', [{'source': 'Website', 'value': 4385, 'fill': 'var(--chart-2)'}, {'source': 'Marketplace', 'value': 4590, 'fill': 'var(--chart-4)'}, {'source': 'Affiliate', 'value': 18356, 'fill': 'var(--chart-1)'}], [{'key': 'value', 'label': 'Revenue'}], x='source', grid=false, class='mx-auto aspect-square h-[200px]', label='Revenue by source') }}
+        <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"><span class="text-xs text-muted-foreground">Total</span><span class="text-2xl font-semibold tabular-nums">$27,850</span></div>
+      </div>
+      <div class="flex flex-col gap-3 text-sm">
+        {% for label, amount, change, tone in [('Website', '$4,385', '+4.7%', 2), ('Marketplace', '$4,590', '+2.1%', 4), ('Affiliate', '$18,356', '-1.7%', 1)] %}
+        <div class="flex items-center gap-3"><span class="h-4 w-1 rounded-full bg-chart-{{ tone }}"></span><span class="font-medium">{{ label }}</span><span class="ml-auto font-medium tabular-nums">{{ amount }}</span>{{ d.delta(change) }}</div>
+        {% endfor %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Sales funnel') }}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      <div class="flex flex-col gap-2 rounded-xl bg-muted p-4">
+        <div class="flex items-center justify-between"><span class="text-sm text-muted-foreground">Conversion rate</span><span class="text-xl font-semibold tabular-nums">18.4%</span></div>
+        {{ d.chart('area', funnel, [{'key': 'rate', 'label': 'Conversion', 'color': 'var(--chart-1)'}], x='week', grid=false, class='aspect-auto h-[110px] w-full', label='Weekly conversion rate') }}
+      </div>
+      {% call ui.item_group(class='gap-0') %}
+        {% for title, detail, amount, change in [('Leads generated', '5 clicks', '$21,120', '+13.2%'), ('Opportunities', '5 clicks', '$21,120', '+13.2%'), ('Deals closed', '12 clicks', '$16,100', '-7.4%')] %}
+        {% if not loop.first %}{{ ui.item_separator() }}{% endif %}
+        {% call ui.item(size='sm', class='px-0') %}{% call ui.item_content() %}{{ ui.item_title(text=title) }}{{ ui.item_description(text=detail) }}{% endcall %}{% call ui.item_actions(class='flex-col items-end gap-1') %}<span class="font-semibold tabular-nums">{{ amount }}</span>{{ d.delta(change) }}{% endcall %}{% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Lead sources', 'Leads by channel') }}
+    {{ d.channel_list([('IG', 1, 'Instagram', '5,230 leads', 'Running'), ('FB', 2, 'Facebook', '5,490 leads', 'Running'), ('AD', 3, 'Google Ads', '790 leads', 'Paused'), ('YT', 4, 'YouTube', '2,763 leads', 'Paused'), ('IN', 5, 'LinkedIn', '5,039 leads', 'Paused')]) }}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Weekly sales') }}
+    {% call ui.card_content(class='flex flex-col gap-6') %}
+      <div class="flex items-center gap-3">{{ d.icon_tile('calendar-days', 'rounded-full') }}<div class="grid"><span class="flex items-center gap-2 text-2xl font-semibold tabular-nums">$96,850 {{ d.delta('-5%') }}</span><span class="text-sm text-muted-foreground">Last 7 days</span></div></div>
+      {{ d.chart('bar', weekly, [{'key': 'sales', 'label': 'Sales', 'color': 'var(--chart-1)'}], x='day', grid=false, class='aspect-auto h-[220px] w-full', label='Sales per day') }}
+    {% endcall %}
+  {% endcall %}
+
+  <div class="xl:col-span-2">
+    {{ d.campaigns_table([
+      ('app-window', 'Web app launch', '04 June 2026', 'Organic', ['AO', 'JK', 'LM'], 60),
+      ('gift', 'Loyalty rewards', '09 January 2026', 'Paid', ['BS', 'TG', 'EP'], 30),
+      ('megaphone', 'Digital marketing', '15 April 2026', 'Email', ['LG', 'OR', 'MA'], 45),
+      ('palette', 'Brand refresh', '30 March 2026', 'Social', ['EP', 'JK', 'AO'], 38),
+      ('paintbrush', 'Graphic design', '23 October 2026', 'Social', ['TG', 'LM'], 88),
+      ('megaphone', 'Spring promotion', '15 April 2026', 'Paid', ['OR', 'BS'], 45),
+      ('shield-check', 'Security webinar', '09 January 2026', 'Paid', ['MA', 'LG', 'JK'], 30),
+    ]) }}
+  </div>
+
+  {% call ui.card() %}
+    {{ d.card_head('Recent events', 'Today') }}
+    {% call ui.card_content() %}
+      {{ d.timeline([('08:15', 'New lead captured from the landing page form', 1), ('08:42', 'Deal ML-3467 moved to negotiation', 2), ('09:05', 'Client replied to the follow-up email', 3), ('09:18', 'Weekly digest email campaign sent', 4), ('09:32', 'Newsletter sign-up goal reached', 2), ('10:02', 'New contact added to the CRM', 1), ('10:15', 'Paid social campaign ML-3467 clicked', 5)]) }}
+    {% endcall %}
+  {% endcall %}
+</div>
+{% endcall %}
+{% endblock %}

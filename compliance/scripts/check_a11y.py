@@ -5,6 +5,9 @@ passes when it introduces no violation that upstream does not have: for every ru
 not exceed the golden count. Rules that only apply to a whole document (landmarks, headings, skip links)
 are disabled. Both lists are reported so upstream-origin findings stay visible.
 
+Charts are audited too (compliance/golden/out/charts/<name>.html against /basecoat/charts/<name>); our chart pages
+are audited once the runtime has drawn them.
+
 Usage: python compliance/scripts/check_a11y.py [name ...] [--json out.json] [--strict]
 --strict requires zero violations instead of parity with upstream.
 """
@@ -48,8 +51,9 @@ def main(argv):
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     base = f'http://127.0.0.1:{srv.server_port}'
     comps = sorted(p.stem for p in GOLDEN.glob('*.html'))
-    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html'))
-    targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks]
+    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html') if '.' not in p.stem)  # <name>.chart*.html are chart goldens
+    charts = sorted(p.stem for p in (GOLDEN / 'charts').glob('chart-*.html') if not p.name.endswith('.hover.html'))
+    targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks] + [('charts', c) for c in charts]
     if argv:
         targets = [t for t in targets if t[1] in argv]
     axe_src = AXE.read_text(encoding='utf8')
@@ -60,6 +64,11 @@ def main(argv):
 
         def audit(url, mode):
             page.goto(base + url, wait_until='load')
+            if url.startswith('/basecoat/'):
+                try:
+                    page.wait_for_function("""() => Array.from(document.querySelectorAll('[data-slot="chart"]')).every((c) => { const s = c.querySelector('svg.recharts-surface'); return s && s.getBoundingClientRect().width > 0; })""", timeout=5000)
+                except Exception:  # noqa: BLE001 - an undrawn chart is check_dom's finding
+                    pass
             # Freeze transitions so contrast is measured on final colours, not mid-animation.
             page.add_style_tag(content='*, *::before, *::after { transition: none !important; animation: none !important; }')
             page.evaluate(f"document.documentElement.classList.toggle('dark', {str(mode == 'dark').lower()})")
@@ -70,7 +79,7 @@ def main(argv):
         for kind, name in targets:
             entry = {'name': name, 'kind': kind, 'modes': {}}
             for mode in ('light', 'dark'):
-                gold = audit(f'/golden/{"blocks/" if kind == "blocks" else ""}{name}.html', mode)
+                gold = audit(f'/golden/{ {"blocks": "blocks/", "charts": "charts/"}.get(kind, "") }{name}.html', mode)
                 ours = audit(f'/basecoat/{kind}/{name}', mode)
                 gcount = Counter({v['id']: v['count'] for v in gold})
                 ocount = Counter({v['id']: v['count'] for v in ours})

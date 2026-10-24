@@ -47,6 +47,36 @@ whether it does.
    `{% from 'basecoat/_example.html' import example, example_wrapper %}`. A page reproduces the
    upstream example section by section, same titles, same elements, same order.
 
+## Charts
+
+The 70 charts and the `chart` example are golden pages taken in headless Chromium, not by ReactDOMServer
+(Recharts draws nothing without a layout pass); see `compliance/CHARTS-GOLDEN.md`. Goldens live in
+`compliance/golden/out/charts/<name>.html` (plus `<name>.hover.html` with the tooltip open) and the declarative
+specs in `compliance/recipes/charts/<name>.json`.
+
+Canonical widths, shared by the golden and our pages: at the 1280px viewport a regular chart renders inside
+`<div data-chart-frame="regular" style="width: 384px;">` (one column of the upstream 3-column charts grid) and a
+full-width chart (`chart-area-interactive`, `chart-bar-interactive`, `chart-line-interactive`) inside
+`<div data-chart-frame="full" style="width: 1232px;">`. Inside the frame comes the upstream ComponentPreview wrapper
+`<div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">`, then the card. Heights follow
+from `ChartContainer`'s `aspect-video` (or the chart's own class). Hover goldens are taken with the pointer at the
+point recorded in `out/charts/manifest.json`.
+
+### Our charts
+
+| What | Where |
+| --- | --- |
+| Spec format, function-source mapping, `<style>` helper | `flask_basecoat/charts.py` |
+| Macros `chart_from_spec(spec, id, class)` and `chart_style(chart_id, config)` | `flask_basecoat/templates/basecoat/_chart_spec.html` (exported by the barrel) |
+| Runtime (d3 port, layout, polar charts, named formatters, controller) | `flask_basecoat/static/js/src/components/chart-d3.js`, `chart-render.js`, `chart-surface.js`, `chart-polar.js`, `chart-format.js`, `chart.js` |
+| Shipped specs | `flask_basecoat/data/charts/<name>.json`, `chart-example-<n>.json` for the `chart` example, `dashboard-01-chart-area-interactive.json` for the dashboard-01 block (browser golden `out/blocks/dashboard-01.chart*.html`, 1096px card at 1440x900, see CHARTS-GOLDEN.md) |
+| Chart pages (a `card()` macro plus the width frame) | `flask_basecoat/templates/basecoat/pages/charts/<name>.html`, index at `/basecoat/charts/` |
+
+`python scripts/gen_chart_pages.py [name ...]` regenerates the specs from `compliance/recipes/charts/` and ports the
+cards from the goldens. Function-valued props are named formatters (`{"$fn": ...}`), listed in
+`compliance/recipes/charts/README.md`. `python compliance/scripts/chart_diff.py <name> [--hover]` prints the
+differences of one chart against its golden.
+
 ## Self-check before reporting done
 
 ```
@@ -54,7 +84,7 @@ python compliance/scripts/check_dom.py <name>        # DOM parity with the golde
 python compliance/scripts/check_recipes.py <name>    # every data-slot carries its recipe classes
 python compliance/scripts/check_styles.py <name>     # computed styles against the golden page (Chromium, light + dark)
 python compliance/scripts/check_a11y.py <name>       # axe: no findings beyond upstream's
-python compliance/scripts/check_runtime.py <name>    # no script errors; popups, tabs, toggles behave like Radix
+python compliance/scripts/check_runtime.py <name>    # no script errors; popups, tabs, toggles behave like Radix; charts: hover replay
 python -m pytest tests/test_shadcn_components.py -k <name> -q
 ```
 

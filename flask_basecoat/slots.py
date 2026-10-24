@@ -359,8 +359,16 @@ def classes_for(name, kw=None, extra=''):
         parts += arec.get('base_classes', '').split() + aclasses
         chosen = {**achosen, **chosen}
     parts += base + own
+    if name == 'toggle-group-item':
+        # Upstream: cn("cn-toggle-group-item ...", toggleVariants({variant, size}), className).
+        trec = recipe('toggle')
+        tclasses, tchosen = _cva(trec, kw, {'variant': 'default', 'size': 'default'})
+        parts += tclasses
+        chosen = {**tchosen, **chosen}
     merged = merge([' '.join(parts), extra or ''])
-    return merged.split(), chosen
+    seen = set()
+    unique = [c for c in merged.split() if not (c in seen or seen.add(c))]
+    return unique, chosen
 
 
 class Rendered:

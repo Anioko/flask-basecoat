@@ -1,0 +1,209 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% from 'examples/ported/_apps.html' import ph %}
+{% block title %}AI Chat · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set chats = [
+  ('1', 'Can you fly?', 'Not on my own! I exist o...'),
+  ('2', 'Do you have emotion...', "I can't feel emotions my..."),
+  ('3', 'Will robots take over t...', 'Science fiction is fun, b...'),
+  ('4', "What's the meaning o...", "That's a big question ph..."),
+  ('5', 'Can you write a song ...', 'I can definitely help you...'),
+  ('6', "What's the best way t...", "Unfortunately, there's n..."),
+  ('7', "What's your favorite c...", 'As a language model, I ...'),
+  ('8', 'Can you predict the f...', "I can't see the future, b..."),
+  ('9', "What's the best pizza ...", "That's entirely up to you..."),
+  ('10', 'Are you sentient?', 'Sentience is a complex ...'),
+  ('11', 'Can you solve this m...', 'Just type ou...'),
+] %}
+{% set suggestions = [
+  ("Don't worry, this update is quicker than your internet history deletion!", 'Tech Help'),
+  ('A majestic bird soars high above a crystal-clear glacial lake, its wings catching the sunlight.', 'Creative Writing'),
+  ('For Wallace the walrus, the perfect day starts with a leisurely swim in the icy Arctic waters', 'Storytelling'),
+  ('The best time to stretch is whenever your body feels tight or stiff!', 'Health & Wellness'),
+] %}
+
+{% macro user_message(text) -%}
+<div class="flex gap-4">
+  {% call ui.avatar() %}{{ ui.avatar_image(src=ph(32, 32)) }}{{ ui.avatar_fallback(text='JD') }}{% endcall %}
+  <div class="flex-1">
+    <div class="bg-muted rounded-lg p-4"><p>{{ text }}</p></div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro assistant_message(text) -%}
+<div class="flex gap-4">
+  {% call ui.avatar() %}{{ ui.avatar_fallback(text='AI', class='bg-primary text-primary-foreground') }}{% endcall %}
+  <div class="flex-1">
+    <div class="bg-muted rounded-lg border p-4">
+      <p class="mb-4">{{ text }}</p>
+      <div class="flex items-center gap-2">
+        {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Copy'}) %}{{ lucide('copy', 'h-4 w-4') }}{% endcall %}
+        {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Share'}) %}{{ lucide('share', 'h-4 w-4') }}{% endcall %}
+        <div class="ml-auto flex items-center gap-1">
+          {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Bad response'}) %}{{ lucide('thumbs-down', 'h-4 w-4') }}{% endcall %}
+          {% call ui.button(variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Good response'}) %}{{ lucide('thumbs-up', 'h-4 w-4') }}{% endcall %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+<div class="flex h-screen">
+  {# Sidebar #}
+  <div class="bg-muted flex w-80 flex-col border-r">
+    <div class="border-b p-4">
+      {% call ui.button(class='w-full', attrs={'data-ai-new': ''}) %}{{ lucide('plus') }}New Chat{% endcall %}
+    </div>
+
+    <div class="flex min-h-0 flex-col">
+      <div class="px-4 py-2">
+        <div class="mb-2 flex items-center justify-between">
+          <h3 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">Recent Chats</h3>
+          {{ lucide('search', 'h-4 w-4 text-muted-foreground') }}
+        </div>
+        <div class="relative">
+          {{ ui.input(id='ai-chat-search', placeholder='Search chats...', class='text-sm', attrs={'aria-label': 'Search chats'}) }}
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-hidden">
+        {% call ui.scroll_area(class='h-full') %}
+          {% call ui.scroll_area_viewport(class='size-full', attrs={'style': 'overflow-y:auto'}) %}
+            <div class="space-y-1 pb-4">
+              {% for id, title, preview in chats %}
+              {% call ui.button(variant='ghost', class='h-auto w-full justify-start p-3 text-left hover:bg-accent', attrs={'data-ai-chat': id, 'data-search': (title ~ ' ' ~ preview)|lower}) %}
+                <div class="flex w-full items-start gap-2">
+                  {{ lucide('message-circle', 'mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground') }}
+                  <div class="min-w-0 flex-1">
+                    <div class="truncate text-sm font-medium">{{ title }}</div>
+                    <div class="text-muted-foreground mt-0.5 truncate text-xs">{{ preview }}</div>
+                  </div>
+                </div>
+              {% endcall %}
+              {% endfor %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+
+    <div class="space-y-1 border border-t p-4">
+      {% call ui.button(variant='ghost', class='text-muted-foreground w-full justify-start gap-2') %}{{ lucide('settings', 'h-4 w-4') }}Settings{% endcall %}
+      {% call ui.button(variant='ghost', class='text-muted-foreground w-full justify-start gap-2') %}{{ lucide('circle-help', 'h-4 w-4') }}Help &amp; Support{% endcall %}
+    </div>
+  </div>
+
+  <div class="flex flex-1 flex-col">
+    {# Welcome screen (no chat selected) #}
+    <div class="mx-auto flex max-w-4xl flex-1 flex-col items-center justify-center p-8" id="ai-welcome">
+      <div class="mb-12 text-center">
+        <h1 class="mb-4 text-6xl font-bold">
+          <span class="bg-gradient-to-r from-destructive/70 via-destructive to-destructive bg-clip-text text-transparent">Welcome, John Doe</span>
+        </h1>
+        <p class="text-muted-foreground text-xl">May I be of assistance today?</p>
+      </div>
+      <div class="grid w-full max-w-4xl grid-cols-1 gap-4 md:grid-cols-2">
+        {% for title, category in suggestions %}
+        {% call ui.button(variant='outline', class='group h-auto border-border p-6 text-left hover:bg-accent/50', attrs={'data-ai-suggestion': category}) %}
+          <div class="flex w-full items-start justify-between">
+            <div class="flex-1 pr-4">
+              <p class="text-muted-foreground text-sm leading-relaxed text-wrap">{{ title }}</p>
+            </div>
+            {{ lucide('arrow-up-right', 'group-hover:text-primary text-muted-foreground h-4 w-4 flex-shrink-0') }}
+          </div>
+        {% endcall %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Conversation (a chat selected) #}
+    <div class="flex flex-1 flex-col" id="ai-conversation" hidden>
+      {% call ui.scroll_area(class='flex-1 p-6') %}
+        {% call ui.scroll_area_viewport(class='size-full', attrs={'style': 'overflow-y:auto'}) %}
+          <div class="mx-auto max-w-3xl space-y-6" id="ai-messages">
+            <div data-ai-thread="2" class="space-y-6">
+              {{ user_message('Do you have emotions?') }}
+              {{ assistant_message("I can't feel emotions myself, but I can understand and respond to yours! Tell me how you're feeling today.") }}
+            </div>
+            <div data-ai-thread="live" class="space-y-6"></div>
+            <div class="flex gap-4" id="ai-typing" hidden>
+              {% call ui.avatar(class='h-8 w-8') %}{{ ui.avatar_fallback(text='AI', class='bg-primary text-primary-foreground') }}{% endcall %}
+              <div class="flex-1">
+                <div class="bg-muted rounded-lg border p-4">
+                  <div class="flex items-center gap-2">
+                    <div class="bg-muted-foreground/40 h-2 w-2 animate-bounce rounded-full"></div>
+                    <div class="bg-muted-foreground/40 h-2 w-2 animate-bounce rounded-full" style="animation-delay: 0.1s"></div>
+                    <div class="bg-muted-foreground/40 h-2 w-2 animate-bounce rounded-full" style="animation-delay: 0.2s"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endcall %}
+      {% endcall %}
+
+      <div class="border-t p-6">
+        <div class="mx-auto max-w-3xl">
+          <form class="relative" id="ai-form">
+            <div class="bg-muted flex items-center gap-2 rounded-lg border p-2">
+              {% call ui.button(type='button', variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Attach file'}) %}{{ lucide('paperclip', 'h-4 w-4') }}{% endcall %}
+              {{ ui.input(id='ai-input', placeholder='Ask me anything...', class='flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0', attrs={'aria-label': 'Message', 'autocomplete': 'off'}) }}
+              {% call ui.button(type='button', variant='ghost', size='sm', class='h-8 w-8 p-0', attrs={'aria-label': 'Voice input'}) %}{{ lucide('mic', 'h-4 w-4') }}{% endcall %}
+              {% call ui.button(type='submit', size='sm', disabled=true, id='ai-send', class='h-8 w-8 p-0', attrs={'aria-label': 'Send'}) %}{{ lucide('send', 'h-4 w-4') }}{% endcall %}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<template id="ai-user-template">{{ user_message('') }}</template>
+<script>
+  (function () {
+    var welcome = document.getElementById('ai-welcome');
+    var conversation = document.getElementById('ai-conversation');
+    var input = document.getElementById('ai-input');
+    var send = document.getElementById('ai-send');
+    var live = document.querySelector('[data-ai-thread="live"]');
+    var stored = document.querySelector('[data-ai-thread="2"]');
+
+    function show(chatId) {
+      document.querySelectorAll('[data-ai-chat]').forEach(function (b) { b.classList.toggle('bg-accent', b.getAttribute('data-ai-chat') === chatId); });
+      welcome.hidden = !!chatId;
+      conversation.hidden = !chatId;
+      stored.hidden = chatId !== '2';
+      live.replaceChildren();
+      if (chatId) input.focus();
+    }
+    document.querySelectorAll('[data-ai-chat]').forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-ai-chat')); });
+    });
+    document.querySelectorAll('[data-ai-suggestion]').forEach(function (b) {
+      b.addEventListener('click', function () { show('new'); });
+    });
+    document.querySelector('[data-ai-new]').addEventListener('click', function () { show(null); });
+    document.getElementById('ai-chat-search').addEventListener('input', function (e) {
+      var q = e.target.value.toLowerCase();
+      document.querySelectorAll('[data-ai-chat]').forEach(function (b) { b.hidden = b.getAttribute('data-search').indexOf(q) === -1; });
+    });
+    input.addEventListener('input', function () { send.disabled = !input.value.trim(); });
+    document.getElementById('ai-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var text = input.value.trim();
+      if (!text) return;
+      var node = document.getElementById('ai-user-template').content.firstElementChild.cloneNode(true);
+      node.querySelector('p').textContent = text;
+      live.appendChild(node);
+      input.value = '';
+      send.disabled = true;
+      var typing = document.getElementById('ai-typing');
+      typing.hidden = false;
+      setTimeout(function () { typing.hidden = true; }, 1200);
+    });
+  })();
+</script>
+{% endblock %}

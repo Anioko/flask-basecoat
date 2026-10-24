@@ -1,0 +1,125 @@
+{
+  "name": "chart-bar-negative",
+  "group": "bar",
+  "fullWidth": false,
+  "description": "A bar chart with negative values",
+  "card": {
+    "title": "Bar Chart - Negative",
+    "description": "January - June 2024",
+    "headerClassName": null,
+    "contentClassName": null,
+    "footerClassName": "flex-col items-start gap-2 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex gap-2 leading-none font-medium"
+      },
+      {
+        "text": "Showing total visitors for the last 6 months",
+        "icons": [],
+        "className": "leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "bar",
+    "component": "BarChart",
+    "container": {
+      "id": null,
+      "className": null
+    },
+    "config": {
+      "visitors": {
+        "label": "Visitors"
+      }
+    },
+    "data": [
+      {
+        "month": "January",
+        "visitors": 186
+      },
+      {
+        "month": "February",
+        "visitors": 205
+      },
+      {
+        "month": "March",
+        "visitors": -207
+      },
+      {
+        "month": "April",
+        "visitors": 173
+      },
+      {
+        "month": "May",
+        "visitors": -209
+      },
+      {
+        "month": "June",
+        "visitors": 214
+      }
+    ],
+    "props": {
+      "accessibilityLayer": true
+    },
+    "series": [
+      {
+        "component": "Bar",
+        "dataKey": "visitors",
+        "labelList": [
+          {
+            "position": "top",
+            "dataKey": "month",
+            "fillOpacity": 1
+          }
+        ],
+        "cells": [
+          {
+            "fill": "var(--chart-1)"
+          },
+          {
+            "fill": "var(--chart-1)"
+          },
+          {
+            "fill": "var(--chart-2)"
+          },
+          {
+            "fill": "var(--chart-1)"
+          },
+          {
+            "fill": "var(--chart-2)"
+          },
+          {
+            "fill": "var(--chart-1)"
+          }
+        ]
+      }
+    ],
+    "axes": [],
+    "grid": {
+      "component": "CartesianGrid",
+      "vertical": false
+    },
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent",
+      "hideLabel": true,
+      "hideIndicator": true
+    },
+    "legend": null,
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [],
+  "unresolved": [],
+  "resolvedByHand": [
+    {
+      "path": "chart.series[0].children[1]",
+      "source": "chartData.map((item) => ( <Cell key={item.month} fill={item.visitors > 0 ? \"var(--chart-1)\" : \"var(--chart-2)\"} /> ))",
+      "resolution": "one Cell per row: var(--chart-1) for positive visitors, var(--chart-2) otherwise (series[0].cells)"
+    }
+  ]
+}

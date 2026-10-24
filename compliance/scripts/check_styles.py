@@ -5,6 +5,12 @@ data-slot element (paired in document order, like check_dom) a fixed list of com
 and compared. Differences mean the stylesheet pipeline, the class set or the DOM diverge from upstream.
 Closed floating content is skipped (it is not in the upstream static markup).
 
+Chart pages (compliance/golden/out/charts/<name>.html against /basecoat/charts/<name>, and the `chart` component
+example) are browser renders on the golden side, so our side is loaded with its runtime and read once the charts
+are drawn. Besides the data-slot elements, every element inside each .recharts-wrapper (the SVG, the tooltip and
+the legend) is paired in document order and its computed paint (fill, stroke, opacity, font, colour) and its box
+relative to the wrapper are compared, light and dark.
+
 Usage: python compliance/scripts/check_styles.py [name ...] [--json out.json] [--width 1280] [--props all]
 """
 import json
@@ -28,6 +34,29 @@ PROPS = [
 ]
 # Properties that legitimately depend on text metrics or layout width and are compared with tolerance.
 NUMERIC_TOLERANCE_PX = 1.0
+
+CHART_PROPS = ['display', 'visibility', 'fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray',
+               'opacity', 'color', 'background-color', 'border-top-color', 'border-top-width', 'border-top-style', 'font-size',
+               'font-weight', 'font-family', 'text-anchor', 'dominant-baseline', 'mix-blend-mode', 'text-transform']
+CHART_SCRIPT = """
+(props) => {
+  const out = [];
+  document.querySelectorAll('.recharts-wrapper').forEach((w, wi) => {
+    const wr = w.getBoundingClientRect();
+    [w, ...w.querySelectorAll('*')].forEach((el) => {
+      if (el.matches('style, script')) return;
+      const cs = getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      const rec = { wrapper: wi, tag: el.tagName.toLowerCase(), cls: el.getAttribute('class') || '',
+                    box: [r.left - wr.left, r.top - wr.top, r.width, r.height] };
+      props.forEach((p) => { rec[p] = cs.getPropertyValue(p); });
+      out.push(rec);
+    });
+  });
+  return out;
+}
+"""
+READY = """() => Array.from(document.querySelectorAll('[data-slot="chart"]')).every((c) => { const s = c.querySelector('svg.recharts-surface'); return s && s.getBoundingClientRect().width > 0; })"""
 
 SCRIPT = """
 (props) => {
@@ -116,6 +145,37 @@ def compare(g, o):
     return diffs
 
 
+def has_drawn_chart(text):
+    from chart_compare import has_drawn_chart as drawn
+    return drawn(text)
+
+
+def compare_chart(g, o):
+    """Paint and box of one element inside a chart wrapper."""
+    diffs = []
+    if g['tag'] != o['tag'] or set(g['cls'].split()) != set(o['cls'].split()):
+        return [f"element golden <{g['tag']} class=\"{g['cls']}\"> ours <{o['tag']} class=\"{o['cls']}\">"]
+    for p in CHART_PROPS:
+        a, b = g.get(p, ''), o.get(p, '')
+        if a == b:
+            continue
+        na, nb = px(a), px(b)
+        if na is not None and nb is not None and abs(na - nb) <= NUMERIC_TOLERANCE_PX:
+            continue
+        if numbers_close(a, b, 0.002 if 'color' in p or p in ('fill', 'stroke') else NUMERIC_TOLERANCE_PX):
+            continue
+        if p == 'font-family' and a.split(',')[0].strip() == b.split(',')[0].strip():
+            continue
+        diffs.append(f'{p}: golden={a!r} ours={b!r}')
+    if any(abs(x - y) > NUMERIC_TOLERANCE_PX for x, y in zip(g['box'], o['box'])):
+        diffs.append(f"box: golden={[round(v, 2) for v in g['box']]} ours={[round(v, 2) for v in o['box']]}")
+    return diffs
+
+
+def golden_url(kind, name):
+    return f'/golden/{ {"blocks": "blocks/", "charts": "charts/"}.get(kind, "") }{name}.html'
+
+
 def run(targets, width, out_json):
     from playwright.sync_api import sync_playwright
     server = Server()
@@ -128,20 +188,29 @@ def run(targets, width, out_json):
         ctx = browser.new_context(viewport={'width': width, 'height': 900}, device_scale_factor=1)
         page = ctx.new_page()
         page.route(lambda url: 'flask-basecoat.js' in url, lambda route: route.abort())
+        # Chart goldens are browser renders: our chart pages are read with their runtime, on a second page.
+        chart_page = ctx.new_page()
         for kind, name in targets:
-            gpath = f'/golden/{"blocks/" if kind == "blocks" else ""}{name}.html'
+            gpath = golden_url(kind, name)
             opath = f'/basecoat/{kind}/{name}'
+            charted = kind == 'charts' or has_drawn_chart((GOLDEN / gpath[len('/golden/'):]).read_text(encoding='utf8'))
             entry = {'name': name, 'kind': kind, 'modes': {}}
             for mode in ('light', 'dark'):
-                def grab(url):
-                    page.goto(base + url, wait_until='load')
+                def grab(url, ours_side):
+                    pg = chart_page if (charted and ours_side) else page
+                    pg.goto(base + url, wait_until='load')
+                    if charted and ours_side:
+                        try:
+                            pg.wait_for_function(READY, timeout=5000)
+                        except Exception:  # noqa: BLE001 - an undrawn chart shows up as an element mismatch
+                            pass
                     # Freeze transitions and animations so colours are sampled at their final values.
-                    page.add_style_tag(content='*, *::before, *::after { transition: none !important; animation: none !important; }')
-                    page.evaluate(f"document.documentElement.classList.toggle('dark', {str(mode == 'dark').lower()})")
-                    page.wait_for_timeout(100)
-                    return page.evaluate(SCRIPT, PROPS)
-                gold = grab(gpath)
-                ours = grab(opath)
+                    pg.add_style_tag(content='*, *::before, *::after { transition: none !important; animation: none !important; }')
+                    pg.evaluate(f"document.documentElement.classList.toggle('dark', {str(mode == 'dark').lower()})")
+                    pg.wait_for_timeout(100)
+                    return pg.evaluate(SCRIPT, PROPS), (pg.evaluate(CHART_SCRIPT, CHART_PROPS) if charted else [])
+                gold, gold_chart = grab(gpath, False)
+                ours, ours_chart = grab(opath, True)
                 problems = []
                 n = max(len(gold), len(ours))
                 for i in range(n):
@@ -153,7 +222,16 @@ def run(targets, width, out_json):
                     d = compare(g, o)
                     if d:
                         problems.append(f'#{i} {g["slot"]}: ' + '; '.join(d[:4]))
-                entry['modes'][mode] = {'elements': len(gold), 'problems': problems}
+                if charted:
+                    if len(gold_chart) != len(ours_chart):
+                        problems.append(f'chart: golden has {len(gold_chart)} elements in its chart wrappers, ours {len(ours_chart)}')
+                    for i, (g, o) in enumerate(zip(gold_chart, ours_chart)):
+                        d = compare_chart(g, o)
+                        if d:
+                            problems.append(f"chart[{g['wrapper']}] #{i} <{g['tag']}>: " + '; '.join(d[:4]))
+                            if d[0].startswith('element '):
+                                break
+                entry['modes'][mode] = {'elements': len(gold) + len(gold_chart), 'problems': problems}
             entry['status'] = 'pass' if not any(m['problems'] for m in entry['modes'].values()) else 'fail'
             results.append(entry)
             mark = 'PASS' if entry['status'] == 'pass' else 'FAIL'
@@ -177,8 +255,9 @@ def main(argv):
     if '--width' in argv:
         i = argv.index('--width'); width = int(argv[i + 1]); argv = argv[:i] + argv[i + 2:]
     comps = sorted(p.stem for p in GOLDEN.glob('*.html'))
-    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html'))
-    targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks]
+    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html') if '.' not in p.stem)  # <name>.chart*.html are chart goldens
+    charts = sorted(p.stem for p in (GOLDEN / 'charts').glob('chart-*.html') if not p.name.endswith('.hover.html'))
+    targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks] + [('charts', c) for c in charts]
     if argv:
         targets = [t for t in targets if t[1] in argv]
     return run(targets, width, out_json)

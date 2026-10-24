@@ -1,0 +1,236 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Product List{% endblock %}
+{% set categories = [('all', 'All'), ('phones', 'Phones'), ('headsets', 'Headsets'), ('laptops', 'Laptops'), ('tv', 'TV sets'), ('sound', 'Sound'), ('watches', 'Watches'), ('others', 'Others'), ('internet', 'Internet')] %}
+{% set brands = [('apple', 'Apple'), ('samsung', 'Samsung'), ('huawei', 'Huawei'), ('microsoft', 'Microsoft'), ('sony', 'Sony'), ('bose', 'Bose'), ('dell', 'Dell'), ('lg', 'LG'), ('jbl', 'JBL'), ('philips', 'Philips'), ('tp-link', 'TP-Link')] %}
+{% set colors = [('red', 'Red', 'bg-destructive'), ('orange', 'Orange', 'bg-chart-1'), ('blue', 'Blue', 'bg-chart-2'), ('black', 'Black', 'bg-foreground'), ('white', 'White', 'bg-background border'), ('purple', 'Purple', 'bg-chart-3'), ('gray', 'Gray', 'bg-muted-foreground')] %}
+{% set products = [
+  {'id': 1, 'title': 'iPhone 14 Pro Max 256GB Space Black', 'price': 999.0, 'originalPrice': 1299.0, 'discount': 23, 'rating': 4.8, 'orders': 234, 'seller': 'Apple Store Official', 'isNew': true, 'category': 'phones', 'brand': 'apple', 'colors': ['black', 'white'], 'deliveryDays': 1},
+  {'id': 2, 'title': 'Samsung Galaxy S23 Ultra 512GB', 'price': 899.0, 'originalPrice': 1199.0, 'discount': 25, 'rating': 4.7, 'orders': 189, 'seller': 'Samsung Official', 'isNew': true, 'category': 'phones', 'brand': 'samsung', 'colors': ['black', 'purple'], 'deliveryDays': 2},
+  {'id': 3, 'title': 'Huawei P50 Pro 128GB Golden', 'price': 699.0, 'originalPrice': 899.0, 'discount': 22, 'rating': 4.5, 'orders': 154, 'seller': 'Huawei Technology Ltd', 'isNew': false, 'category': 'phones', 'brand': 'huawei', 'colors': ['orange', 'black'], 'deliveryDays': 3},
+  {'id': 4, 'title': 'Sony WH-1000XM5 Wireless Headphones', 'price': 299.0, 'originalPrice': 399.0, 'discount': 25, 'rating': 4.9, 'orders': 456, 'seller': 'Sony Electronics', 'isNew': true, 'category': 'headsets', 'brand': 'sony', 'colors': ['black', 'white'], 'deliveryDays': 1},
+  {'id': 5, 'title': 'Bose QuietComfort 45 Headphones', 'price': 249.0, 'rating': 4.6, 'orders': 321, 'seller': 'Bose Official Store', 'isNew': false, 'category': 'headsets', 'brand': 'bose', 'colors': ['black', 'white'], 'deliveryDays': 2},
+  {'id': 6, 'title': 'MacBook Pro 16-inch M2 Pro', 'price': 2199.0, 'originalPrice': 2499.0, 'discount': 12, 'rating': 4.8, 'orders': 89, 'seller': 'Apple Store Official', 'isNew': true, 'category': 'laptops', 'brand': 'apple', 'colors': ['gray', 'white'], 'deliveryDays': 3},
+  {'id': 7, 'title': 'Dell XPS 13 Plus Intel i7', 'price': 1299.0, 'originalPrice': 1599.0, 'discount': 19, 'rating': 4.4, 'orders': 167, 'seller': 'Dell Technologies', 'isNew': false, 'category': 'laptops', 'brand': 'dell', 'colors': ['gray', 'black'], 'deliveryDays': 5},
+  {'id': 8, 'title': 'Microsoft Surface Laptop 5', 'price': 999.0, 'rating': 4.3, 'orders': 134, 'seller': 'Microsoft Store', 'isNew': false, 'category': 'laptops', 'brand': 'microsoft', 'colors': ['blue', 'gray'], 'deliveryDays': 4},
+  {'id': 9, 'title': 'Samsung 65-inch QLED 4K Smart TV', 'price': 1499.0, 'originalPrice': 1899.0, 'discount': 21, 'rating': 4.6, 'orders': 78, 'seller': 'Samsung Electronics', 'isNew': true, 'category': 'tv', 'brand': 'samsung', 'colors': ['black'], 'deliveryDays': 7},
+  {'id': 10, 'title': 'LG OLED 55-inch C3 Series', 'price': 1299.0, 'originalPrice': 1699.0, 'discount': 24, 'rating': 4.7, 'orders': 92, 'seller': 'LG Electronics', 'isNew': true, 'category': 'tv', 'brand': 'lg', 'colors': ['black'], 'deliveryDays': 6},
+  {'id': 11, 'title': 'JBL Charge 5 Portable Speaker', 'price': 149.0, 'originalPrice': 199.0, 'discount': 25, 'rating': 4.5, 'orders': 267, 'seller': 'JBL Official', 'isNew': false, 'category': 'sound', 'brand': 'jbl', 'colors': ['blue', 'red', 'black'], 'deliveryDays': 2},
+  {'id': 12, 'title': 'Apple Watch Series 9 GPS 45mm', 'price': 399.0, 'originalPrice': 449.0, 'discount': 11, 'rating': 4.8, 'orders': 345, 'seller': 'Apple Store Official', 'isNew': true, 'category': 'watches', 'brand': 'apple', 'colors': ['black', 'white', 'red'], 'deliveryDays': 1},
+] %}
+
+{% macro radio_row(group, value, label, checked, label_class='text-sm font-normal') -%}
+<div class="flex items-center space-x-2">
+  {% if checked %}{% call ui.radio_group_item(value=value, id=group ~ '-' ~ value, checked=true) %}{% call ui.radio_group_indicator(checked=true) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}{% else %}{{ ui.radio_group_item(value=value, id=group ~ '-' ~ value, checked=false) }}{% endif %}
+  {{ ui.label(text=label, for_=group ~ '-' ~ value, class=label_class) }}
+</div>
+{%- endmacro %}
+
+{#- The filter column; rendered in the sidebar and again in the mobile sheet, so ids carry a prefix. -#}
+{% macro filter_section(p) -%}
+<div class="space-y-6" data-filters>
+  <div>
+    <h3 class="mb-3 font-semibold">Related categories</h3>
+    {% call ui.radio_group(attrs={'data-filter': 'category'}) %}
+      <div class="space-y-2 text-sm">
+        {% for id, label in categories %}{{ radio_row(p ~ 'category', id, label, id == 'all', 'cursor-pointer text-sm font-normal') }}{% endfor %}
+      </div>
+    {% endcall %}
+  </div>
+  {{ ui.separator() }}
+  <div>
+    <h3 class="mb-3 font-semibold">Brands</h3>
+    <div class="max-h-48 space-y-3 overflow-y-auto">
+      {% for id, label in brands %}
+      <div class="flex items-center space-x-2">
+        {{ ui.checkbox(id=p ~ 'brand-' ~ id, checked=false, attrs={'data-filter': 'brand', 'data-value': id}) }}
+        {{ ui.label(text=label, for_=p ~ 'brand-' ~ id, class='cursor-pointer text-sm font-normal') }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ ui.separator() }}
+  <div>
+    <h3 class="mb-3 font-semibold">Colors</h3>
+    <div class="grid grid-cols-1 gap-2">
+      {% for id, label, swatch in colors %}
+      <div class="flex items-center space-x-2">
+        {{ ui.checkbox(id=p ~ 'color-' ~ id, checked=false, attrs={'data-filter': 'color', 'data-value': id}) }}
+        <div class="h-4 w-4 rounded {{ swatch }}"></div>
+        {{ ui.label(text=label, for_=p ~ 'color-' ~ id, class='cursor-pointer text-sm font-normal') }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {{ ui.separator() }}
+  <div>
+    <h3 class="mb-3 font-semibold">Delivery date</h3>
+    {% call ui.radio_group(attrs={'data-filter': 'delivery'}) %}
+      {% for id, label in [('any', 'Any day'), ('today', 'Today'), ('tomorrow', 'Tomorrow'), ('week', 'Within 7 days')] %}{{ radio_row(p ~ 'delivery', id, label, id == 'any') }}{% endfor %}
+    {% endcall %}
+  </div>
+  {{ ui.separator() }}
+  <div>
+    <h3 class="mb-3 font-semibold">Price</h3>
+    <div class="space-y-4">
+      {% call ui.slider(class='w-full', attrs={'data-step': 10, 'data-filter': 'price', 'aria-label': 'Price'}) %}
+        {% call ui.slider_track() %}{{ ui.slider_range() }}{% endcall %}
+        {{ ui.slider_thumb(min=0, max=3000, value=0) }}{{ ui.slider_thumb(min=0, max=3000, value=3000) }}
+      {% endcall %}
+      <div class="flex items-center space-x-2">
+        <div class="flex-1">
+          {{ ui.label(text='From', for_=p ~ 'price-from', class='text-muted-foreground text-xs') }}
+          {{ ui.input(id=p ~ 'price-from', type='number', value=0, class='h-8', attrs={'data-filter': 'price-from'}) }}
+        </div>
+        <div class="flex-1">
+          {{ ui.label(text='To', for_=p ~ 'price-to', class='text-muted-foreground text-xs') }}
+          {{ ui.input(id=p ~ 'price-to', type='number', value=3000, class='h-8', attrs={'data-filter': 'price-to'}) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro view_toggle(size='default') -%}
+{% call ui.toggle_group(type='single', attrs={'data-view-toggle': ''}) %}
+  {% call ui.toggle_group_item(size=size, pressed=true, attrs={'data-value': 'grid', 'aria-label': 'Grid view'}) %}{{ lucide('grid-3-x-3', 'h-4 w-4') }}{% endcall %}
+  {% call ui.toggle_group_item(size=size, pressed=false, attrs={'data-value': 'list', 'aria-label': 'List view'}) %}{{ lucide('list', 'h-4 w-4') }}{% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% block body %}
+<div class="px-4 py-4 sm:py-6">
+  <div class="flex flex-col gap-6 lg:flex-row">
+    <aside class="hidden w-64 lg:block">{{ filter_section('') }}</aside>
+
+    <main class="flex-1">
+      <div class="mb-4 flex flex-col gap-4 sm:mb-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            {% call ui.sheet() %}
+              {% call ui.sheet_trigger(variant='outline', size='sm', class='bg-transparent lg:hidden') %}{{ lucide('filter', 'mr-2 h-4 w-4') }}Filters{% endcall %}
+              {{ ui.sheet_overlay() }}
+              {% call ui.sheet_content(side='left', class='w-80 sm:w-96') %}
+                {% call ui.sheet_header() %}{{ ui.sheet_title(text='Filters') }}{% endcall %}
+                {% call ui.scroll_area(class='h-full pr-4', attrs={'style': 'position:relative;--radix-scroll-area-corner-width:0px;--radix-scroll-area-corner-height:0px'}) %}
+                  {% call ui.scroll_area_viewport(class='h-full', attrs={'style': 'overflow-x:hidden;overflow-y:auto'}) %}
+                    <div class="px-4 py-4">{{ filter_section('m-') }}</div>
+                  {% endcall %}
+                {% endcall %}
+                {% call ui.sheet_close(variant='ghost', size='icon-sm', class='cn-sheet-close') %}{{ lucide('x') }}<span class="sr-only">Close</span>{% endcall %}
+              {% endcall %}
+            {% endcall %}
+            <div class="text-muted-foreground flex items-center gap-2 text-sm"><span id="product-count">{{ products | length }}</span> products</div>
+          </div>
+          <div class="hidden sm:block">{{ view_toggle() }}</div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative flex-1 sm:flex-initial">
+            {{ lucide('search', 'text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform') }}
+            {{ ui.input(id='product-search', placeholder='Search products...', class='w-full pl-10 sm:w-64', attrs={'aria-label': 'Search products'}) }}
+          </div>
+          <div class="sm:hidden">{{ view_toggle('sm') }}</div>
+        </div>
+      </div>
+
+      <div class="py-12 text-center hidden" id="products-empty">
+        <p class="text-muted-foreground text-lg">No products found matching your filters.</p>
+        <p class="text-muted-foreground mt-2 text-sm">Try adjusting your search criteria.</p>
+      </div>
+      <div class="grid gap-4 sm:gap-6 xs:grid-cols-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4" id="products-grid">
+        {% for p in products %}
+        {% call ui.card(class='group transition-shadow hover:shadow-lg', attrs={'data-product': '', 'data-category': p.category, 'data-brand': p.brand, 'data-colors': p.colors | join(' '), 'data-price': p.price, 'data-delivery': p.deliveryDays, 'data-search': (p.title ~ ' ' ~ p.brand ~ ' ' ~ p.seller) | lower}) %}
+          {% call ui.card_content(class='p-3 sm:p-4') %}
+            <div class="relative mb-3 sm:mb-4">
+              <img src="{{ c.placeholder(600, 400) }}" alt="{{ p.title }}" class="h-40 w-full rounded-md object-cover sm:h-48">
+              {% if p.isNew %}{{ ui.badge(text='New', class='absolute top-2 left-2 bg-destructive text-white text-xs hover:bg-destructive/90') }}{% endif %}
+              {% call ui.button(variant='ghost', size='icon', class='absolute top-2 right-2 h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100', attrs={'aria-label': 'Add to wishlist'}) %}{{ lucide('heart', 'h-4 w-4') }}{% endcall %}
+            </div>
+            <div class="space-y-2">
+              <h3 class="line-clamp-2 text-sm leading-tight font-medium">{{ p.title }}</h3>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-base font-bold text-primary sm:text-lg">{{ c.money(p.price) }}</span>
+                {% if p.originalPrice %}
+                <span class="text-muted-foreground text-xs line-through sm:text-sm">{{ c.money(p.originalPrice) }}</span>
+                {{ ui.badge(text='-' ~ p.discount ~ '%', variant='destructive', class='text-xs') }}
+                {% endif %}
+              </div>
+              <div class="flex items-center gap-1">
+                <div class="flex items-center">{{ c.stars(p.rating | int, 'h-3 w-3', 'fill-primary text-primary', 'text-muted-foreground/40') }}</div>
+                <span class="text-muted-foreground text-xs">{{ p.rating }}</span>
+              </div>
+              <p class="text-muted-foreground text-xs">{{ p.orders }} orders this week</p>
+              <p class="text-muted-foreground text-xs">Seller: {{ p.seller }}</p>
+              <div class="text-muted-foreground text-xs">Delivery: {{ 'Today' if p.deliveryDays == 0 else ('Tomorrow' if p.deliveryDays == 1 else p.deliveryDays ~ ' days') }}</div>
+              <div class="flex gap-2 pt-2">
+                {% call ui.button(size='sm', class='flex-1') %}{{ lucide('shopping-cart', 'mr-1 h-4 w-4 sm:mr-2') }}<span class="xs:inline hidden">Add to cart</span><span class="xs:hidden">Add</span>{% endcall %}
+                {% call ui.button(variant='outline', size='sm', class='bg-transparent px-2 sm:px-3', attrs={'aria-label': 'Add to wishlist'}) %}{{ lucide('heart', 'h-4 w-4') }}{% endcall %}
+              </div>
+            </div>
+          {% endcall %}
+        {% endcall %}
+        {% endfor %}
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  (function () {
+    var state = { category: 'all', delivery: 'any', brands: [], colors: [], min: 0, max: 3000, search: '' };
+    var grid = document.getElementById('products-grid');
+    var gridClasses = 'xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4'.split(' ');
+    function apply() {
+      var maxDays = { today: 0, tomorrow: 1, week: 7 }[state.delivery];
+      var shown = 0;
+      grid.querySelectorAll('[data-product]').forEach(function (card) {
+        var d = card.dataset;
+        var ok = (state.category === 'all' || d.category === state.category)
+          && (!state.search || d.search.indexOf(state.search) !== -1)
+          && Number(d.price) >= state.min && Number(d.price) <= state.max
+          && (!state.brands.length || state.brands.indexOf(d.brand) !== -1)
+          && (!state.colors.length || d.colors.split(' ').some(function (c) { return state.colors.indexOf(c) !== -1; }))
+          && (maxDays === undefined || Number(d.delivery) <= maxDays);
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+      document.getElementById('product-count').textContent = shown;
+      document.getElementById('products-empty').classList.toggle('hidden', shown > 0);
+      grid.classList.toggle('hidden', shown === 0);
+    }
+    function toggle(list, value, on) {
+      var i = list.indexOf(value);
+      if (on && i === -1) list.push(value);
+      if (!on && i !== -1) list.splice(i, 1);
+    }
+    document.addEventListener('basecoat:change', function (e) {
+      var el = e.target.closest('[data-filter], [data-view-toggle]');
+      if (!el) return;
+      if (el.hasAttribute('data-view-toggle')) {
+        var list = e.detail.value.indexOf('list') !== -1;
+        gridClasses.forEach(function (k) { grid.classList.toggle(k, !list); });
+        return;
+      }
+      var kind = el.getAttribute('data-filter');
+      if (kind === 'category' || kind === 'delivery') state[kind] = e.detail.value;
+      else if (kind === 'brand') toggle(state.brands, el.dataset.value, e.detail.checked);
+      else if (kind === 'color') toggle(state.colors, el.dataset.value, e.detail.checked);
+      else if (kind === 'price') {
+        state.min = e.detail.value[0]; state.max = e.detail.value[1];
+        document.querySelectorAll('[data-filter="price-from"]').forEach(function (i) { i.value = state.min; });
+        document.querySelectorAll('[data-filter="price-to"]').forEach(function (i) { i.value = state.max; });
+      }
+      apply();
+    });
+    document.addEventListener('input', function (e) {
+      var kind = e.target.getAttribute('data-filter');
+      if (kind === 'price-from') state.min = parseInt(e.target.value, 10) || 0;
+      else if (kind === 'price-to') state.max = parseInt(e.target.value, 10) || 3000;
+      else if (e.target.id === 'product-search') state.search = e.target.value.trim().toLowerCase();
+      else return;
+      apply();
+    });
+  })();
+</script>
+{% endblock %}

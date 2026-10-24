@@ -1,0 +1,116 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Task Detail{% endblock %}
+{% set attachments = [('1248371294812.pdf', '20 MB'), ('guideline fix_2024.pdf', '101 MB'), ('21412981364.pdf', '82 MB')] %}
+{% set checklist = [('Update Safety Protocols', true), ('Develop Clear Emergency Procedures', true), ('Create Employee Training Modules', true), ('Include Visuals and Checklists', false)] %}
+
+{% block body %}
+<div class="min-h-screen bg-background p-6">
+  <div class="mx-auto max-w-4xl space-y-6">
+    <div class="flex items-start justify-between">
+      <div class="space-y-1">
+        <h1 class="text-2xl font-semibold text-foreground">Workplace Safety Guide 2024</h1>
+        <div class="flex items-center gap-2">{{ ui.badge(text='To-Do', variant='secondary', class='border-destructive/20 bg-destructive/10 text-destructive') }}</div>
+      </div>
+      {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'More actions'}) %}{{ lucide('ellipsis', 'h-4 w-4') }}{% endcall %}
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <h3 class="text-sm font-medium text-muted-foreground">Assignee:</h3>
+          <div class="flex items-center gap-3">
+            {% for initials, name in [('RS', 'Raden Sam Pitak'), ('JK', 'James Kokoklomel')] %}
+            <div class="flex items-center gap-2 rounded-lg border bg-card px-3 py-2">
+              {% call ui.avatar(class='h-6 w-6') %}{{ ui.avatar_fallback(text=initials) }}{% endcall %}
+              <span class="text-sm font-medium">{{ name }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-sm font-medium text-muted-foreground">Date</h3>
+          <div class="flex w-fit items-center gap-2 rounded-lg border bg-card px-3 py-2">{{ lucide('calendar-days', 'h-4 w-4 text-muted-foreground') }}<span class="text-sm">May 18, 2024 - May 26, 2024</span></div>
+        </div>
+        <div class="space-y-3">
+          <h3 class="text-sm font-medium text-muted-foreground">Priority</h3>
+          {{ ui.badge(text='Low', variant='secondary', class='w-fit border-primary/20 bg-primary/10 text-primary') }}
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-sm font-medium text-muted-foreground">Attachment</h3>
+        <div class="grid gap-3">
+          {% for name, size in attachments %}
+          {% call ui.card(class='p-4') %}
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="rounded-lg bg-destructive/10 p-2">{{ lucide('file-text', 'h-4 w-4 text-destructive') }}</div>
+                <div><p class="text-sm font-medium">{{ name }}</p><p class="text-xs text-muted-foreground">{{ size }}</p></div>
+              </div>
+              <div class="flex items-center gap-2">
+                {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Preview ' ~ name}) %}{{ lucide('eye', 'h-4 w-4') }}{% endcall %}
+                {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Download ' ~ name}) %}{{ lucide('download', 'h-4 w-4') }}{% endcall %}
+              </div>
+            </div>
+          {% endcall %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <h3 class="text-sm font-medium text-muted-foreground">Description</h3>
+      {% call ui.card(class='p-4') %}
+        <div class="border-l-4 border-primary pl-4">
+          <p class="text-sm leading-relaxed text-foreground">Create a comprehensive safety guide for the workplace, focusing on updated safety protocols, regulations, and best practices for 2024. The guide should cover essential topics such as emergency procedures, hazard identification, employee training, and equipment safety. Ensure the content is clear, practical, and accessible to all employees. Include visual aids, checklists, and real-life examples to enhance understanding and compliance.</p>
+        </div>
+      {% endcall %}
+    </div>
+
+    <div class="space-y-4">
+      <div class="flex items-center gap-2"><span class="text-lg">🚀</span><h2 class="text-lg font-semibold">Phase 1</h2></div>
+      {% call ui.card(class='p-4') %}
+        <div class="border-l-4 border-primary pl-4">
+          <p class="text-sm text-muted-foreground">The guide should be aligned with current industry standards and legal requirements, promoting a safe and healthy work environment for everyone.</p>
+        </div>
+      {% endcall %}
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2"><span class="text-primary">✅</span><h3 class="font-medium">Task - Phase 1</h3></div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-muted-foreground" data-done-count>3/4</span>
+            <div class="flex gap-1" data-done-bars>
+              {% for _, done in checklist %}<div class="h-2 w-8 rounded-full {{ 'bg-primary' if done else 'bg-muted' }}"></div>{% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="space-y-3">
+          {% for text, done in checklist %}
+          <div class="flex items-center gap-3 rounded-lg border bg-card p-3" data-check-row>
+            {{ ui.checkbox(id='phase-task-' ~ loop.index, checked=done, disabled=done, attrs={'aria-label': text}) }}
+            <span class="text-sm {{ 'text-muted-foreground line-through' if done else 'font-medium' }}" data-check-text>{{ text }}</span>
+            <div class="ml-auto">{% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'More actions for ' ~ text}) %}{{ lucide('ellipsis', 'h-4 w-4') }}{% endcall %}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Ticking the open item updates the phase progress.
+  document.addEventListener('basecoat:change', function (e) {
+    var row = e.target.closest && e.target.closest('[data-check-row]');
+    if (!row) return;
+    var on = e.detail.checked === true;
+    var text = row.querySelector('[data-check-text]');
+    text.classList.toggle('line-through', on); text.classList.toggle('text-muted-foreground', on); text.classList.toggle('font-medium', !on);
+    var rows = document.querySelectorAll('[data-check-row]');
+    var done = Array.prototype.filter.call(rows, function (r) { return r.querySelector('[data-slot="checkbox"]').getAttribute('aria-checked') === 'true'; }).length;
+    document.querySelector('[data-done-count]').textContent = done + '/' + rows.length;
+    document.querySelectorAll('[data-done-bars] > div').forEach(function (b, i) { b.className = 'h-2 w-8 rounded-full ' + (i < done ? 'bg-primary' : 'bg-muted'); });
+  });
+</script>
+{% endblock %}

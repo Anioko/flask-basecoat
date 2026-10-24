@@ -1,0 +1,71 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/_dashboards.html' as d %}
+{% block title %}Marketing dashboard · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set revenue = [
+  {'day': 'Jan 1', 'teamA': 7400, 'teamB': 3600, 'teamC': 2600}, {'day': 'Jan 4', 'teamA': 7200, 'teamB': 2800, 'teamC': 2600},
+  {'day': 'Jan 6', 'teamA': 8600, 'teamB': 4500, 'teamC': 3700}, {'day': 'Jan 8', 'teamA': 8200, 'teamB': 3200, 'teamC': 3400},
+  {'day': 'Jan 12', 'teamA': 10200, 'teamB': 4900, 'teamC': 4600}, {'day': 'Jan 16', 'teamA': 7000, 'teamB': 3200, 'teamC': 3000},
+  {'day': 'Jan 20', 'teamA': 8900, 'teamB': 4400, 'teamC': 4200}, {'day': 'Jan 24', 'teamA': 11300, 'teamB': 6700, 'teamC': 5300},
+  {'day': 'Jan 28', 'teamA': 10600, 'teamB': 4900, 'teamC': 4600}, {'day': 'Feb 1', 'teamA': 9100, 'teamB': 4200, 'teamC': 3800},
+  {'day': 'Feb 5', 'teamA': 10400, 'teamB': 5300, 'teamC': 4400}, {'day': 'Feb 8', 'teamA': 12100, 'teamB': 6600, 'teamC': 5200},
+] %}
+{% call d.shell('marketing', 'Marketing', 'Campaign reach, revenue and the products driving it') %}
+<div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-3">
+  {{ d.greeting('Katrina', 'Here is a quick snapshot of today’s analytics and the campaigns that need attention.', 'xl:col-span-2') }}
+
+  {% call ui.card() %}
+    {% call ui.card_header() %}{% call ui.card_title(class='flex items-center gap-2') %}{{ lucide('lightbulb', 'size-4 text-muted-foreground') }}Key insights{% endcall %}{% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      <div class="flex flex-col gap-1">
+        <span class="text-3xl font-semibold tracking-tight tabular-nums">$20,320</span>
+        <span class="flex items-center gap-2 text-sm text-muted-foreground">{{ d.delta('+40%') }} vs last month</span>
+      </div>
+      {{ d.segments([('Asia', 52, 1), ('USA', 30, 2), ('Europe', 18, 3)]) }}
+      {{ d.legend([('Asia', 1), ('USA', 2), ('Europe', 3)]) }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card(class='xl:col-span-2') %}
+    {% call ui.card_header() %}
+      {{ ui.card_description(text='Revenue overview') }}
+      {% call ui.card_title(class='flex flex-wrap items-baseline gap-2 text-3xl font-semibold tabular-nums') %}$640,000 <span class="flex items-center gap-2 text-sm font-normal text-muted-foreground">{{ d.delta('+18.0%') }} vs last month</span>{% endcall %}
+      {% call ui.card_action() %}{{ d.period('revenue-period', ['Last 7 days', 'Last 30 days', 'Last 90 days'], 'Last 30 days') }}{% endcall %}
+    {% endcall %}
+    {% call ui.card_content(class='flex flex-col gap-4') %}
+      {{ d.legend([('Team A', 1), ('Team B', 2), ('Team C', 3)]) }}
+      {{ d.chart('stacked-bar', revenue, [{'key': 'teamA', 'label': 'Team A', 'color': 'var(--chart-1)'}, {'key': 'teamB', 'label': 'Team B', 'color': 'var(--chart-2)'}, {'key': 'teamC', 'label': 'Team C', 'color': 'var(--chart-3)'}], x='day', class='aspect-auto h-[280px] w-full', label='Revenue by team') }}
+    {% endcall %}
+  {% endcall %}
+
+  {% call ui.card() %}
+    {{ d.card_head('Sales distribution', 'Revenue by channel') }}
+    {% call ui.card_content(class='flex flex-col gap-6') %}
+      <div class="relative">
+        {{ d.chart('donut', [{'channel': 'Website', 'value': 4385, 'fill': 'var(--chart-1)'}, {'channel': 'Marketplace', 'value': 4590, 'fill': 'var(--chart-2)'}, {'channel': 'Affiliate', 'value': 18356, 'fill': 'var(--chart-3)'}], [{'key': 'value', 'label': 'Revenue'}], x='channel', grid=false, class='mx-auto aspect-square h-[220px]', label='Revenue by channel') }}
+        <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"><span class="text-xs tracking-wide text-muted-foreground uppercase">Total revenue</span><span class="text-xl font-semibold tabular-nums">$284,920</span></div>
+      </div>
+      <div class="flex flex-col gap-3 text-sm">
+        {% for label, amount, change, tone in [('Website', '$4,385', '+4.7%', 1), ('Marketplace', '$4,590', '+2.1%', 2), ('Affiliate', '$18,356', '+1.7%', 3)] %}
+        <div class="flex items-center gap-3"><span class="h-4 w-1 rounded-full bg-chart-{{ tone }}"></span><span class="font-medium">{{ label }}</span><span class="ml-auto font-medium tabular-nums">{{ amount }}</span>{{ d.delta(change) }}</div>
+        {% endfor %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+
+  {{ d.stat_card('Weekly sales', '714k', 'shopping-bag', '+40%', period=none, action='See statistics') }}
+  {{ d.stat_card('New users', '1.35m', 'users', '+20%', period=none, action='See statistics') }}
+  {{ d.stat_card('Purchase orders', '1.72m', 'package', '+40%', period=none, action='See statistics') }}
+
+  {% call ui.card() %}
+    {{ d.card_head('Campaign performance', 'Audience reached per channel') }}
+    {{ d.channel_list([('IG', 1, 'Instagram', '8.49k users', 'Completed'), ('GO', 2, 'Google', '9.12k users', 'Running'), ('FB', 3, 'Facebook', '6.98k users', 'Stopped'), ('X', 4, 'X', '8.92k users', 'Stopped')], footer='See report') }}
+  {% endcall %}
+
+  <div class="xl:col-span-2">
+    {{ d.products_table([('AeroBeat X9 Earbuds', 'Wireless earbuds', 4, '$1,499.00', 'High demand'), ('DataDrive Secure X', 'External SSD 2TB', 4, '$199.00', 'Low demand'), ('FlexBook Infinity', 'Convertible laptop', 4, '$1,499.00', 'High demand'), ('PulseFit Tracker 2', 'Fitness watch', 3, '$1,499.00', 'Low demand')]) }}
+  </div>
+</div>
+{% endcall %}
+{% endblock %}

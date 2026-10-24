@@ -1,0 +1,53 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_content.html' as c %}
+{% block title %}Changelog · Flask-Basecoat{% endblock %}
+{% set entries = [
+  {'date': 'Mar 22, 2023', 'version': 'Version 4.2.92', 'badges': ['Improvements', 'Bug Fixes'],
+   'sections': [('Improvements', ['Improved tooltip UI in settings.']), ('Bugfixes', ['SAML request signing support.', 'SAML encrypted claims support.'])],
+   'image': 'Screenshot of improved tooltip UI in settings'},
+  {'date': 'Mar 15, 2023', 'version': 'Version 4.2.88', 'badges': ['Improvements', 'Bug Fixes'],
+   'sections': [('Improvements', ['Enhanced dashboard loading performance.', 'New filtering options for user management.']), ('Bugfixes', ['Fixed an issue with report generation for large datasets.', 'Resolved minor UI glitches on mobile devices.'])]},
+  {'date': 'Mar 08, 2023', 'version': 'Version 4.2.85', 'badges': ['New Features'],
+   'sections': [('New Features', ['Introduced dark mode support across the application.', 'Added customizable notification preferences.'])]},
+] %}
+{% block body %}
+<div class="min-h-screen p-4">
+  <header class="relative overflow-hidden rounded-xl bg-gradient-to-br from-chart-3 to-chart-5 p-8 text-center text-white shadow-lg md:p-16 lg:p-20">
+    <div class="relative z-10 mx-auto max-w-4xl space-y-4">
+      <h1 class="text-3xl font-bold tracking-tight md:text-5xl">What&apos;s new?</h1>
+      <p class="text-lg text-balance opacity-80 sm:text-xl">A rundown of the latest Phosphorus feature releases, product enhancements, design updates and important bug fixes.</p>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid gap-12">
+      {% for e in entries %}
+      {% if not loop.first %}<hr class="border-t">{% endif %}
+      <div class="grid gap-4 md:grid-cols-[120px_1fr] md:gap-8">
+        <div class="text-muted-foreground mt-1 text-sm md:text-right">{{ e.date }}</div>
+        <div class="grid gap-4">
+          <h2 class="text-2xl font-bold">{{ e.version }}</h2>
+          <div class="flex flex-wrap gap-2">
+            {% for b in e.badges %}
+            {{ ui.badge(text=b, class='bg-destructive/15 text-destructive hover:bg-destructive/25' if b == 'Bug Fixes' else 'bg-primary/10 text-primary hover:bg-primary/20') }}
+            {% endfor %}
+          </div>
+          {% for heading, items in e.sections %}
+          <div class="grid gap-2">
+            <h3 class="text-lg font-semibold">{{ heading }}</h3>
+            <ul class="text-muted-foreground list-disc space-y-1 pl-5">
+              {% for it in items %}<li>{{ it }}</li>{% endfor %}
+            </ul>
+          </div>
+          {% endfor %}
+          {% if e.image %}
+          <img src="{{ c.ph(600, 400) }}" alt="{{ e.image }}" width="600" height="400" class="mt-4 aspect-[3/2] w-[600px] max-w-full rounded-lg border object-cover shadow-sm">
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+</div>
+{% endblock %}

@@ -3,6 +3,9 @@
 @import "tailwindcss" source(none);
 @source "./out";
 @source "./out/blocks";
+/* Charts: the browser-rendered goldens (charts/render_charts.py) and the pinned chart sources they come from. */
+@source "./out/charts";
+@source "../upstream/shadcn/charts";
 /* Upstream scans its TSX sources; the rendered HTML escapes quotes and ampersands inside class names, so the TSX is scanned too. */
 @source "../upstream/shadcn/radix";
 @source "../upstream/shadcn/new-york-v4";

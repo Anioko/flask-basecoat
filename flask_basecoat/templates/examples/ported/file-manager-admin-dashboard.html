@@ -1,0 +1,215 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_admin.html' as admin %}
+{% block title %}File Manager Admin Dashboard{% endblock %}
+{% set file_type_tones = [('Documents', 1), ('Image', 2), ('Video', 3), ('Audio', 4), ('ZIP', 5)] %}
+{% set sidebar_items = [('chart-column', 'Dashboard', true), ('clock', 'Recent files', false), ('file-text', 'Documents', false), ('image', 'Image', false), ('video', 'Videos', false), ('headphones', 'Audios', false), ('archive', 'Deleted files', false)] %}
+{% set recent_files = [('Campaign Analysis - Q3.docx', '2.7 MB', 'Document', 'file-text'), ('HR_meeting_notes_2024.docx', '8.4 MB', 'Image', 'file-text'), ('landscape_002.jpg', '4.2 MB', 'Image', 'image')] %}
+{% set all_files = [
+  ('Campaign Analysis - Q3.docx', 'Brooklyn Simmons', '2.7 MB', 'Apr 14, 2024', 'file-text'),
+  ('rebrand_mockup_v2_20241025.jpg', 'Cameron Williamson', '6.7 MB', 'Apr 14, 2024', 'image'),
+  ('proposal_new_product_jdoe.docx', 'Brooklyn Simmons', '1.5 MB', 'Apr 13, 2024', 'file-text'),
+  ('landscape_002.jpg', 'Esther Howard', '8.4 MB', 'Apr 13, 2024', 'image'),
+  ('sunset_beach_20241025.jpg', 'Cameron Williamson', '7.3 MB', 'Apr 11, 2024', 'image'),
+  ('social_media_report_20241025.docx', 'Leslie Alexander', '2.3 MB', 'Apr 10, 2024', 'file-text'),
+  ('HR_meeting_notes_20241025.docx', 'Jenny Wilson', '3.1 MB', 'Apr 10, 2024', 'file-text'),
+  ('interview_downtown_20241025.mp4', 'Brooklyn Simmons', '15.2 MB', 'Apr 10, 2024', 'video'),
+  ('project_files_backup_2024-11-05.zip', 'Cameron Williamson', '21.6 MB', 'Apr 09, 2024', 'archive'),
+  ('landscape_003.jpg', 'Esther Howard', '3.6 MB', 'Apr 09, 2024', 'image'),
+] %}
+{% set storage = [('Documents', 42, '112.8 MB', 'file-text'), ('Image', 75, '286.8 MB', 'image'), ('Video', 32, '639.2 MB', 'video'), ('Audio', 20, '23.6 MB', 'headphones'), ('ZIP', 14, '213.3 MB', 'archive')] %}
+{% set nav_button = 'flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2 text-sm font-normal transition-colors' %}
+
+{% macro sidebar_content() -%}
+  <div class="border-b border-border p-6">
+    <div class="flex items-center gap-2">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">{{ lucide('folder', 'size-4 text-primary-foreground') }}</div>
+      <span class="text-lg font-semibold">File Manager</span>
+    </div>
+  </div>
+  <div class="flex-1 p-4">
+    <div class="mb-4 text-xs font-medium text-muted-foreground">Menu</div>
+    <nav class="space-y-1">
+      {% for icon, label, active in sidebar_items %}
+      {% call ui.button(variant='ghost', class=nav_button ~ (' bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground' if active else ' text-muted-foreground hover:bg-accent hover:text-foreground'), attrs={'data-fb-close': ''}) %}{{ lucide(icon, 'h-4 w-4') }}{{ label }}{% endcall %}
+      {% endfor %}
+    </nav>
+  </div>
+  <div class="border-t border-border p-4">
+    <div class="mb-4 text-xs font-medium text-muted-foreground">Other</div>
+    <nav class="space-y-1">
+      {% for icon, label in [('settings', 'Settings'), ('message-circle', 'Chat & Support'), ('circle-help', 'Help Center')] %}
+      {% call ui.button(variant='ghost', class=nav_button ~ ' text-muted-foreground hover:bg-accent hover:text-foreground') %}{{ lucide(icon, 'h-4 w-4') }}{{ label }}{% endcall %}
+      {% endfor %}
+    </nav>
+  </div>
+{%- endmacro %}
+
+{% macro storage_panel() -%}
+  {% call ui.card(class='mb-6') %}
+    {% call ui.card_header() %}{{ ui.card_title(text='Storage usage', class='text-lg') }}{% endcall %}
+    {% call ui.card_content() %}
+      <div class="mb-6 flex flex-col items-center">
+        <div class="relative mb-4 h-32 w-32">
+          <svg class="h-32 w-32 -rotate-90 transform" viewBox="0 0 36 36" aria-hidden="true">
+            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2" class="text-muted"></path>
+            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="65, 100" class="text-primary"></path>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            {{ lucide('folder', 'mb-1 h-6 w-6 text-muted-foreground') }}
+            <div class="text-xl font-bold">104.6 GB</div>
+            <div class="text-xs text-muted-foreground">of 256 GB</div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-4">
+        {% for type, files, size, icon in storage %}
+        <div class="flex items-center gap-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">{{ lucide(icon, 'h-4 w-4 text-muted-foreground') }}</div>
+          <div class="flex-1">
+            <div class="mb-1 flex items-center justify-between"><span class="text-sm font-medium">{{ type }}</span></div>
+            <div class="text-xs text-muted-foreground">{{ files }} Files | {{ size }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endcall %}
+  {% endcall %}
+  {% call ui.card() %}{% call ui.card_content(class='p-6 text-center') %}
+    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+      <div class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-muted-foreground"><span class="text-xs font-bold">$</span></div>
+    </div>
+    <h3 class="mb-2 font-semibold">Get more space for your files</h3>
+    <p class="mb-4 text-sm text-muted-foreground">Upgrade your account to pro to get more storage</p>
+    {{ ui.button(text='Upgrade to pro', class='w-full') }}
+  {% endcall %}{% endcall %}
+{%- endmacro %}
+
+{% block body %}
+<div class="flex h-screen bg-background">
+  <div class="hidden w-64 flex-col border-r border-border bg-card lg:flex">{{ sidebar_content() }}</div>
+
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <header class="flex h-16 items-center justify-between border-b border-border px-4 lg:px-6">
+      <div class="flex flex-1 items-center gap-4">
+        {% call ui.sheet() %}
+          {% call ui.sheet_trigger(variant='ghost', size='icon', class='lg:hidden', attrs={'aria-label': 'Open menu'}) %}{{ lucide('menu', 'h-5 w-5') }}{% endcall %}
+          {{ ui.sheet_overlay() }}
+          {% call ui.sheet_content(side='left', class='w-64 p-0') %}
+            {{ ui.sheet_title(text='Menu', class='sr-only') }}
+            <div class="flex h-full flex-col bg-card">{{ sidebar_content() }}</div>
+          {% endcall %}
+        {% endcall %}
+        <div class="relative max-w-md flex-1">
+          {{ lucide('search', 'absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground') }}
+          {{ ui.input(id='file-search', placeholder='Search files...', class='pl-10', attrs={'aria-label': 'Search files'}) }}
+        </div>
+      </div>
+      <div class="flex items-center gap-2 lg:gap-4">
+        {% call ui.sheet() %}
+          {% call ui.sheet_trigger(variant='ghost', size='icon', class='xl:hidden', attrs={'aria-label': 'Storage usage'}) %}{{ lucide('chart-column', 'h-4 w-4') }}{% endcall %}
+          {{ ui.sheet_overlay() }}
+          {% call ui.sheet_content(side='right', class='w-80 overflow-y-auto p-6') %}
+            {{ ui.sheet_title(text='Storage', class='sr-only') }}
+            {{ storage_panel() }}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.button(size='sm') %}{{ lucide('upload', 'h-4 w-4 lg:mr-2') }}<span class="hidden sm:inline">Upload file</span>{% endcall %}
+        {% call ui.button(variant='outline', size='sm', class='hidden bg-transparent sm:flex') %}{{ lucide('plus', 'mr-2 h-4 w-4') }}Create{% endcall %}
+        {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'Notifications'}) %}{{ lucide('bell', 'h-4 w-4') }}{% endcall %}
+        {% call ui.dropdown_menu() %}
+          {% call ui.dropdown_menu_trigger(variant='ghost', class='flex items-center gap-2') %}
+            {% call ui.avatar(class='h-8 w-8') %}{{ ui.avatar_fallback(text='RF') }}{% endcall %}
+            <span class="hidden md:inline">Robert Fox</span>{{ lucide('chevron-down', 'hidden h-4 w-4 md:inline') }}
+          {% endcall %}
+          {% call ui.dropdown_menu_content(align='end') %}{{ ui.dropdown_menu_item(text='Profile') }}{{ ui.dropdown_menu_item(text='Settings') }}{{ ui.dropdown_menu_item(text='Sign out') }}{% endcall %}
+        {% endcall %}
+      </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+      <div class="flex-1 overflow-auto p-4 lg:p-6">
+        <div class="mb-6">
+          <h1 class="mb-1 text-xl font-semibold lg:text-2xl">All files</h1>
+          <p class="text-sm text-muted-foreground lg:text-base">All of your files are displayed here</p>
+        </div>
+
+        <div class="mb-8">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-base font-medium lg:text-lg">Recently modified</h2>
+            {{ ui.button(text='View all →', variant='ghost', class='text-sm text-primary hover:text-primary/80') }}
+          </div>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for name, size, type, icon in recent_files %}
+            {% call ui.card(class='p-4', attrs={'data-file': name}) %}
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">{{ lucide(icon, 'h-5 w-5 text-muted-foreground') }}</div>
+                <div class="min-w-0 flex-1"><p class="truncate text-sm font-medium">{{ name }}</p><p class="text-xs text-muted-foreground">{{ size }} • {{ type }}</p></div>
+              </div>
+            {% endcall %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-base font-medium lg:text-lg">All files</h2>
+            <div class="flex items-center gap-2">
+              {% call ui.button(variant='outline', size='sm') %}{{ lucide('funnel', 'h-4 w-4 sm:mr-2') }}<span class="hidden sm:inline">Filter</span>{% endcall %}
+              {% call ui.button(variant='outline', size='sm') %}{{ lucide('list', 'h-4 w-4 sm:mr-2') }}<span class="hidden sm:inline">List</span>{{ lucide('chevron-down', 'ml-1 hidden h-4 w-4 sm:inline') }}{% endcall %}
+            </div>
+          </div>
+
+          <div class="mb-6 flex items-center gap-2 overflow-x-auto pb-2">
+            {% for label, tone in file_type_tones %}
+            <div class="flex items-center gap-1 whitespace-nowrap"><div class="h-4 w-4 rounded-sm bg-chart-{{ tone }}"></div><span class="text-sm text-muted-foreground">{{ label }}</span></div>
+            {% endfor %}
+          </div>
+
+          <div class="space-y-3 lg:hidden">
+            {% for name, owner, size, date, icon in all_files %}
+            {% call ui.card(class='p-4', attrs={'data-file': name}) %}
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">{{ lucide(icon, 'h-5 w-5 text-muted-foreground') }}</div>
+                <div class="min-w-0 flex-1">
+                  <p class="mb-1 truncate text-sm font-medium">{{ name }}</p>
+                  <div class="flex items-center gap-2 text-xs text-muted-foreground"><span>{{ owner }}</span><span>•</span><span>{{ size }}</span><span>•</span><span>{{ date }}</span></div>
+                </div>
+                {% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'More actions for ' ~ name}) %}{{ lucide('ellipsis', 'h-4 w-4') }}{% endcall %}
+              </div>
+            {% endcall %}
+            {% endfor %}
+          </div>
+
+          <div class="hidden overflow-hidden rounded-lg border border-border lg:block">
+            <div class="grid grid-cols-12 gap-4 border-b border-border bg-muted/50 p-4 text-sm font-medium text-muted-foreground">
+              <div class="col-span-5">Name</div><div class="col-span-3">Owner</div><div class="col-span-2">File Size</div><div class="col-span-2">Date modified</div>
+            </div>
+            {% for name, owner, size, date, icon in all_files %}
+            <div class="grid grid-cols-12 gap-4 border-b border-border p-4 transition-colors last:border-b-0 hover:bg-muted/50" data-file="{{ name }}">
+              <div class="col-span-5 flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">{{ lucide(icon, 'h-4 w-4 text-muted-foreground') }}</div>
+                <span class="truncate text-sm font-medium">{{ name }}</span>
+              </div>
+              <div class="col-span-3 text-sm text-muted-foreground">{{ owner }}</div>
+              <div class="col-span-2 text-sm text-muted-foreground">{{ size }}</div>
+              <div class="col-span-1 text-sm text-muted-foreground">{{ date }}</div>
+              <div class="col-span-1 flex justify-end">{% call ui.button(variant='ghost', size='icon', attrs={'aria-label': 'More actions for ' ~ name}) %}{{ lucide('ellipsis', 'h-4 w-4') }}{% endcall %}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="hidden w-80 border-l border-border bg-card p-6 xl:block">{{ storage_panel() }}</div>
+    </div>
+  </div>
+</div>
+<script>
+  // The search box filters the files by name as you type.
+  document.getElementById('file-search').addEventListener('input', function (e) {
+    var q = e.target.value.toLowerCase();
+    document.querySelectorAll('[data-file]').forEach(function (el) { el.hidden = el.getAttribute('data-file').toLowerCase().indexOf(q) === -1; });
+  });
+</script>
+{% endblock %}

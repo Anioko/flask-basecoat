@@ -1,0 +1,113 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Kanban Board · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set columns = [
+  ('backlog', 'Backlog', [
+    ('1', 'Add authentication', 'high', 'John Doe', '2024-04-01'),
+    ('2', 'Create API endpoints', 'medium', 'Jane Smith', '2024-04-05'),
+    ('3', 'Write documentation', 'low', 'Bob Johnson', '2024-04-10')]),
+  ('inProgress', 'In Progress', [
+    ('4', 'Design system updates', 'high', 'Alice Brown', '2024-03-28'),
+    ('5', 'Implement dark mode', 'medium', 'Charlie Wilson', '2024-04-02')]),
+  ('done', 'Done', [
+    ('7', 'Setup project', 'high', 'Eve Davis', '2024-03-25'),
+    ('8', 'Initial commit', 'low', 'Frank White', '2024-03-24')]),
+] %}
+{% set priority_variant = {'high': 'destructive', 'medium': 'default', 'low': 'secondary'} %}
+
+<div class="p-6">
+  <div data-slot="kanban" id="kanban">
+    <div data-slot="kanban-board" data-orientation="horizontal" aria-orientation="horizontal" class="size-full gap-4 flex-row grid auto-rows-fr sm:grid-cols-3">
+      {% for value, title, tasks in columns %}
+      <div data-slot="kanban-column" data-value="{{ value }}" class="flex size-full flex-col gap-2 rounded-lg border bg-muted p-2.5 aria-disabled:pointer-events-none aria-disabled:opacity-50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold">{{ title }}</span>
+            {{ ui.badge(text=tasks|length, variant='secondary', class='pointer-events-none rounded-sm', attrs={'data-kanban-count': ''}) }}
+          </div>
+        </div>
+        <div class="flex min-h-10 flex-col gap-2 p-0.5" data-kanban-list>
+          {% for id, task, priority, assignee, due in tasks %}
+          <div data-slot="kanban-item" data-value="{{ id }}" draggable="true" tabindex="0" role="button" aria-roledescription="sortable" class="bg-card rounded-md border p-3 shadow-xs focus-visible:ring-ring focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-hidden touch-none select-none cursor-grab data-dragging:opacity-50">
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="line-clamp-1 text-sm font-medium">{{ task }}</span>
+                {{ ui.badge(text=priority, variant=priority_variant[priority], class='pointer-events-none h-5 rounded-sm px-1.5 text-[11px] capitalize') }}
+              </div>
+              <div class="text-muted-foreground flex items-center justify-between text-xs">
+                <div class="flex items-center gap-1">
+                  <div class="bg-primary/20 size-2 rounded-full"></div>
+                  <span class="line-clamp-1">{{ assignee }}</span>
+                </div>
+                <time class="text-[10px] tabular-nums">{{ due }}</time>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // Drag a task within or across columns; counts follow. Keyboard: Space picks up, arrows move, Space drops.
+    var board = document.getElementById('kanban');
+    var dragged = null;
+    function counts() {
+      board.querySelectorAll('[data-slot="kanban-column"]').forEach(function (col) {
+        col.querySelector('[data-kanban-count]').textContent = col.querySelectorAll('[data-slot="kanban-item"]').length;
+      });
+    }
+    function after(list, y) {
+      var items = Array.from(list.querySelectorAll('[data-slot="kanban-item"]:not([data-dragging])'));
+      return items.find(function (el) { var r = el.getBoundingClientRect(); return y < r.top + r.height / 2; }) || null;
+    }
+    board.addEventListener('dragstart', function (e) {
+      dragged = e.target.closest('[data-slot="kanban-item"]');
+      if (!dragged) return;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', dragged.getAttribute('data-value'));
+      requestAnimationFrame(function () { dragged.setAttribute('data-dragging', ''); board.setAttribute('data-dragging', 'true'); });
+    });
+    board.addEventListener('dragover', function (e) {
+      var list = e.target.closest('[data-slot="kanban-column"]');
+      if (!dragged || !list) return;
+      e.preventDefault();
+      list = list.querySelector('[data-kanban-list]');
+      list.insertBefore(dragged, after(list, e.clientY));
+    });
+    board.addEventListener('dragend', function () {
+      if (!dragged) return;
+      dragged.removeAttribute('data-dragging'); board.setAttribute('data-dragging', 'false');
+      dragged = null; counts();
+    });
+    var held = null;
+    board.addEventListener('keydown', function (e) {
+      var item = e.target.closest('[data-slot="kanban-item"]');
+      if (!item) return;
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        held = held ? null : item;
+        item.toggleAttribute('data-dragging', !!held);
+        counts();
+        return;
+      }
+      if (held !== item) return;
+      var list = item.parentElement, col = item.closest('[data-slot="kanban-column"]');
+      var cols = Array.from(board.querySelectorAll('[data-slot="kanban-column"]'));
+      if (e.key === 'ArrowUp' && item.previousElementSibling) list.insertBefore(item, item.previousElementSibling);
+      else if (e.key === 'ArrowDown' && item.nextElementSibling) list.insertBefore(item.nextElementSibling, item);
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        var next = cols[cols.indexOf(col) + (e.key === 'ArrowLeft' ? -1 : 1)];
+        if (next) next.querySelector('[data-kanban-list]').appendChild(item);
+      } else return;
+      e.preventDefault();
+      item.focus();
+    });
+  })();
+</script>
+{% endblock %}

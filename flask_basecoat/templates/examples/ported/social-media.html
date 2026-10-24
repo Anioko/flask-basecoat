@@ -1,0 +1,146 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% from 'examples/ported/_apps.html' import ph %}
+{% block title %}Social Media · Flask-Basecoat{% endblock %}
+{% block body %}
+{% set posts = [
+  {'name': 'Moyo Shiro', 'handle': '@moyo', 'time': '09:00 AM', 'fallback': 'MS', 'image': none,
+   'text': "Just launched my new portfolio website! 🚀 Check out these 15 standout examples of creative, sleek, and interactive portfolio designs that inspired me. Which one's your favorite? #WebDesign #PortfolioInspiration",
+   'likes': '62', 'reposts': '23', 'comments': '45', 'gap': 'space-x-6'},
+  {'name': 'Sophia', 'handle': '@sophia', 'time': '10:12 AM', 'fallback': 'S', 'image': 'Saturn with rings in space',
+   'text': 'Dreaming of distant worlds... 🪐 This AI-generated image captures the essence of exploration. What stories does it spark in your imagination?',
+   'likes': '128', 'reposts': '34', 'comments': '67', 'gap': 'space-x-4'},
+] %}
+{% set follow = [('George', '@georgeSZ', 'G'), ('Nettie Schuster', '@Precious3', 'NS'), ('Mrs. Lola Rohan', '@collin_marks', 'LR')] %}
+{% set trending = [('#TechInnovation', '5.2K posts'), ('#ArtificialIntelligence', '12K posts'), ('#ClimateAction', '8.7K posts'), ('#SpaceExploration', '3.9K posts')] %}
+
+<div class="min-h-screen">
+  <div class="mx-auto flex max-w-7xl">
+    {# Left sidebar #}
+    <div class="border-border sticky top-0 h-screen w-64 overflow-y-auto border-r p-4">
+      <nav class="space-y-2">
+        {% for label, icon in [('Home', 'house'), ('Communities', 'users'), ('Notifications', 'bell'), ('Messages', 'message-circle'), ('Bookmarks', 'bookmark'), ('Profile', 'user'), ('Settings', 'settings')] %}
+        {% call ui.button(variant='ghost', class='w-full justify-start') %}{{ lucide(icon) }}{{ label }}{% endcall %}
+        {% endfor %}
+      </nav>
+
+      {{ ui.button(text='Create Post', class='mt-6 w-full') }}
+
+      <div class="mt-8">
+        <h3 class="mb-4 text-sm font-semibold">Your Communities</h3>
+        <div class="space-y-2">
+          {% for name, dot in [('Design Community', 'bg-chart-2'), ('Tech Enthusiasts', 'bg-primary'), ('Sustainability', 'bg-chart-4')] %}
+          <a href="#" class="flex items-center text-sm"><div class="mr-2 h-2 w-2 rounded-full {{ dot }}"></div>{{ name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {# Timeline #}
+    <div class="border-border max-w-2xl flex-1 border-r">
+      <div class="border-b p-4">
+        <div class="flex space-x-3">
+          {% call ui.avatar() %}{{ ui.avatar_image(src=ph(40, 40)) }}{{ ui.avatar_fallback(text='U') }}{% endcall %}
+          <div class="flex-1">
+            {{ ui.input(id='social-composer', placeholder="What's happening?", class='placeholder:text-muted-foreground border-none p-0 text-xl focus-visible:ring-0 shadow-none bg-transparent dark:bg-transparent', attrs={'aria-label': 'New post'}) }}
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex space-x-1">
+                {% for icon, label in [('image', 'Add image'), ('smile', 'Add emoji'), ('calendar', 'Schedule'), ('map-pin', 'Add location')] %}
+                {% call ui.button(variant='ghost', size='sm', class='text-primary hover:bg-accent', attrs={'aria-label': label}) %}{{ lucide(icon) }}{% endcall %}
+                {% endfor %}
+              </div>
+              {{ ui.button(text='Post', variant='outline', id='social-post') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="social-timeline">
+        {% for p in posts %}
+        <div class="border-b p-4">
+          <div class="flex space-x-3">
+            {% call ui.avatar() %}{{ ui.avatar_image(src=ph(40, 40)) }}{{ ui.avatar_fallback(text=p.fallback) }}{% endcall %}
+            <div class="flex-1">
+              <div class="flex items-center space-x-2">
+                <span class="font-semibold">{{ p.name }}</span>
+                <span class="text-muted-foreground">{{ p.handle }}</span>
+                <span class="text-muted-foreground">·</span>
+                <span class="text-muted-foreground">{{ p.time }}</span>
+                {% call ui.button(variant='ghost', size='sm', class='ml-auto', attrs={'aria-label': 'More options'}) %}{{ lucide('ellipsis', 'h-4 w-4') }}{% endcall %}
+              </div>
+              <p class="mt-2 text-sm leading-relaxed">{{ p.text }}</p>
+              {% if p.image %}
+              <div class="mt-3 overflow-hidden rounded-2xl">
+                <img src="{{ ph(300, 500) }}" alt="{{ p.image }}" width="500" height="300" class="aspect-[5/3] w-full object-cover">
+              </div>
+              {% endif %}
+              <div class="text-muted-foreground mt-3 flex items-center {{ p.gap }}">
+                {% call ui.button(variant='ghost', size='sm', class='flex items-center space-x-2 hover:text-destructive', attrs={'data-social-like': '', 'aria-pressed': 'false', 'aria-label': 'Like'}) %}{{ lucide('heart', 'h-4 w-4') }}<span class="text-sm">{{ p.likes }}</span>{% endcall %}
+                {% call ui.button(variant='ghost', size='sm', class='flex items-center space-x-2 hover:text-chart-4', attrs={'aria-label': 'Repost'}) %}{{ lucide('repeat-2', 'h-4 w-4') }}<span class="text-sm">{{ p.reposts }}</span>{% endcall %}
+                {% call ui.button(variant='ghost', size='sm', class='flex items-center space-x-2 hover:text-primary', attrs={'aria-label': 'Comment'}) %}{{ lucide('message-circle', 'h-4 w-4') }}<span class="text-sm">{{ p.comments }}</span>{% endcall %}
+                {% call ui.button(variant='ghost', size='sm', class='hover:text-primary', attrs={'aria-label': 'Share'}) %}{{ lucide('share', 'h-4 w-4') }}{% endcall %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Right sidebar #}
+    <div class="w-80 space-y-6 p-4">
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Who to follow') }}{% endcall %}
+        {% call ui.card_content() %}
+          <div class="space-y-4">
+            {% for name, handle, fb in follow %}
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                {% call ui.avatar(class='h-10 w-10') %}{{ ui.avatar_image(src=ph(40, 40)) }}{{ ui.avatar_fallback(text=fb) }}{% endcall %}
+                <div>
+                  <p class="text-sm font-semibold">{{ name }}</p>
+                  <p class="text-muted-foreground text-sm">{{ handle }}</p>
+                </div>
+              </div>
+              {{ ui.button(text='Follow', variant='outline', size='sm', attrs={'data-social-follow': ''}) }}
+            </div>
+            {% endfor %}
+          </div>
+        {% endcall %}
+      {% endcall %}
+
+      {% call ui.card() %}
+        {% call ui.card_header() %}{{ ui.card_title(text='Trending Topics') }}{% endcall %}
+        {% call ui.card_content() %}
+          <div class="space-y-3">
+            {% for tag, count in trending %}
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-primary">{{ tag }}</span>
+              <span class="text-muted-foreground text-sm">{{ count }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        {% endcall %}
+      {% endcall %}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    document.querySelectorAll('[data-social-like]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var on = b.getAttribute('aria-pressed') !== 'true';
+        var count = b.querySelector('span');
+        b.setAttribute('aria-pressed', String(on));
+        b.classList.toggle('text-destructive', on);
+        b.querySelector('svg').classList.toggle('fill-current', on);
+        count.textContent = Number(count.textContent) + (on ? 1 : -1);
+      });
+    });
+    document.querySelectorAll('[data-social-follow]').forEach(function (b) {
+      b.addEventListener('click', function () { b.textContent = b.textContent.trim() === 'Follow' ? 'Following' : 'Follow'; });
+    });
+  })();
+</script>
+{% endblock %}

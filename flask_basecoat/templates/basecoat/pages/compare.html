@@ -12,6 +12,7 @@
         {% call ui.native_select(id='compare-name', size='sm', attrs={'name': 'name', 'onchange': "location.href = '/basecoat/compare/' + this.value"}) %}
           {% for c in components %}{{ ui.native_select_option(text=c, value=c, attrs={'selected': true if c == name else none}) }}{% endfor %}
           {% for b in blocks %}{{ ui.native_select_option(text='block: ' ~ b, value=b, attrs={'selected': true if b == name else none}) }}{% endfor %}
+          {% for c in charts or [] %}{{ ui.native_select_option(text='chart: ' ~ c, value=c, attrs={'selected': true if c == name else none}) }}{% endfor %}
         {% endcall %}
         {{ ui.native_select_icon() }}
       {% endcall %}

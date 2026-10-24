@@ -1,0 +1,87 @@
+{
+ "type": "radial",
+ "component": "RadialBarChart",
+ "config": {
+  "desktop": {
+   "label": "Desktop",
+   "color": "var(--chart-1)"
+  },
+  "mobile": {
+   "label": "Mobile",
+   "color": "var(--chart-2)"
+  }
+ },
+ "data": [
+  {
+   "month": "january",
+   "mobile": 570,
+   "desktop": 1260
+  }
+ ],
+ "props": {
+  "endAngle": 180,
+  "innerRadius": 80,
+  "outerRadius": 110
+ },
+ "series": [
+  {
+   "component": "RadialBar",
+   "dataKey": "mobile",
+   "fill": "var(--color-mobile)",
+   "stackId": "a",
+   "cornerRadius": 5,
+   "className": "stroke-transparent stroke-2"
+  },
+  {
+   "component": "RadialBar",
+   "dataKey": "desktop",
+   "stackId": "a",
+   "cornerRadius": 5,
+   "fill": "var(--color-desktop)",
+   "className": "stroke-transparent stroke-2"
+  }
+ ],
+ "axes": [
+  {
+   "component": "PolarRadiusAxis",
+   "tick": false,
+   "tickLine": false,
+   "axisLine": false,
+   "labels": [
+    {
+     "content": {
+      "$fn": "centerText",
+      "lines": [
+       {
+        "value": {
+         "pickSum": [
+          "desktop",
+          "mobile"
+         ],
+         "index": 0
+        },
+        "className": "fill-foreground text-2xl font-bold",
+        "dy": -16
+       },
+       {
+        "value": {
+         "text": "Visitors"
+        },
+        "className": "fill-muted-foreground",
+        "dy": 4
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "grid": null,
+ "tooltip": {
+  "cursor": false,
+  "hideLabel": true,
+  "$class": "cn-chart-tooltip grid min-w-32 items-start"
+ },
+ "legend": null,
+ "labels": []
+}

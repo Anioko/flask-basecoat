@@ -1,0 +1,25 @@
+{# Shared pieces for the app screens (mail, chat, music, social, calendar, boards). #}
+{% import 'basecoat/index.html' as ui %}
+
+{#- Local neutral image standing in for upstream cover art and avatars. -#}
+{% macro ph(height, width) -%}
+{{ url_for('basecoat.placeholder', height=height, width=width) }}
+{%- endmacro %}
+
+{#- Initials of a name, the way the upstream avatar fallbacks compute them. -#}
+{% macro initials(name) -%}
+{%- for part in name.split(' ') if part %}{{ part[0] }}{% endfor -%}
+{%- endmacro %}
+
+{#- The "Coming Soon" empty state shared by screens that upstream has not shipped yet. -#}
+{% macro coming_soon() -%}
+<div class="bg-background">
+  {% call ui.empty() %}
+    {% call ui.empty_header() %}
+      {% call ui.empty_icon(variant='icon') %}{{ lucide('loader-circle', '-ms-1 animate-spin size-4') }}{% endcall %}
+    {% endcall %}
+    {{ ui.empty_title(text='Coming Soon') }}
+    {{ ui.empty_description(text='This example is currently under development and will be shipped as soon as possible.') }}
+  {% endcall %}
+</div>
+{%- endmacro %}

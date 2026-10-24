@@ -1,0 +1,9 @@
+{% extends 'basecoat/pages/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{# Port of the upstream shadcn/ui chart `chart-pie-legend` (pinned source in compliance/upstream/shadcn/charts). #}
+{% block title %}chart-pie-legend · Flask-Basecoat{% endblock %}
+{% macro card() -%}
+{% call ui.card(size='default') %}{% call ui.card_header(class='items-center pb-0') %}{% call ui.card_title() %}Pie Chart - Legend{% endcall %}{% call ui.card_description() %}January - June 2024{% endcall %}{% endcall %}{% call ui.card_content(class='flex-1 pb-0') %}{{ ui.chart_from_spec(chart_spec('chart-pie-legend'), id='pie-legend', class='mx-auto aspect-square max-h-[300px]') }}{% endcall %}{% endcall %}
+{%- endmacro %}
+{% block body %}
+<div data-chart-frame="regular" style="width: 384px;"><div class="bg-background *:data-[slot=card]:has-[[data-slot=chart]]:shadow-none">{{ card() }}</div></div>{% endblock %}

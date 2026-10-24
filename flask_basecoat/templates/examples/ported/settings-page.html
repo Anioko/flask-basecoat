@@ -1,0 +1,282 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Settings{% endblock %}
+{% block body %}
+{% set posted = request.method == 'POST' %}
+{% set f = request.form %}
+{% set active = f.get('section', 'profile') if posted else 'profile' %}
+{% macro val(name, default) %}{{ f.get(name, default) if posted and f.get('section') in ('profile', 'security') else default }}{% endmacro %}
+{% set nav = [('profile', 'Profile', 'user'), ('security', 'Security', 'shield'), ('notifications', 'Notification', 'bell'), ('billing', 'Billing', 'credit-card'), ('integrations', 'Integration', 'settings')] %}
+{% set integrations = [
+  ('Google Drive', 'Upload your files to Google Drive', '🟢', true),
+  ('Slack', 'Post to a Slack channel', '🟣', true),
+  ('Notion', 'Retrieve notion note to your project', '⚫', false),
+  ('Jira', 'Create Jira issues', '🔵', false),
+  ('Zendesk', 'Exchange data with Zendesk', '🟢', false),
+  ('Dropbox', 'Exchange data with Dropbox', '🔵', false),
+  ('Github', 'Exchange files with a GitHub repository', '⚫', false),
+  ('Gitlab', 'Exchange files with a Gitlab repository', '🟠', false),
+] %}
+{% set transactions = [
+  ('36223', 'Mock premium pack', 'Pending', '12/10/2021', '$39.90'),
+  ('34283', 'Business board basic subscription', 'Paid', '11/13/2021', '$59.90'),
+  ('32234', 'Business board basic subscription', 'Paid', '10/13/2021', '$59.90'),
+  ('31354', 'Business board basic subscription', 'Paid', '09/13/2021', '$59.90'),
+] %}
+{% macro text_field(id, label, value, type='text') -%}
+<div class="space-y-2">{{ ui.label(text=label, for_=id) }}{{ ui.input(id=id, name=id, type=type, value=val(id, value)) }}</div>
+{%- endmacro %}
+{% macro method_row(initial, tone, title, text) -%}
+<div class="flex items-center justify-between rounded-lg border p-4">
+  <div class="flex items-center gap-3">
+    <div class="flex h-8 w-8 items-center justify-center rounded-full {{ tone }}"><span class="text-sm font-semibold">{{ initial }}</span></div>
+    <div><h4 class="font-medium">{{ title }}</h4><p class="text-muted-foreground text-sm">{{ text }}</p></div>
+  </div>
+  {{ caller() }}
+</div>
+{%- endmacro %}
+<div class="bg-background min-h-screen">
+  <div class="fixed top-4 left-4 z-50 lg:hidden">
+    {% call ui.button(variant='outline', size='icon', id='settings-menu', attrs={'aria-label': 'Toggle menu', 'aria-expanded': 'false'}) %}{{ lucide('menu', 'h-4 w-4') }}{{ lucide('x', 'hidden h-4 w-4') }}{% endcall %}
+  </div>
+
+  <div class="bg-card fixed inset-y-0 left-0 z-40 w-64 -translate-x-full transform border-r transition-transform duration-200 ease-in-out lg:translate-x-0" id="settings-sidebar">
+    <div class="p-6">
+      <nav class="space-y-2">
+        {% for id, label, icon in nav %}
+        {% call ui.button(variant='ghost', class='flex h-auto w-full items-center justify-start gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ' ~ ('bg-secondary text-secondary-foreground' if id == active else 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'), attrs={'data-section-link': id, 'aria-current': 'page' if id == active else none}) %}{{ lucide(icon, 'h-4 w-4') }}{{ label }}{% endcall %}
+        {% endfor %}
+      </nav>
+    </div>
+  </div>
+
+  <div class="lg:ml-64">
+    <div class="p-6 lg:p-8">
+      <div class="mx-auto max-w-4xl">
+
+        <form method="post" action="{{ request.path }}" class="space-y-6" data-section="profile"{{ '' if active == 'profile' else ' hidden' }}>
+          <input type="hidden" name="section" value="profile">
+          <div><h1 class="text-2xl font-semibold text-balance">Personal information</h1></div>
+          {% call ui.card() %}{% call ui.card_content(class='p-6') %}
+            <div class="space-y-6">
+              <div class="flex items-center gap-4">
+                {% call ui.avatar(class='h-20 w-20') %}{{ ui.avatar_fallback(text='AG') }}{% endcall %}
+                <div class="flex gap-2">
+                  {% call ui.button(size='sm', type='button') %}{{ lucide('upload') }}Upload image{% endcall %}
+                  {{ ui.button(text='Remove', variant='outline', size='sm', type='button') }}
+                </div>
+              </div>
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {{ text_field('firstName', 'First name', 'Angelina') }}
+                {{ text_field('userName', 'User name', 'Gotelli') }}
+              </div>
+              {{ text_field('email', 'Email', 'carolyn_h@hotmail.com', 'email') }}
+              <div class="space-y-2">
+                {{ ui.label(text='Phone number', for_='phone') }}
+                <div class="flex gap-2">
+                  {{ c.select_field('phoneCountry', [('us', '🇺🇸 +1'), ('uk', '🇬🇧 +44')], val('phoneCountry', 'us') | trim, class='w-20') }}
+                  {{ ui.input(id='phone', name='phone', class='flex-1', value=val('phone', '121231234')) }}
+                </div>
+              </div>
+            </div>
+          {% endcall %}{% endcall %}
+          {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Address information') }}{% endcall %}
+            {% call ui.card_content(class='space-y-4') %}
+              <div class="space-y-2">
+                {{ ui.label(text='Country', for_='country') }}
+                {{ c.select_field('country', [('us', '🇺🇸 United States'), ('uk', '🇬🇧 United Kingdom')], val('country', 'us') | trim) }}
+              </div>
+              {{ text_field('address', 'Address', '123 Main St') }}
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {{ text_field('city', 'City', 'New York') }}
+                {{ text_field('postalCode', 'Postal Code', '10001') }}
+              </div>
+              <div class="flex justify-end">{{ ui.button(text='Save', type='submit') }}</div>
+            {% endcall %}
+          {% endcall %}
+        </form>
+
+        <form method="post" action="{{ request.path }}" class="space-y-6" data-section="security"{{ '' if active == 'security' else ' hidden' }}>
+          <input type="hidden" name="section" value="security">
+          <div>
+            <h1 class="text-2xl font-semibold text-balance">Password</h1>
+            <p class="text-muted-foreground mt-1">Remember, your password is your digital key to your account. Keep it safe, keep it secure!</p>
+          </div>
+          {% call ui.card() %}{% call ui.card_content(class='space-y-4 p-6') %}
+            {{ text_field('currentPassword', 'Current password', '••••••••', 'password') }}
+            {{ text_field('newPassword', 'New password', '••••••••', 'password') }}
+            {{ text_field('confirmPassword', 'Confirm new password', '••••••••', 'password') }}
+            <div class="flex justify-end">{{ ui.button(text='Update', type='submit') }}</div>
+          {% endcall %}{% endcall %}
+          {% call ui.card() %}
+            {% call ui.card_header() %}
+              {{ ui.card_title(text='2-Step verification') }}
+              {{ ui.card_description(text='Your account holds great value to hackers. Enable two-step verification to safeguard your account!') }}
+            {% endcall %}
+            {% call ui.card_content(class='space-y-4') %}
+              {% call method_row('G', 'bg-destructive/10 text-destructive', 'Google Authenticator', 'Using Google Authenticator app generates time-sensitive codes for secure logins.') %}{{ ui.badge(text='Activated', variant='secondary', class='bg-primary/10 text-primary') }}{% endcall %}
+              {% call method_row('O', 'bg-primary/10 text-primary', 'Okta Verify', 'Receive push notifications from Okta Verify app on your phone for quick login approval.') %}{{ ui.button(text='Enable', variant='outline', size='sm', type='button') }}{% endcall %}
+              {% call method_row('@', 'bg-muted text-foreground', 'E Mail verification', 'Unique codes sent to email for confirming logins.') %}{{ ui.button(text='Enable', variant='outline', size='sm', type='button') }}{% endcall %}
+            {% endcall %}
+          {% endcall %}
+        </form>
+
+        <div class="space-y-6" data-section="notifications"{{ '' if active == 'notifications' else ' hidden' }}>
+          <div><h1 class="text-2xl font-semibold text-balance">Notification</h1></div>
+          {% call ui.card() %}{% call ui.card_content(class='space-y-6 p-6') %}
+            <div class="flex items-center justify-between">
+              <div><h3 class="font-medium">Enable desktop notification</h3><p class="text-muted-foreground text-sm">Decide whether you want to be notified of new message &amp; updates</p></div>
+              {{ ui.switch(checked=true, attrs={'aria-label': 'Enable desktop notification'}) }}
+            </div>
+            {{ ui.separator() }}
+            <div class="flex items-center justify-between">
+              <div><h3 class="font-medium">Enable unread notification badge</h3><p class="text-muted-foreground text-sm">Display a red indicator on of the notification icon when you have unread message</p></div>
+              {{ ui.switch(checked=false, attrs={'aria-label': 'Enable unread notification badge'}) }}
+            </div>
+            {{ ui.separator() }}
+            <div class="space-y-4">
+              <h3 class="font-medium">Enable unread notification badge</h3>
+              {% call ui.radio_group(class='space-y-4') %}
+                {% for value, label, text in [('all', 'All new messages', 'Broadcast notifications to the channel for each new message'), ('mentions', 'Mentions only', 'Only alert me in the channel if someone mentions me in a message'), ('nothing', 'Nothing', "Don't notify me anything")] %}
+                <div class="flex items-start space-x-3">
+                  {% if value == 'mentions' %}{% call ui.radio_group_item(value=value, id=value, checked=true, class='mt-1') %}{% call ui.radio_group_indicator(checked=true) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}{% else %}{{ ui.radio_group_item(value=value, id=value, checked=false, class='mt-1') }}{% endif %}
+                  <div>{{ ui.label(text=label, for_=value, class='font-medium') }}<p class="text-muted-foreground text-sm">{{ text }}</p></div>
+                </div>
+                {% endfor %}
+              {% endcall %}
+            </div>
+            {{ ui.separator() }}
+            <div class="flex items-center justify-between">
+              <div><h3 class="font-medium">Email notification</h3><p class="text-muted-foreground text-sm">Substance can send you email notification for any new direct message</p></div>
+              {{ ui.switch(checked=true, attrs={'aria-label': 'Email notification'}) }}
+            </div>
+            <div class="space-y-4">
+              {% for id, label, text, on in [('news', 'News & updates', 'New about product and features update', true), ('tips', 'Tips & tutorials', 'Tips & trick in order to increase your performance efficiency', true), ('offers', 'Offer & promotions', 'Promotion about product price & latest discount', false), ('reminders', 'Follow up reminder', 'Receive notification all the reminder that have been made', false)] %}
+              <div class="flex items-center space-x-3">
+                {{ ui.checkbox(id=id, checked=on) }}
+                <div>{{ ui.label(text=label, for_=id, class='font-medium') }}<p class="text-muted-foreground text-sm">{{ text }}</p></div>
+              </div>
+              {% endfor %}
+            </div>
+          {% endcall %}{% endcall %}
+        </div>
+
+        <div class="space-y-6" data-section="billing"{{ '' if active == 'billing' else ' hidden' }}>
+          <div><h1 class="text-2xl font-semibold text-balance">Billing</h1></div>
+          {% call ui.card() %}{% call ui.card_content(class='p-6') %}
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full"><span class="text-primary font-semibold">⚡</span></div>
+                <div>
+                  <div class="flex items-center gap-2"><h3 class="font-semibold">Business board basic</h3>{{ ui.badge(text='Active', variant='secondary', class='bg-primary/10 text-primary') }}</div>
+                  <p class="text-muted-foreground text-sm">Billing monthly | Next payment on 02/09/2025 for <span class="font-medium">$59.90</span></p>
+                </div>
+              </div>
+              {{ ui.button(text='Change plan') }}
+            </div>
+          {% endcall %}{% endcall %}
+          {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Payment method') }}{% endcall %}
+            {% call ui.card_content(class='space-y-4') %}
+              <div class="flex items-center justify-between rounded-lg border p-4">
+                <div class="flex items-center gap-3">
+                  <div class="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-lg"><span class="text-primary text-xs font-bold">VISA</span></div>
+                  <div>
+                    <div class="flex items-center gap-2"><span class="font-medium">Carolyn Perkins •••• 0392</span>{{ ui.badge(text='Primary', variant='outline', class='text-xs') }}</div>
+                    <p class="text-muted-foreground text-sm">Expired Dec 2025</p>
+                  </div>
+                </div>
+                {{ ui.button(text='Edit', variant='outline', size='sm') }}
+              </div>
+              <div class="flex items-center justify-between rounded-lg border p-4">
+                <div class="flex items-center gap-3">
+                  <div class="bg-muted flex h-8 w-8 items-center justify-center rounded-lg"><span class="text-foreground text-xs font-bold">MC</span></div>
+                  <div><span class="font-medium">Carolyn Perkins •••• 8461</span><p class="text-muted-foreground text-sm">Expired Jun 2025</p></div>
+                </div>
+                {{ ui.button(text='Edit', variant='outline', size='sm') }}
+              </div>
+              {% call ui.button(variant='outline', class='w-full bg-transparent') %}{{ lucide('plus', 'mr-2 h-4 w-4') }}Add payment method{% endcall %}
+            {% endcall %}
+          {% endcall %}
+          {% call ui.card() %}
+            {% call ui.card_header() %}{{ ui.card_title(text='Transaction history') }}{% endcall %}
+            {% call ui.card_content() %}
+              <div class="space-y-4">
+                <div class="text-muted-foreground grid grid-cols-5 gap-4 border-b pb-2 text-sm font-medium"><div>REFERENCE</div><div>PRODUCT</div><div>STATUS</div><div>DATE</div><div class="text-right">AMOUNT</div></div>
+                {% for id, product, status, date, amount in transactions %}
+                <div class="grid grid-cols-5 gap-4 py-2 text-sm">
+                  <div class="font-medium">&#35;{{ id }}</div>
+                  <div>{{ product }}</div>
+                  <div>{{ ui.badge(text=status, variant='default' if status == 'Paid' else 'secondary', class='bg-primary/10 text-primary' if status == 'Paid' else 'bg-muted text-muted-foreground') }}</div>
+                  <div>{{ date }}</div>
+                  <div class="text-right font-medium">{{ amount }}</div>
+                </div>
+                {% endfor %}
+              </div>
+            {% endcall %}
+          {% endcall %}
+        </div>
+
+        <div class="space-y-6" data-section="integrations"{{ '' if active == 'integrations' else ' hidden' }}>
+          <div>
+            <h1 class="text-2xl font-semibold text-balance">Integration</h1>
+            <p class="text-muted-foreground mt-1">Supercharge your workflow using these integration</p>
+          </div>
+          <div class="space-y-4">
+            {% for name, description, icon, enabled in integrations %}
+            {% call ui.card() %}{% call ui.card_content(class='p-6') %}
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="text-2xl">{{ icon }}</div>
+                  <div><h3 class="font-semibold">{{ name }}</h3><p class="text-muted-foreground text-sm">{{ description }}</p></div>
+                </div>
+                <div class="flex items-center gap-3">
+                  {{ ui.button(text='Learn more', variant='ghost', size='sm', class='text-muted-foreground') }}
+                  {{ ui.switch(checked=enabled, attrs={'aria-label': name}) }}
+                </div>
+              </div>
+            {% endcall %}{% endcall %}
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="bg-foreground/50 fixed inset-0 z-30 hidden lg:hidden" id="settings-overlay"></div>
+</div>
+<script>
+  (function () {
+    var sidebar = document.getElementById('settings-sidebar');
+    var overlay = document.getElementById('settings-overlay');
+    var menu = document.getElementById('settings-menu');
+    function setOpen(open) {
+      sidebar.classList.toggle('-translate-x-full', !open);
+      sidebar.classList.toggle('translate-x-0', open);
+      overlay.classList.toggle('hidden', !open);
+      menu.setAttribute('aria-expanded', String(open));
+      menu.querySelector('.lucide-menu').classList.toggle('hidden', open);
+      menu.querySelector('.lucide-x').classList.toggle('hidden', !open);
+    }
+    menu.addEventListener('click', function () { setOpen(menu.getAttribute('aria-expanded') !== 'true'); });
+    overlay.addEventListener('click', function () { setOpen(false); });
+    var on = 'bg-secondary text-secondary-foreground'.split(' ');
+    var off = 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'.split(' ');
+    document.querySelectorAll('[data-section-link]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        var id = link.getAttribute('data-section-link');
+        document.querySelectorAll('[data-section-link]').forEach(function (l) {
+          var active = l === link;
+          on.forEach(function (k) { l.classList.toggle(k, active); });
+          off.forEach(function (k) { l.classList.toggle(k, !active); });
+          if (active) l.setAttribute('aria-current', 'page'); else l.removeAttribute('aria-current');
+        });
+        document.querySelectorAll('[data-section]').forEach(function (s) { s.hidden = s.getAttribute('data-section') !== id; });
+        setOpen(false);
+      });
+    });
+  })();
+</script>
+{% endblock %}

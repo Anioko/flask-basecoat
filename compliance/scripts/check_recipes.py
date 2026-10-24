@@ -133,7 +133,7 @@ def main(argv):
     while '--url' in argv:
         i = argv.index('--url'); urls.append(argv[i + 1]); argv = argv[:i] + argv[i + 2:]
     comps = sorted(p.stem for p in GOLDEN.glob('*.html'))
-    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html'))
+    blocks = sorted(p.stem for p in (GOLDEN / 'blocks').glob('*.html') if '.' not in p.stem)  # <name>.chart*.html are chart goldens
     targets = [('components', c) for c in comps] + [('blocks', b) for b in blocks]
     if argv:
         targets = [t for t in targets if t[1] in argv]

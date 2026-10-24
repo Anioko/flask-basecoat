@@ -1,0 +1,213 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Onboarding{% endblock %}
+{% block body %}
+{% set posted = request.method == 'POST' %}
+{% set f = request.form %}
+{% set d = {
+  'accountType': f.get('accountType', 'corporate') if posted else 'corporate',
+  'teamSize': f.get('teamSize', '10-50') if posted else '10-50',
+  'teamName': f.get('teamName', ''), 'accountPlan': f.get('accountPlan', 'developer') if posted else 'developer',
+  'companyName': f.get('companyName', ''), 'industry': f.get('industry') or none, 'website': f.get('website', ''),
+  'nameOnCard': f.get('nameOnCard', '') if posted else 'Max Doe',
+  'cardNumber': f.get('cardNumber', '') if posted else '4111 1111 1111 1111',
+  'expirationMonth': f.get('expirationMonth') or none, 'expirationYear': f.get('expirationYear') or none,
+  'cvv': f.get('cvv', ''), 'saveCard': ('saveCard' in f) if posted else true,
+} %}
+{% set current = 5 if posted else 1 %}
+{% set steps = [(1, 'Account Type', 'Select your account type'), (2, 'Account Info', 'Setup your account settings'), (3, 'Business Details', 'Setup your business details'), (4, 'Billing Details', 'Provide your payment info'), (5, 'Completed', 'Your account is created')] %}
+{% macro step_header(title, link='Help Page', lead='If you need more info, please check out') -%}
+{% call ui.card_header(class='px-0 pt-0') %}
+  {{ ui.card_title(text=title) }}
+  {% call ui.card_description() %}{{ lead }} <a href="#" class="text-primary hover:underline">{{ link }}</a>.{% endcall %}
+{% endcall %}
+{%- endmacro %}
+{% macro req(text, for_=none) -%}
+{% call ui.label(for_=for_, class='text-base font-medium') %}{{ text }} <span class="text-destructive">*</span>{% endcall %}
+{%- endmacro %}
+{% macro account_card(value, title, text, icon, icon_box) -%}
+{% set on = d.accountType == value %}
+{% call ui.card(class='cursor-pointer transition-all ' ~ ('bg-muted border-primary ring-2 ring-primary' if on else 'border-border hover:shadow-md'), attrs={'data-choice': 'accountType', 'data-value': value, 'role': 'radio', 'aria-checked': 'true' if on else 'false', 'tabindex': '0'}) %}
+  {% call ui.card_content(class='flex items-start space-x-4 p-6') %}
+    <div class="flex-shrink-0"><div class="flex h-12 w-12 items-center justify-center rounded-lg {{ icon_box }}">{{ lucide(icon, 'h-6 w-6 text-primary') }}</div></div>
+    <div><h3 class="text-muted-foreground mb-1 font-semibold">{{ title }}</h3><p class="text-muted-foreground text-sm">{{ text }}</p></div>
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+{% set on_choice = 'bg-muted border-primary ring-2 ring-primary' %}
+{% set off_choice = 'border-border text-muted-foreground hover:border-muted-foreground/40' %}
+<div class="flex items-center justify-center p-4">
+  <form method="post" action="{{ request.path }}" class="w-full max-w-3xl" id="onboarding-form">
+    <input type="hidden" name="accountType" value="{{ d.accountType }}">
+    <input type="hidden" name="teamSize" value="{{ d.teamSize }}">
+    {% call ui.card(class='w-full shadow-lg') %}
+      {% call ui.card_header(class='pb-0') %}
+        <div class="mb-6 flex items-center justify-between">
+          {% for id, title, description in steps %}
+          <div class="relative flex flex-1 flex-col items-center" data-step-indicator="{{ id }}">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-colors duration-300" data-step-circle>
+              <span data-step-number>{{ id }}</span>{{ lucide('check', 'hidden h-5 w-5', **{'data-step-check': ''}) }}
+            </div>
+            <div class="mt-2 text-center text-sm font-medium" data-step-title>{{ title }}</div>
+            {% if not loop.last %}<div class="bg-muted absolute top-5 left-[calc(50%+20px)] h-0.5 w-[calc(100%-40px)] -translate-y-1/2 transition-colors duration-300" data-step-line></div>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      {% endcall %}
+
+      {% call ui.card_content(class='p-6 md:p-8') %}
+        <div class="space-y-6" data-step="1">
+          {{ step_header('Choose Account Type') }}
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {{ account_card('personal', 'Personal Account', 'If you need more info, please check it out', 'user', 'bg-muted') }}
+            {{ account_card('corporate', 'Corporate Account', 'Create corporate account to manage users', 'briefcase', 'bg-primary/10') }}
+          </div>
+        </div>
+
+        <div class="space-y-6" data-step="2" hidden>
+          {{ step_header('Account Info') }}
+          <div class="space-y-6">
+            <div>
+              {{ ui.label(text='Specify Team Size', class='mb-4 block text-base', attrs={'id': 'team-size-label'}) }}
+              <div class="grid grid-cols-4 gap-3" role="radiogroup" aria-labelledby="team-size-label">
+                {% for size in ['1-1', '2-10', '10-50', '50+'] %}
+                {{ ui.button(text=size, type='button', variant='outline', class='h-auto rounded-lg border-2 p-4 text-center transition-all ' ~ (on_choice if d.teamSize == size else off_choice), attrs={'data-choice': 'teamSize', 'data-value': size, 'role': 'radio', 'aria-checked': 'true' if d.teamSize == size else 'false'}) }}
+                {% endfor %}
+              </div>
+              <p class="text-muted-foreground mt-2 text-sm">Customers will see this shortened version of your statement descriptor</p>
+            </div>
+            <div>
+              {{ ui.label(text='Team Account Name', for_='teamName', class='text-base') }}
+              {{ ui.input(id='teamName', name='teamName', value=d.teamName, class='mt-2') }}
+            </div>
+            <div>
+              {{ ui.label(text='Select Account Plan', class='mb-4 block text-base', attrs={'id': 'plan-label'}) }}
+              {% call ui.radio_group(name='accountPlan', class='space-y-3', attrs={'aria-labelledby': 'plan-label'}) %}
+                {% for value, icon, title, text in [('company', 'factory', 'Company Account', 'Use images to enhance your post flow'), ('developer', 'user', 'Developer Account', 'Use images to your post time'), ('testing', 'globe', 'Testing Account', 'Use images to enhance time travel rivers')] %}
+                <div class="flex items-center space-x-3 rounded-lg border p-4">
+                  {{ lucide(icon, 'text-muted-foreground h-6 w-6') }}
+                  <div class="flex-1"><div class="font-medium">{{ title }}</div><div class="text-muted-foreground text-sm">{{ text }}</div></div>
+                  {% if d.accountPlan == value %}{% call ui.radio_group_item(value=value, checked=true, attrs={'aria-label': title}) %}{% call ui.radio_group_indicator(checked=true) %}<span class="cn-radio-group-indicator-icon"></span>{% endcall %}{% endcall %}{% else %}{{ ui.radio_group_item(value=value, checked=false, attrs={'aria-label': title}) }}{% endif %}
+                </div>
+                {% endfor %}
+              {% endcall %}
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6" data-step="3" hidden>
+          {{ step_header('Business Details') }}
+          <div class="space-y-4">
+            <div>{{ ui.label(text='Company Name', for_='companyName') }}{{ ui.input(id='companyName', name='companyName', placeholder='Enter your company name', class='mt-2', value=d.companyName) }}</div>
+            <div>{{ ui.label(text='Industry', for_='industry') }}{{ c.select_field('industry', [('technology', 'Technology'), ('finance', 'Finance'), ('healthcare', 'Healthcare'), ('retail', 'Retail')], d.industry, 'Select your industry', class='mt-2 w-full') }}</div>
+            <div>{{ ui.label(text='Website', for_='website') }}{{ ui.input(id='website', name='website', placeholder='https://yourcompany.com', class='mt-2', value=d.website) }}</div>
+          </div>
+        </div>
+
+        <div class="space-y-6" data-step="4" hidden>
+          {{ step_header('Billing Details') }}
+          <div class="space-y-6">
+            <div>{{ req('Name On Card', 'nameOnCard') }}{{ ui.input(id='nameOnCard', name='nameOnCard', value=d.nameOnCard, class='mt-2') }}</div>
+            <div>
+              {{ req('Card Number', 'cardNumber') }}
+              <div class="relative mt-2">
+                {{ ui.input(id='cardNumber', name='cardNumber', value=d.cardNumber, class='pr-20') }}
+                <div class="absolute top-1/2 right-3 flex -translate-y-1/2 transform space-x-1">
+                  <div class="bg-primary text-primary-foreground flex h-5 w-8 items-center justify-center rounded text-xs font-bold">VISA</div>
+                  <div class="bg-destructive h-5 w-8 rounded"></div>
+                  <div class="bg-chart-2 h-5 w-8 rounded"></div>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                {{ req('Expiration Date', 'expirationMonth') }}
+                <div class="mt-2 grid grid-cols-2 gap-2">
+                  {% set months = [] %}{% for i in range(1, 13) %}{% set _ = months.append(('%02d' | format(i), '%02d' | format(i))) %}{% endfor %}
+                  {% set years = [] %}{% for y in range(2024, 2034) %}{% set _ = years.append((y | string, y | string)) %}{% endfor %}
+                  {{ c.select_field('expirationMonth', months, d.expirationMonth, 'Month', class='w-full') }}
+                  {{ c.select_field('expirationYear', years, d.expirationYear, 'Year', class='w-full') }}
+                </div>
+              </div>
+              <div>{{ req('CVV', 'cvv') }}{{ ui.input(id='cvv', name='cvv', value=d.cvv, placeholder='CVV', class='mt-2') }}</div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-medium">Save Card for further billing?</div>
+                <div class="text-muted-foreground text-sm">If you need more info, please check budget planning</div>
+              </div>
+              <div class="flex items-center space-x-2">
+                {{ ui.switch(id='saveCard', name='saveCard', checked=d.saveCard) }}
+                {{ ui.label(text='Save Card', for_='saveCard', class='text-muted-foreground text-sm font-normal') }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6" data-step="5" hidden>
+          {{ step_header('Your Are Done!', 'Sign In', 'If you need more info, please') }}
+          <div class="space-y-4">
+            <p class="text-foreground">Writing headlines for blog posts is as much an art as it is a science and probably warrants its own post, but for all advise is with what works for your great &amp; amazing audience.</p>
+            {% call ui.alert(class='border-primary/20 bg-muted') %}
+              {{ lucide('triangle-alert', 'h-4 w-4') }}
+              {% call ui.alert_description(class='text-foreground') %}<strong>We need your attention!</strong><br>To start using great tools, please, <a href="#" class="text-primary font-medium hover:underline">Create Team Platform</a>{% endcall %}
+            {% endcall %}
+          </div>
+        </div>
+
+        <div class="mt-8 flex items-center justify-between border-t pt-6">
+          {% call ui.button(type='button', variant='outline', id='onboarding-prev', disabled=true) %}{{ lucide('chevron-left', 'h-4 w-4') }}<span>Previous</span>{% endcall %}
+          {% call ui.button(type='submit', id='onboarding-next') %}<span data-next-label>Continue</span>{{ lucide('chevron-right', 'h-4 w-4') }}{% endcall %}
+        </div>
+      {% endcall %}
+    {% endcall %}
+  </form>
+</div>
+<script>
+  (function () {
+    var form = document.getElementById('onboarding-form');
+    var prev = document.getElementById('onboarding-prev');
+    var next = document.getElementById('onboarding-next');
+    var step = {{ current }};
+    function render() {
+      form.querySelectorAll('[data-step]').forEach(function (p) { p.hidden = Number(p.getAttribute('data-step')) !== step; });
+      form.querySelectorAll('[data-step-indicator]').forEach(function (s) {
+        var id = Number(s.getAttribute('data-step-indicator'));
+        var circle = s.querySelector('[data-step-circle]');
+        var done = step > id, now = step === id;
+        ['bg-primary', 'text-primary-foreground'].forEach(function (k) { circle.classList.toggle(k, done); });
+        circle.classList.toggle('bg-primary/80', now);
+        if (now) circle.classList.add('text-primary-foreground');
+        ['bg-muted', 'text-muted-foreground'].forEach(function (k) { circle.classList.toggle(k, !done && !now); });
+        s.querySelector('[data-step-number]').classList.toggle('hidden', done);
+        s.querySelector('[data-step-check]').classList.toggle('hidden', !done);
+        var title = s.querySelector('[data-step-title]');
+        title.classList.toggle('text-foreground', step >= id);
+        title.classList.toggle('text-muted-foreground', step < id);
+        var line = s.querySelector('[data-step-line]');
+        if (line) { line.classList.toggle('bg-primary/60', done); line.classList.toggle('bg-muted', !done); }
+      });
+      prev.disabled = step === 1;
+      next.hidden = step >= 5;
+      next.querySelector('[data-next-label]').textContent = step === 4 ? 'Submit' : 'Continue';
+    }
+    form.addEventListener('submit', function (e) { if (step < 4) { e.preventDefault(); step++; render(); } });
+    prev.addEventListener('click', function () { if (step > 1) { step--; render(); } });
+    var on = '{{ on_choice }}'.split(' '), off = '{{ off_choice }}'.split(' ');
+    function choose(el) {
+      var group = el.getAttribute('data-choice');
+      form.querySelectorAll('[data-choice="' + group + '"]').forEach(function (o) {
+        var sel = o === el;
+        o.setAttribute('aria-checked', String(sel));
+        if (group === 'teamSize') { on.forEach(function (k) { o.classList.toggle(k, sel); }); off.forEach(function (k) { o.classList.toggle(k, !sel); }); }
+        else { ['bg-muted', 'border-primary', 'ring-2', 'ring-primary'].forEach(function (k) { o.classList.toggle(k, sel); }); ['border-border', 'hover:shadow-md'].forEach(function (k) { o.classList.toggle(k, !sel); }); }
+      });
+      form.querySelector('input[name="' + group + '"]').value = el.getAttribute('data-value');
+    }
+    form.addEventListener('click', function (e) { var el = e.target.closest('[data-choice]'); if (el) choose(el); });
+    form.addEventListener('keydown', function (e) { var el = e.target.closest('[data-choice]'); if (el && el === e.target && el.tagName !== 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); choose(el); } });
+    render();
+  })();
+</script>
+{% endblock %}

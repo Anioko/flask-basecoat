@@ -1,0 +1,82 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% block title %}Contact Page · Flask-Basecoat{% endblock %}
+{% block body %}
+<div class="bg-background">
+<div class="min-h-screen bg-background">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid items-start gap-16 lg:grid-cols-2">
+      <div class="space-y-8">
+        <div class="space-y-4">
+          <h1 class="text-3xl leading-tight font-bold text-foreground lg:text-4xl">
+            Let&#39;s Talk About
+            <br>
+            Your Energy Goals
+          </h1>
+          <p class="leading-relaxed text-muted-foreground">
+            Whether You&#39;re Curious About Solar, Ready To Get Your Energy System, Or Just
+            Need Some Honest Guidance—Our Experts Are Here To Help.
+          </p>
+        </div>
+
+        <form class="space-y-6" data-contact-form>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="relative">
+              {{ lucide('user', 'absolute top-3 left-3 h-5 w-5 text-muted-foreground') }}
+              {{ ui.input(placeholder='First Name', name='firstName', aria_label='First Name', class='h-12 border-border bg-card pl-10 dark:bg-card', required=true) }}
+            </div>
+            <div class="relative">
+              {{ lucide('user', 'absolute top-3 left-3 h-5 w-5 text-muted-foreground') }}
+              {{ ui.input(placeholder='Last Name', name='lastName', aria_label='Last Name', class='h-12 border-border bg-card pl-10 dark:bg-card', required=true) }}
+            </div>
+          </div>
+
+          <div class="relative">
+            {{ lucide('phone', 'absolute top-3 left-3 h-5 w-5 text-muted-foreground') }}
+            {{ ui.input(placeholder='Phone No', type='tel', name='phone', aria_label='Phone No', class='h-12 border-border bg-card pl-10 dark:bg-card', required=true) }}
+          </div>
+
+          <div class="relative">
+            {{ lucide('mail', 'absolute top-3 left-3 h-5 w-5 text-muted-foreground') }}
+            {{ ui.input(placeholder='Email', type='email', name='email', aria_label='Email', class='h-12 border-border bg-card pl-10 dark:bg-card', required=true) }}
+          </div>
+
+          <div>
+            {{ ui.textarea(placeholder='Your message', name='message', aria_label='Your message', class='min-h-32 resize-none border-border bg-card dark:bg-card', required=true) }}
+          </div>
+
+          <div class="flex items-center space-x-3">
+            {{ ui.checkbox(id='privacy') }}
+            <label for="privacy" class="text-sm leading-relaxed text-muted-foreground">
+              I have read and agree to the
+              <a href="#" class="underline">privacy policy</a>
+            </label>
+          </div>
+
+          {{ ui.button(text='Send Your Message', type='submit', size='lg') }}
+        </form>
+      </div>
+
+      {# Right column: hero image #}
+      <div class="relative">
+        <div class="overflow-hidden rounded-2xl shadow-lg">
+          <img src="{{ url_for('basecoat.placeholder', height=600, width=640) }}" alt="Wind turbine over coastal landscape representing sustainable energy solutions" class="h-[600px] w-full object-cover">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  (function () {
+    var form = document.querySelector('[data-contact-form]');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      form.reset();
+      var box = form.querySelector('[data-slot="checkbox"]');
+      if (box && box.getAttribute('aria-checked') === 'true') box.click();
+    });
+  })();
+</script>
+{% endblock %}

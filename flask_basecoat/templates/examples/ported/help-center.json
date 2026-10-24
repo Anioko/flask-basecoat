@@ -1,0 +1,10 @@
+{
+  "id": "help-center",
+  "title": "Help Center",
+  "description": "A searchable help center with guides, FAQs and support resources to help users quickly find answers.",
+  "tags": [
+    "support",
+    "faq",
+    "search"
+  ]
+}

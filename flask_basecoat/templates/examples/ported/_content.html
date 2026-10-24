@@ -1,0 +1,17 @@
+{# Shared pieces for the content screens: blog, changelog, updates, roadmap, timeline, activity feed, projects and playground. #}
+
+{#- The neutral placeholder image served by the extension, sized like the upstream image. -#}
+{% macro ph(width, height) -%}{{ url_for('basecoat.placeholder', height=height, width=width) }}{%- endmacro %}
+
+{#- Brand marks (Twitter, Facebook, LinkedIn) drawn with the Lucide outlines lucide-react ships for them. -#}
+{% set BRAND_ICONS = {
+  'twitter': '<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>',
+  'facebook': '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>',
+  'linkedin': '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle>',
+} %}
+{% macro brand_icon(name, class='') -%}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-{{ name }}{{ ' ' ~ class if class }}" aria-hidden="true">{{ BRAND_ICONS[name] | safe }}</svg>
+{%- endmacro %}
+
+{#- Initials of a name, as upstream computes them for avatar fallbacks ("Jennifer Taylor" -> "JT"). -#}
+{% macro initials(name) -%}{% for part in name.split(' ') if part %}{{ part[0] }}{% endfor %}{%- endmacro %}

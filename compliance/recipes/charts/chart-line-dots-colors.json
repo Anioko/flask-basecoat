@@ -1,0 +1,125 @@
+{
+  "name": "chart-line-dots-colors",
+  "group": "line",
+  "fullWidth": false,
+  "description": "A line chart with dots and colors",
+  "card": {
+    "title": "Line Chart - Dots Colors",
+    "description": "January - June 2024",
+    "headerClassName": null,
+    "contentClassName": null,
+    "footerClassName": "flex-col items-start gap-2 text-sm",
+    "footer": [
+      {
+        "text": "Trending up by 5.2% this month",
+        "icons": [
+          "trending-up"
+        ],
+        "className": "flex gap-2 leading-none font-medium"
+      },
+      {
+        "text": "Showing total visitors for the last 6 months",
+        "icons": [],
+        "className": "leading-none text-muted-foreground"
+      }
+    ]
+  },
+  "chart": {
+    "type": "line",
+    "component": "LineChart",
+    "container": {
+      "id": null,
+      "className": null
+    },
+    "config": {
+      "visitors": {
+        "label": "Visitors",
+        "color": "var(--chart-2)"
+      },
+      "chrome": {
+        "label": "Chrome",
+        "color": "var(--chart-1)"
+      },
+      "safari": {
+        "label": "Safari",
+        "color": "var(--chart-2)"
+      },
+      "firefox": {
+        "label": "Firefox",
+        "color": "var(--chart-3)"
+      },
+      "edge": {
+        "label": "Edge",
+        "color": "var(--chart-4)"
+      },
+      "other": {
+        "label": "Other",
+        "color": "var(--chart-5)"
+      }
+    },
+    "data": [
+      {
+        "browser": "chrome",
+        "visitors": 275,
+        "fill": "var(--color-chrome)"
+      },
+      {
+        "browser": "safari",
+        "visitors": 200,
+        "fill": "var(--color-safari)"
+      },
+      {
+        "browser": "firefox",
+        "visitors": 187,
+        "fill": "var(--color-firefox)"
+      },
+      {
+        "browser": "edge",
+        "visitors": 173,
+        "fill": "var(--color-edge)"
+      },
+      {
+        "browser": "other",
+        "visitors": 90,
+        "fill": "var(--color-other)"
+      }
+    ],
+    "props": {
+      "accessibilityLayer": true,
+      "margin": {
+        "top": 24,
+        "left": 24,
+        "right": 24
+      }
+    },
+    "series": [
+      {
+        "component": "Line",
+        "dataKey": "visitors",
+        "type": "natural",
+        "stroke": "var(--color-visitors)",
+        "strokeWidth": 2,
+        "dot": "({ payload, ...props }) => { return ( <Dot key={payload.browser} r={5} cx={props.cx} cy={props.cy} fill={payload.fill} stroke={payload.fill} /> ) }"
+      }
+    ],
+    "axes": [],
+    "grid": {
+      "component": "CartesianGrid",
+      "vertical": false
+    },
+    "tooltip": {
+      "cursor": false,
+      "content": "ChartTooltipContent",
+      "indicator": "line",
+      "nameKey": "visitors",
+      "hideLabel": true
+    },
+    "legend": null,
+    "labels": []
+  },
+  "interactive": null,
+  "functionProps": [
+    "chart.series[0].dot"
+  ],
+  "unresolved": []
+}

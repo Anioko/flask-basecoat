@@ -26,6 +26,8 @@
   [data-slot="navigation-menu-content"][data-state="closed"],
   [data-slot="navigation-menu-viewport"][data-state="closed"],
   [data-slot="navigation-menu-indicator"][data-state="hidden"],
+  [data-slot="scroll-area-scrollbar"][data-state="hidden"],
+  [data-slot="scroll-area-scrollbar"][hidden],
   [data-slot="toast"][data-state="closed"],
   [data-slot="tabs-content"][data-state="inactive"],
   [data-slot="accordion-content"][data-state="closed"],
@@ -51,9 +53,10 @@
     display: block !important;
   }
   /* Radix only renders indicators while checked; the static markup may carry them unchecked. */
+  /* Important: the indicator's own recipe sets display (grid/flex) in the utilities layer. */
   [data-slot="checkbox-indicator"][data-state="unchecked"],
   [data-slot="radio-group-indicator"][data-state="unchecked"] {
-    display: none;
+    display: none !important;
   }
   /* Command palettes hide filtered-out items and empty groups. */
   [data-slot="command-item"][hidden],
@@ -75,4 +78,7 @@
   [data-slot="combobox-clear"]:not([data-visible]) {
     display: none;
   }
+  /* Scroll areas draw their own scrollbar; the native one is hidden, as Radix does. */
+  [data-radix-scroll-area-viewport] { scrollbar-width: none; -ms-overflow-style: none; }
+  [data-radix-scroll-area-viewport]::-webkit-scrollbar { display: none; }
 }

@@ -1,0 +1,116 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% import 'examples/ported/_commerce.html' as c %}
+{% block title %}Shopping Cart{% endblock %}
+{% block body %}
+{% set cart = [
+  {'id': '1', 'name': 'Samsung Galaxy S23 Ultra S918B/DS 256GB', 'color': 'Phantom Black', 'price': 1049.99, 'quantity': 2},
+  {'id': '2', 'name': 'JBL Charge 3 Waterproof Portable Bluetooth Speaker', 'color': 'Black', 'price': 109.99, 'quantity': 1},
+  {'id': '3', 'name': 'GARMIN Fenix 7X 010-02541-11 Exclusive Version', 'color': 'Black', 'price': 349.99, 'quantity': 1},
+  {'id': '4', 'name': 'Beats Fit Pro - True Wireless Noise Cancelling Earbuds', 'color': 'Phantom Black', 'price': 199.99, 'quantity': 1},
+  {'id': '5', 'name': 'JLab Epic Air Sport ANC True Wireless Earbuds', 'color': 'Black', 'price': 99.99, 'quantity': 1},
+] %}
+{% set ns = namespace(subtotal=0) %}
+{% for item in cart %}{% set ns.subtotal = ns.subtotal + item.price * item.quantity %}{% endfor %}
+{% set discount, delivery, tax = 0, 29.99, 39.99 %}
+{% set coupon = request.form.get('coupon', '') if request.method == 'POST' else '' %}
+<div class="bg-background min-h-screen p-4 lg:p-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <div class="bg-card rounded-lg border p-6">
+          <h1 class="mb-6 text-2xl font-semibold">Shopping Cart</h1>
+          <div class="text-muted-foreground mb-4 hidden gap-4 border-b pb-4 text-sm font-medium lg:grid lg:grid-cols-[2fr_1fr_1fr_auto]">
+            <div>Product</div>
+            <div class="text-center">Quantity</div>
+            <div class="text-center">Price</div>
+            <div class="w-8"></div>
+          </div>
+          <div class="space-y-4" id="cart-items">
+            {% for item in cart %}
+            <div class="bg-card flex items-center gap-4 rounded-lg border p-4" data-cart-item data-price="{{ item.price }}" data-quantity="{{ item.quantity }}">
+              <div class="bg-muted flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg">
+                <img src="{{ c.placeholder(64, 64) }}" alt="{{ item.name }}" class="h-full w-full rounded-lg object-cover">
+              </div>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-foreground line-clamp-2 text-sm font-medium lg:text-base">{{ item.name }}</h3>
+                <p class="text-muted-foreground mt-1 text-sm">Color: <span>{{ item.color }}</span></p>
+              </div>
+              <div class="bg-muted flex items-center gap-2 rounded-lg p-1">
+                {% call ui.button(variant='ghost', size='icon', class='hover:bg-muted h-8 w-8', attrs={'data-cart-step': '-1', 'aria-label': 'Decrease quantity'}) %}{{ lucide('minus', 'h-4 w-4') }}{% endcall %}
+                <span class="min-w-[2rem] text-center text-sm font-medium" data-cart-qty>{{ item.quantity }}</span>
+                {% call ui.button(variant='ghost', size='icon', class='hover:bg-muted h-8 w-8', attrs={'data-cart-step': '1', 'aria-label': 'Increase quantity'}) %}{{ lucide('plus', 'h-4 w-4') }}{% endcall %}
+              </div>
+              <div class="text-foreground min-w-[80px] text-right text-sm font-semibold lg:text-base">{{ c.money(item.price) }}</div>
+              {% call ui.button(variant='ghost', size='icon', class='text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8', attrs={'data-cart-remove': '', 'aria-label': 'Remove'}) %}{{ lucide('trash-2', 'h-4 w-4') }}{% endcall %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="mt-6 flex flex-col gap-4 sm:flex-row">
+          {% call ui.button(variant='outline', class='flex items-center gap-2') %}{{ lucide('arrow-left', 'h-4 w-4') }}Back{% endcall %}
+          {{ ui.button(text='Cancel Order', variant='destructive', class='bg-destructive text-white hover:bg-destructive/90') }}
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-card rounded-lg border p-6">
+          <h2 class="mb-4 text-xl font-semibold">Coupon Code</h2>
+          <form method="post" action="{{ request.path }}" class="space-y-4">
+            {{ ui.input(name='coupon', placeholder='Enter Your Coupon Code', value=coupon, class='h-12', attrs={'aria-label': 'Coupon Code'}) }}
+            {{ ui.button(text='Apply Your Coupon', type='submit', class='bg-primary hover:bg-primary/90 h-12 w-full') }}
+          </form>
+        </div>
+
+        <div class="bg-card rounded-lg border p-6">
+          <h2 class="mb-6 text-xl font-semibold">Order Summary</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between"><span class="text-muted-foreground">Discount</span><span class="font-medium">{{ c.money(discount) }}</span></div>
+            <div class="flex items-center justify-between"><span class="text-muted-foreground">Delivery</span><span class="font-medium">{{ c.money(delivery) }}</span></div>
+            <div class="flex items-center justify-between"><span class="text-muted-foreground">Tax</span><span class="font-medium">{{ c.money(tax) }}</span></div>
+            <hr class="border-border">
+            <div class="flex items-center justify-between">
+              <span class="text-lg font-semibold">Total</span>
+              <span class="text-xl font-bold" id="cart-total" data-extra="{{ delivery + tax - discount }}">{{ c.money(ns.subtotal - discount + delivery + tax) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-card rounded-lg border p-6">
+          <h2 class="mb-6 text-xl font-semibold">Payment Method</h2>
+          <div class="mb-6 grid grid-cols-4 gap-3">
+            {% for id, name, icon in [('paypal', 'PayPal', '💳'), ('stripe', 'Stripe', '$'), ('mastercard', 'Mastercard', '💳'), ('bitcoin', 'Bitcoin', '₿')] %}
+            {% call ui.button(variant='outline', class='hover:bg-primary hover:text-primary-foreground hover:border-primary aspect-square h-12 p-0', attrs={'aria-label': name, 'title': name}) %}<span class="text-lg">{{ icon }}</span>{% endcall %}
+            {% endfor %}
+          </div>
+          {{ ui.button(text='Check Out', class='bg-primary hover:bg-primary/90 text-primary-foreground h-12 w-full') }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    var list = document.getElementById('cart-items');
+    var total = document.getElementById('cart-total');
+    function refresh() {
+      var sum = Number(total.getAttribute('data-extra'));
+      list.querySelectorAll('[data-cart-item]').forEach(function (row) { sum += Number(row.dataset.price) * Number(row.dataset.quantity); });
+      total.textContent = '$' + sum.toFixed(2);
+    }
+    list.addEventListener('click', function (e) {
+      var row = e.target.closest('[data-cart-item]');
+      if (!row) return;
+      var step = e.target.closest('[data-cart-step]');
+      if (step) {
+        var q = Math.max(1, Number(row.dataset.quantity) + Number(step.getAttribute('data-cart-step')));
+        row.dataset.quantity = q;
+        row.querySelector('[data-cart-qty]').textContent = q;
+      } else if (e.target.closest('[data-cart-remove]')) {
+        row.remove();
+      } else return;
+      refresh();
+    });
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{
+  "id": "payment-admin-dashboard",
+  "title": "Payment Admin Dashboard",
+  "description": "Invoice overview with receivables, a cash flow chart and a paginated table of invoices with status badges.",
+  "tags": [
+    "Invoices",
+    "Charts",
+    "Table",
+    "Sheet"
+  ]
+}

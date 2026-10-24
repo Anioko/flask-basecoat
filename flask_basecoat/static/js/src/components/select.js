@@ -52,6 +52,24 @@
         FB.emit(wrapper, 'change', { value, label });
         close();
       }
+      // Programmatic selection: trigger.fbSetValue('value') picks the item with that value (or label), like a click.
+      function setValue(value) {
+        const v = value == null ? '' : String(value);
+        if (v === '') {
+          // no value (Radix value ""): nothing checked, the placeholder is shown
+          items().forEach((i) => { i.setAttribute('aria-selected', 'false'); FB.setState(i, 'unchecked'); });
+          if (valueEl) valueEl.textContent = placeholder;
+          trigger.setAttribute('data-placeholder', '');
+          trigger.removeAttribute('data-value');
+          if (input) input.value = '';
+          return true;
+        }
+        const item = items().find((i) => (i.getAttribute('data-value') || i.getAttribute('value')) === v) || items().find((i) => i.textContent.trim() === v);
+        if (item) select(item);
+        return !!item;
+      }
+      trigger.fbSetValue = setValue; content.fbSetValue = setValue;
+      trigger.fbGetValue = () => trigger.getAttribute('data-value');
       const preselected = items().find((i) => i.getAttribute('data-state') === 'checked' || i.getAttribute('aria-selected') === 'true');
       if (preselected) { const label = preselected.textContent.trim(); if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = label; if (input) input.value = preselected.getAttribute('data-value') || preselected.getAttribute('value') || label; trigger.removeAttribute('data-placeholder'); }
       else if (valueEl && !valueEl.textContent.trim()) valueEl.textContent = placeholder;

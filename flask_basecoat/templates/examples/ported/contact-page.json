@@ -1,0 +1,10 @@
+{
+  "id": "contact-page",
+  "title": "Contact Page",
+  "description": "A contact page where visitors leave their name, phone, email and a message beside a hero image.",
+  "tags": [
+    "marketing",
+    "form",
+    "contact"
+  ]
+}

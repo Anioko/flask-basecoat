@@ -28,3 +28,9 @@ node-v20.18.1-win-x64/
 node-portable.zip
 compliance/golden/out/*-report.json
 compliance/REPORT.json
+
+# Charts browser golden: esbuild output
+compliance/golden/charts/bundle.js
+
+# Local browser-automation screenshots and logs
+.playwright-mcp/

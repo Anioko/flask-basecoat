@@ -1,0 +1,156 @@
+{% extends 'examples/_layout.html' %}
+{% import 'basecoat/index.html' as ui %}
+{% from 'examples/reference/_shell.html' import shell %}
+{#
+  Reference page: an application portfolio dashboard.
+  shadcn-nearest: dashboard-01
+  How it is built (copy this when you build a page):
+    - The frame is dashboard-01's sidebar, inset and site header (examples/reference/_shell.html); only labels change.
+    - The content keeps dashboard-01's regions: a row of four section cards, one interactive area chart card, one
+      data table with tabs. Nothing is added that dashboard-01 does not have, and no part is restyled.
+    - Every visible part is a component macro. Wrappers carry layout and type classes only; colours are tokens.
+    - Check it:  python compliance/scripts/check_page.py /examples/reference/portfolio --nearest dashboard-01 --browser
+#}
+{% block title %}Application portfolio · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+
+{% macro section_card(label, value, change, trend, headline, detail) -%}
+{%- set down = change.startswith('-') -%}
+{% call ui.card(class='@container/card') %}
+  {% call ui.card_header() %}
+    {{ ui.card_description(text=label) }}
+    {% call ui.card_title(class='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl') %}{{ value }}{% endcall %}
+    {% call ui.card_action() %}{% call ui.badge(variant='outline') %}{{ lucide('trending-down' if down else 'trending-up') }}{{ change }}{% endcall %}{% endcall %}
+  {% endcall %}
+  {% call ui.card_footer(class='flex-col items-start gap-1.5 text-sm') %}
+    <div class="line-clamp-1 flex gap-2 font-medium">{{ headline }} {{ lucide('trending-down' if down else 'trending-up', 'size-4') }}</div>
+    <div class="text-muted-foreground">{{ detail }}</div>
+  {% endcall %}
+{% endcall %}
+{%- endmacro %}
+
+{% set lifecycle_icon = {'Invest': 'circle-check', 'Tolerate': 'circle-dashed', 'Migrate': 'loader', 'Eliminate': 'circle-alert'} %}
+
+{% block body %}
+{% call shell('Application portfolio') %}
+  {# 1. Section cards: dashboard-01's four-card row, one card structure. #}
+  <div class="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+    {{ section_card('Applications', '1,284', '+4.2%', 'up', 'Twelve added this quarter', 'Across 9 business units') }}
+    {{ section_card('Capability coverage', '86%', '+3.1%', 'up', 'Coverage up this quarter', 'Capabilities with a supporting application') }}
+    {{ section_card('End-of-life technology', '37', '-12%', 'down', 'Down 12% this period', 'Components past vendor support') }}
+    {{ section_card('Annual run cost', '$18.4M', '-2.1%', 'down', 'Savings from retirements', 'Licences, hosting and support') }}
+  </div>
+
+  {# 2. One interactive area chart card, as in dashboard-01: range toggle on wide cards, select on narrow ones. #}
+  <div class="px-4 lg:px-6">
+    {% call ui.card(class='@container/card') %}
+      {% call ui.card_header() %}
+        {{ ui.card_title(text='Changes and incidents') }}
+        {% call ui.card_description() %}<span class="hidden @[540px]/card:block">Daily totals for the last 3 months</span><span class="@[540px]/card:hidden">Last 3 months</span>{% endcall %}
+        {% call ui.card_action() %}
+          {% call ui.toggle_group(type='single', variant='outline', spacing='2', class='hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex', attrs={'aria-label': 'Time range'}) %}
+            {% for value, label in [('90d', 'Last 3 months'), ('30d', 'Last 30 days'), ('7d', 'Last 7 days')] %}
+            {{ ui.toggle_group_item(text=label, value=value, variant='outline', spacing='2', pressed=(value == '90d'), attrs={'data-chart-control': 'chart-portfolio-events', 'data-chart-state': 'timeRange', 'data-chart-value': value}) }}
+            {% endfor %}
+          {% endcall %}
+          {% call ui.select() %}
+            {% call ui.select_trigger(size='sm', class='w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden', attrs={'aria-label': 'Time range', 'data-chart-control': 'chart-portfolio-events', 'data-chart-state': 'timeRange'}) %}{{ ui.select_value(text='Last 3 months') }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+            {% call ui.select_content(class='rounded-xl') %}
+              {% for value, label in [('90d', 'Last 3 months'), ('30d', 'Last 30 days'), ('7d', 'Last 7 days')] %}{{ ui.select_item(text=label, value=value, class='rounded-lg', checked=(value == '90d')) }}{% endfor %}
+            {% endcall %}
+          {% endcall %}
+        {% endcall %}
+      {% endcall %}
+      {% call ui.card_content(class='px-2 pt-4 sm:px-6 sm:pt-6') %}
+        {{ ui.chart_from_spec(chart, id='portfolio-events', class='aspect-auto h-[250px] w-full') }}
+      {% endcall %}
+    {% endcall %}
+  </div>
+
+  {# 3. One data table with tabs, as in dashboard-01. #}
+  {% call ui.tabs(class='w-full flex-col justify-start gap-6') %}
+    <div class="flex items-center justify-between px-4 lg:px-6">
+      {{ ui.label(text='View', for_='view-selector', class='sr-only') }}
+      {% call ui.select() %}
+        {% call ui.select_trigger(size='sm', id='view-selector', class='@4xl/main:hidden') %}{{ ui.select_value(text='All applications') }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+        {% call ui.select_content() %}{% for value, label in [('all', 'All applications'), ('review', 'Needs review'), ('retiring', 'Retiring')] %}{{ ui.select_item(text=label, value=value, checked=(value == 'all')) }}{% endfor %}{% endcall %}
+      {% endcall %}
+      {% call ui.tabs_list(class='hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex') %}
+        {{ ui.tabs_trigger(text='All applications', value='all', active=true) }}
+        {% call ui.tabs_trigger(value='review') %}Needs review {{ ui.badge(text='3', variant='secondary') }}{% endcall %}
+        {% call ui.tabs_trigger(value='retiring') %}Retiring {{ ui.badge(text='2', variant='secondary') }}{% endcall %}
+      {% endcall %}
+      <div class="flex items-center gap-2">
+        {% call ui.dropdown_menu() %}
+          {% call ui.dropdown_menu_trigger(variant='outline', size='sm') %}{{ lucide('columns-3') }}<span class="hidden lg:inline">Customize Columns</span><span class="lg:hidden">Columns</span>{{ lucide('chevron-down') }}{% endcall %}
+          {% call ui.dropdown_menu_content(align='end', class='w-56') %}
+            {% for column in ['Capability', 'Lifecycle', 'Run cost', 'Owner'] %}{{ ui.dropdown_menu_checkbox_item(text=column, checked=true, class='capitalize') }}{% endfor %}
+          {% endcall %}
+        {% endcall %}
+        {% call ui.button(variant='outline', size='sm') %}{{ lucide('plus') }}<span class="hidden lg:inline">Add Application</span>{% endcall %}
+      </div>
+    </div>
+    {% call ui.tabs_content(value='all', active=true, class='relative flex flex-col gap-4 overflow-auto px-4 lg:px-6') %}
+      <div class="overflow-hidden rounded-lg border">
+        {% call ui.table_container() %}{% call ui.table() %}
+          {% call ui.table_header(class='sticky top-0 z-10 bg-muted') %}{% call ui.table_row() %}
+            {% call ui.table_head() %}<div class="flex items-center justify-center">{{ ui.checkbox(checked=false, attrs={'aria-label': 'Select all'}) }}</div>{% endcall %}
+            {{ ui.table_head(text='Application') }}
+            {{ ui.table_head(text='Capability') }}
+            {{ ui.table_head(text='Lifecycle') }}
+            {% call ui.table_head() %}<div class="w-full text-right">Run cost</div>{% endcall %}
+            {{ ui.table_head(text='Owner') }}
+            {{ ui.table_head() }}
+          {% endcall %}{% endcall %}
+          {% call ui.table_body(class='**:data-[slot=table-cell]:first:w-8') %}
+            {% for name, capability, lifecycle, owner, cost, health in apps %}
+            {% call ui.table_row() %}
+              {% call ui.table_cell() %}<div class="flex items-center justify-center">{{ ui.checkbox(checked=false, attrs={'aria-label': 'Select ' ~ name}) }}</div>{% endcall %}
+              {% call ui.table_cell() %}{{ ui.button(text=name, variant='link', href='#', class='w-fit px-0 text-left text-foreground') }}{% endcall %}
+              {% call ui.table_cell() %}<div class="w-40">{{ ui.badge(text=capability, variant='outline', class='px-1.5 text-muted-foreground') }}</div>{% endcall %}
+              {% call ui.table_cell() %}{% call ui.badge(variant='outline', class='px-1.5 text-muted-foreground') %}{{ lucide(lifecycle_icon[lifecycle]) }}{{ lifecycle }}{% endcall %}{% endcall %}
+              {% call ui.table_cell() %}<div class="w-full text-right tabular-nums">${{ '{:,}'.format(cost) }}k</div>{% endcall %}
+              {{ ui.table_cell(text=owner) }}
+              {% call ui.table_cell() %}
+                {% call ui.dropdown_menu() %}
+                  {% call ui.dropdown_menu_trigger(variant='ghost', size='icon', class='flex size-8 text-muted-foreground data-[state=open]:bg-muted') %}{{ lucide('ellipsis-vertical') }}<span class="sr-only">Open menu</span>{% endcall %}
+                  {% call ui.dropdown_menu_content(align='end', class='w-32') %}
+                    {{ ui.dropdown_menu_item(text='Edit') }}{{ ui.dropdown_menu_item(text='Make a copy') }}{{ ui.dropdown_menu_item(text='Favorite') }}
+                    {{ ui.dropdown_menu_separator() }}
+                    {{ ui.dropdown_menu_item(text='Delete', variant='destructive') }}
+                  {% endcall %}
+                {% endcall %}
+              {% endcall %}
+            {% endcall %}
+            {% endfor %}
+          {% endcall %}
+        {% endcall %}{% endcall %}
+      </div>
+      <div class="flex items-center justify-between px-4">
+        <div class="hidden flex-1 text-sm text-muted-foreground lg:flex">0 of {{ apps|length }} row(s) selected.</div>
+        <div class="flex w-full items-center gap-8 lg:w-fit">
+          <div class="hidden items-center gap-2 lg:flex">
+            {{ ui.label(text='Rows per page', for_='rows-per-page', class='text-sm font-medium') }}
+            {% call ui.select() %}
+              {% call ui.select_trigger(size='sm', id='rows-per-page', class='w-20') %}{{ ui.select_value(text='10') }}{{ lucide('chevron-down', 'cn-select-trigger-icon pointer-events-none') }}{% endcall %}
+              {% call ui.select_content(side='top') %}{% for n in [10, 20, 30, 40, 50] %}{{ ui.select_item(text=n, value=n, checked=(n == 10)) }}{% endfor %}{% endcall %}
+            {% endcall %}
+          </div>
+          <div class="flex w-fit items-center justify-center text-sm font-medium">Page 1 of 1</div>
+          <div class="ml-auto flex items-center gap-2 lg:ml-0">
+            {% call ui.button(variant='outline', disabled=true, class='hidden h-8 w-8 p-0 lg:flex') %}<span class="sr-only">Go to first page</span>{{ lucide('chevrons-left') }}{% endcall %}
+            {% call ui.button(variant='outline', size='icon', disabled=true, class='size-8') %}<span class="sr-only">Go to previous page</span>{{ lucide('chevron-left') }}{% endcall %}
+            {% call ui.button(variant='outline', size='icon', disabled=true, class='size-8') %}<span class="sr-only">Go to next page</span>{{ lucide('chevron-right') }}{% endcall %}
+            {% call ui.button(variant='outline', size='icon', disabled=true, class='hidden size-8 lg:flex') %}<span class="sr-only">Go to last page</span>{{ lucide('chevrons-right') }}{% endcall %}
+          </div>
+        </div>
+      </div>
+    {% endcall %}
+    {% for value, rows in [('review', 3), ('retiring', 2)] %}
+    {% call ui.tabs_content(value=value, class='flex flex-col px-4 lg:px-6') %}
+      <div class="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+    {% endcall %}
+    {% endfor %}
+  {% endcall %}
+{% endcall %}
+{% endblock %}
