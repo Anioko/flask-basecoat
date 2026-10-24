@@ -4,8 +4,6 @@
 {% block title %}toast · flask-basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
-    {% call ui.example(title='Toaster') %}
-      {% call ui.button(size='default', variant='outline') %}Show toast{% endcall %}
-{% endcall %}
+{% call ui.example(title='Toaster') %}{% call ui.button(size='default', variant='outline') %}Show toast{% endcall %}{% endcall %}
 {% endcall %}
 {% endblock %}

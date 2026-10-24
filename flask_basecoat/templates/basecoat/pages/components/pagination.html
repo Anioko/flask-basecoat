@@ -4,72 +4,8 @@
 {% block title %}pagination · flask-basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
-    {% call ui.example(title='Basic') %}
-      {% call ui.pagination(attrs={'aria-label': 'pagination'}) %}
-        {% call ui.pagination_content() %}
-          {% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-previous', attrs={'aria-label': 'Go to previous page'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left cn-rtl-flip" aria-hidden="true" data-icon="inline-start"><path d="m15 18-6-6 6-6"></path></svg><span class="cn-pagination-previous-text hidden sm:block">Previous</span>{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}1{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='outline', active=true, href='#', class='cn-pagination-link') %}2{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}3{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_ellipsis() %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis lucide-more-horizontal" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span class="sr-only">More pages</span>{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-next', attrs={'aria-label': 'Go to next page'}) %}
-              <span class="cn-pagination-next-text hidden sm:block">Next</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true" data-icon="inline-end"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Simple') %}
-      {% call ui.pagination(attrs={'aria-label': 'pagination'}) %}
-        {% call ui.pagination_content() %}
-          {% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}1{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='outline', active=true, href='#', class='cn-pagination-link') %}2{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}3{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}4{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-            {% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}5{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Select', container_class='col-span-2') %}
-      <div class="flex items-center justify-between gap-4">{% call ui.field(orientation='horizontal', class='w-fit') %}
-          {% call ui.field_label(as_='label', for_='select-rows-per-page') %}Rows per page{% endcall %}
-{% call ui.select_trigger(size='default', placeholder_shown=false, id='select-rows-per-page', class='w-20') %}
-            {{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{% endcall %}
-{% call ui.pagination(class='mx-0 w-auto', attrs={'aria-label': 'pagination'}) %}
-          {% call ui.pagination_content() %}
-            {% call ui.pagination_item() %}
-              {% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-previous', attrs={'aria-label': 'Go to previous page'}) %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left cn-rtl-flip" aria-hidden="true" data-icon="inline-start"><path d="m15 18-6-6 6-6"></path></svg><span class="cn-pagination-previous-text hidden sm:block">Previous</span>{% endcall %}
-{% endcall %}
-{% call ui.pagination_item() %}
-              {% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-next', attrs={'aria-label': 'Go to next page'}) %}
-                <span class="cn-pagination-next-text hidden sm:block">Next</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true" data-icon="inline-end"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-</div>{% endcall %}
+{% call ui.example(title='Basic') %}{% call ui.pagination(attrs={'aria-label': 'pagination'}) %}{% call ui.pagination_content() %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-previous', attrs={'aria-label': 'Go to previous page'}) %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left cn-rtl-flip" aria-hidden="true" data-icon="inline-start"><path d="m15 18-6-6 6-6"></path></svg><span class="cn-pagination-previous-text hidden sm:block">Previous</span>{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}1{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='outline', active=true, href='#', class='cn-pagination-link') %}2{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}3{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_ellipsis() %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis lucide-more-horizontal" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span class="sr-only">More pages</span>{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-next', attrs={'aria-label': 'Go to next page'}) %}<span class="cn-pagination-next-text hidden sm:block">Next</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true" data-icon="inline-end"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Simple') %}{% call ui.pagination(attrs={'aria-label': 'pagination'}) %}{% call ui.pagination_content() %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}1{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='outline', active=true, href='#', class='cn-pagination-link') %}2{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}3{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}4{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='icon', variant='ghost', href='#', class='cn-pagination-link') %}5{% endcall %}{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='With Select', container_class='col-span-2') %}<div class="flex items-center justify-between gap-4">{% call ui.field(orientation='horizontal', class='w-fit') %}{% call ui.field_label(as_='label', for_='select-rows-per-page') %}Rows per page{% endcall %}{% call ui.select_trigger(size='default', placeholder_shown=false, id='select-rows-per-page', class='w-20') %}{{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{% endcall %}{% call ui.pagination(class='mx-0 w-auto', attrs={'aria-label': 'pagination'}) %}{% call ui.pagination_content() %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-previous', attrs={'aria-label': 'Go to previous page'}) %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left cn-rtl-flip" aria-hidden="true" data-icon="inline-start"><path d="m15 18-6-6 6-6"></path></svg><span class="cn-pagination-previous-text hidden sm:block">Previous</span>{% endcall %}{% endcall %}{% call ui.pagination_item() %}{% call ui.pagination_link(size='default', variant='ghost', href='#', class='cn-pagination-link cn-pagination-next', attrs={'aria-label': 'Go to next page'}) %}<span class="cn-pagination-next-text hidden sm:block">Next</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right cn-rtl-flip" aria-hidden="true" data-icon="inline-end"><path d="m9 18 6-6-6-6"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}</div>{% endcall %}
 {% endcall %}
 {% endblock %}

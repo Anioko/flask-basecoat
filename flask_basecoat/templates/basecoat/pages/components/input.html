@@ -4,95 +4,15 @@
 {% block title %}input · flask-basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
-    {% call ui.example(title='Basic') %}
-      {{ ui.input(type='email', attrs={'placeholder': 'Email'}) }}{% endcall %}
-{% call ui.example(title='Invalid') %}
-      {{ ui.input(invalid=true, type='text', attrs={'placeholder': 'Error'}) }}{% endcall %}
-{% call ui.example(title='With Label') %}
-      {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='input-demo-email') %}Email{% endcall %}
-{{ ui.input(type='email', id='input-demo-email', attrs={'placeholder': 'name@example.com'}) }}{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Description') %}
-      {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='input-demo-username') %}Username{% endcall %}
-{{ ui.input(type='text', id='input-demo-username', attrs={'placeholder': 'Enter your username'}) }}{% call ui.field_description() %}Choose a unique username for your account.{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Disabled') %}
-      {% call ui.field(orientation='vertical') %}
-        {% call ui.field_label(as_='label', for_='input-demo-disabled') %}Email{% endcall %}
-{{ ui.input(disabled=true, type='email', id='input-demo-disabled', attrs={'placeholder': 'Email'}) }}{% endcall %}
-{% endcall %}
-{% call ui.example(title='Input Types') %}
-      <div class="flex w-full flex-col gap-6">{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-password') %}Password{% endcall %}
-{{ ui.input(type='password', id='input-demo-password', attrs={'placeholder': 'Password'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-tel') %}Phone{% endcall %}
-{{ ui.input(type='tel', id='input-demo-tel', attrs={'placeholder': '+1 (555) 123-4567'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-url') %}URL{% endcall %}
-{{ ui.input(type='url', id='input-demo-url', attrs={'placeholder': 'https://example.com'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-search') %}Search{% endcall %}
-{{ ui.input(type='search', id='input-demo-search', attrs={'placeholder': 'Search'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-number') %}Number{% endcall %}
-{{ ui.input(type='number', id='input-demo-number', attrs={'placeholder': '123'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-date') %}Date{% endcall %}
-{{ ui.input(type='date', id='input-demo-date') }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-time') %}Time{% endcall %}
-{{ ui.input(type='time', id='input-demo-time') }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-          {% call ui.field_label(as_='label', for_='input-demo-file') %}File{% endcall %}
-{{ ui.input(type='file', id='input-demo-file') }}{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Select') %}
-      <div class="flex w-full gap-2">{{ ui.input(type='text', class='flex-1', attrs={'placeholder': 'Enter amount'}) }}{% call ui.select_trigger(size='default', placeholder_shown=false, class='w-32') %}
-          {{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select></div>{% endcall %}
-{% call ui.example(title='With Button') %}
-      <div class="flex w-full gap-2">{{ ui.input(type='search', class='flex-1', attrs={'placeholder': 'Search...'}) }}{% call ui.button(size='default', variant='default') %}Search{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Native Select') %}
-      <div class="flex w-full gap-2">{{ ui.input(type='tel', class='flex-1', attrs={'placeholder': '(555) 123-4567'}) }}{% call ui.native_select_wrapper(size='default') %}
-          {% call ui.native_select(size='default') %}
-            {% call ui.native_select_option(attrs={'value': '+1', 'selected': ''}) %}+1{% endcall %}
-{% call ui.native_select_option(attrs={'value': '+44'}) %}+44{% endcall %}
-{% call ui.native_select_option(attrs={'value': '+46'}) %}+46{% endcall %}
-{% endcall %}
-{% call ui.native_select_icon() %}
-            <path d="m6 9 6 6 6-6"></path>{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='Form') %}
-      <form class="w-full">{% call ui.field_group() %}
-          {% call ui.field(orientation='vertical') %}
-            {% call ui.field_label(as_='label', for_='form-name') %}Name{% endcall %}
-{{ ui.input(type='text', id='form-name', attrs={'placeholder': 'John Doe'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-            {% call ui.field_label(as_='label', for_='form-email') %}Email{% endcall %}
-{{ ui.input(type='email', id='form-email', attrs={'placeholder': 'john@example.com'}) }}{% call ui.field_description() %}We'll never share your email with anyone.{% endcall %}
-{% endcall %}
-<div class="grid grid-cols-2 gap-4">{% call ui.field(orientation='vertical') %}
-              {% call ui.field_label(as_='label', for_='form-phone') %}Phone{% endcall %}
-{{ ui.input(type='tel', id='form-phone', attrs={'placeholder': '+1 (555) 123-4567'}) }}{% endcall %}
-{% call ui.field(orientation='vertical') %}
-              {% call ui.field_label(as_='label', for_='form-country') %}Country{% endcall %}
-{% call ui.select_trigger(as_='select-trigger', size='default', placeholder_shown=false, id='form-country') %}
-                {{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{% endcall %}
-</div>{% call ui.field(orientation='vertical') %}
-            {% call ui.field_label(as_='label', for_='form-address') %}Address{% endcall %}
-{{ ui.input(type='text', id='form-address', attrs={'placeholder': '123 Main St'}) }}{% endcall %}
-{% call ui.field(orientation='horizontal') %}
-            {% call ui.button(size='default', variant='outline', type='button') %}Cancel{% endcall %}
-{% call ui.button(size='default', variant='default', type='submit') %}Submit{% endcall %}
-{% endcall %}
-{% endcall %}
-</form>{% endcall %}
+{% call ui.example(title='Basic') %}{{ ui.input(type='email', attrs={'placeholder': 'Email'}) }}{% endcall %}
+{% call ui.example(title='Invalid') %}{{ ui.input(invalid=true, type='text', attrs={'placeholder': 'Error'}) }}{% endcall %}
+{% call ui.example(title='With Label') %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-email') %}Email{% endcall %}{{ ui.input(type='email', id='input-demo-email', attrs={'placeholder': 'name@example.com'}) }}{% endcall %}{% endcall %}
+{% call ui.example(title='With Description') %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-username') %}Username{% endcall %}{{ ui.input(type='text', id='input-demo-username', attrs={'placeholder': 'Enter your username'}) }}{% call ui.field_description() %}Choose a unique username for your account.{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Disabled') %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-disabled') %}Email{% endcall %}{{ ui.input(disabled=true, type='email', id='input-demo-disabled', attrs={'placeholder': 'Email'}) }}{% endcall %}{% endcall %}
+{% call ui.example(title='Input Types') %}<div class="flex w-full flex-col gap-6">{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-password') %}Password{% endcall %}{{ ui.input(type='password', id='input-demo-password', attrs={'placeholder': 'Password'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-tel') %}Phone{% endcall %}{{ ui.input(type='tel', id='input-demo-tel', attrs={'placeholder': '+1 (555) 123-4567'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-url') %}URL{% endcall %}{{ ui.input(type='url', id='input-demo-url', attrs={'placeholder': 'https://example.com'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-search') %}Search{% endcall %}{{ ui.input(type='search', id='input-demo-search', attrs={'placeholder': 'Search'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-number') %}Number{% endcall %}{{ ui.input(type='number', id='input-demo-number', attrs={'placeholder': '123'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-date') %}Date{% endcall %}{{ ui.input(type='date', id='input-demo-date') }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-time') %}Time{% endcall %}{{ ui.input(type='time', id='input-demo-time') }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='input-demo-file') %}File{% endcall %}{{ ui.input(type='file', id='input-demo-file') }}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Select') %}<div class="flex w-full gap-2">{{ ui.input(type='text', class='flex-1', attrs={'placeholder': 'Enter amount'}) }}{% call ui.select_trigger(size='default', placeholder_shown=false, class='w-32') %}{{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select></div>{% endcall %}
+{% call ui.example(title='With Button') %}<div class="flex w-full gap-2">{{ ui.input(type='search', class='flex-1', attrs={'placeholder': 'Search...'}) }}{% call ui.button(size='default', variant='default') %}Search{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Native Select') %}<div class="flex w-full gap-2">{{ ui.input(type='tel', class='flex-1', attrs={'placeholder': '(555) 123-4567'}) }}{% call ui.native_select_wrapper(size='default') %}{% call ui.native_select(size='default') %}{% call ui.native_select_option(attrs={'value': '+1', 'selected': ''}) %}+1{% endcall %}{% call ui.native_select_option(attrs={'value': '+44'}) %}+44{% endcall %}{% call ui.native_select_option(attrs={'value': '+46'}) %}+46{% endcall %}{% endcall %}{% call ui.native_select_icon() %}<path d="m6 9 6 6 6-6"></path>{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='Form') %}<form class="w-full">{% call ui.field_group() %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='form-name') %}Name{% endcall %}{{ ui.input(type='text', id='form-name', attrs={'placeholder': 'John Doe'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='form-email') %}Email{% endcall %}{{ ui.input(type='email', id='form-email', attrs={'placeholder': 'john@example.com'}) }}{% call ui.field_description() %}We'll never share your email with anyone.{% endcall %}{% endcall %}<div class="grid grid-cols-2 gap-4">{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='form-phone') %}Phone{% endcall %}{{ ui.input(type='tel', id='form-phone', attrs={'placeholder': '+1 (555) 123-4567'}) }}{% endcall %}{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='form-country') %}Country{% endcall %}{% call ui.select_trigger(as_='select-trigger', size='default', placeholder_shown=false, id='form-country') %}{{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{% endcall %}</div>{% call ui.field(orientation='vertical') %}{% call ui.field_label(as_='label', for_='form-address') %}Address{% endcall %}{{ ui.input(type='text', id='form-address', attrs={'placeholder': '123 Main St'}) }}{% endcall %}{% call ui.field(orientation='horizontal') %}{% call ui.button(size='default', variant='outline', type='button') %}Cancel{% endcall %}{% call ui.button(size='default', variant='default', type='submit') %}Submit{% endcall %}{% endcall %}{% endcall %}</form>{% endcall %}
 {% endcall %}
 {% endblock %}

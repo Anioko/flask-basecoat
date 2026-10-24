@@ -4,196 +4,22 @@
 {% block title %}button-group · flask-basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
-    {% call ui.example(title='Basic') %}
-      <div class="flex flex-col gap-4">{% call ui.button_group() %}
-          {% call ui.button(size='default', variant='outline') %}Button{% endcall %}
-{% call ui.button(size='default', variant='outline') %}Another Button{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Input') %}
-      <div class="flex flex-col gap-4">{% call ui.button_group() %}
-          {% call ui.button(size='default', variant='outline') %}Button{% endcall %}
-{{ ui.input(attrs={'placeholder': 'Type something here...'}) }}{% endcall %}
-{% call ui.button_group() %}
-          {{ ui.input(attrs={'placeholder': 'Type something here...'}) }}{% call ui.button(size='default', variant='outline') %}Button{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Text') %}
-      <div class="flex flex-col gap-4">{% call ui.button_group() %}
-          <div class="cn-button-group-text flex items-center [&_svg]:pointer-events-none">Text</div>{% call ui.button(size='default', variant='outline') %}Another Button{% endcall %}
-{% endcall %}
-{% call ui.button_group() %}
-          {% call ui.label(for_='input-text', class='cn-button-group-text [&_svg]:pointer-events-none') %}GPU Size{% endcall %}
-{{ ui.input(id='input-text', class='style-luma:border-border', attrs={'placeholder': 'Type something here...'}) }}{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Dropdown') %}
-      <div class="flex flex-col gap-4">{% call ui.button_group() %}
-          {% call ui.button(size='default', variant='outline') %}Update{% endcall %}
-{% call ui.dropdown_menu_trigger(size='icon', variant='outline', id='radix-_R_164_') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-{% endcall %}
-{% call ui.button_group() %}
-          {% call ui.button(size='default', variant='outline') %}Follow{% endcall %}
-{% call ui.dropdown_menu_trigger(size='icon', variant='outline', id='radix-_R_1a4_') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Select') %}
-      {% call ui.field(orientation='vertical') %}
-        {% call ui.label(for_='amount') %}Amount{% endcall %}
-{% call ui.button_group() %}
-          {% call ui.select_trigger(as_='select-trigger', size='default', placeholder_shown=false) %}
-            {{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{{ ui.input(attrs={'placeholder': 'Enter amount to send'}) }}{% call ui.button(size='default', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Icons') %}
-      <div class="flex flex-col gap-4">{% call ui.button_group() %}
-          {% call ui.button(size='default', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-horizontal lucide-flip-horizontal" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path><path d="M12 20v2"></path><path d="M12 14v2"></path><path d="M12 8v2"></path><path d="M12 2v2"></path></svg>{% endcall %}
-{% call ui.button(size='default', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-vertical lucide-flip-vertical" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path><path d="M4 12H2"></path><path d="M10 12H8"></path><path d="M16 12h-2"></path><path d="M22 12h-2"></path></svg>{% endcall %}
-{% call ui.button(size='default', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Input Group') %}
-      <div class="flex flex-col gap-4">{% call ui.input_group() %}
-          {{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Type to search...'}) }}{% call ui.input_group_addon(align='inline-start', class='text-muted-foreground') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='With Fields') %}
-      {% call ui.field_group(class='grid grid-cols-3 gap-4') %}
-        {% call ui.field(orientation='vertical', class='col-span-2') %}
-          {% call ui.label(for_='width') %}Width{% endcall %}
-{% call ui.button_group() %}
-            {% call ui.input_group() %}
-              {{ ui.input_group_control(id='width', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50') }}{% call ui.input_group_addon(align='inline-start', class='text-muted-foreground') %}W{% endcall %}
-{% call ui.input_group_addon(align='inline-end', class='text-muted-foreground') %}px{% endcall %}
-{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Like') %}
-      {% call ui.button_group() %}
-        {% call ui.button(size='default', variant='outline') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart" aria-hidden="true" data-icon="inline-start"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg>Like        {% endcall %}
-{% call ui.button(tag='span', size='icon', variant='outline', class='w-12') %}1.2K{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Select and Input') %}
-      {% call ui.button_group() %}
-        {% call ui.select_trigger(as_='select-trigger', size='default', placeholder_shown=false, id='duration') %}
-          {{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}
-<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{{ ui.input() }}{% endcall %}
-{% endcall %}
-{% call ui.example(title='Nested') %}
-      {% call ui.button_group() %}
-        {% call ui.button_group() %}
-          {% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
-{% endcall %}
-{% call ui.button_group() %}
-          {% call ui.input_group() %}
-            {{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Send a message...'}) }}{% call ui.tooltip_trigger(as_=none, tag='div', align='inline-end', class='cn-input-group-addon flex cursor-text items-center justify-center select-none cn-input-group-addon-align-inline-end order-last', attrs={'role': 'group'}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-audio-lines" aria-hidden="true"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Pagination') %}
-      {% call ui.button_group() %}
-        {% call ui.button(size='sm', variant='outline') %}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true" data-icon="inline-start"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Previous        {% endcall %}
-{% call ui.button(size='sm', variant='outline') %}1{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}2{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}3{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}4{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}5{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}Next<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Pagination Split') %}
-      {% call ui.button_group() %}
-        {% call ui.button_group() %}
-          {% call ui.button(size='sm', variant='outline') %}1{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}2{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}3{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}4{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}5{% endcall %}
-{% endcall %}
-{% call ui.button_group() %}
-          {% call ui.button(size='icon-xs', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>{% endcall %}
-{% call ui.button(size='icon-xs', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Navigation') %}
-      {% call ui.button_group() %}
-        {% call ui.button_group() %}
-          {% call ui.button(size='default', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>{% endcall %}
-{% call ui.button(size='default', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}
-{% endcall %}
-{% call ui.button_group(attrs={'aria-label': 'Single navigation button'}) %}
-          {% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Text Alignment') %}
-      {% call ui.field(orientation='vertical') %}
-        {% call ui.label(id='alignment-label') %}Text Alignment{% endcall %}
-{% call ui.button_group(aria_labelledby='alignment-label') %}
-          {% call ui.button(size='sm', variant='outline') %}Left{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}Center{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}Right{% endcall %}
-{% call ui.button(size='sm', variant='outline') %}Justify{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='Vertical') %}
-      <div class="flex gap-6">{% call ui.button_group(orientation='vertical', class='h-fit', attrs={'aria-label': 'Media controls'}) %}
-          {% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}
-{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='Vertical Nested') %}
-      {% call ui.button_group(orientation='vertical', attrs={'aria-label': 'Design tools palette'}) %}
-        {% call ui.button_group(orientation='vertical') %}
-          {% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share" aria-hidden="true"><path d="M12 2v13"></path><path d="m16 6-4-4-4 4"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path></svg>{% endcall %}
-{% endcall %}
-{% call ui.button_group(orientation='vertical') %}
-          {% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-horizontal lucide-flip-horizontal" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path><path d="M12 20v2"></path><path d="M12 14v2"></path><path d="M12 8v2"></path><path d="M12 2v2"></path></svg>{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-vertical lucide-flip-vertical" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path><path d="M4 12H2"></path><path d="M10 12H8"></path><path d="M16 12h-2"></path><path d="M22 12h-2"></path></svg>{% endcall %}
-{% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>{% endcall %}
-{% endcall %}
-{% call ui.button_group() %}
-          {% call ui.button(size='icon', variant='outline') %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash lucide-trash-2" aria-hidden="true"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% endcall %}
+{% call ui.example(title='Basic') %}<div class="flex flex-col gap-4">{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}Button{% endcall %}{% call ui.button(size='default', variant='outline') %}Another Button{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Input') %}<div class="flex flex-col gap-4">{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}Button{% endcall %}{{ ui.input(attrs={'placeholder': 'Type something here...'}) }}{% endcall %}{% call ui.button_group() %}{{ ui.input(attrs={'placeholder': 'Type something here...'}) }}{% call ui.button(size='default', variant='outline') %}Button{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Text') %}<div class="flex flex-col gap-4">{% call ui.button_group() %}<div class="cn-button-group-text flex items-center [&_svg]:pointer-events-none">Text</div>{% call ui.button(size='default', variant='outline') %}Another Button{% endcall %}{% endcall %}{% call ui.button_group() %}{% call ui.label(for_='input-text', class='cn-button-group-text [&_svg]:pointer-events-none') %}GPU Size{% endcall %}{{ ui.input(id='input-text', class='style-luma:border-border', attrs={'placeholder': 'Type something here...'}) }}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Dropdown') %}<div class="flex flex-col gap-4">{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}Update{% endcall %}{% call ui.dropdown_menu_trigger(size='icon', variant='outline', id='radix-_R_164_') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}{% endcall %}{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}Follow{% endcall %}{% call ui.dropdown_menu_trigger(size='icon', variant='outline', id='radix-_R_1a4_') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Select') %}{% call ui.field(orientation='vertical') %}{% call ui.label(for_='amount') %}Amount{% endcall %}{% call ui.button_group() %}{% call ui.select_trigger(as_='select-trigger', size='default', placeholder_shown=false) %}{{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{{ ui.input(attrs={'placeholder': 'Enter amount to send'}) }}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='With Icons') %}<div class="flex flex-col gap-4">{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-horizontal lucide-flip-horizontal" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path><path d="M12 20v2"></path><path d="M12 14v2"></path><path d="M12 8v2"></path><path d="M12 2v2"></path></svg>{% endcall %}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-vertical lucide-flip-vertical" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path><path d="M4 12H2"></path><path d="M10 12H8"></path><path d="M16 12h-2"></path><path d="M22 12h-2"></path></svg>{% endcall %}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Input Group') %}<div class="flex flex-col gap-4">{% call ui.input_group() %}{{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Type to search...'}) }}{% call ui.input_group_addon(align='inline-start', class='text-muted-foreground') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='With Fields') %}{% call ui.field_group(class='grid grid-cols-3 gap-4') %}{% call ui.field(orientation='vertical', class='col-span-2') %}{% call ui.label(for_='width') %}Width{% endcall %}{% call ui.button_group() %}{% call ui.input_group() %}{{ ui.input_group_control(id='width', class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50') }}{% call ui.input_group_addon(align='inline-start', class='text-muted-foreground') %}W{% endcall %}{% call ui.input_group_addon(align='inline-end', class='text-muted-foreground') %}px{% endcall %}{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='With Like') %}{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart" aria-hidden="true" data-icon="inline-start"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg> Like{% endcall %}{% call ui.button(tag='span', size='icon', variant='outline', class='w-12') %}1.2K{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='With Select and Input') %}{% call ui.button_group() %}{% call ui.select_trigger(as_='select-trigger', size='default', placeholder_shown=false, id='duration') %}{{ ui.select_value(attrs={'style': 'pointer-events:none'}) }}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down cn-select-trigger-icon pointer-events-none" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>{% endcall %}<select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select>{{ ui.input() }}{% endcall %}{% endcall %}
+{% call ui.example(title='Nested') %}{% call ui.button_group() %}{% call ui.button_group() %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}{% endcall %}{% call ui.button_group() %}{% call ui.input_group() %}{{ ui.input_group_control(class='cn-input w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50', attrs={'placeholder': 'Send a message...'}) }}{% call ui.tooltip_trigger(as_=none, tag='div', align='inline-end', class='cn-input-group-addon flex cursor-text items-center justify-center select-none cn-input-group-addon-align-inline-end order-last', attrs={'role': 'group'}) %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-audio-lines" aria-hidden="true"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Pagination') %}{% call ui.button_group() %}{% call ui.button(size='sm', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true" data-icon="inline-start"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Previous{% endcall %}{% call ui.button(size='sm', variant='outline') %}1{% endcall %}{% call ui.button(size='sm', variant='outline') %}2{% endcall %}{% call ui.button(size='sm', variant='outline') %}3{% endcall %}{% call ui.button(size='sm', variant='outline') %}4{% endcall %}{% call ui.button(size='sm', variant='outline') %}5{% endcall %}{% call ui.button(size='sm', variant='outline') %}Next<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true" data-icon="inline-end"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Pagination Split') %}{% call ui.button_group() %}{% call ui.button_group() %}{% call ui.button(size='sm', variant='outline') %}1{% endcall %}{% call ui.button(size='sm', variant='outline') %}2{% endcall %}{% call ui.button(size='sm', variant='outline') %}3{% endcall %}{% call ui.button(size='sm', variant='outline') %}4{% endcall %}{% call ui.button(size='sm', variant='outline') %}5{% endcall %}{% endcall %}{% call ui.button_group() %}{% call ui.button(size='icon-xs', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>{% endcall %}{% call ui.button(size='icon-xs', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Navigation') %}{% call ui.button_group() %}{% call ui.button_group() %}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>{% endcall %}{% call ui.button(size='default', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>{% endcall %}{% endcall %}{% call ui.button_group(attrs={'aria-label': 'Single navigation button'}) %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Text Alignment') %}{% call ui.field(orientation='vertical') %}{% call ui.label(id='alignment-label') %}Text Alignment{% endcall %}{% call ui.button_group(aria_labelledby='alignment-label') %}{% call ui.button(size='sm', variant='outline') %}Left{% endcall %}{% call ui.button(size='sm', variant='outline') %}Center{% endcall %}{% call ui.button(size='sm', variant='outline') %}Right{% endcall %}{% call ui.button(size='sm', variant='outline') %}Justify{% endcall %}{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='Vertical') %}<div class="flex gap-6">{% call ui.button_group(orientation='vertical', class='h-fit', attrs={'aria-label': 'Media controls'}) %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus" aria-hidden="true"><path d="M5 12h14"></path></svg>{% endcall %}{% endcall %}</div>{% endcall %}
+{% call ui.example(title='Vertical Nested') %}{% call ui.button_group(orientation='vertical', attrs={'aria-label': 'Design tools palette'}) %}{% call ui.button_group(orientation='vertical') %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share" aria-hidden="true"><path d="M12 2v13"></path><path d="m16 6-4-4-4 4"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path></svg>{% endcall %}{% endcall %}{% call ui.button_group(orientation='vertical') %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-horizontal lucide-flip-horizontal" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path><path d="M12 20v2"></path><path d="M12 14v2"></path><path d="M12 8v2"></path><path d="M12 2v2"></path></svg>{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-centerline-dashed-vertical lucide-flip-vertical" aria-hidden="true"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path><path d="M4 12H2"></path><path d="M10 12H8"></path><path d="M16 12h-2"></path><path d="M22 12h-2"></path></svg>{% endcall %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>{% endcall %}{% endcall %}{% call ui.button_group() %}{% call ui.button(size='icon', variant='outline') %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash lucide-trash-2" aria-hidden="true"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>{% endcall %}{% endcall %}{% endcall %}{% endcall %}
 {% endcall %}
 {% endblock %}

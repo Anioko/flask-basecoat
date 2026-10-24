@@ -314,7 +314,7 @@ def text_literal(t):
 
 
 def render_node(el, depth, ctx):
-    pad = '  ' * depth
+    pad = ''  # React emits no whitespace between elements; the generator emits none either
     out = []
     tag = el.tag if isinstance(el.tag, str) else None
     if tag is None:
@@ -324,7 +324,7 @@ def render_node(el, depth, ctx):
     # indentation would otherwise become visible whitespace.
     preformatted = tag in PRE_TAGS or any(c.startswith('whitespace-pre') for c in classes_of(el))
     if preformatted and slot_name:
-        full = etree.tostring(el, encoding='unicode', method='html').replace('&amp;', '&')
+        full = etree.tostring(el, encoding='unicode', method='html', with_tail=False).replace('&amp;', '&')
         inner = full[full.index('>') + 1:full.rindex('<')]
         kw, extra, leftover, slot_name = translate(el, slot_name)
         if extra:
@@ -335,7 +335,7 @@ def render_node(el, depth, ctx):
             kw['tag'] = tag
         report['slots'] += 1
         macro = 'ui.' + slot_name.replace('-', '_')
-        return f"{pad}{{% call {macro}({kw_literal(kw)}) %}}{{% raw %}}{inner}{{% endraw %}}{{% endcall %}}\n"
+        return f"{{% call {macro}({kw_literal(kw)}) %}}{{% raw %}}{inner}{{% endraw %}}{{% endcall %}}"
     children = ''.join(render_children(el, depth + 1, ctx))
     text_before = text_literal(el.text)
     if slot_name:
@@ -344,7 +344,7 @@ def render_node(el, depth, ctx):
         if slot_name == 'example-wrapper':
             extra = ' '.join(c for c in classes_of(el) if c not in set(EXAMPLE_WRAPPER_CLASSES))
             kw = {'class': extra} if extra else {}
-            return f"{pad}{{% call ui.example_wrapper({kw_literal(kw)}) %}}\n{children}{pad}{{% endcall %}}\n"
+            return f"{{% call ui.example_wrapper({kw_literal(kw)}) %}}\n{children}{{% endcall %}}\n"
         if slot_name == 'example':
             title = None
             content = None
@@ -363,7 +363,7 @@ def render_node(el, depth, ctx):
             if eextra:
                 kw['container_class'] = eextra
             inner = ''.join(render_children(content, depth + 1, ctx)) if content is not None else ''
-            return f"{pad}{{% call ui.example({kw_literal(kw)}) %}}\n{inner}{pad}{{% endcall %}}\n"
+            return f"{{% call ui.example({kw_literal(kw)}) %}}{inner}{{% endcall %}}\n"
         if slot_name == 'example-content':
             return children
         kw, extra, leftover, slot_name = translate(el, slot_name)
@@ -380,12 +380,12 @@ def render_node(el, depth, ctx):
         if S.tag_for(slot_name) in S.VOID or (not children.strip() and not text_before.strip()):
             if text_before.strip():
                 kw['text'] = el.text
-            return f"{pad}{{{{ {macro}({kw_literal(kw)}) }}}}\n"
-        return f"{pad}{{% call {macro}({kw_literal(kw)}) %}}{text_before}\n{children}{pad}{{% endcall %}}\n"
+            return f"{{{{ {macro}({kw_literal(kw)}) }}}}"
+        return f"{{% call {macro}({kw_literal(kw)}) %}}{text_before}{children}{{% endcall %}}"
     if is_lucide(el):
         call = lucide_call(el)
         if call:
-            return f"{pad}{call}\n"
+            return f"{call}"
     return raw_element(el, depth, ctx, children, text_before)
 
 
@@ -402,11 +402,11 @@ def in_pre(el):
 
 
 def raw_element(el, depth, ctx, children, text_before):
-    pad = '  ' * depth
+    pad = ''
     tag = el.tag
     if tag in PRE_TAGS:
         # whitespace is content here: emit the subtree exactly as upstream rendered it
-        return pad + etree.tostring(el, encoding='unicode', method='html').replace('&amp;', '&') + '\n'
+        return etree.tostring(el, encoding='unicode', method='html', with_tail=False).replace('&amp;', '&')
     attrs = []
     for k, v in el.attrib.items():
         if k in DROP_ATTRS:
@@ -417,10 +417,10 @@ def raw_element(el, depth, ctx, children, text_before):
             attrs.append(f' {k}="{html.escape(v, quote=True)}"' if v != '' else f' {k}=""')
     open_tag = f"<{tag}{''.join(attrs)}>"
     if tag in S.VOID:
-        return f"{pad}{open_tag}\n"
+        return f"{open_tag}"
     if not children.strip():
-        return f"{pad}{open_tag}{text_before}</{tag}>\n"
-    return f"{pad}{open_tag}{text_before}\n{children}{pad}</{tag}>\n"
+        return f"{open_tag}{text_before}</{tag}>"
+    return f"{open_tag}{text_before}{children}</{tag}>"
 
 
 def render_children(el, depth, ctx):

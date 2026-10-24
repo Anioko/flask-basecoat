@@ -4,45 +4,10 @@
 {% block title %}switch · flask-basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
-    {% call ui.example(title='Basic') %}
-      {% call ui.field(orientation='horizontal') %}
-        {% call ui.switch(size='default', checked=false, id='switch-basic') %}
-          {{ ui.switch_thumb(checked=false) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='switch-basic') %}Airplane Mode{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Description') %}
-      {% call ui.field_label(as_='label', for_='switch-focus-mode') %}
-        {% call ui.field(orientation='horizontal') %}
-          {% call ui.field_content() %}
-            {% call ui.field_label(tag='div') %}Share across devices{% endcall %}
-{% call ui.field_description() %}Focus is shared across devices, and turns off when you leave the app.{% endcall %}
-{% endcall %}
-{% call ui.switch(size='default', checked=false, id='switch-focus-mode') %}
-            {{ ui.switch_thumb(checked=false) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.example(title='With Label') %}
-      <div class="flex items-center gap-2">{% call ui.switch(size='default', checked=true, id='switch-bluetooth') %}
-          {{ ui.switch_thumb(checked=true) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% call ui.label(for_='switch-bluetooth') %}Bluetooth{% endcall %}
-</div>{% endcall %}
-{% call ui.example(title='Disabled') %}
-      <div class="flex flex-col gap-12"><div class="flex items-center gap-2">{% call ui.switch(size='default', checked=false, disabled=true, id='switch-disabled-unchecked') %}
-            {{ ui.switch_thumb(checked=false, disabled=true) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='switch-disabled-unchecked') %}Disabled (Unchecked){% endcall %}
-</div><div class="flex items-center gap-2">{% call ui.switch(size='default', checked=true, disabled=true, id='switch-disabled-checked') %}
-            {{ ui.switch_thumb(checked=true, disabled=true) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% call ui.label(for_='switch-disabled-checked') %}Disabled (Checked){% endcall %}
-</div></div>{% endcall %}
-{% call ui.example(title='Sizes') %}
-      <div class="flex flex-col gap-12"><div class="flex items-center gap-2">{% call ui.switch(size='sm', checked=false, id='switch-size-sm') %}
-            {{ ui.switch_thumb(checked=false) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='switch-size-sm') %}Small{% endcall %}
-</div><div class="flex items-center gap-2">{% call ui.switch(size='default', checked=false, id='switch-size-default') %}
-            {{ ui.switch_thumb(checked=false) }}{% endcall %}
-<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='switch-size-default') %}Default{% endcall %}
-</div></div>{% endcall %}
+{% call ui.example(title='Basic') %}{% call ui.field(orientation='horizontal') %}{% call ui.switch(size='default', checked=false, id='switch-basic') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.field_label(as_='label', for_='switch-basic') %}Airplane Mode{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='With Description') %}{% call ui.field_label(as_='label', for_='switch-focus-mode') %}{% call ui.field(orientation='horizontal') %}{% call ui.field_content() %}{% call ui.field_label(tag='div') %}Share across devices{% endcall %}{% call ui.field_description() %}Focus is shared across devices, and turns off when you leave the app.{% endcall %}{% endcall %}{% call ui.switch(size='default', checked=false, id='switch-focus-mode') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% endcall %}{% endcall %}{% endcall %}
+{% call ui.example(title='With Label') %}<div class="flex items-center gap-2">{% call ui.switch(size='default', checked=true, id='switch-bluetooth') %}{{ ui.switch_thumb(checked=true) }}{% endcall %}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% call ui.label(for_='switch-bluetooth') %}Bluetooth{% endcall %}</div>{% endcall %}
+{% call ui.example(title='Disabled') %}<div class="flex flex-col gap-12"><div class="flex items-center gap-2">{% call ui.switch(size='default', checked=false, disabled=true, id='switch-disabled-unchecked') %}{{ ui.switch_thumb(checked=false, disabled=true) }}{% endcall %}<input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='switch-disabled-unchecked') %}Disabled (Unchecked){% endcall %}</div><div class="flex items-center gap-2">{% call ui.switch(size='default', checked=true, disabled=true, id='switch-disabled-checked') %}{{ ui.switch_thumb(checked=true, disabled=true) }}{% endcall %}<input type="checkbox" aria-hidden="true" disabled="" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" checked="" value="on">{% call ui.label(for_='switch-disabled-checked') %}Disabled (Checked){% endcall %}</div></div>{% endcall %}
+{% call ui.example(title='Sizes') %}<div class="flex flex-col gap-12"><div class="flex items-center gap-2">{% call ui.switch(size='sm', checked=false, id='switch-size-sm') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='switch-size-sm') %}Small{% endcall %}</div><div class="flex items-center gap-2">{% call ui.switch(size='default', checked=false, id='switch-size-default') %}{{ ui.switch_thumb(checked=false) }}{% endcall %}<input type="checkbox" aria-hidden="true" tabindex="-1" style="position:absolute;pointer-events:none;opacity:0;margin:0;transform:translateX(-100%)" value="on">{% call ui.label(for_='switch-size-default') %}Default{% endcall %}</div></div>{% endcall %}
 {% endcall %}
 {% endblock %}

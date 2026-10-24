@@ -4,34 +4,6 @@
 {% block title %}message-scroller · flask-basecoat{% endblock %}
 {% block body %}
 {% call ui.example_wrapper() %}
-    {% call ui.example(title='Chat', container_class='self-start') %}
-      {% call ui.card(size='default', class='h-140') %}
-        {% call ui.card_header() %}
-          {% call ui.card_title() %}How can I help you today?{% endcall %}
-{% call ui.card_description() %}Status: ready{% endcall %}
-{% endcall %}
-{% call ui.card_content(class='min-h-0 flex-1 overflow-hidden p-0') %}
-          {% call ui.message_scroller(attrs={'data-pending-scroll': ''}) %}
-            {% call ui.message_scroller_viewport(attrs={'aria-label': 'Messages', 'data-pending-scroll': ''}) %}
-              {% call ui.message_scroller_content(class='p-(--card-spacing)') %}
-                <div aria-hidden="true" data-message-scroller-spacer="" hidden=""></div>{% endcall %}
-{% endcall %}
-{% call ui.message_scroller_button(as_=none, variant='secondary', size='icon-sm', active=false, class='cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-secondary cn-button-size-icon-sm', attrs={'inert': ''}) %}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg><span class="sr-only">Scroll to end</span>{% endcall %}
-{% endcall %}
-{% endcall %}
-{% call ui.card_footer() %}
-          <form class="w-full" id="chat-form">{% call ui.input_group() %}
-              {% call ui.input_group_control(tag='textarea', readonly=true, class='cn-textarea flex field-sizing-content w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 h-10 min-h-10 overflow-y-auto', attrs={'placeholder': 'Ask me anything...'}) %}{% raw %}Hello there!{% endraw %}{% endcall %}
-{% call ui.input_group_addon(align='block-end', class='p-2') %}
-                {% call ui.input_group_button(as_='input-group-button', size='icon-sm', variant='default', type='submit', class='ml-auto data-[hidden=true]:hidden', attrs={'data-hidden': 'false'}) %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up" aria-hidden="true"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg><span class="sr-only">Send</span>{% endcall %}
-{% call ui.input_group_button(as_='input-group-button', size='icon-sm', variant='ghost', type='button', class='ml-auto data-[hidden=true]:hidden', attrs={'data-hidden': 'true'}) %}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-stop lucide-stop-circle" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6" rx="1"></rect></svg><span class="sr-only">Stop</span>{% endcall %}
-{% endcall %}
-{% endcall %}
-</form>{% endcall %}
-{% endcall %}
-{% endcall %}
+{% call ui.example(title='Chat', container_class='self-start') %}{% call ui.card(size='default', class='h-140') %}{% call ui.card_header() %}{% call ui.card_title() %}How can I help you today?{% endcall %}{% call ui.card_description() %}Status: ready{% endcall %}{% endcall %}{% call ui.card_content(class='min-h-0 flex-1 overflow-hidden p-0') %}{% call ui.message_scroller(attrs={'data-pending-scroll': ''}) %}{% call ui.message_scroller_viewport(attrs={'aria-label': 'Messages', 'data-pending-scroll': ''}) %}{% call ui.message_scroller_content(class='p-(--card-spacing)') %}<div aria-hidden="true" data-message-scroller-spacer="" hidden=""></div>{% endcall %}{% endcall %}{% call ui.message_scroller_button(as_=none, variant='secondary', size='icon-sm', active=false, class='cn-button group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 cn-button-variant-secondary cn-button-size-icon-sm', attrs={'inert': ''}) %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg><span class="sr-only">Scroll to end</span>{% endcall %}{% endcall %}{% endcall %}{% call ui.card_footer() %}<form class="w-full" id="chat-form">{% call ui.input_group() %}{% call ui.input_group_control(tag='textarea', readonly=true, class='cn-textarea flex field-sizing-content w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 h-10 min-h-10 overflow-y-auto', attrs={'placeholder': 'Ask me anything...'}) %}{% raw %}Hello there!{% endraw %}{% endcall %}{% call ui.input_group_addon(align='block-end', class='p-2') %}{% call ui.input_group_button(as_='input-group-button', size='icon-sm', variant='default', type='submit', class='ml-auto data-[hidden=true]:hidden', attrs={'data-hidden': 'false'}) %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up" aria-hidden="true"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg><span class="sr-only">Send</span>{% endcall %}{% call ui.input_group_button(as_='input-group-button', size='icon-sm', variant='ghost', type='button', class='ml-auto data-[hidden=true]:hidden', attrs={'data-hidden': 'true'}) %}<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-stop lucide-stop-circle" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><rect x="9" y="9" width="6" height="6" rx="1"></rect></svg><span class="sr-only">Stop</span>{% endcall %}{% endcall %}{% endcall %}</form>{% endcall %}{% endcall %}{% endcall %}
 {% endcall %}
 {% endblock %}
