@@ -25,6 +25,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 GOLDEN = ROOT / 'compliance/golden/out'
 CHARTS = GOLDEN / 'charts'
+EXTRA = GOLDEN / 'charts-extra'  # the Recharts oracles of the forms shadcn has no original for (R18, R19)
 
 TOLERANCE_PX = 0.5
 NUMERIC_ATTRS = ['x', 'y', 'width', 'height', 'cx', 'cy', 'r', 'x1', 'y1', 'x2', 'y2', 'rx', 'ry']

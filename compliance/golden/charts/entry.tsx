@@ -13,6 +13,7 @@ import { createRoot } from "react-dom/client"
 
 import { charts } from "../../upstream/shadcn/charts-app/charts"
 import { ComponentPreview } from "../../upstream/shadcn/charts-app/view-component-preview"
+import { extraCharts } from "./extra/charts"
 import ChartExample from "../../upstream/shadcn/radix/examples/chart-example"
 import { ChartAreaInteractive as Dashboard01Chart } from "../../upstream/shadcn/radix/blocks/dashboard-01/components/chart-area-interactive"
 
@@ -41,8 +42,15 @@ declare global {
     __error?: string
     __chart?: { name: string; group: string | null; fullWidth: boolean; width: number | null }
     __charts?: Record<string, { group: string; fullWidth: boolean }>
+    __extraCharts?: Record<string, { group: string; width: number }>
   }
 }
+
+// Charts for the forms shadcn has no original for (R18, R19): ?name=<chart> finds them in ./extra/charts.tsx.
+// They are not part of window.__charts, so the 70-chart run is unchanged; `render_charts.py --extra` takes them.
+window.__extraCharts = Object.fromEntries(
+  Object.entries(extraCharts).map(([id, e]) => [id, { group: e.group, width: e.width }])
+)
 
 window.__charts = Object.fromEntries(
   Object.entries(index).map(([id, { group, item }]) => [id, { group, fullWidth: !!item.fullWidth }])
@@ -63,6 +71,18 @@ function element(): React.ReactElement | null {
     return (
       <div data-chart-frame="block" style={{ width: `${block.width}px` }}>
         <Comp />
+      </div>
+    )
+  }
+  const extra = extraCharts[name]
+  if (extra) {
+    window.__chart = { name, group: extra.group, fullWidth: false, width: extra.width }
+    const Comp = extra.component
+    return (
+      <div data-chart-frame="extra" style={{ width: `${extra.width}px` }}>
+        <ComponentPreview>
+          <Comp />
+        </ComponentPreview>
       </div>
     )
   }
