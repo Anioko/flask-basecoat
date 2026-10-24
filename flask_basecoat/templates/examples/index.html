@@ -42,8 +42,13 @@
                 </p>
             </div>
             <div class="flex items-center gap-3">
-                {{ bc.button('Component Gallery', variant='outline', href='/basecoat/gallery') }}
-                {{ bc.button('Toggle Dark Mode', variant='outline', icon='moon', on_click='toggleDarkMode()') }}
+                <a href="/basecoat/gallery" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    Component Gallery
+                </a>
+                <button type="button" onclick="toggleDarkMode()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                    Toggle Dark Mode
+                </button>
             </div>
         </header>
 

@@ -49,7 +49,10 @@
                 <p class="text-sm text-muted-foreground mt-1">100% shadcn/ui-aligned canonical components for Flask & Jinja2.</p>
             </div>
             <div class="flex items-center gap-3">
-                {{ button(text='Toggle Dark Mode', variant='outline', icon='moon', on_click='toggleDarkMode()') }}
+                <button type="button" onclick="toggleDarkMode()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-3 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                    Toggle Dark Mode
+                </button>
             </div>
         </header>
 
@@ -57,15 +60,15 @@
         <section class="space-y-4">
             <h2 class="text-xl font-semibold tracking-tight">1. Buttons</h2>
             <div class="flex flex-wrap items-center gap-3">
-                {{ button(text='Primary Default', variant='default') }}
-                {{ button(text='Secondary', variant='secondary') }}
-                {{ button(text='Outline', variant='outline') }}
-                {{ button(text='Ghost', variant='ghost') }}
-                {{ button(text='Destructive', variant='destructive', icon='trash-2') }}
-                {{ button(text='Link Action', variant='link', href='#') }}
-                {{ button(text='Loading State', variant='default', loading=true) }}
-                {{ button(text='Small', size='sm', variant='outline') }}
-                {{ button(text='Large', size='lg', variant='default') }}
+                {{ button(content='Primary Default', variant='default') }}
+                {{ button(content='Secondary', variant='secondary') }}
+                {{ button(content='Outline', variant='outline') }}
+                {{ button(content='Ghost', variant='ghost') }}
+                {{ button(content='<i data-lucide="trash-2"></i> Destructive', variant='destructive') }}
+                <a href="#" class="text-primary underline-offset-4 hover:underline inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2">Link Action</a>
+                {{ button(content='<i data-lucide="loader-2" class="animate-spin"></i> Loading State', variant='default', disabled=true) }}
+                {{ button(content='Small', size='sm', variant='outline') }}
+                {{ button(content='Large', size='lg', variant='default') }}
             </div>
         </section>
 
@@ -105,7 +108,7 @@
                     {{ render_field(form.bio) }}
                     {{ render_field(form.terms) }}
                     <div class="pt-2">
-                        {{ button(text='Submit Form', type='submit', variant='default') }}
+                        {{ button(content='Submit Form', type='submit', variant='default') }}
                     </div>
                 </form>
             {% endcall %}
@@ -128,8 +131,8 @@
             <h2 class="text-xl font-semibold tracking-tight">6. Dialog (Modal)</h2>
             <div class="flex items-center gap-4">
                 {% set dialog_actions %}
-                    {{ button(text='Cancel', variant='outline', on_click="document.getElementById('demo-dialog').close()") }}
-                    {{ button(text='Confirm Promotion', variant='destructive', on_click="document.getElementById('demo-dialog').close()") }}
+                    <button type="button" onclick="document.getElementById('demo-dialog').close()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">Cancel</button>
+                    <button type="button" onclick="document.getElementById('demo-dialog').close()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 px-4 py-2 bg-destructive text-white shadow-xs hover:bg-destructive/90">Confirm Promotion</button>
                 {% endset %}
 
                 {% call dialog(id='demo-dialog', title='Confirm Action', description='Are you sure you want to promote this build to production?', trigger_text='Open Modal Dialog', trigger_variant='default', footer=dialog_actions) %}
