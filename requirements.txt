@@ -51,3 +51,4 @@ honcho==1.1.0
 
 # Deprecated - to be removed
 # Flask-Script is deprecated, use Flask CLI instead
+WTForms-SQLAlchemy==0.4.2
