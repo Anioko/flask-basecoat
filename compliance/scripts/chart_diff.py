@@ -30,7 +30,11 @@ def main(argv):
             status, ours = b.load(path)
             if hover:
                 h = manifest[name]['hover']
-                b.page.mouse.move(h['x'], h['y'])
+                if h.get('relativeTo') == 'surface':  # our page frames the chart differently from the harness
+                    box = b.page.locator('[data-slot=chart] svg.recharts-surface').first.bounding_box()
+                    b.page.mouse.move(box['x'] + h['dx'], box['y'] + h['dy'])
+                else:
+                    b.page.mouse.move(h['x'], h['y'])
                 b.page.wait_for_timeout(250)
                 ours = b.page.content()
                 gfile = home / f'{name}.hover.html'

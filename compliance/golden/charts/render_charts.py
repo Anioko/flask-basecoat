@@ -448,6 +448,9 @@ def main(argv):
                     entry['hover'] = {'x': x, 'y': y, 'kind': pt['kind'], 'target': pt.get('target'),
                                       'axis': pt.get('axis'), 'scrollY': 0,
                                       'tooltipSelector': TOOLTIP_SELECTOR, 'slots': hinfo['slots']}
+                    if extra:  # our page frames the chart differently: the point is also given relative to the chart surface
+                        sr = page.evaluate(SURFACE_JS)
+                        entry['hover'].update(relativeTo='surface', dx=round(x - sr['left'], 1), dy=round(y - sr['top'], 1))
                     if note:
                         entry['hover']['note'] = note
                     status = 'rendered+hover'

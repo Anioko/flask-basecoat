@@ -152,3 +152,120 @@ def test_ticks_set_on_an_axis_are_the_ticks_drawn(draw):
     page = draw(spec)
     ticks = page.evaluate("() => [...document.querySelectorAll('.recharts-yAxis-tick-labels tspan')].map((t) => t.textContent)")
     assert ticks == ['0', '25', '100']
+
+
+# ---------------------------------------------------------------- ScatterChart, Scatter and ZAxis
+
+# d3-shape 3.2 symbol().type(...).size(100)(), taken with node from the package Recharts draws its symbols with
+D3_SYMBOLS = {
+    'circle': 'M5.642,0A5.642,5.642,0,1,1,-5.642,0A5.642,5.642,0,1,1,5.642,0',
+    'cross': 'M-6.708,-2.236L-2.236,-2.236L-2.236,-6.708L2.236,-6.708L2.236,-2.236L6.708,-2.236L6.708,2.236L2.236,2.236L2.236,6.708L-2.236,6.708L-2.236,2.236L-6.708,2.236Z',
+    'diamond': 'M0,-9.306L5.373,0L0,9.306L-5.373,0Z',
+    'square': 'M-5,-5h10v10h-10Z',
+    'star': 'M0,-9.438L2.119,-2.917L8.976,-2.917L3.429,1.114L5.548,7.636L0,3.605L-5.548,7.636L-3.429,1.114L-8.976,-2.917L-2.119,-2.917Z',
+    'triangle': 'M0,-8.774L7.598,4.387L-7.598,4.387Z',
+    'wye': 'M2.699,1.558L2.699,6.955L-2.699,6.955L-2.699,1.558L-7.373,-1.141L-4.674,-5.815L0,-3.116L4.674,-5.815L7.373,-1.141Z',
+}
+
+POINTS = [{'name': 'Alpha', 'x': 100, 'y': 20, 'z': 10}, {'name': 'Beta', 'x': 200, 'y': 60, 'z': 40}, {'name': 'Gamma', 'x': 300, 'y': 100, 'z': 20}]
+
+
+def scatter_spec(z=True, **over):
+    axes = [{'component': 'XAxis', 'type': 'number', 'dataKey': 'x', 'name': 'Cost', 'domain': [0, 400], 'ticks': [0, 100, 200, 300, 400], 'tickLine': False, 'axisLine': False},
+            {'component': 'YAxis', 'type': 'number', 'dataKey': 'y', 'name': 'Value', 'domain': [0, 100], 'ticks': [0, 50, 100], 'tickLine': False, 'axisLine': False}]
+    if z:
+        axes.append({'component': 'ZAxis', 'type': 'number', 'dataKey': 'z', 'name': 'Effort', 'range': [60, 400]})
+    spec = {'type': 'scatter', 'component': 'ScatterChart', 'config': {'y': {'label': 'Value', 'color': 'var(--chart-1)'}}, 'data': POINTS,
+            'props': {'accessibilityLayer': True, 'margin': {'top': 10, 'right': 40, 'bottom': 10, 'left': 10}},
+            'series': [{'component': 'Scatter', 'fill': 'var(--color-y)', 'labelList': [{'dataKey': 'name', 'position': 'right', 'offset': 8, 'fontSize': 12}]}],
+            'axes': axes, 'grid': {'component': 'CartesianGrid'}, 'tooltip': {'cursor': False}, 'legend': None, 'labels': []}
+    spec.update(over)
+    return spec
+
+
+SYMBOLS_JS = """() => [...document.querySelectorAll('.recharts-scatter-symbol')].map((g) => { const p = g.querySelector('path'); return {
+  cx: +p.getAttribute('cx'), cy: +p.getAttribute('cy'), d: p.getAttribute('d'), w: +p.getAttribute('width'), label: g.getAttribute('aria-label'),
+  role: g.getAttribute('role'), tabindex: g.getAttribute('tabindex') } })"""
+
+
+def test_scatter_points_sit_at_their_data_values_and_bubble_size_comes_from_the_z_axis(draw):
+    page = draw(scatter_spec())
+    plot = page.evaluate(PLOT_JS)
+    pts = page.evaluate(SYMBOLS_JS)
+    assert len(pts) == 3
+    for pt, row in zip(pts, POINTS):
+        assert pt['cx'] == pytest.approx(plot['x'] + plot['width'] * row['x'] / 400, abs=0.5)
+        assert pt['cy'] == pytest.approx(plot['y'] + plot['height'] * (1 - row['y'] / 100), abs=0.5)
+    # ZAxis domain [0, max z] onto the area range [60, 400]: the symbol's area is size, its width 2 * sqrt(size / pi)
+    import math
+    for pt, row in zip(pts, POINTS):
+        area = 60 + (400 - 60) * row['z'] / 40
+        assert pt['w'] == pytest.approx(2 * math.sqrt(area / math.pi), abs=0.01)
+    assert pts[1]['w'] > pts[2]['w'] > pts[0]['w']
+
+
+def test_scatter_without_a_z_axis_draws_every_point_at_the_implicit_size_of_64(draw):
+    page = draw(scatter_spec(z=False))
+    pts = page.evaluate(SYMBOLS_JS)
+    assert {pt['d'] for pt in pts} == {'M4.514,0A4.514,4.514,0,1,1,-4.514,0A4.514,4.514,0,1,1,4.514,0'}
+
+
+def test_symbols_are_the_paths_d3_shape_draws(draw):
+    page = draw(scatter_spec(z=False))
+    got = page.evaluate("(names) => Object.fromEntries(names.map((n) => [n, window.FlaskBasecoatChart.d3.symbol(n, 100)]))", list(D3_SYMBOLS))
+    assert got == D3_SYMBOLS
+    assert page.evaluate("window.FlaskBasecoatChart.d3.symbol('no-such-shape', 100)") == D3_SYMBOLS['circle']  # unknown: a circle, as Recharts
+
+
+def test_scatter_shape_prop_changes_the_symbol(draw):
+    spec = scatter_spec(z=False)
+    spec['series'][0]['shape'] = 'diamond'
+    page = draw(spec)
+    assert page.evaluate(SYMBOLS_JS)[0]['d'].startswith('M0,-')  # a diamond starts at its top vertex
+
+
+def test_each_point_is_a_named_focusable_image_with_one_in_the_tab_order(draw):
+    page = draw(scatter_spec())
+    pts = page.evaluate(SYMBOLS_JS)
+    assert [p['role'] for p in pts] == ['img'] * 3
+    assert pts[0]['label'] == 'Alpha: Cost 100, Value 20, Effort 10'
+    assert pts[2]['label'] == 'Gamma: Cost 300, Value 100, Effort 20'
+    assert [p['tabindex'] for p in pts] == ['0', '-1', '-1']
+    assert page.evaluate("document.querySelector('svg.recharts-surface').hasAttribute('tabindex')") is False
+
+
+def test_hovering_a_point_shows_both_values_and_the_size(draw):
+    page = draw(scatter_spec())
+    page.locator('.recharts-scatter-symbol').nth(1).hover()
+    tip = page.locator('.recharts-tooltip-wrapper .cn-chart-tooltip')
+    tip.wait_for()
+    assert tip.inner_text().split() == ['Cost', '200', 'Value', '60', 'Effort', '40']
+    page.mouse.move(0, 0)
+    page.wait_for_function("() => getComputedStyle(document.querySelector('.recharts-tooltip-wrapper')).visibility === 'hidden'")
+
+
+def test_focus_shows_the_tooltip_and_the_arrow_keys_move_between_points(draw):
+    page = draw(scatter_spec())
+    page.locator('.recharts-scatter-symbol').first.focus()
+    tip = page.locator('.recharts-tooltip-wrapper .cn-chart-tooltip')
+    tip.wait_for()
+    assert tip.inner_text().split()[:2] == ['Cost', '100']
+    page.keyboard.press('ArrowRight')
+    page.wait_for_function("() => document.activeElement.getAttribute('aria-label').startsWith('Beta')")
+    assert tip.inner_text().split()[:2] == ['Cost', '200']
+    assert [p['tabindex'] for p in page.evaluate(SYMBOLS_JS)] == ['-1', '0', '-1']
+    page.keyboard.press('End')
+    page.wait_for_function("() => document.activeElement.getAttribute('aria-label').startsWith('Gamma')")
+    page.keyboard.press('ArrowRight')  # past the last point: stays
+    assert page.evaluate("document.activeElement.getAttribute('aria-label')").startswith('Gamma')
+    page.keyboard.press('Home')
+    page.wait_for_function("() => document.activeElement.getAttribute('aria-label').startsWith('Alpha')")
+    page.locator('body').click(position={'x': 5, 'y': 5})  # focus leaves the chart: the tooltip hides
+    page.wait_for_function("() => getComputedStyle(document.querySelector('.recharts-tooltip-wrapper')).visibility === 'hidden'")
+
+
+def test_points_have_no_keyboard_layer_when_accessibility_layer_is_off(draw):
+    page = draw(scatter_spec(props={'accessibilityLayer': False, 'margin': {'top': 10, 'right': 40, 'bottom': 10, 'left': 10}}))
+    # Recharts' own switch: without accessibilityLayer the chart has no roles, labels or tab stops
+    assert page.evaluate("document.querySelectorAll('.recharts-scatter-symbol[tabindex], .recharts-scatter-symbol[role]').length") == 0
+    assert page.evaluate("document.querySelectorAll('.recharts-scatter-symbol').length") == 3

@@ -75,7 +75,10 @@
         "card-header",
         "card-title",
         "chart"
-      ]
+      ],
+      "relativeTo": "surface",
+      "dx": 198.0,
+      "dy": 41.3
     }
   },
   "chart-matrix-two-by-two": {
@@ -161,7 +164,10 @@
         "card-header",
         "card-title",
         "chart"
-      ]
+      ],
+      "relativeTo": "surface",
+      "dx": 246,
+      "dy": 136.6
     }
   },
   "chart-bar-waterfall": {
@@ -244,7 +250,10 @@
         "card-header",
         "card-title",
         "chart"
-      ]
+      ],
+      "relativeTo": "surface",
+      "dx": 283.5,
+      "dy": 137.5
     }
   }
 }
