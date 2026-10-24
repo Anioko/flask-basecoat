@@ -251,10 +251,12 @@ class TestTableStyling:
         rows = table.find_elements(By.CSS_SELECTOR, 'tbody tr')
         assert len(rows) > 0, "Admin table should have rows"
 
-        # Check first row has border
+        # Check first row has border (shadcn body [&_tr:last-child]:border-0 removes it from the last row,
+        # so a one-user table's only row has none)
         first_row = rows[0]
         border_bottom = first_row.value_of_css_property('border-bottom-width')
-        assert border_bottom == '1px', f"Admin table row should have 1px bottom border, got {border_bottom}"
+        expected = '1px' if len(rows) > 1 else '0px'
+        assert border_bottom == expected, f"Admin table row should have {expected} bottom border, got {border_bottom}"
 
 
 if __name__ == '__main__':
