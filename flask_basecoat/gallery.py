@@ -41,6 +41,10 @@ def gallery():
     )
 
 
+@gallery_bp.route('/gallery/checkbox')
+def gallery_checkbox():
+    return render_template('basecoat/gallery_checkbox.html')
+
 @gallery_bp.route('/gallery/button')
 def gallery_button():
     theme = 'dark' if request.args.get('theme') == 'dark' else 'light'

@@ -1,0 +1,47 @@
+{% from 'basecoat/checkbox.html' import checkbox %}
+{% from 'basecoat/label.html' import label %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox - Basecoat UI Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/basecoat.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <script src="{{ url_for('basecoat.static', filename='js/all.min.js') }}" defer></script>
+    <script src="{{ url_for('basecoat.static', filename='js/checkbox.js') }}" defer></script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 md:p-10 font-sans">
+    <main class="max-w-3xl mx-auto space-y-8">
+        <header class="space-y-1">
+            <p class="text-sm"><a href="{{ url_for('basecoat_gallery.gallery') }}" class="text-primary underline-offset-4 hover:underline">Back to gallery</a></p>
+            <h1 class="text-3xl font-bold tracking-tight">Checkbox</h1>
+            <p class="text-sm text-muted-foreground">A control that allows the user to toggle between checked and not checked.</p>
+        </header>
+
+        <section aria-labelledby="states" class="space-y-4" data-testid="checkbox-states">
+            <h2 id="states" class="text-xl font-semibold tracking-tight">States</h2>
+            <div class="flex flex-col gap-4">
+                {% call checkbox(id='cb-default', name='default') %}{{ label(content='Unchecked', for='cb-default') }}{% endcall %}
+                {% call checkbox(id='cb-checked', name='checked', checked=true) %}{{ label(content='Checked', for='cb-checked') }}{% endcall %}
+                {% call checkbox(id='cb-indeterminate', name='indeterminate', indeterminate=true) %}{{ label(content='Indeterminate', for='cb-indeterminate') }}{% endcall %}
+                {% call checkbox(id='cb-disabled', name='disabled', disabled=true) %}{{ label(content='Disabled', for='cb-disabled') }}{% endcall %}
+                {% call checkbox(id='cb-disabled-checked', name='disabled-checked', checked=true, disabled=true) %}{{ label(content='Disabled and checked', for='cb-disabled-checked') }}{% endcall %}
+                {% call checkbox(id='cb-invalid', name='invalid', invalid=true) %}{{ label(content='Invalid', for='cb-invalid') }}{% endcall %}
+                {% call checkbox(id='cb-required', name='required', required=true) %}{{ label(content='Required', for='cb-required') }}{% endcall %}
+                <div class="flex items-start gap-3">
+                    {{ checkbox(id='cb-terms', name='terms', class='mt-0.5') }}
+                    <div class="grid gap-2">
+                        {{ label(content='Accept terms and conditions', for='cb-terms') }}
+                        <p class="text-muted-foreground text-sm">By clicking this checkbox, you agree to the terms and conditions.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    {{ checkbox(aria_label='Checkbox without a visible label') }}
+                    <span class="text-sm text-muted-foreground">Unlabelled box with aria-label</span>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
