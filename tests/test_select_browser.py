@@ -131,3 +131,76 @@ def test_disabled_option_is_skipped_by_arrow_keys(page):
     page.keyboard.press("ArrowDown")
     page.keyboard.press("End")
     assert page.locator("#sel-disabled-item-trigger").get_attribute("aria-activedescendant") == "sel-disabled-item-opt-3"
+
+
+@pytest.mark.parametrize("theme", ["light", "dark"])
+def test_open_panel_snapshot(page, theme):
+    open_gallery(page, theme)
+    page.locator("#sel-groups-trigger").click()
+    page.wait_for_selector("#sel-groups [data-popover][aria-hidden=false]")
+    page.wait_for_timeout(250)
+    box = page.locator("[data-gallery-state=groups]").bounding_box()
+    shot = page.screenshot(clip={**box, "height": 420})
+    stored = SNAPSHOT_DIR / f"select-open-{theme}.png"
+    if not stored.exists():
+        stored.write_bytes(shot)
+        return
+    ratio = diff_ratio(shot, stored.read_bytes())
+    assert ratio <= MAX_DIFF_RATIO, f"{theme} open panel differs by {ratio:.4%} (limit {MAX_DIFF_RATIO:.1%})"
+
+
+def test_open_panel_looks_like_shadcn_select_content(page):
+    open_gallery(page)
+    page.locator("#sel-groups-trigger").click()
+    page.wait_for_selector("#sel-groups [data-popover][aria-hidden=false]")
+    style = page.evaluate("""() => {
+        const c = getComputedStyle(document.querySelector('#sel-groups [data-slot=select-content]'));
+        const v = getComputedStyle(document.querySelector('#sel-groups [data-slot=select-viewport]'));
+        const root = getComputedStyle(document.documentElement);
+        return {bg: c.backgroundColor, popover: getComputedStyle(document.body).getPropertyValue('--popover'),
+                radius: c.borderTopLeftRadius, border: c.borderTopWidth, shadow: c.boxShadow, minW: c.minWidth,
+                padding: v.paddingTop, overflowX: c.overflowX, overflowY: c.overflowY,
+                popoverBorder: getComputedStyle(document.querySelector('#sel-groups [data-popover]')).borderTopWidth,
+                popoverShadow: getComputedStyle(document.querySelector('#sel-groups [data-popover]')).boxShadow};
+    }""")
+    assert style["border"] == "1px"
+    assert style["radius"] != "0px"
+    assert style["shadow"] != "none"
+    assert style["minW"] == "128px"
+    assert style["padding"] == "4px"
+    assert style["overflowX"] == "hidden" and style["overflowY"] == "auto"
+    # Basecoat's wrapper must not add a second border or shadow around shadcn's panel
+    assert style["popoverBorder"] == "0px"
+    assert "rgba(0, 0, 0, 0.1)" not in style["popoverShadow"]  # only transparent zero-size shadow layers remain
+
+
+def test_scroll_buttons_appear_only_when_the_list_overflows(page):
+    open_gallery(page)
+    # Short list: no overflow, both buttons hidden
+    page.locator("#sel-default-trigger").click()
+    page.wait_for_selector("#sel-default [data-popover][aria-hidden=false]")
+    assert not page.locator("#sel-default [data-slot=select-scroll-up-button]").is_visible()
+    assert not page.locator("#sel-default [data-slot=select-scroll-down-button]").is_visible()
+    page.keyboard.press("Escape")
+
+    # Long list: at the top only the down button shows; after scrolling to the end only the up button shows
+    page.locator("#sel-scroll-trigger").click()
+    page.wait_for_selector("#sel-scroll [data-popover][aria-hidden=false]")
+    up = page.locator("#sel-scroll [data-slot=select-scroll-up-button]")
+    down = page.locator("#sel-scroll [data-slot=select-scroll-down-button]")
+    assert down.is_visible() and not up.is_visible()
+    page.evaluate("() => { const c = document.querySelector('#sel-scroll [data-slot=select-content]'); c.scrollTop = c.scrollHeight; }")
+    page.wait_for_timeout(100)
+    assert up.is_visible() and not down.is_visible()
+
+
+def test_selected_item_shows_one_check_indicator(page):
+    open_gallery(page)
+    page.locator("#sel-value-trigger").click()
+    page.wait_for_selector("#sel-value [data-popover][aria-hidden=false]")
+    selected = page.locator("#sel-value [role=option][aria-selected=true]")
+    other = page.locator("#sel-value [role=option]:not([aria-selected=true])").first
+    assert selected.locator("svg").is_visible()
+    assert not other.locator("svg").is_visible()
+    # Basecoat's own background check icon is replaced by shadcn's indicator span
+    assert selected.evaluate("e => getComputedStyle(e).backgroundImage") == "none"
