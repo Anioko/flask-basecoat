@@ -14,12 +14,17 @@ import {
 
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/registry/new-york-v4/ui/card"
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/registry/new-york-v4/ui/toggle-group"
 import {
   ChartContainer,
   ChartTooltip,
@@ -32,7 +37,7 @@ export const description = "A two-by-two matrix: value against cost"
 const chartData = [
   { option: "SSO rollout", cost: 60, value: 82, effort: 6 },
   { option: "Retire legacy CRM", cost: 90, value: 68, effort: 10 },
-  { option: "API gateway", cost: 150, value: 74, effort: 14 },
+  { option: "API gateway", cost: 120, value: 74, effort: 14 },
   { option: "Data lake", cost: 280, value: 88, effort: 40 },
   { option: "ERP upgrade", cost: 300, value: 76, effort: 52 },
   { option: "Mainframe exit", cost: 250, value: 62, effort: 36 },
@@ -63,6 +68,19 @@ export function ChartMatrixTwoByTwo() {
       <CardHeader>
         <CardTitle>Matrix - Value against Cost</CardTitle>
         <CardDescription>Ten options, split at a cost of 200 and a value of 50</CardDescription>
+        <CardAction>
+          <ToggleGroup
+            type="single"
+            defaultValue="chart"
+            variant="outline"
+            size="sm"
+            spacing={2}
+            aria-label="View"
+          >
+            <ToggleGroupItem value="chart">Chart</ToggleGroupItem>
+            <ToggleGroupItem value="table">Table</ToggleGroupItem>
+          </ToggleGroup>
+        </CardAction>
       </CardHeader>
       <CardContent>
         <ChartContainer

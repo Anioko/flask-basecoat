@@ -144,7 +144,7 @@ LAYOUT_FAMILY = re.compile(r'^-?(?:grid-cols-\S+|grid-rows-\S+|col-span-\S+|row-
 
 def layout_vocab():
     words = set()
-    for f in list(GOLDEN.glob('*.html')) + list((GOLDEN / 'blocks').glob('*.html')) + list((GOLDEN / 'charts').glob('*.html')):
+    for f in list(GOLDEN.glob('*.html')) + list((GOLDEN / 'blocks').glob('*.html')) + list((GOLDEN / 'charts').glob('*.html')) + list((GOLDEN / 'charts-extra').glob('*.html')):
         for cls in re.findall(r'class="([^"]*)"', f.read_text(encoding='utf8')):
             for t in cls.split():
                 if LAYOUT_FAMILY.match(strip_variant(t)):
@@ -182,7 +182,8 @@ def load(target):
 
 
 def golden_path(nearest):
-    for p in (GOLDEN / 'blocks' / f'{nearest}.html', GOLDEN / f'{nearest}.html', GOLDEN / 'charts' / f'{nearest}.html'):
+    for p in (GOLDEN / 'blocks' / f'{nearest}.html', GOLDEN / f'{nearest}.html', GOLDEN / 'charts' / f'{nearest}.html',
+              GOLDEN / 'charts-extra' / f'{nearest}.html'):  # the Recharts oracles of the forms shadcn has no original for
         if p.exists():
             return p
     return None

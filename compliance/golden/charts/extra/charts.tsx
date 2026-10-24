@@ -5,7 +5,7 @@ import { ChartBarWaterfall } from "./chart-bar-waterfall"
 import { ChartMatrixTwoByTwo } from "./chart-matrix-two-by-two"
 import { ChartScatterDefault } from "./chart-scatter-default"
 
-export const EXTRA_WIDTH = 640
+export const EXTRA_WIDTH = 672
 
 export const extraCharts: Record<string, { group: string; width: number; component: React.ComponentType }> = {
   "chart-scatter-default": { group: "scatter", width: 384, component: ChartScatterDefault },

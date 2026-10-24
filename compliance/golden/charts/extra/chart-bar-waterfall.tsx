@@ -64,7 +64,7 @@ export function ChartBarWaterfall() {
         <CardDescription>Three-year cost of the current estate to the target, $ thousands</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="min-w-[560px]">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -103,13 +103,13 @@ export function ChartBarWaterfall() {
               strokeDasharray="3 3"
             />
             <Bar dataKey="base" stackId="a" fill="transparent" legendType="none" tooltipType="none" />
-            <Bar dataKey="fall" stackId="a" fill="var(--color-fall)">
+            <Bar dataKey="fall" stackId="a" fill="var(--color-fall)" stroke="var(--muted-foreground)" strokeWidth={1}>
               <LabelList dataKey="label" position="top" offset={8} className="fill-foreground" fontSize={12} />
             </Bar>
-            <Bar dataKey="rise" stackId="a" fill="var(--color-rise)">
+            <Bar dataKey="rise" stackId="a" fill="var(--color-rise)" stroke="var(--muted-foreground)" strokeWidth={1}>
               <LabelList dataKey="label" position="top" offset={8} className="fill-foreground" fontSize={12} />
             </Bar>
-            <Bar dataKey="total" stackId="a" fill="var(--color-total)">
+            <Bar dataKey="total" stackId="a" fill="var(--color-total)" stroke="var(--muted-foreground)" strokeWidth={1}>
               <LabelList dataKey="label" position="top" offset={8} className="fill-foreground" fontSize={12} />
             </Bar>
           </BarChart>
@@ -117,7 +117,7 @@ export function ChartBarWaterfall() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="leading-none text-muted-foreground">
-          Current cost 4,800, less 2,100 of savings, plus 650 of migration, is 3,350
+          Starts at 4,800, falls by 2,100, rises by 650 and ends at 3,350
         </div>
       </CardFooter>
     </Card>
