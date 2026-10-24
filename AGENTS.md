@@ -27,7 +27,15 @@ Write the original in the page: `<meta name="shadcn-nearest" content="dashboard-
   at most 6 card regions, at most 4 stat cards of one structure, at most 2 chart cards and 1 primary table. When a page
   needs more, split it (a Tabs panel or a linked page); never shrink, tint or decorate to fit.
 
-## 3. Write every visible part with a macro
+## 3. Lay out with the originals' recipes
+
+shadcn has no grid system; its originals repeat a few layout recipes. `docs/LAYOUT.md` lists them with the original
+each comes from, a snippet and screenshots at 390, 768 and 1440 pixels: the page column, the stat card row, cards that
+adapt to their width, content tiles, the centred form, the split screen, the card split in two, paired fields and the
+chart grid. Use the recipe whose original matches the page; do not invent column counts, gaps or breakpoints. Prefer
+the container queries the originals use (`@xl/main:`, `@[540px]/card:`) over window breakpoints inside the page column.
+
+## 4. Write every visible part with a macro
 
 ```jinja
 {% import 'basecoat/index.html' as ui %}
@@ -52,10 +60,10 @@ Write the original in the page: `<meta name="shadcn-nearest" content="dashboard-
 - Colours are theme tokens only (`bg-primary`, `text-muted-foreground`, `border`, `bg-chart-1` …); no palette colours
   (`bg-blue-500`), no hex, rgb or oklch values, no inline style other than CSS custom properties.
 
-## 4. Prove it
+## 5. Prove it
 
 ```bash
-python compliance/scripts/check_page.py /your/page --nearest dashboard-01            # structure, recipes, tokens, density, frame
+python compliance/scripts/check_page.py /your/page --nearest dashboard-01            # structure, recipes, layout, tokens, density, frame
 python compliance/scripts/check_page.py http://127.0.0.1:5000/your/page --browser    # also computed colours and 390px overflow
 python compliance/scripts/check_ratchet.py                                           # no raw colours or controls in templates
 ```

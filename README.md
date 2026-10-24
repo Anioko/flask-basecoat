@@ -123,7 +123,8 @@ built with the macros, and `/basecoat/gallery` the WTForms adapter with live val
 ## Building pages with an AI coding agent
 
 `AGENTS.md` is the procedure for agents (and people) building new pages: pick the nearest shadcn original, reuse its
-frame, write every part with a macro (`docs/MACROS.md` lists them all), and prove the result with
+frame, lay rows out with the originals' recipes (`docs/LAYOUT.md`), write every part with a macro
+(`docs/MACROS.md` lists them all), and prove the result with
 `compliance/scripts/check_page.py`, which reports whether a page is composed only of shadcn parts inside the frame of
 a shadcn original. `flask_basecoat/templates/examples/reference/portfolio.html` (served at
 `/examples/reference/portfolio`) is a dashboard built that way. A Claude skill with the same steps is in

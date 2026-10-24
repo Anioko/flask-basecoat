@@ -132,6 +132,31 @@ def recipe_vocab():
 
 
 VOCAB, MARKERS = recipe_vocab()
+
+
+# ---------------------------------------------------------------- layout vocabulary
+# Grid, gap, padding and margin utilities, with their responsive and container prefixes, exactly as the shadcn
+# originals use them (every component example, block and chart render). A page that lays out with any other
+# value or breakpoint is not following a shadcn layout recipe; docs/LAYOUT.md lists the recipes.
+LAYOUT_FAMILY = re.compile(r'^-?(?:grid-cols-\S+|grid-rows-\S+|col-span-\S+|row-span-\S+|gap(?:-[xy])?-\S+|space-[xy]-\S+|'
+                           r'[pm][trblxyse]?-\S+|max-w-\S+)$')
+
+
+def layout_vocab():
+    words = set()
+    for f in list(GOLDEN.glob('*.html')) + list((GOLDEN / 'blocks').glob('*.html')) + list((GOLDEN / 'charts').glob('*.html')):
+        for cls in re.findall(r'class="([^"]*)"', f.read_text(encoding='utf8')):
+            for t in cls.split():
+                if LAYOUT_FAMILY.match(strip_variant(t)):
+                    words.add(t)
+    # the upstream charts page lays its chart cards out itself (it is a site page, not a rendered block)
+    for f in (ROOT / 'compliance/upstream/shadcn/charts-app').glob('*.tsx'):
+        for cls in re.findall(r'className="([^"]*)"', f.read_text(encoding='utf8')):
+            words |= {t for t in cls.split() if LAYOUT_FAMILY.match(strip_variant(t))}
+    return words
+
+
+LAYOUT_VOCAB = layout_vocab()
 ALLOWED_SLOTS = set(RECIPES) | {'chart-style', 'example', 'example-wrapper', 'example-content'}
 
 
@@ -244,7 +269,7 @@ def companion_control(el, orig_styles):
 
 
 def check(doc, original_doc, original_name, limits):
-    res = {k: [] for k in ('components', 'recipes', 'wrappers', 'colours', 'styles', 'structure', 'density', 'frame')}
+    res = {k: [] for k in ('components', 'recipes', 'wrappers', 'layout', 'colours', 'styles', 'structure', 'density', 'frame')}
     orig_cls = original_classes(original_doc) if original_doc is not None else set()
     orig_styles = original_styles(original_doc) if original_doc is not None else set()
     body = doc.xpath('//body')[0]
@@ -300,6 +325,15 @@ def check(doc, original_doc, original_name, limits):
             if RAW_COLOUR_LITERAL.search(c) and c not in orig_cls and c not in VOCAB.get(slot or '', ()):
                 res['colours'].append(f'{describe(el)}: raw colour in class "{c}"')
                 problems.append('colour')
+
+        if not inside_chart:
+            own = VOCAB.get(slot or '', set())
+            for c in classes:
+                if c in own or c in orig_cls or c in LAYOUT_VOCAB:
+                    continue
+                if LAYOUT_FAMILY.match(strip_variant(c)):
+                    res['layout'].append(f'{describe(el)}: "{c}" is not a spacing, column or width value a shadcn original uses (docs/LAYOUT.md)')
+                    problems.append('layout')
 
         style = el.get('style')
         if style and not inside_chart:

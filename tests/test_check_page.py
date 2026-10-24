@@ -43,6 +43,8 @@ CARD = 'data-slot="card" class="'
     ('<main', '<button type="button">Raw</button><main', 'components'),  # raw control
     ('data-slot="card-content"', 'data-slot="card-content"><div data-slot="card" class="cn-card group/card flex flex-col"></div', 'structure'),  # card in a card
     ('data-slot="sidebar-header"', 'data-slot="sidebar-headerx"', 'components'),  # unknown part
+    ('<main', '<div class="grid grid-cols-7 gap-5"></div><main', 'layout'),  # a column count and gap no original uses
+    ('<main', '<div class="grid xl:grid-cols-3"></div><main', 'layout'),     # a breakpoint the originals do not use for columns
 ])
 def test_departures_are_caught(tmp_path, old, new, check):
     res, score, _ = mutate(tmp_path, old, new)
