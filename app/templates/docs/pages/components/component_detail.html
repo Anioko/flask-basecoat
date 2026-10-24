@@ -26,142 +26,11 @@
 <section class="docs-section">
   <h2>Usage Examples</h2>
   <p>Here are some practical examples of using the {{ component.title.lower() }} component:</p>
-  
-  {% if component.name == 'button' %}
-  <h3>Jinja macro</h3>
-  <p>Every shadcn variant and size, plus <code>disabled</code>, <code>loading</code>, <code>invalid</code> and <code>href</code> (renders a link with the same classes). Children come from <code>content</code> or a <code>call</code> block. Icon-only buttons need <code>aria_label</code>. See all states in the <a href="{{ url_for('basecoat_gallery.gallery_button') }}">button gallery</a>.</p>
-  <pre><code>{% raw %}{% from 'basecoat/button.html' import button %}
-{{ button(content='Save', variant='default') }}
-{% call button(variant='outline', size='sm') %}Next{% endcall %}
-{{ button(content='Please wait', loading=true) }}
-{{ button(content='Docs', variant='link', href='/docs') }}{% endraw %}</code></pre>
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Form Actions</h4>
-      <div class="component-example">
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-        <button class="btn btn-secondary" type="button">Cancel</button>
-      </div>
-      
-      <h4>Navigation</h4>
-      <div class="component-example">
-        <button class="btn btn-outline" type="button">← Previous</button>
-        <button class="btn btn-primary" type="button">Next →</button>
-      </div>
-      
-      <h4>Destructive Actions</h4>
-      <div class="component-example">
-        <button class="btn btn-destructive" type="button">Delete Item</button>
-        <button class="btn btn-ghost" type="button">Cancel</button>
-      </div>
-    </div>
-  </div>
-  
-  {% elif component.name == 'textarea' %}
-  <h3>Jinja macro</h3>
-  <p>One shadcn part (<code>data-slot="textarea"</code>) that grows with its text. Pass a <code>class</code> such as <code>min-h-32</code> for a taller box, and <code>disabled</code>, <code>readonly</code>, <code>required</code> or <code>invalid</code> for states, and pass initial text with <code>content</code> or a <code>call</code> block. Give it a visible label (<code>for</code> the <code>id</code>) or <code>aria_label</code>, and link help or error text with <code>aria_describedby</code>. See all states in the <a href="{{ url_for('basecoat_gallery.gallery_textarea') }}">textarea gallery</a>.</p>
-  <pre><code>{% raw %}{% from 'basecoat/textarea.html' import textarea %}
-{{ textarea(id='message', name='message', placeholder='Type your message here.') }}
-{{ textarea(id='bio', class='min-h-32', invalid=true, aria_describedby='bio-error') }}
-{% call textarea(id='notes') %}Initial text{% endcall %}{% endraw %}</code></pre>
+  {% set entry = basecoat_entry(component.name) %}
+  {% if entry and entry.docs %}
+{{ basecoat_render_docs(entry.docs) }}
+  {% else %}
 
-  {% elif component.name == 'label' %}
-  <h3>Jinja macro</h3>
-  <p>One shadcn part (<code>data-slot="label"</code>). Pass <code>for</code> with the control's <code>id</code> so the label names it and clicking it focuses or toggles the control, give the label text with <code>content</code> or a <code>call</code> block, and add <code>id</code> or <code>class</code> when needed. Disabled styling follows the markup as in shadcn: put <code>peer</code> on a disabled control that precedes the label, or <code>group</code> with <code>data-disabled="true"</code> on an ancestor. See all states in the <a href="{{ url_for('basecoat_gallery.gallery_label') }}">label gallery</a>.</p>
-  <pre><code>{% raw %}{% from 'basecoat/label.html' import label %}
-{{ label(for='email', content='Email') }}
-{% call label(for='terms') %}Accept terms and conditions{% endcall %}{% endraw %}</code></pre>
-
-  {% elif component.name == 'card' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Product Card</h4>
-      <div class="component-example">
-        <div class="card card-interactive">
-          <div class="card-header">
-            <h3 class="card-title">Premium Plan</h3>
-            <p class="card-description">Perfect for growing teams</p>
-          </div>
-          <div class="card-content">
-            <p class="card-price">$29<span>/month</span></p>
-            <ul class="card-features">
-              <li>Unlimited projects</li>
-              <li>Advanced analytics</li>
-              <li>Priority support</li>
-            </ul>
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  {% elif component.name == 'alert' %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage">
-      <h4>Form Validation</h4>
-      <div class="component-example">
-        <div class="alert alert-destructive" role="alert">
-          <div class="alert-icon">⚠️</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Validation Error</h4>
-            <p class="alert-description">Please check the required fields and try again.</p>
-          </div>
-        </div>
-      </div>
-      
-      <h4>Success Message</h4>
-      <div class="component-example">
-        <div class="alert alert-success" role="alert">
-          <div class="alert-icon">✅</div>
-          <div class="alert-content">
-            <h4 class="alert-title">Success!</h4>
-            <p class="alert-description">Your changes have been saved successfully.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% elif component.name == 'select' %}
-  <div class="docs-preview" data-preview data-docs-entry="select">
-    <div class="component-usage">
-      <h4>Jinja macro</h4>
-      <p>Behaviour (open, arrow keys, Home/End, Enter, Escape, hidden form value) comes from Basecoat's select script; use <code>caller()</code> for groups, labels and separators.</p>
-      <pre><code>{% raw %}{% from 'basecoat/select.html' import select, select_group, select_item, select_separator %}
-
-{{ select(name='fruit', id='fruit', placeholder='Select a fruit', label='Fruit',
-          options=[('apple', 'Apple'), ('banana', 'Banana')]) }}
-
-{% call select(name='tz', id='tz', placeholder='Timezone', size='sm') %}
-  {% call select_group(label='Europe', id='tz-eu') %}
-    {{ select_item(value='cet', content='CET') }}
-  {% endcall %}
-{% endcall %}{% endraw %}</code></pre>
-      <p>Arguments: <code>value</code>, <code>placeholder</code>, <code>size</code> (<code>default</code> or <code>sm</code>), <code>disabled</code>, <code>invalid</code>, <code>required</code>, <code>class</code>. Include <code>select-placeholder.js</code> after Basecoat's script to show a placeholder instead of the first option, and <code>select-scroll.js</code> for the scroll up and down buttons on long lists.</p>
-      <p><a class="docs-link" href="/basecoat/gallery/select">See every state in the development gallery &rarr;</a></p>
-    </div>
-  </div>
-  {% elif component.name == 'input' %}
-  {% from 'basecoat/input.html' import input as shadcn_input %}
-  <div class="docs-preview" data-preview>
-    <div class="component-usage" data-docs-input>
-      <h4>Shadcn input macro</h4>
-      <p>
-        <code>{% raw %}{% from 'basecoat/input.html' import input %}{% endraw %}</code>.
-        Arguments: <code>type</code>, <code>placeholder</code>, <code>value</code>, <code>disabled</code>,
-        <code>readonly</code>, <code>required</code>, <code>invalid</code> (sets <code>aria-invalid</code>),
-        <code>describedby</code>, <code>label</code> (<code>aria-label</code>), <code>class</code>; any other
-        keyword becomes an HTML attribute. Input has no children, so there is no <code>caller()</code> slot.
-        See the <a class="docs-link" href="/basecoat/gallery/input">gallery entry</a> for every state.
-      </p>
-      <div class="component-example">
-        {{ shadcn_input(id='docs-input-email', type='email', placeholder='Email', label='Email') }}
-        {{ shadcn_input(id='docs-input-invalid', value='ab', invalid=true, label='Username') }}
-      </div>
-    </div>
-  </div>
   {% endif %}
 </section>
 
@@ -180,16 +49,9 @@
   <p>Other components that work well with {{ component.title.lower() }}:</p>
   
   <div class="docs-grid">
-    {% set related_components = {
-      'button': ['badge', 'card', 'alert'],
-      'badge': ['button', 'card', 'avatar'],
-      'card': ['button', 'badge', 'avatar'],
-      'alert': ['button', 'badge'],
-      'avatar': ['badge', 'card'],
-      'input': ['button', 'alert', 'card']
-    } %}
+    {# Related names come from the component's registry entry #}
     
-    {% for related_name in related_components.get(component.name, []) %}
+    {% for related_name in (entry.related if entry else []) %}
     <article class="docs-card">
       <h3><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">{{ related_name|title }}</a></h3>
       <p><a class="docs-link" href="{{ url_for('docs.page', slug='components/' + related_name) }}">View component &rarr;</a></p>

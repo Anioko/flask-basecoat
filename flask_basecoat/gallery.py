@@ -2,6 +2,7 @@
 Interactive Component Gallery Blueprint for Basecoat UI.
 """
 from flask import Blueprint, render_template, request, flash, redirect, url_for
+from .gallery_registry import gallery_entries
 from wtforms import Form, StringField, PasswordField, BooleanField, SelectField, TextAreaField, validators
 
 gallery_bp = Blueprint('basecoat_gallery', __name__, template_folder='templates')
@@ -37,34 +38,22 @@ def gallery():
         'basecoat/gallery.html',
         form=form,
         sample_columns=sample_columns,
-        sample_rows=sample_rows
+        sample_rows=sample_rows,
+        header_nav_entries=gallery_entries('header-nav'),
+        header_entries=gallery_entries('header'),
+        nav_entries=gallery_entries('nav')
     )
 
 
-@gallery_bp.route('/gallery/select')
-def gallery_select():
-    numbers = [(n, f'Number {n}') for n in range(1, 31)]
-    return render_template('basecoat/gallery_select.html', numbers=numbers)
+def _add_entry_page(entry):
+    def view():
+        if entry.themed:
+            theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
+            return render_template(entry.gallery_template, theme=theme, **entry.context)
+        return render_template(entry.gallery_template, **entry.context)
+
+    gallery_bp.add_url_rule(f'/gallery/{entry.name}', endpoint=entry.endpoint, view_func=view)
 
 
-@gallery_bp.route('/gallery/input')
-def gallery_input():
-    return render_template('basecoat/gallery_input.html')
-
-
-@gallery_bp.route('/gallery/button')
-def gallery_button():
-    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
-    return render_template('basecoat/gallery_button.html', theme=theme)
-
-
-@gallery_bp.route('/gallery/textarea')
-def gallery_textarea():
-    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
-    return render_template('basecoat/gallery_textarea.html', theme=theme)
-
-
-@gallery_bp.route('/gallery/label')
-def gallery_label():
-    theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
-    return render_template('basecoat/gallery_label.html', theme=theme)
+for _entry in gallery_entries():
+    _add_entry_page(_entry)

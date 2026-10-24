@@ -392,6 +392,22 @@ Accessible placeholder shapes for async content:
 
 ---
 
+## ➕ Adding a Component to the Gallery and Docs
+
+To register a component, add one file, `flask_basecoat/gallery_entries/<name>.py`, and nothing else. It defines an `ENTRY` dict (`name`, plus optional `gallery_template`, `index_label`, `docs` and `related`; the full key list is in `flask_basecoat/gallery_registry.py`). The gallery route and index link, and the usage examples and related components on `/docs/components/<name>`, are all built from that file, so do not edit `gallery.py`, `gallery.html` or `component_detail.html`. The macro and its gallery template are your component's own files, as before.
+
+```python
+# flask_basecoat/gallery_entries/switch.py
+ENTRY = {
+    'name': 'switch',
+    'gallery_template': 'basecoat/gallery_switch.html',
+    'index_label': 'Switch',
+    'related': ['label', 'button'],
+}
+```
+
+---
+
 ## 🏛️ Anti-Drift CI Ratchet
 
 To prevent codebases from regressing to raw HTML tags (`<button>`, `<input>`), `flask-basecoat` includes a strict CI ratchet check:
