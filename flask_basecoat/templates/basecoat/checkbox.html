@@ -1,20 +1,41 @@
-{# shadcn checkbox macro - exact class parity with shadcn/ui checkbox.tsx #}
-{% macro checkbox(name='', checked=false, disabled=false, class='', id='') %}
+{# shadcn checkbox macro - exact class parity with shadcn/ui checkbox.tsx.
+   States: checked, indeterminate, disabled, invalid, required. A caller() block renders beside the box (shadcn pairs it with a Label whose for= is the box id).
+   Behaviour (click, Space, Enter suppressed, form value) comes from js/checkbox.js. #}
+{% macro checkbox(name='', checked=false, indeterminate=false, disabled=false, invalid=false, required=false, value='on', class='', id='', aria_label='') %}
+{%- set state = 'indeterminate' if indeterminate else ('checked' if checked else 'unchecked') -%}
+{%- set box -%}
 <button
     type="button"
     role="checkbox"
-    aria-checked="{{ 'true' if checked else 'false' }}"
-    data-state="{{ 'checked' if checked else 'unchecked' }}"
+    aria-checked="{{ 'mixed' if indeterminate else ('true' if checked else 'false') }}"
+    data-state="{{ state }}"
     data-slot="checkbox"
     class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 {{ class }}"
     {%- if disabled %} disabled{% endif %}
+    {%- if invalid %} aria-invalid="true"{% endif %}
+    {%- if required %} aria-required="true"{% endif %}
     {%- if id %} id="{{ id }}"{% endif %}
-    {%- if name %} name="{{ name }}"{% endif %}
+    {%- if aria_label %} aria-label="{{ aria_label }}"{% endif %}
 >
     <span data-slot="checkbox-indicator" class="flex items-center justify-center text-current transition-none">
-        {%- if checked %}
-        <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        {%- if checked or indeterminate %}
+        <svg class="size-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
         {%- endif %}
     </span>
 </button>
+{%- if name %}
+<input type="checkbox" hidden aria-hidden="true" tabindex="-1" name="{{ name }}" value="{{ value }}"
+    {%- if checked %} checked{% endif %}
+    {%- if disabled %} disabled{% endif %}
+    {%- if required %} required{% endif %}>
+{%- endif %}
+{%- endset -%}
+{%- if caller -%}
+<div class="flex items-center gap-2" data-slot="checkbox-field">
+    {{ box }}
+    {{ caller() }}
+</div>
+{%- else -%}
+{{ box }}
+{%- endif -%}
 {%- endmacro -%}
