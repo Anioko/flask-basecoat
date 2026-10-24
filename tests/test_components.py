@@ -51,6 +51,12 @@ class ComponentsTestCase(unittest.TestCase):
         self.assertIn(b'Alert', response.data)
         self.assertIn(b'Default Alert', response.data)
 
+    def test_label_component_page_documents_the_macro(self):
+        response = self.client.get('/docs/components/label')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Jinja macro', response.data)
+        self.assertIn(b'/basecoat/gallery/label', response.data)
+
     def test_avatar_component_page_renders(self):
         response = self.client.get('/docs/components/avatar')
         self.assertEqual(response.status_code, 200)
