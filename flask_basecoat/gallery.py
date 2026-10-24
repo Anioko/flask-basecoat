@@ -48,8 +48,8 @@ def _add_entry_page(entry):
     def view():
         if entry.themed:
             theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
-            return render_template(entry.gallery_template, theme=theme)
-        return render_template(entry.gallery_template)
+            return render_template(entry.gallery_template, theme=theme, **entry.context)
+        return render_template(entry.gallery_template, **entry.context)
 
     gallery_bp.add_url_rule(f'/gallery/{entry.name}', endpoint=entry.endpoint, view_func=view)
 

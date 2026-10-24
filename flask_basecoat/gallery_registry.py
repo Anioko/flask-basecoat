@@ -12,6 +12,7 @@ ENTRY keys (all optional except ``name``):
 ``gallery_template``  Template of the component's gallery page, e.g. ``'basecoat/gallery_button.html'``.
                       Served at ``/gallery/<name>`` with endpoint ``gallery_<name>`` (``-`` becomes ``_``).
 ``themed``            True (default): the page gets ``theme`` ('light' or 'dark') from ``?theme=``.
+``context``           Dict of extra template variables to pass to the gallery template.
 ``index_label``       Link text on the gallery index. Required with ``gallery_template``.
 ``index_slot``        ``'nav'`` (default, the Components list) or ``'header'`` (button row in the page header).
 ``order``             Sort position on the index; ties sort by name. Default 1000.
@@ -24,7 +25,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 INDEX_SLOTS = ('nav', 'header')
-_KEYS = {'name', 'gallery_template', 'themed', 'index_label', 'index_slot', 'order', 'docs', 'related'}
+_KEYS = {'name', 'gallery_template', 'themed', 'context', 'index_label', 'index_slot', 'order', 'docs', 'related'}
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,7 @@ class Entry:
     name: str
     gallery_template: str = None
     themed: bool = True
+    context: dict = None
     index_label: str = None
     index_slot: str = 'nav'
     order: int = 1000
@@ -51,7 +53,7 @@ def _build(module_name, data):
         raise ValueError(f"gallery entry {module_name}: missing 'name'")
     if data['name'].replace('-', '_') != module_name:
         raise ValueError(f"gallery entry {module_name}: name {data['name']!r} does not match the file name")
-    entry = Entry(**{**data, 'related': tuple(data.get('related', ()))})
+    entry = Entry(**{**data, 'related': tuple(data.get('related', ())), 'context': data.get('context', {})})
     if entry.index_slot not in INDEX_SLOTS:
         raise ValueError(f"gallery entry {module_name}: index_slot must be one of {INDEX_SLOTS}")
     if entry.gallery_template and not entry.index_label:

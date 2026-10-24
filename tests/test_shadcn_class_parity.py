@@ -790,32 +790,113 @@ def test_pagination_parity():
 
 # ===== Select Tests =====
 
-def test_select_parity():
-    """Test select macros match shadcn select.tsx exactly."""
-    tsx_path = COMPONENTS_PATH / "select.tsx"
-    tsx_content = tsx_path.read_text()
+# Classes shadcn applies to select parts that are dropped on purpose, each with its reason.
+SELECT_DROPPED = {
+    # position="popper" side offsets: Basecoat's [data-popover] wrapper positions itself from data-side with margins.
+    "content": {
+        "data-[side=bottom]:translate-y-1": "Radix popper side offset; Basecoat offsets the wrapper with margin-top",
+        "data-[side=left]:-translate-x-1": "Radix popper side offset; Basecoat offsets the wrapper with margin-right",
+        "data-[side=right]:translate-x-1": "Radix popper side offset; Basecoat offsets the wrapper with margin-left",
+        "data-[side=top]:-translate-y-1": "Radix popper side offset; Basecoat offsets the wrapper with margin-bottom",
+    },
+    # Radix sizes the viewport from CSS variables that only exist inside Radix's popper.
+    "viewport": {
+        "h-[var(--radix-select-trigger-height)]": "--radix-select-trigger-height is never defined without Radix",
+        "min-w-[var(--radix-select-trigger-width)]": "--radix-select-trigger-width is never defined; Basecoat's min-width:100% matches the trigger",
+    },
+}
 
-    # Test SelectTrigger with default size
-    trigger_match = re.search(r'data-slot="select-trigger".*?className=\{cn\(\s*"([^"]+)"', tsx_content, re.DOTALL)
-    assert trigger_match, "Failed to parse select.tsx trigger classes"
-    trigger_classes = normalize_classes(trigger_match.group(1).replace('\n', ' '))
+
+def _tsx_classes(tsx, slot):
+    """Classes of the first cn("...") string after data-slot="<slot>"."""
+    m = re.search(r'data-slot="' + slot + r'".*?cn\(\s*"([^"]+)"', tsx, re.DOTALL)
+    assert m, f"Failed to parse {slot} classes in select.tsx"
+    return normalize_classes(m.group(1).replace('\n', ' '))
+
+
+def _tsx_string_after(tsx, marker):
+    m = re.search(re.escape(marker) + r'\s*&&\s*"([^"]+)"', tsx)
+    assert m, f"Failed to parse {marker} string in select.tsx"
+    return normalize_classes(m.group(1))
+
+
+def _classes(elem):
+    return normalize_classes(' '.join(elem.get('class', [])))
+
+
+def test_select_parity():
+    """Every part select.tsx renders: trigger, content, viewport, label, item (+indicator), separator, scroll buttons."""
+    tsx = (COMPONENTS_PATH / "select.tsx").read_text()
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)))
-    template_str = "{% from 'select.html' import select_trigger %}{{ select_trigger() }}"
-    template = env.from_string(template_str)
-    html = template.render()
-
+    html = env.from_string(
+        "{% from 'select.html' import select, select_group, select_item, select_separator %}"
+        "{% call select(name='tz', id='tz', placeholder='Pick') %}"
+        "{% call select_group(label='Group', id='tz-g') %}{{ select_item(value='a', content='A') }}{% endcall %}"
+        "{{ select_separator() }}"
+        "{% endcall %}"
+    ).render()
     soup = BeautifulSoup(html, 'html.parser')
-    trigger_elem = soup.find(attrs={'data-slot': 'select-trigger'})
 
-    assert trigger_elem, "Select trigger element not found"
-    actual_classes = normalize_classes(' '.join(trigger_elem.get('class', [])))
+    def part(slot):
+        elem = soup.find(attrs={'data-slot': slot})
+        assert elem, f"{slot} element not found"
+        return elem
 
-    assert actual_classes == trigger_classes, \
-        f"Select trigger: classes mismatch.\nExpected: {trigger_classes}\nActual: {actual_classes}"
+    # Root, group and value carry their data-slot
+    for slot in ('select', 'select-group', 'select-value'):
+        part(slot)
+    assert re.search(r'data-slot="select"', tsx) and re.search(r'data-slot="select-group"', tsx) and re.search(r'data-slot="select-value"', tsx)
 
-    # Check data-size attribute
-    assert trigger_elem.get('data-size') == 'default', "Select trigger should have data-size='default'"
+    # Trigger
+    trigger = part('select-trigger')
+    assert _classes(trigger) == _tsx_classes(tsx, 'select-trigger'), "Select trigger: classes mismatch"
+    assert trigger.get('data-size') == 'default'
+    icon = trigger.find('svg')
+    assert icon and set(icon['class']) == {'size-4', 'opacity-50'}, "Select trigger chevron: size-4 opacity-50"
+
+    # Content panel: every static class kept (animation/state ones are inert without Radix data-state), popper offsets dropped.
+    content = part('select-content')
+    expected_content = _tsx_classes(tsx, 'select-content')
+    popper = _tsx_string_after(tsx, 'position === "popper"')
+    assert set(popper) == set(SELECT_DROPPED['content']), "Dropped popper classes must be exactly the named ones"
+    assert _classes(content) == expected_content, "Select content: classes mismatch"
+    for needed in ('bg-popover', 'text-popover-foreground', 'relative', 'z-50', 'min-w-[8rem]', 'overflow-x-hidden',
+                   'overflow-y-auto', 'rounded-md', 'border', 'shadow-md', 'max-h-(--radix-select-content-available-height)'):
+        assert needed in content['class']
+    # Basecoat's positioned wrapper (Radix's popper wrapper) holds the content; its own surface is neutralised
+    assert content.parent.has_attr('data-popover')
+
+    # Viewport (p-1 plus the popper sizing, minus the Radix-variable classes named above)
+    viewport = part('select-viewport')
+    m = re.search(r'Viewport\s+className=\{cn\(\s*"([^"]+)",\s*position === "popper" &&\s*"([^"]+)"', tsx)
+    assert m, "Failed to parse viewport classes"
+    viewport_expected = m.group(1).split() + [c for c in m.group(2).split() if c not in SELECT_DROPPED['viewport']]
+    assert set(m.group(2).split()) - set(viewport_expected) == set(SELECT_DROPPED['viewport'])
+    assert _classes(viewport) == normalize_classes(' '.join(viewport_expected)), "Select viewport: classes mismatch"
+    assert viewport['role'] == 'listbox'
+
+    # Label, item, separator
+    assert _classes(part('select-label')) == _tsx_classes(tsx, 'select-label'), "Select label: classes mismatch"
+    item = part('select-item')
+    assert _classes(item) == _tsx_classes(tsx, 'select-item'), "Select item: classes mismatch"
+    assert _classes(part('select-separator')) == _tsx_classes(tsx, 'select-separator'), "Select separator: classes mismatch"
+
+    # Item indicator: first child span "absolute right-2 flex size-3.5 items-center justify-center" wrapping a size-4 check;
+    # the check is shown only while aria-selected (the ItemIndicator behaviour), via an extra in-aria-selected utility.
+    indicator_tsx = re.search(r'<span className="([^"]+)">\s*<SelectPrimitive.ItemIndicator>', tsx).group(1)
+    spans = item.find_all('span', recursive=False)
+    assert len(spans) == 2, "Item renders indicator span then text span"
+    assert _classes(spans[0]) == normalize_classes(indicator_tsx), "Select item indicator: classes mismatch"
+    check = spans[0].find('svg')
+    assert 'size-4' in check['class'] and 'in-aria-selected:block' in check['class']
+
+    # Scroll buttons: shadcn classes, present but hidden until the list overflows
+    for direction in ('up', 'down'):
+        button = part(f'select-scroll-{direction}-button')
+        assert _classes(button) == _tsx_classes(tsx, f'select-scroll-{direction}-button'), f"Scroll {direction} button: classes mismatch"
+        assert button.has_attr('hidden'), "Scroll buttons are hidden until the list overflows"
+        assert 'size-4' in button.find('svg')['class']
 
 
 # ===== Radio Group Tests =====
