@@ -72,6 +72,23 @@ A page is shadcn when the page check prints `SHADCN COMPOSED` at 100% content fi
 and the rule; fix the page, never the check. The check passes every shadcn original the library ships (dashboard-01,
 the 10 login and sign-up blocks, the 16 sidebar blocks) and fails each kind of departure (`tests/test_check_page.py`).
 
+### The gates beyond the page check
+
+Each is a flag of the same command (`--gates` runs all of them). A line starting `FAIL` names the node and the rule; fix
+the page, never the check. The markup contract of the Tier C forms is in `docs/PAGE-GATES.md`.
+
+| Gate | Command | Passes when |
+|---|---|---|
+| A2 structure | `check_page.py /page --nearest login-01 --structure --tier A` | the element tree equals the original's golden render after repeated rows, cards and list items collapse to one each. Prints the percent match and the first differing node. Tier A needs 100%; Tier B and C need the frame (sidebar, inset, header) at 100% |
+| A5 pixels | `... --pixels --tier A` | with text runs, chart plots, avatars and images painted out, at most 0.5% of pixels differ from the golden render at 1440 and 390, light and dark. Tier B and C compare the frame only, at 2% (B8) |
+| B9 charts | `... --charts` (`--rendered` also draws it) | each chart spec names a pinned chart id (`load_spec` sets it), is that chart's family, has no more series than it (and at most 5), and uses `chart-1` to `chart-5`, `muted-foreground` and the colours the pinned chart itself carries |
+| R9 accessibility | `... --a11y [--departures departures.json]` | axe (WCAG 2.2 AA) at 1440 and 390, light and dark, finds no serious or critical issue, even one the original has, unless the page records a departure `{"check": "R9", "rule": "color-contrast", "wcag": "1.4.3", "reason": "..."}` (a file, or `<meta name="shadcn-departure" content="R9 color-contrast wcag=1.4.3 reason=...">`). Moderate and minor issues fail only beyond the original's count |
+| Tier C forms | `... --forms [--form c4]` | each region marked `data-entelim-form="c1"` to `"c5"` passes its form's gate: C1 diagram, C2 heat map, C3 timeline, C4 canvas, C5 document. C1 also holds on every page: one diagram engine (R15) |
+| Help text | `... --help-text` | no "Nothing here yet", "No data" or "N/A" as visible text; every icon-only button has an accessible name and a Tooltip; no native `title` tooltip on a control; an ordered measure drawn in colour shows its value as text and has a legend (R16) |
+
+`python compliance/scripts/check_page.py --survey report.md` runs every gate on the 27 blocks and all example pages.
+Tests: `tests/test_check_page_gates.py` (each gate has a passing fixture and a broken one).
+
 ## What the library itself proves
 
 `python scripts/shadcn_compliance.py --browser` compares every component example, block and chart with the pinned

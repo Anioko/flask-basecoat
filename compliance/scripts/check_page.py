@@ -27,6 +27,21 @@ Checks (each prints PASS/FAIL with the offending nodes):
                horizontal overflow at 390px; no accessibility finding beyond those of the original
 
 The fidelity score is the share of nodes in the content area that pass; a page is "shadcn composed" only at 100%.
+
+Gates (compliance/scripts/page_gates.py; each is a flag, --gates runs them all):
+  --structure   A2   element tree against the named original's golden render, repeated units collapsed: percent match
+                     and the first differing node (--tier A needs 100%; B and C need the frame at 100%, B2)
+  --pixels      A5   masked screenshot against the golden render at 1440 and 390, light and dark (--tier A: 0.5% of the
+                     page; B and C: 2% of the frame, B8)
+  --charts      B9   each chart spec names a pinned chart id, is that family, has no more series than it, chart tokens only
+                     (add --rendered to also draw it in the browser)
+  --a11y        R9   axe at 1440 and 390, light and dark: serious and critical findings fail even where the original has
+                     them unless recorded (--departures file.json or <meta name="shadcn-departure">); moderate and minor
+                     fail only beyond the original's
+  --forms       C    the gate of each region marked data-entelim-form="c1".."c5"; R15 (one diagram engine) on every page;
+                     --form c4 also requires that the page has one
+  --help-text   help-and-overlays-v1: placeholder words, icon-only buttons (name and Tooltip), native title tooltips, R16
+  --survey out.md    run every gate on the 27 blocks and all example pages and write a report
 """
 import json
 import pathlib
@@ -37,6 +52,8 @@ from lxml import html as lxml_html
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import page_gates  # noqa: E402  (the gates this checker dispatches to)
 GOLDEN = ROOT / 'compliance' / 'golden' / 'out'
 RECIPES = json.loads((ROOT / 'flask_basecoat' / 'data' / 'recipes.json').read_text(encoding='utf8'))
 
@@ -88,7 +105,7 @@ WRAPPER_TAGS = {'div', 'section', 'main', 'header', 'footer', 'nav', 'aside', 'a
                 'polygon', 'g', 'ellipse', 'defs', 'linearGradient', 'stop', 'text', 'tspan', 'title', 'clipPath', 'mask',
                 'img', 'label', 'fieldset', 'legend', 'input', 'select', 'option', 'button', 'textarea', 'table', 'thead',
                 'tbody', 'tr', 'th', 'td', 'caption', 'colgroup', 'col', 'kbd', 'mark', 'sup', 'sub', 'hr',
-                'link', 'meta'}  # React emits <link rel=preload> for images inside the body
+                'marker', 'symbol', 'use', 'link', 'meta'}  # SVG parts of a diagram; React emits <link rel=preload> for images inside the body
 CONTROL_TAGS = {'button', 'input', 'select', 'textarea', 'table'}
 
 # Inline styles the component macros and runtime emit on their own parts (not authored by the page).
@@ -100,6 +117,9 @@ CUSTOM_PROPERTIES_ONLY = re.compile(r'^\s*(?:--[a-zA-Z0-9-]+\s*:[^;]+;?\s*)*$')
 
 # Recharts' own SVG classes inside a chart container.
 RECHARTS = re.compile(r'^(?:recharts-\S+|xAxis|yAxis|angleAxis|radiusAxis)$')
+
+
+FORM_GRID = re.compile(r'^(?:grid-cols-\d+|grid-rows-\d+|(?:col|row)-(?:start|span)-\d+)$')
 
 
 def strip_variant(c):
@@ -206,15 +226,7 @@ def original_styles(doc):
     return {style_signature(el.get('style')) for el in doc.iter() if isinstance(el.tag, str) and el.get('style')}
 
 
-def closed_floating(el):
-    """Closed menus, popovers and dialogs: React renders them only while open, so they are not part of the frame."""
-    for a in [el] + list(el.iterancestors()):
-        if not isinstance(a.tag, str):
-            continue
-        s = a.get('data-slot') or ''
-        if a.get('data-state') == 'closed' and s.endswith(('-content', '-overlay', '-portal')):
-            return True
-    return False
+closed_floating = page_gates.closed_floating
 
 
 def nearest_from_page(doc):
@@ -286,9 +298,11 @@ def check(doc, original_doc, original_name, limits):
         inside_chart = any((a.get('data-slot') == 'chart') for a in el.iterancestors() if isinstance(a.tag, str))
         in_content = in_roots(el, content)
         problems = []
+        in_form = any(a.get('data-entelim-form') for a in [el] + list(el.iterancestors()) if isinstance(a.tag, str))
+        notation_ok = slot == 'badge' or in_form
 
         if slot:
-            if slot not in ALLOWED_SLOTS:
+            if slot not in ALLOWED_SLOTS and not (notation_ok and slot in page_gates.FORM_SLOTS):
                 res['components'].append(f'unknown part {describe(el)}')
                 problems.append('component')
             vocab = set(VOCAB.get(slot, set()))
@@ -318,6 +332,8 @@ def check(doc, original_doc, original_name, limits):
         for c in classes:
             base = strip_variant(c)
             m = COLOUR_UTILITY.match(base)
+            if m and notation_ok and page_gates.NOTATION_TOKEN_RE.match(m.group(1)):
+                continue  # X5: notation tokens in status badges and inside a Tier C marked region
             if m and not NON_COLOUR_SUFFIX.match(m.group(1)) and m.group(1) not in TOKENS and c not in orig_cls and c not in VOCAB.get(slot or '', ()):
                 if not (m.group(1) in ('white', 'black') and c in orig_cls):
                     res['colours'].append(f'{describe(el)}: "{c}" is not a theme token')
@@ -331,6 +347,8 @@ def check(doc, original_doc, original_name, limits):
             for c in classes:
                 if c in own or c in orig_cls or c in LAYOUT_VOCAB:
                     continue
+                if in_form and FORM_GRID.match(strip_variant(c)):
+                    continue  # 1.5: a Tier C form region is placed with grid-cols-N and col/row start and span classes
                 if LAYOUT_FAMILY.match(strip_variant(c)):
                     res['layout'].append(f'{describe(el)}: "{c}" is not a spacing, column or width value a shadcn original uses (docs/LAYOUT.md)')
                     problems.append('layout')
@@ -363,8 +381,9 @@ def check(doc, original_doc, original_name, limits):
         for r in content:
             out += ([r] if r.xpath('self::*' + xp[len('.//*'):]) else []) + r.xpath(xp)
         return out
-    top_cards = [c for c in within('.//*[@data-slot="card"]') if not c.xpath('ancestor::*[@data-slot="card"]')]
-    regions = len(top_cards)
+    marked = [r for r in within('.//*[@data-entelim-form]') if not r.xpath('ancestor::*[@data-entelim-form]')]
+    top_cards = [c for c in within('.//*[@data-slot="card"]') if not c.xpath('ancestor::*[@data-slot="card"]') and not c.xpath('ancestor::*[@data-entelim-form]')]
+    regions = len(top_cards) + len(marked)  # a Tier C form region counts once, however many boxes it holds
     chart_cards = [c for c in top_cards if c.xpath('.//*[@data-slot="chart"]')]
     table_cards = [c for c in top_cards if c.xpath('.//*[@data-slot="table"]')]
     loose_tables = [t for t in within('.//*[@data-slot="table"]') if not t.xpath('ancestor::*[@data-slot="card"]')]
@@ -472,13 +491,24 @@ def browser_checks(target_url, html_text, original_url):
     return out[:40]
 
 
+GATE_FLAGS = {'--structure': 'structure', '--pixels': 'pixels', '--charts': 'charts', '--a11y': 'a11y', '--forms': 'forms', '--help-text': 'help'}
+
+
+def option(argv, name):
+    return argv[argv.index(name) + 1] if name in argv else None
+
+
 def main(argv):
-    args = [a for a in argv if not a.startswith('--')]
-    if not args:
+    flag_values = {option(argv, o) for o in ('--nearest', '--json', '--tier', '--departures', '--form', '--survey', '--pixel-region') if o in argv}
+    args = [a for a in argv if not a.startswith('--') and a not in flag_values]
+    if '--survey' in argv:
+        import survey_gates
+        return survey_gates.main(option(argv, '--survey'))
+    if not args or '--help' in argv or '-h' in argv:
         print(__doc__)
         return 2
     target = args[0]
-    nearest = argv[argv.index('--nearest') + 1] if '--nearest' in argv else None
+    nearest = option(argv, '--nearest')
     text, where = load(target)
     doc = lxml_html.fromstring(text)
     nearest = nearest or nearest_from_page(doc)
@@ -501,19 +531,32 @@ def main(argv):
             gp = golden_path(nearest).relative_to(GOLDEN).as_posix()
             original_url = f'{u.scheme}://{u.netloc}/basecoat/golden/{gp}'
         res['browser'] = browser_checks(url, text if not url else None, original_url)
+    selected = {v for k, v in GATE_FLAGS.items() if k in argv}
+    if '--gates' in argv:
+        selected = set(GATE_FLAGS.values())
+    info = {}
+    if selected:
+        golden_rel = golden_path(nearest).relative_to(GOLDEN).as_posix() if nearest else None
+        gate_res, info = page_gates.run_gates(
+            selected, doc, text, target=target, nearest=nearest, original_doc=original_doc, content_roots=content_roots, golden_rel=golden_rel,
+            tier=option(argv, '--tier') or 'B', departures=page_gates.load_departures(doc, option(argv, '--departures')),
+            force_form=(option(argv, '--form') or '').lower() or None, pixel_region=option(argv, '--pixel-region'), rendered='--rendered' in argv)
+        res.update(gate_res)
     failed = [k for k, v in res.items() if v]
     print(f'{where}  nearest original: {nearest or "(none named)"}')
     for k, v in res.items():
         print(f"{'PASS' if not v else 'FAIL'} {k}" + (f' ({len(v)})' if v else ''))
         for line in v[:12]:
             print('      ', line)
+    for k, v in info.items():
+        print(f'  {k}: {json.dumps(v, default=str)[:300]}')
     print(f"counts: {counts}")
     print(f'content fidelity: {score}% of {counts["content_nodes"]} nodes')
     verdict = 'shadcn composed' if not failed and score == 100 else 'not shadcn composed'
     print(f'{verdict.upper()}')
     if '--json' in argv:
-        pathlib.Path(argv[argv.index('--json') + 1]).write_text(json.dumps({'target': where, 'nearest': nearest, 'results': res,
-                                                                           'score': score, 'counts': counts, 'verdict': verdict}, indent=2), encoding='utf8')
+        pathlib.Path(option(argv, '--json')).write_text(json.dumps({'target': where, 'nearest': nearest, 'results': res, 'info': info,
+                                                                  'score': score, 'counts': counts, 'verdict': verdict}, indent=2, default=str), encoding='utf8')
     return 0 if verdict == 'shadcn composed' else 1
 
 
