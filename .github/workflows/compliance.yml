@@ -17,6 +17,8 @@ jobs:
           node-version: '22'
       - name: Install Python dependencies
         run: |
+          # Flask-RQ2 (demo app) still imports pkg_resources, which setuptools stopped shipping in version 81.
+          pip install "setuptools<81"
           pip install -r requirements.txt -r requirements-dev.txt
           pip install playwright axe-playwright-python lxml cssselect pytest
           python -m playwright install --with-deps chromium
