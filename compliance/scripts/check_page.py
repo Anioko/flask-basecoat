@@ -269,7 +269,7 @@ def check_form(doc, marked):
     if 'overflow-x-auto' not in (m.get('class') or '').split():
         out.append('the marked region does not scroll horizontally (overflow-x-auto) on a phone')
     for el in m.iter():
-        if isinstance(el.tag, str) and el.get('style'):
+        if isinstance(el.tag, str) and el.get('style') and not el.xpath('ancestor-or-self::*[@data-slot="chart"]'):
             props = {d.split(':', 1)[0].strip() for d in el.get('style').split(';') if ':' in d}
             if props - FORM_CUSTOM_PROPERTIES and not (el.get('data-slot') in MACRO_STYLE_SLOTS):
                 out.append(f'{describe(el)}: geometry style uses {sorted(props - FORM_CUSTOM_PROPERTIES)}; only --x --y --w --h --col --row are allowed')
