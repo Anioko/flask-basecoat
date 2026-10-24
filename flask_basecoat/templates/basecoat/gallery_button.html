@@ -1,0 +1,82 @@
+{% from 'basecoat/button.html' import button %}
+{% set arrow = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>' %}
+{% set mail = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>' %}
+<!DOCTYPE html>
+<html lang="en" class="h-full{% if theme == 'dark' %} dark{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button - Basecoat UI Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('basecoat.static', filename='css/basecoat.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    <script src="{{ url_for('basecoat.static', filename='js/all.min.js') }}" defer></script>
+</head>
+<body class="min-h-full bg-background text-foreground antialiased p-6 font-sans">
+    <main class="max-w-3xl mx-auto space-y-8" data-gallery="button" data-theme="{{ theme }}">
+        <header class="flex items-center justify-between border-b border-border pb-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Button</h1>
+                <p class="text-sm text-muted-foreground mt-1">Every variant, size and state ({{ theme }} theme).</p>
+            </div>
+            <nav class="flex items-center gap-2" aria-label="Gallery">
+                {{ button(content='Gallery index', variant='ghost', href=url_for('basecoat_gallery.gallery'), id='gallery-index-link') }}
+                {{ button(content='Light', variant='outline', size='sm', href=url_for('basecoat_gallery.gallery_button'), id='theme-light') }}
+                {{ button(content='Dark', variant='outline', size='sm', href=url_for('basecoat_gallery.gallery_button', theme='dark'), id='theme-dark') }}
+            </nav>
+        </header>
+
+        <section class="space-y-3" aria-labelledby="h-variants">
+            <h2 id="h-variants" class="text-lg font-semibold">Variants</h2>
+            <div class="flex flex-wrap items-center gap-3">
+                {% for v in ['default', 'secondary', 'destructive', 'outline', 'ghost', 'link'] %}
+                {{ button(content=v|capitalize, variant=v, id='variant-' ~ v) }}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-sizes">
+            <h2 id="h-sizes" class="text-lg font-semibold">Sizes</h2>
+            <div class="flex flex-wrap items-center gap-3">
+                {{ button(content='Small', size='sm', variant='outline', id='size-sm') }}
+                {{ button(content='Default', size='default', variant='outline', id='size-default') }}
+                {{ button(content='Large', size='lg', variant='outline', id='size-lg') }}
+                {{ button(content=arrow, size='icon', variant='outline', aria_label='Next', id='size-icon') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-icons">
+            <h2 id="h-icons" class="text-lg font-semibold">With icon</h2>
+            <div class="flex flex-wrap items-center gap-3">
+                {% call button(variant='default', id='with-icon') %}{{ mail|safe }} Login with Email{% endcall %}
+                {% call button(variant='outline', id='icon-trailing') %}Next {{ arrow|safe }}{% endcall %}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-states">
+            <h2 id="h-states" class="text-lg font-semibold">States</h2>
+            <div class="flex flex-wrap items-center gap-3">
+                {{ button(content='Disabled', disabled=true, id='state-disabled') }}
+                {{ button(content='Please wait', loading=true, id='state-loading') }}
+                {{ button(content='Invalid', variant='outline', invalid=true, id='state-invalid') }}
+                {{ button(content='Pressed', variant='outline', aria_pressed=true, id='state-pressed') }}
+                {{ button(content='Disabled link', variant='link', href='#', disabled=true, id='state-disabled-link') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-link">
+            <h2 id="h-link" class="text-lg font-semibold">As link</h2>
+            <div class="flex flex-wrap items-center gap-3">
+                {{ button(content='Link button', variant='secondary', href='#as-link', id='as-link') }}
+            </div>
+        </section>
+
+        <section class="space-y-3" aria-labelledby="h-click">
+            <h2 id="h-click" class="text-lg font-semibold">Keyboard</h2>
+            <form action="#" onsubmit="return false" class="flex items-center gap-3">
+                {{ button(content='Submit', type='submit', id='kbd-submit') }}
+                {{ button(content='Cancel', variant='outline', id='kbd-cancel') }}
+            </form>
+        </section>
+    </main>
+</body>
+</html>
