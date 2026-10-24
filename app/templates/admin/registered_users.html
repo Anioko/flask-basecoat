@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% from 'basecoat/table.html' import table, table_header, table_body, table_row, table_head, table_cell %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-8">
@@ -28,28 +29,26 @@
 
                     {# Use overflow-x: scroll so that mobile views don't freak out
                      # when the table is too wide #}
-                    <div class="overflow-x-auto">
-                        <table class="table w-full">
-                            <thead>
-                                <tr>
-                                    <th>First name</th>
-                                    <th class="sorted ascending">Last name</th>
-                                    <th>Email address</th>
-                                    <th>Account type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    {% call table(class='table') %}
+                        {% call table_header() %}
+                            {% call table_row() %}
+                                {{ table_head(content='First name') }}
+                                {{ table_head(content='Last name', class='sorted ascending') }}
+                                {{ table_head(content='Email address') }}
+                                {{ table_head(content='Account type') }}
+                            {% endcall %}
+                        {% endcall %}
+                        {% call table_body() %}
                             {% for u in users | sort(attribute='last_name') %}
-                                <tr data-href="{{ url_for('admin.user_info', user_id=u.id) }}" class="cursor-pointer">
-                                    <td>{{ u.first_name }}</td>
-                                    <td>{{ u.last_name }}</td>
-                                    <td>{{ u.email }}</td>
-                                    <td class="user role">{{ u.role.name }}</td>
-                                </tr>
+                                {% call table_row(class='cursor-pointer data-row') %}
+                                    {{ table_cell(content='<span data-user-id="' ~ u.id ~ '">' ~ u.first_name ~ '</span>') }}
+                                    {{ table_cell(content=u.last_name) }}
+                                    {{ table_cell(content=u.email) }}
+                                    {{ table_cell(content=u.role.name, class='user role') }}
+                                {% endcall %}
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        {% endcall %}
+                    {% endcall %}
                 </div>
             </div>
         </div>
@@ -92,10 +91,12 @@
             selectRole.addEventListener('change', filterRows);
         }
 
-        // Attach click navigation to rows using data-href
+        // Attach click navigation to rows using data-user-id
         rows.forEach(function(row){
-            var href = row.getAttribute('data-href');
-            if(href){
+            var userIdSpan = row.querySelector('[data-user-id]');
+            if(userIdSpan){
+                var userId = userIdSpan.getAttribute('data-user-id');
+                var href = '/admin/user/' + userId;
                 row.addEventListener('click', function(){ window.location.href = href; });
             }
         });

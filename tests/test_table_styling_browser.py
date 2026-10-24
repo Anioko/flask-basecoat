@@ -1,6 +1,13 @@
 """
 Browser tests for table styling verification
-Tests that table borders and lines are clearly visible
+Tests that table borders and lines match shadcn/ui table design.
+
+This file tests shadcn's table component which flask-basecoat ports verbatim:
+- 1px borders (border-b on rows)
+- 8px cell padding (p-2)
+- no header background (transparent is acceptable)
+- hover effect changes row background
+- 14px font size (text-sm)
 """
 import time
 
@@ -71,7 +78,7 @@ class TestTableStyling:
         assert border_collapse == 'collapse', f"Table should have border-collapse: collapse, got {border_collapse}"
 
     def test_table_header_has_bottom_border(self, driver):
-        """Test that table header has visible bottom border"""
+        """Test that table header has visible bottom border (shadcn: border-b = 1px)"""
         login(driver)
         driver.get(f'{TEST_SERVER_BASE_URL}/account/manage')
 
@@ -87,9 +94,9 @@ class TestTableStyling:
 
         thead = thead_elements[0]
 
-        # Check thead has bottom border
+        # Check thead has bottom border (shadcn: border-b = 1px)
         border_bottom = thead.value_of_css_property('border-bottom-width')
-        assert border_bottom == '2px', f"Table thead should have 2px bottom border, got {border_bottom}"
+        assert border_bottom == '1px', f"Table thead should have 1px bottom border (shadcn border-b), got {border_bottom}"
 
         # Check border color is visible (not transparent)
         border_color = thead.value_of_css_property('border-bottom-color')
@@ -118,7 +125,7 @@ class TestTableStyling:
         assert border_color != 'rgba(0, 0, 0, 0)', "Border color should not be transparent"
 
     def test_table_cells_have_padding(self, driver):
-        """Test that table cells have adequate padding"""
+        """Test that table cells have adequate padding (shadcn: p-2 = 8px)"""
         login(driver)
         driver.get(f'{TEST_SERVER_BASE_URL}/account/manage')
 
@@ -134,19 +141,22 @@ class TestTableStyling:
         padding_left = first_cell.value_of_css_property('padding-left')
         padding_top = first_cell.value_of_css_property('padding-top')
 
-        # Should have at least 12px padding (1rem = 16px, but we check for minimum)
-        assert float(padding_left.replace('px', '')) >= 12, f"Cell should have at least 12px left padding, got {padding_left}"
-        assert float(padding_top.replace('px', '')) >= 10, f"Cell should have at least 10px top padding, got {padding_top}"
+        # shadcn uses p-2 (8px all around)
+        assert float(padding_left.replace('px', '')) >= 8, f"Cell should have at least 8px left padding (shadcn p-2), got {padding_left}"
+        assert float(padding_top.replace('px', '')) >= 8, f"Cell should have at least 8px top padding (shadcn p-2), got {padding_top}"
 
     def test_table_header_has_background(self, driver):
-        """Test that table header has visible background color"""
+        """Test that table header exists (shadcn: no specific background, transparent is acceptable)"""
         login(driver)
         driver.get(f'{TEST_SERVER_BASE_URL}/account/manage')
 
-        # Wait for thead th elements
-        headers = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table thead th'))
+        # Wait for table to load
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '.table'))
         )
+
+        # Try to find thead th elements
+        headers = driver.find_elements(By.CSS_SELECTOR, '.table thead th')
 
         # Note: The account manage table uses tbody only, no thead
         # So we test the td cells instead
@@ -156,10 +166,10 @@ class TestTableStyling:
             rows = driver.find_elements(By.CSS_SELECTOR, '.table tbody tr')
             assert len(rows) > 0, "Should have table rows"
         else:
-            # If thead exists, check background
+            # shadcn table headers have no specific background (transparent is fine)
+            # Just verify the header exists and is visible
             first_header = headers[0]
-            bg_color = first_header.value_of_css_property('background-color')
-            assert bg_color != 'rgba(0, 0, 0, 0)', "Header should have visible background color"
+            assert first_header.is_displayed(), "Header should be displayed"
 
     def test_table_hover_effect(self, driver):
         """Test that table rows have hover effect"""
@@ -190,7 +200,7 @@ class TestTableStyling:
         # In real browser, hover_bg should be different from initial_bg
 
     def test_table_text_is_readable(self, driver):
-        """Test that table text has good contrast and is readable"""
+        """Test that table text has good contrast and is readable (shadcn: text-sm = 14px)"""
         login(driver)
         driver.get(f'{TEST_SERVER_BASE_URL}/account/manage')
 
@@ -208,13 +218,13 @@ class TestTableStyling:
         # Should have a defined color (not default)
         assert color != 'rgba(0, 0, 0, 0)', "Text should have visible color"
 
-        # Check font size is readable
+        # Check font size is readable (shadcn uses text-sm = 14px)
         font_size = first_cell.value_of_css_property('font-size')
         size_px = float(font_size.replace('px', ''))
-        assert size_px >= 12, f"Font size should be at least 12px, got {size_px}px"
+        assert size_px >= 12, f"Font size should be at least 12px (shadcn text-sm = 14px), got {size_px}px"
 
     def test_admin_users_table_has_styling(self, driver):
-        """Test that admin users table also has proper styling"""
+        """Test that admin users table has shadcn styling (1px borders)"""
         login(driver)
         driver.get(f'{TEST_SERVER_BASE_URL}/admin/users')
 
@@ -227,9 +237,11 @@ class TestTableStyling:
         thead = table.find_element(By.CSS_SELECTOR, 'thead')
         assert thead is not None, "Admin table should have thead"
 
-        # Check thead has bottom border
-        border_bottom = thead.value_of_css_property('border-bottom-width')
-        assert border_bottom == '2px', f"Admin table thead should have 2px bottom border, got {border_bottom}"
+        # Check thead tr has bottom border (shadcn: [&_tr]:border-b applies border to tr, not thead)
+        thead_rows = thead.find_elements(By.CSS_SELECTOR, 'tr')
+        assert len(thead_rows) > 0, "Admin table thead should have rows"
+        border_bottom = thead_rows[0].value_of_css_property('border-bottom-width')
+        assert border_bottom == '1px', f"Admin table thead tr should have 1px bottom border (shadcn [&_tr]:border-b), got {border_bottom}"
 
         # Check tbody rows
         rows = table.find_elements(By.CSS_SELECTOR, 'tbody tr')
