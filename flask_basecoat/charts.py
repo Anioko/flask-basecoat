@@ -45,6 +45,7 @@ FORMATTERS = {
     'localeDate': 'new Date(value).toLocaleDateString(locale, options): tickFormatter, labelFormatter',
     'configLabel': 'chartConfig[value]?.label: tickFormatter, LabelList formatter',
     'configLabelOfFirstDataKey': 'chartConfig[payload[0].dataKey].label: tooltip labelFormatter',
+    'payloadField': 'payload?.[0]?.payload[key]: tooltip labelFormatter showing a field of the hovered row (the name of a scatter point)',
     'unitValue': 'tooltip formatter: label, value and unit (wrap=true puts them in a min-w-[130px] row)',
     'unitValueWithTotal': 'tooltip formatter: swatch, label, value and unit, plus a Total row after index `after`',
     'centerText': 'Label content: <text> centred on the polar view box, one <tspan> per line',

@@ -269,3 +269,13 @@ def test_points_have_no_keyboard_layer_when_accessibility_layer_is_off(draw):
     # Recharts' own switch: without accessibilityLayer the chart has no roles, labels or tab stops
     assert page.evaluate("document.querySelectorAll('.recharts-scatter-symbol[tabindex], .recharts-scatter-symbol[role]').length") == 0
     assert page.evaluate("document.querySelectorAll('.recharts-scatter-symbol').length") == 3
+
+
+def test_payload_field_formatter_names_the_hovered_point_in_the_tooltip(draw):
+    spec = scatter_spec()
+    spec['tooltip'] = {'cursor': False, 'labelFormatter': {'$fn': 'payloadField', 'key': 'name'}}
+    page = draw(spec)
+    page.locator('.recharts-scatter-symbol').nth(1).hover()
+    tip = page.locator('.recharts-tooltip-wrapper .cn-chart-tooltip')
+    tip.wait_for()
+    assert tip.inner_text().split('\n')[0] == 'Beta'
