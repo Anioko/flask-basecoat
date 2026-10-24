@@ -6,7 +6,9 @@
   'use strict';
 
   function setup(kind, content) {
-    const trigger = FB.pairWith(content, `[data-slot="${kind}-trigger"], [data-slot="${kind}-anchor"]`);
+    // A sidebar menu button is the tooltip trigger when the content directly follows it (upstream: SidebarMenuButton tooltip).
+    const trigger = (kind === 'tooltip' && content.hasAttribute('data-sidebar-tooltip') && FB.pairWith(content, '[data-sidebar="menu-button"]', { adjacent: true })) ||
+      FB.pairWith(content, `[data-slot="${kind}-trigger"], [data-slot="${kind}-anchor"]`);
     if (!trigger) return;
     const id = FB.ensureId(content, kind);
     content.setAttribute('data-floating', '');
@@ -23,6 +25,11 @@
     function open() {
       clearTimeout(closeTimer);
       if (FB.isOpen(content)) return;
+      if (content.hasAttribute('data-sidebar-tooltip')) {
+        // Upstream hides it unless the sidebar is collapsed to the icon rail on desktop.
+        const sb = trigger.closest('[data-slot="sidebar"]');
+        if (!sb || sb.getAttribute('data-state') !== 'collapsed' || window.innerWidth < 768) return;
+      }
       if (content.parentNode !== document.body) document.body.appendChild(content);
       FB.setState(content, 'open');
       FB.setState(trigger, kind === 'tooltip' ? 'delayed-open' : 'open');
