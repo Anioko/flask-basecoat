@@ -1,0 +1,454 @@
+{% import 'basecoat/index.html' as bc %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - shadcn/ui Example</title>
+    
+    {# Inter Font #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {{ basecoat.css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/app.css') }}">
+    
+    {{ basecoat.js() }}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) { lucide.createIcons(); }
+        });
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (!files || !files.length) return;
+            const container = document.getElementById('media-preview-container');
+            if (container) container.classList.remove('hidden');
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'relative size-20 rounded-md border border-border overflow-hidden group';
+                    thumb.innerHTML = `
+                        <img src="${evt.target.result}" class="h-full w-full object-cover">
+                        <button type="button" onclick="this.parentElement.remove()" class="absolute top-1 right-1 size-5 bg-background/80 hover:bg-destructive hover:text-white rounded-full flex items-center justify-center text-xs transition-colors">
+                            &times;
+                        </button>
+                    `;
+                    document.getElementById('media-thumbnails').appendChild(thumb);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        let variationCount = 1;
+        function addVariation() {
+            variationCount++;
+            const list = document.getElementById('variations-list');
+            if (!list) return;
+            const row = document.createElement('div');
+            row.className = 'flex items-center gap-3 border-t border-border pt-3';
+            row.innerHTML = `
+                <div class="flex-1">
+                    <input class="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" placeholder="Variation Name (e.g. Size L, Blue)" />
+                </div>
+                <div class="w-28">
+                    <input class="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" placeholder="SKU" />
+                </div>
+                <div class="w-24">
+                    <input class="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" placeholder="$0.00" />
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" class="size-8 rounded-md hover:bg-muted text-muted-foreground hover:text-destructive flex items-center justify-center transition-colors">
+                    <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                </button>
+            `;
+            list.appendChild(row);
+        }
+
+        function saveProduct(e) {
+            if (e) e.preventDefault();
+            const toast = document.getElementById('save-toast');
+            if (toast) {
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3500);
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-foreground antialiased min-h-full">
+<div class="bg-muted/50 p-6">
+<form class="mx-auto max-w-7xl space-y-4">
+<button class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 w-fit" data-size="sm" data-slot="button" data-variant="outline">
+<svg aria-hidden="true" class="lucide lucide-arrow-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m12 19-7-7 7-7">
+</path>
+<path d="M19 12H5">
+</path>
+</svg>
+   Back
+  </button>
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+<div class="space-y-4 lg:col-span-2">
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       General
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing) space-y-6" data-slot="card-content">
+<div class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;&gt;.sr-only]:w-auto" data-orientation="vertical" data-slot="field" role="group">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col" data-slot="field-label" for="name">
+        Product Name
+        <span class="text-red-500">
+         *
+        </span>
+</label>
+<input class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" data-slot="input" id="name" name="name"/>
+<p class="text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="field-description">
+        A product name is required and recommended to be unique.
+       </p>
+</div>
+<div class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;&gt;.sr-only]:w-auto" data-orientation="vertical" data-slot="field" role="group">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col" data-slot="field-label" for="description">
+        Description
+       </label>
+<textarea class="flex field-sizing-content w-full rounded-md border border-input bg-transparent px-2.5 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 min-h-[200px]" data-slot="textarea" id="description" name="description" placeholder="Set a description to the product for better visibility."></textarea>
+</div>
+</div>
+</div>
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Media
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing) space-y-4" data-slot="card-content">
+<div class="rounded-lg border-2 border-dashed p-8 text-center transition-colors bg-muted/50">
+<input accept="image/*" class="hidden" id="media-files" multiple="" type="file"/>
+<div class="text-muted-foreground/50 mx-auto mb-2 flex h-8 w-8 items-center justify-center text-xl">
+<svg aria-hidden="true" class="lucide lucide-image" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3">
+</rect>
+<circle cx="9" cy="9" r="2">
+</circle>
+<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21">
+</path>
+</svg>
+</div>
+<p>
+        Drop image files here to upload
+       </p>
+<p class="text-muted-foreground mt-1 text-xs">
+        Only image files are accepted. You can upload up to 8 files.
+       </p>
+<div class="mt-4 flex justify-center">
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-size="default" data-slot="button" data-variant="outline" type="button">
+         Choose files
+        </button>
+</div>
+</div>
+</div>
+</div>
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Variations
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing) space-y-4" data-slot="card-content">
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-size="default" data-slot="button" data-variant="outline" type="button">
+<svg aria-hidden="true" class="lucide lucide-plus" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 12h14">
+</path>
+<path d="M12 5v14">
+</path>
+</svg>
+       Add another variation
+      </button>
+</div>
+</div>
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Pricing
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing) space-y-6" data-slot="card-content">
+<div class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;&gt;.sr-only]:w-auto" data-orientation="vertical" data-slot="field" role="group">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col" data-slot="field-label" for="basePrice">
+        Base Price
+        <span class="text-red-500">
+         *
+        </span>
+</label>
+<input class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" data-slot="input" id="basePrice" name="basePrice" placeholder="Product Price"/>
+<p class="text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="field-description">
+        Set the product price.
+       </p>
+</div>
+<div class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;&gt;.sr-only]:w-auto" data-orientation="vertical" data-slot="field" role="group">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col" data-slot="field-label">
+        Discount Type
+       </label>
+<div class="group/field-content flex flex-1 flex-col gap-1 leading-snug" data-slot="field-content">
+<div aria-required="false" class="w-full flex gap-2" data-slot="radio-group" dir="ltr" role="radiogroup" style="outline:none" tabindex="0">
+<div class="border-input has-data-[state=checked]:border-primary/50 relative flex w-full min-w-0 flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+<button aria-checked="true" aria-describedby="discount-none-description" class="group/radio-group-item peer relative flex aspect-square size-4 shrink-0 rounded-full border border-input outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary order-1 after:absolute after:inset-0" data-radix-collection-item="" data-slot="radio-group-item" data-state="checked" id="discount-none" role="radio" tabindex="-1" type="button" value="none">
+<span class="flex size-4 items-center justify-center" data-slot="radio-group-indicator" data-state="checked">
+<span class="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-foreground">
+</span>
+</span>
+</button>
+<input aria-hidden="true" checked="" style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 16px; height: 16px;" tabindex="-1" type="radio" value="none"/>
+<div class="grid grow gap-1">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" data-slot="label" for="discount-none">
+            No Discount
+           </label>
+</div>
+</div>
+<div class="border-input has-data-[state=checked]:border-primary/50 relative flex w-full min-w-0 flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+<button aria-checked="false" aria-describedby="discount-percentage-description" class="group/radio-group-item peer relative flex aspect-square size-4 shrink-0 rounded-full border border-input outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary order-1 after:absolute after:inset-0" data-radix-collection-item="" data-slot="radio-group-item" data-state="unchecked" id="discount-percentage" role="radio" tabindex="-1" type="button" value="percentage">
+</button>
+<input aria-hidden="true" style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 16px; height: 16px;" tabindex="-1" type="radio" value="percentage"/>
+<div class="grid grow gap-1">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" data-slot="label" for="discount-percentage">
+            Percentage
+            <!-- -->
+<span class="text-muted-foreground text-xs leading-[inherit] font-normal">
+             (Discount %)
+            </span>
+</label>
+</div>
+</div>
+<div class="border-input has-data-[state=checked]:border-primary/50 relative flex w-full min-w-0 flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+<button aria-checked="false" aria-describedby="discount-fixed-description" class="group/radio-group-item peer relative flex aspect-square size-4 shrink-0 rounded-full border border-input outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary order-1 after:absolute after:inset-0" data-radix-collection-item="" data-slot="radio-group-item" data-state="unchecked" id="discount-fixed" role="radio" tabindex="-1" type="button" value="fixed">
+</button>
+<input aria-hidden="true" style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 16px; height: 16px;" tabindex="-1" type="radio" value="fixed"/>
+<div class="grid grow gap-1">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" data-slot="label" for="discount-fixed">
+            Fixed Price
+            <!-- -->
+<span class="text-muted-foreground text-xs leading-[inherit] font-normal">
+             (Set amount)
+            </span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;&gt;.sr-only]:w-auto" data-orientation="vertical" data-slot="field" role="group">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col" data-slot="field-label" for="taxClass">
+         Tax Class
+         <span class="text-red-500">
+          *
+         </span>
+</label>
+<button aria-autocomplete="none" aria-expanded="false" class="flex items-center justify-between gap-1.5 rounded-md border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 w-full" data-placeholder="" data-size="default" data-slot="select-trigger" data-state="closed" dir="ltr" role="combobox" type="button">
+<span data-slot="select-value" style="pointer-events:none">
+          Select an option
+         </span>
+<svg aria-hidden="true" class="lucide lucide-chevron-down pointer-events-none size-4 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</button>
+<select aria-hidden="true" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="-1">
+<option selected="" value="">
+</option>
+<option value="standard">
+          Standard
+         </option>
+<option value="reduced">
+          Reduced
+         </option>
+<option value="zero">
+          Zero Rate
+         </option>
+</select>
+<p class="text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="field-description">
+         Set the product tax class.
+        </p>
+</div>
+<div class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col *:w-full [&amp;&gt;.sr-only]:w-auto" data-orientation="vertical" data-slot="field" role="group">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border *:data-[slot=field]:p-3 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col" data-slot="field-label" for="vatAmount">
+         VAT Amount (%)
+         <span class="text-red-500">
+          *
+         </span>
+</label>
+<input class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" data-slot="input" id="vatAmount" name="vatAmount" placeholder="0"/>
+<p class="text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="field-description">
+         Set the product VAT amount.
+        </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Thumbnail
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing) space-y-3" data-slot="card-content">
+<div class="rounded-lg border-2 border-dashed p-4 text-center transition-colors bg-muted/50">
+<input accept="image/*" class="hidden" id="thumbnail-file" type="file"/>
+<div class="text-muted-foreground/50 mx-auto mb-2 flex h-8 w-8 items-center justify-center text-xl">
+<svg aria-hidden="true" class="lucide lucide-image" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3">
+</rect>
+<circle cx="9" cy="9" r="2">
+</circle>
+<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21">
+</path>
+</svg>
+</div>
+<p class="text-sm">
+        Drop thumbnail image here
+       </p>
+<div class="mt-3 flex justify-center">
+<button class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5" data-size="sm" data-slot="button" data-variant="outline" type="button">
+         Choose image
+        </button>
+</div>
+</div>
+</div>
+</div>
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Status
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing)" data-slot="card-content">
+<button aria-autocomplete="none" aria-expanded="false" class="flex items-center justify-between gap-1.5 rounded-md border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 w-full" data-size="default" data-slot="select-trigger" data-state="closed" dir="ltr" role="combobox" type="button">
+<span data-slot="select-value" style="pointer-events:none">
+<span class="h-2 w-2 rounded-full bg-green-500">
+</span>
+        Published
+       </span>
+<svg aria-hidden="true" class="lucide lucide-chevron-down pointer-events-none size-4 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</button>
+<select aria-hidden="true" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="-1">
+<option selected="" value="published">
+        Published
+       </option>
+<option value="draft">
+        Draft
+       </option>
+<option value="archived">
+        Archived
+       </option>
+</select>
+</div>
+</div>
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Categories
+      </div>
+<div class="text-sm text-muted-foreground" data-slot="card-description">
+       Add product to a category.
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing)" data-slot="card-content">
+<div class="flex gap-2">
+<input class="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 flex-1" data-slot="input" placeholder="New category" value=""/>
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 size-9" data-size="icon" data-slot="button" data-variant="outline" type="button">
+<svg aria-hidden="true" class="lucide lucide-plus" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 12h14">
+</path>
+<path d="M12 5v14">
+</path>
+</svg>
+</button>
+</div>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="group/badge h-5 w-fit shrink-0 justify-center overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&amp;&gt;svg]:pointer-events-none [&amp;&gt;svg]:size-3! bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80 flex cursor-pointer items-center gap-2 select-none" data-slot="badge" data-variant="secondary">
+<svg aria-hidden="true" class="lucide lucide-x h-3 w-3" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M18 6 6 18">
+</path>
+<path d="m6 6 12 12">
+</path>
+</svg>
+<span>
+         Headphones
+        </span>
+</span>
+</div>
+</div>
+</div>
+<div class="group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground ring-1 ring-foreground/10 [--card-spacing:--spacing(6)] has-[&gt;img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(4)] *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl shadow-none" data-size="default" data-slot="card">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)" data-slot="card-header">
+<div class="font-heading text-base leading-normal font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">
+       Product Template
+      </div>
+<div class="text-sm text-muted-foreground" data-slot="card-description">
+       Assign a template from your current theme to define how a single product is displayed.
+      </div>
+</div>
+<div class="flex flex-col gap-3 px-(--card-spacing)" data-slot="card-content">
+<div class="space-y-2">
+<button aria-autocomplete="none" aria-expanded="false" class="flex items-center justify-between gap-1.5 rounded-md border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 w-full" data-size="default" data-slot="select-trigger" data-state="closed" dir="ltr" role="combobox" type="button">
+<span data-slot="select-value" style="pointer-events:none">
+         Default Template
+        </span>
+<svg aria-hidden="true" class="lucide lucide-chevron-down pointer-events-none size-4 text-muted-foreground" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</button>
+<select aria-hidden="true" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="-1">
+<option selected="" value="default">
+         Default Template
+        </option>
+<option value="minimal">
+         Minimal Template
+        </option>
+<option value="detailed">
+         Detailed Template
+        </option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-size="default" data-slot="button" data-variant="default" type="submit">
+    Save changes
+   </button>
+<button class="group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40 h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-size="default" data-slot="button" data-variant="destructive" type="button">
+    Cancel
+   </button>
+</div>
+</form>
+</div>
+
+<!-- Success Toast -->
+<div id="save-toast" class="fixed bottom-6 right-6 z-50 bg-card text-card-foreground border border-border shadow-lg rounded-lg p-4 flex items-center gap-3 hidden animate-in slide-in-from-bottom-5">
+    <div class="size-8 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
+    </div>
+    <div>
+        <p class="text-sm font-semibold">Product Saved!</p>
+        <p class="text-xs text-muted-foreground">Product details and media have been updated.</p>
+    </div>
+</div>
+</body>
+</html>

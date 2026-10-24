@@ -182,6 +182,72 @@ class BasecoatExtensionTestCase(unittest.TestCase):
         self.assertIn('Q2 2025', resp_kanban.get_data(as_text=True))
         self.assertIn('Backlog', resp_kanban.get_data(as_text=True))
 
+        # 18. /examples/shopping-cart
+        resp_cart = client.get('/examples/shopping-cart')
+        self.assertEqual(resp_cart.status_code, 200)
+        self.assertIn('Briefcase', resp_cart.get_data(as_text=True))
+        self.assertIn('Emporio Armani', resp_cart.get_data(as_text=True))
+        self.assertIn('Confirm Order', resp_cart.get_data(as_text=True))
+
+        # 19. /examples/checkout
+        resp_checkout = client.get('/examples/checkout')
+        self.assertEqual(resp_checkout.status_code, 200)
+        self.assertIn('Pick Delivery Method', resp_checkout.get_data(as_text=True))
+        self.assertIn('Shipping Information', resp_checkout.get_data(as_text=True))
+
+        # 20. /examples/add-product
+        resp_addprod = client.get('/examples/add-product')
+        self.assertEqual(resp_addprod.status_code, 200)
+        self.assertIn('General', resp_addprod.get_data(as_text=True))
+        self.assertIn('Product Name', resp_addprod.get_data(as_text=True))
+        self.assertIn('Variations', resp_addprod.get_data(as_text=True))
+
+        # 21. /examples/mail
+        resp_mail = client.get('/examples/mail')
+        self.assertEqual(resp_mail.status_code, 200)
+        self.assertIn('Alicia Koch', resp_mail.get_data(as_text=True))
+        self.assertIn('Meeting Tomorrow', resp_mail.get_data(as_text=True))
+        self.assertIn('William Smith', resp_mail.get_data(as_text=True))
+
+        # 22. /examples/calendar
+        resp_cal = client.get('/examples/calendar')
+        self.assertEqual(resp_cal.status_code, 200)
+        self.assertIn('October 2026', resp_cal.get_data(as_text=True))
+        self.assertIn('New event', resp_cal.get_data(as_text=True))
+        self.assertIn('Today', resp_cal.get_data(as_text=True))
+
+        # 23. /examples/file-manager
+        resp_fm = client.get('/examples/file-manager')
+        self.assertEqual(resp_fm.status_code, 200)
+        self.assertIn('File Manager', resp_fm.get_data(as_text=True))
+        self.assertIn('Upload', resp_fm.get_data(as_text=True))
+        self.assertIn('Arion', resp_fm.get_data(as_text=True))
+
+        # 24. /examples/two-factor
+        resp_2fa = client.get('/examples/two-factor')
+        self.assertEqual(resp_2fa.status_code, 200)
+        self.assertIn('Two-step verification', resp_2fa.get_data(as_text=True))
+        self.assertIn('john.doe@example.com', resp_2fa.get_data(as_text=True))
+
+        # 25. /examples/task-detail
+        resp_tdetail = client.get('/examples/task-detail')
+        self.assertEqual(resp_tdetail.status_code, 200)
+        self.assertIn('Workplace Safety Guide', resp_tdetail.get_data(as_text=True))
+        self.assertIn('Phase 1', resp_tdetail.get_data(as_text=True))
+
+        # 26. /examples/blog-detail
+        resp_bdetail = client.get('/examples/blog-detail')
+        self.assertEqual(resp_bdetail.status_code, 200)
+        self.assertIn('The Best Way to Write a Recurring Email Newsletter', resp_bdetail.get_data(as_text=True))
+        self.assertIn('Esther Howard', resp_bdetail.get_data(as_text=True))
+
+        # 27. /examples/notifications
+        resp_notif = client.get('/examples/notifications')
+        self.assertEqual(resp_notif.status_code, 200)
+        self.assertIn('Notifications', resp_notif.get_data(as_text=True))
+        self.assertIn('Olivia Grant', resp_notif.get_data(as_text=True))
+        self.assertIn('Mark all as read', resp_notif.get_data(as_text=True))
+
 
 if __name__ == '__main__':
     unittest.main()

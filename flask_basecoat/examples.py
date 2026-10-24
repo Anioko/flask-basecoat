@@ -138,6 +138,76 @@ def index():
             'description': 'Agile sprint task board with Backlog, Todo, In Progress, Done columns and priority tag badges.',
             'href': url_for('basecoat_examples.kanban'),
             'tags': ['Kanban', 'Cards', 'Badges']
+        },
+        {
+            'id': 'shopping-cart',
+            'title': 'Shopping Cart',
+            'description': 'Multi-item e-commerce shopping bag with quantity stepper, coupon applicator, gift wrap toggle, and price breakdown.',
+            'href': url_for('basecoat_examples.shopping_cart'),
+            'tags': ['E-Commerce', 'Cart', 'Forms', 'Cards']
+        },
+        {
+            'id': 'checkout',
+            'title': 'Checkout Page',
+            'description': 'Multi-step checkout with delivery/pickup selector, shipping address form, and live order summary.',
+            'href': url_for('basecoat_examples.checkout'),
+            'tags': ['E-Commerce', 'Checkout', 'Forms', 'Wizard']
+        },
+        {
+            'id': 'add-product',
+            'title': 'Add Product Form',
+            'description': 'Merchant catalog creation form with drag-and-drop media uploader, product variations, status, and pricing.',
+            'href': url_for('basecoat_examples.add_product'),
+            'tags': ['Forms', 'Media', 'Pricing', 'Cards']
+        },
+        {
+            'id': 'mail',
+            'title': 'Mail Application',
+            'description': 'Triple-panel desktop email client with mailbox folders, searchable message list, reading pane, and reply composer.',
+            'href': url_for('basecoat_examples.mail'),
+            'tags': ['Mail', 'Resizable', 'Search', 'Tabs']
+        },
+        {
+            'id': 'calendar',
+            'title': 'Event Calendar',
+            'description': 'Monthly schedule grid with color-categorized event pills, month navigator, and interactive event modal.',
+            'href': url_for('basecoat_examples.calendar'),
+            'tags': ['Calendar', 'Modal', 'Badges']
+        },
+        {
+            'id': 'file-manager',
+            'title': 'File Manager',
+            'description': 'Cloud drive file browser with storage usage breakdown, folder cards, and searchable files table.',
+            'href': url_for('basecoat_examples.file_manager'),
+            'tags': ['Files', 'Table', 'Progress', 'Cards']
+        },
+        {
+            'id': 'two-factor',
+            'title': 'Two-Step Verification',
+            'description': 'Two-factor authentication (2FA) verification screen with 6-digit OTP code input, countdown, and resend trigger.',
+            'href': url_for('basecoat_examples.two_factor'),
+            'tags': ['Auth', 'Security', 'Forms']
+        },
+        {
+            'id': 'task-detail',
+            'title': 'Task Detail View',
+            'description': 'Deep task inspection drawer with priority tags, milestone status, interactive subtasks checklist, and comments log.',
+            'href': url_for('basecoat_examples.task_detail'),
+            'tags': ['Tasks', 'Checklist', 'Comments', 'Badges']
+        },
+        {
+            'id': 'blog-detail',
+            'title': 'Blog Post Detail',
+            'description': 'Editorial long-form publication view with author byline, hero media, blockquotes, social share, and reader comments.',
+            'href': url_for('basecoat_examples.blog_detail'),
+            'tags': ['Blog', 'Typography', 'Comments']
+        },
+        {
+            'id': 'notifications',
+            'title': 'Notifications Center',
+            'description': 'Centralized user notification feed with All/Unread/Mentions filter tabs, unread indicators, and mark-all-as-read.',
+            'href': url_for('basecoat_examples.notifications'),
+            'tags': ['Notifications', 'Tabs', 'Badges']
         }
     ]
     return render_template('examples/index.html', examples=examples_list)
@@ -815,3 +885,62 @@ def product_detail():
 def kanban():
     """Shadcn Kanban Project Board screen."""
     return render_template('examples/kanban.html')
+
+@examples_bp.route('/shopping-cart')
+def shopping_cart():
+    """Shadcn Shopping Cart screen."""
+    return render_template('examples/shopping_cart.html')
+
+
+@examples_bp.route('/checkout')
+def checkout():
+    """Shadcn Checkout Page screen."""
+    return render_template('examples/checkout.html')
+
+
+@examples_bp.route('/add-product')
+def add_product():
+    """Shadcn Add Product Form screen."""
+    return render_template('examples/add_product.html')
+
+
+@examples_bp.route('/mail')
+def mail():
+    """Shadcn Mail Application screen."""
+    return render_template('examples/mail.html')
+
+
+@examples_bp.route('/calendar')
+def calendar():
+    """Shadcn Event Calendar screen."""
+    return render_template('examples/calendar.html')
+
+
+@examples_bp.route('/file-manager')
+def file_manager():
+    """Shadcn File Manager screen."""
+    return render_template('examples/file_manager.html')
+
+
+@examples_bp.route('/two-factor')
+def two_factor():
+    """Shadcn Two-Step Verification screen."""
+    return render_template('examples/two_factor.html')
+
+
+@examples_bp.route('/task-detail')
+def task_detail():
+    """Shadcn Task Detail screen."""
+    return render_template('examples/task_detail.html')
+
+
+@examples_bp.route('/blog-detail')
+def blog_detail():
+    """Shadcn Blog Post Detail screen."""
+    return render_template('examples/blog_detail.html')
+
+
+@examples_bp.route('/notifications')
+def notifications():
+    """Shadcn Notifications Center screen."""
+    return render_template('examples/notifications.html')
