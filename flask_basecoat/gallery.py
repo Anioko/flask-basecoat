@@ -41,6 +41,11 @@ def gallery():
     )
 
 
+@gallery_bp.route('/gallery/input')
+def gallery_input():
+    return render_template('basecoat/gallery_input.html')
+
+
 @gallery_bp.route('/gallery/button')
 def gallery_button():
     theme = 'dark' if request.args.get('theme') == 'dark' else 'light'
