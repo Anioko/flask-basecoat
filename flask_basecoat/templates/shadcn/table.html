@@ -1,0 +1,78 @@
+{# shadcn table macros - exact class parity with shadcn/ui table.tsx #}
+
+{% macro table(content='', class='') %}
+<div
+    data-slot="table-container"
+    class="relative w-full overflow-x-auto"
+>
+    <table
+        data-slot="table"
+        class="w-full caption-bottom text-sm {{ class }}"
+    >
+        {{- content|safe -}}
+    </table>
+</div>
+{%- endmacro -%}
+
+{% macro table_header(content='', class='') %}
+<thead
+    data-slot="table-header"
+    class="[&_tr]:border-b {{ class }}"
+>
+    {{- content|safe -}}
+</thead>
+{%- endmacro -%}
+
+{% macro table_body(content='', class='') %}
+<tbody
+    data-slot="table-body"
+    class="[&_tr:last-child]:border-0 {{ class }}"
+>
+    {{- content|safe -}}
+</tbody>
+{%- endmacro -%}
+
+{% macro table_footer(content='', class='') %}
+<tfoot
+    data-slot="table-footer"
+    class="bg-muted/50 border-t font-medium [&>tr]:last:border-b-0 {{ class }}"
+>
+    {{- content|safe -}}
+</tfoot>
+{%- endmacro -%}
+
+{% macro table_row(content='', class='') %}
+<tr
+    data-slot="table-row"
+    class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors {{ class }}"
+>
+    {{- content|safe -}}
+</tr>
+{%- endmacro -%}
+
+{% macro table_head(content='', class='') %}
+<th
+    data-slot="table-head"
+    class="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] {{ class }}"
+>
+    {{- content|safe -}}
+</th>
+{%- endmacro -%}
+
+{% macro table_cell(content='', class='') %}
+<td
+    data-slot="table-cell"
+    class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] {{ class }}"
+>
+    {{- content|safe -}}
+</td>
+{%- endmacro -%}
+
+{% macro table_caption(content='', class='') %}
+<caption
+    data-slot="table-caption"
+    class="text-muted-foreground mt-4 text-sm {{ class }}"
+>
+    {{- content|safe -}}
+</caption>
+{%- endmacro -%}
