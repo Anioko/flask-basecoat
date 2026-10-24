@@ -10,6 +10,11 @@ copy of the shadcn/ui sources and checked against them in a browser.
 - 65 components, 406 macros: Accordion to Tooltip, including Combobox, Command, Data Table, Date Picker,
   Input OTP, Sidebar, Resizable, Carousel, Chart, Sonner toasts, Field and Input Group.
 - 27 blocks ported part for part: sidebar-01 to sidebar-16, login-01 to login-05, signup-01 to signup-05, dashboard-01.
+- All 70 shadcn charts (area, bar, line, pie, radar, radial and tooltip variants) drawn from a chart spec, with the
+  same SVG, tooltips and legends as Recharts.
+- 46 application screens ported from the shadcn-examples collection (mail, chat, calendar, kanban, tasks, admin
+  dashboards, commerce, settings, blog and more), six dashboard layouts, and a reference dashboard built only from
+  shadcn parts.
 - The upstream look, not a re-implementation: the shipped stylesheet is compiled from shadcn's own
   Tailwind v4 pipeline (the shadcn stylesheet, the Vega style pack and the neutral theme) with light and dark mode.
 - Behaviour without React: dialogs, sheets, drawers, menus, popovers, tooltips, selects, comboboxes, command
@@ -18,6 +23,23 @@ copy of the shadcn/ui sources and checked against them in a browser.
 - WTForms adapter: `ui.render_form(form)` and `ui.render_field(form.email)` render fields with server-side
   validation state the way shadcn's Field component does.
 - A compliance harness that proves all of the above against the pinned upstream sources on every build.
+
+## Screenshots
+
+| | |
+|---|---|
+| ![The dashboard-01 block in light mode](readme_media/dashboard-01-light-1440.png) | ![The dashboard-01 block in dark mode](readme_media/dashboard-01-dark-1440.png) |
+| dashboard-01, light | dashboard-01, dark |
+| ![The chart gallery](readme_media/charts-1440.png) | ![An upstream chart beside the Flask-Basecoat render](readme_media/compare-1440.png) |
+| The chart gallery | Upstream render (left) beside Flask-Basecoat (right) |
+| ![The admin dashboard example screen](readme_media/example-admin-dashboard-1440.png) | ![The mail example screen in dark mode](readme_media/example-mail-dark-1440.png) |
+| Admin dashboard example | Mail example, dark |
+| ![The reference portfolio dashboard](readme_media/reference-portfolio-1440.png) | ![The component gallery](readme_media/gallery-light-1440.png) |
+| Reference page built only from shadcn parts | Component gallery |
+| ![A dialog](readme_media/dialog-modal.png) | ![Server-side form validation](readme_media/form-validation.png) |
+| Dialog with focus management | WTForms validation shown with the Field component |
+
+<p align="center"><img src="readme_media/dashboard-01-mobile-390.png" alt="dashboard-01 at phone width" width="260"></p>
 
 ## Install
 
