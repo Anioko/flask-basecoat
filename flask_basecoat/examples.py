@@ -172,6 +172,23 @@ def reference_portfolio():
     return render_template('examples/reference/portfolio.html', chart=_portfolio_spec(), apps=PORTFOLIO_APPS)
 
 
+@examples_bp.route('/canvas/')
+def canvas_index():
+    """Directory of the strategy canvases."""
+    from flask_basecoat.canvases import available
+    return render_template('examples/canvas/index.html', canvases=available())
+
+
+@examples_bp.route('/canvas/<slug>')
+def canvas(slug):
+    """One strategy canvas (Tier C) with its Northwind Logistics data."""
+    from flask_basecoat.canvases import available, canvas_data
+    entry = next((c for c in available() if c['slug'] == slug), None)
+    if entry is None:
+        abort(404)
+    return render_template(entry['page'], data=canvas_data(slug), entry=entry)
+
+
 @examples_bp.route('/<slug>', methods=['GET', 'POST'])
 def ported(slug):
     """A ported screen (templates/examples/ported/<slug>.html); earlier addresses redirect to their replacement."""

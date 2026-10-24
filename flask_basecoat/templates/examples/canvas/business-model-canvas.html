@@ -1,0 +1,12 @@
+{% extends 'examples/_layout.html' %}
+{% from 'examples/reference/_shell.html' import shell %}
+{% import 'basecoat/canvas/business-model-canvas.html' as canvas %}
+{#- Business Model Canvas on the dashboard-01 frame. Tier C4: the nine-box canvas is the one marked region.
+    Check:  python compliance/scripts/check_page.py /examples/canvas/business-model-canvas --nearest dashboard-01 --browser -#}
+{% block title %}Business Model Canvas · Flask-Basecoat{% endblock %}
+{% block head %}<meta name="shadcn-nearest" content="dashboard-01">{% endblock %}
+{% block body %}
+{% call shell('Business Model Canvas') %}
+  <div class="px-4 lg:px-6">{{ canvas.business_model_canvas(data) }}</div>
+{% endcall %}
+{% endblock %}

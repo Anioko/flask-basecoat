@@ -1,0 +1,65 @@
+{
+  "title": "Northwind Logistics · Northwind Flow",
+  "subtitle": "Business Model Canvas · Osterwalder and Pigneur",
+  "boxes": {
+    "key-partners": [
+      "Regional subcontracted van operators (220 vehicles on call)",
+      "Two EV leasing partners for the urban fleet",
+      "Customs brokers at Rotterdam and Felixstowe",
+      "Shopify and WooCommerce app marketplaces",
+      "Telematics provider for in-cab devices",
+      "Cloud hosting and mapping data suppliers"
+    ],
+    "key-activities": [
+      "Line-haul and last-mile delivery across 6 hubs",
+      "Route planning and daily load balancing",
+      "Running the shipper portal and tracking API",
+      "Customs clearance for EU and UK flows",
+      "Carrier onboarding and quality audits"
+    ],
+    "key-resources": [
+      "640 owned vans, 180 of them electric",
+      "6 cross-dock hubs in the UK, NL, BE, FR and DE",
+      "Northwind Flow platform and 9 years of delivery data",
+      "1,200 staff, 70 in operations control"
+    ],
+    "value-propositions": [
+      "Next-day delivery across the UK and Benelux from one contract",
+      "Live tracking with a 30-minute ETA window for every parcel",
+      "Customs paperwork done for you on cross-border orders",
+      "Carbon report per shipment, ready for CSRD disclosures",
+      "One invoice, one support line, no minimum volume"
+    ],
+    "customer-relationships": [
+      "Self-service portal and API for small merchants",
+      "Named account manager above 2,000 parcels a month",
+      "Quarterly service reviews with enterprise shippers",
+      "Community forum and integration guides"
+    ],
+    "channels": [
+      "E-commerce plugin marketplaces",
+      "Inside sales team for mid-market accounts",
+      "Trade shows: Multimodal, Parcel+Post Expo",
+      "Partner referrals from 3PL warehouses"
+    ],
+    "customer-segments": [
+      "Online retailers shipping 500 to 20,000 parcels a month (62% of revenue)",
+      "B2B manufacturers sending pallets to trade customers",
+      "Marketplace sellers needing cross-border UK-EU delivery",
+      "Healthcare distributors with timed deliveries"
+    ],
+    "cost-structure": [
+      "Drivers and subcontractors: 46% of costs",
+      "Fleet leases, fuel and charging: 21%",
+      "Hub rent and handling equipment: 14%",
+      "Platform engineering and hosting: 7%",
+      "Sales, support and overheads: 12%"
+    ],
+    "revenue-streams": [
+      "Per-parcel delivery fees, banded by weight and zone (81%)",
+      "Pallet and timed-delivery surcharges (11%)",
+      "Customs clearance fee per declaration (5%)",
+      "Flow Pro subscription for analytics and carbon reports, from 149 GBP a month (3%)"
+    ]
+  }
+}
